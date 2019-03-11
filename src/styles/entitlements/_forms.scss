@@ -46,3 +46,18 @@
     }
   }
 }
+
+.quipucords-form-control.form-control[readonly] {
+  background-color: $color-pf-white;
+  border: 0;
+  color: inherit;
+  font-weight: 700;
+
+  &[type=textarea] {
+    resize: none;
+  }
+}
+
+textarea.quipucords-form-control.form-control[readonly] {
+  resize: none;
+}
