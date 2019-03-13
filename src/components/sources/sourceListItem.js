@@ -4,10 +4,10 @@ import cx from 'classnames';
 import { Button, Checkbox, Grid, Icon, ListView } from 'patternfly-react';
 import _find from 'lodash/find';
 import _get from 'lodash/get';
-import _isEqual from 'lodash/isEqual';
+// import _isEqual from 'lodash/isEqual';
 import _size from 'lodash/size';
 import * as moment from 'moment';
-import { connect, reduxTypes, store } from '../../redux';
+import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { dictionary } from '../../constants/dictionaryConstants';
 import SourceCredentialsList from './sourceCredentialsList';
@@ -20,6 +20,38 @@ class SourceListItem extends React.Component {
     return _find(selectedSources, nextSelected => nextSelected.id === item.id) !== undefined;
   }
 
+  static notifyDeleteStatus(item, error, results) {
+    try {
+      if (error) {
+        store.dispatch({
+          type: reduxTypes.toastNotifications.TOAST_ADD,
+          alertType: 'error',
+          header: 'Error',
+          message: helpers.getMessageFromResults(results).message
+        });
+      } else {
+        store.dispatch({
+          type: reduxTypes.toastNotifications.TOAST_ADD,
+          alertType: 'success',
+          message: (
+            <span>
+              Deleted source <strong>{_get(item, 'name')}</strong>.
+            </span>
+          )
+        });
+
+        store.dispatch({
+          type: reduxTypes.view.DESELECT_ITEM,
+          viewType: reduxTypes.view.SOURCES_VIEW,
+          item
+        });
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  /*
   componentWillReceiveProps(nextProps) {
     const { lastRefresh } = this.props;
     // Check for changes resulting in a fetch
@@ -27,6 +59,7 @@ class SourceListItem extends React.Component {
       this.closeExpandIfNoData(this.expandType());
     }
   }
+  */
 
   onItemSelectChange = () => {
     const { item, selectedSources } = this.props;
@@ -68,12 +101,54 @@ class SourceListItem extends React.Component {
     });
   };
 
+  onDelete = source => {
+    const { deleteSource } = this.props;
+
+    const onConfirm = () => {
+      store.dispatch({
+        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+      });
+
+      deleteSource(source.id).then(
+        response => SourceListItem.notifyDeleteStatus(source, false, response.value),
+        error => SourceListItem.notifyDeleteStatus(source, true, error)
+      );
+    };
+
+    store.dispatch({
+      type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_SHOW,
+      title: 'Delete Source',
+      heading: (
+        <span>
+          Are you sure you want to delete the source <strong>{source.name}</strong>?
+        </span>
+      ),
+      confirmButtonText: 'Delete',
+      onConfirm
+    });
+  };
+
+  onEdit = source => {
+    store.dispatch({
+      type: reduxTypes.sources.EDIT_SOURCE_SHOW,
+      source
+    });
+  };
+
+  onScan = source => {
+    store.dispatch({
+      type: reduxTypes.scans.EDIT_SCAN_SHOW,
+      sources: [source]
+    });
+  };
+
   expandType() {
     const { item, expandedSources } = this.props;
 
     return _get(_find(expandedSources, nextExpanded => nextExpanded.id === item.id), 'expandType');
   }
 
+  /*
   closeExpandIfNoData(expandType) {
     const { item } = this.props;
 
@@ -86,6 +161,7 @@ class SourceListItem extends React.Component {
       }
     }
   }
+  */
 
   renderSourceType() {
     const { item } = this.props;
@@ -99,21 +175,21 @@ class SourceListItem extends React.Component {
   }
 
   renderActions() {
-    const { item, onEdit, onDelete, onScan } = this.props;
+    const { item } = this.props;
 
     return (
       <span>
         <ToolTip tooltip="Edit">
-          <Button onClick={() => onEdit(item)} bsStyle="link" key="editButton">
+          <Button onClick={() => this.onEdit(item)} bsStyle="link" key="editButton">
             <Icon type="pf" name="edit" aria-label="Edit" />
           </Button>
         </ToolTip>
         <ToolTip tooltip="Delete">
-          <Button onClick={() => onDelete(item)} bsStyle="link" key="removeButton">
+          <Button onClick={() => this.onDelete(item)} bsStyle="link" key="removeButton">
             <Icon type="pf" name="delete" aria-label="Delete" />
           </Button>
         </ToolTip>
-        <Button onClick={() => onScan(item)} key="scanButton">
+        <Button onClick={() => this.onScan(item)} key="scanButton">
           Scan
         </Button>
       </span>
@@ -378,23 +454,31 @@ class SourceListItem extends React.Component {
 }
 
 SourceListItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  lastRefresh: PropTypes.number,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  onScan: PropTypes.func,
-  selectedSources: PropTypes.array,
-  expandedSources: PropTypes.array
+  deleteSource: PropTypes.func,
+  expandedSources: PropTypes.array,
+  item: PropTypes.shape({
+    connection: PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    }),
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    hosts: PropTypes.array,
+    name: PropTypes.string,
+    source_type: PropTypes.string
+  }).isRequired,
+  // lastRefresh: PropTypes.number,
+  selectedSources: PropTypes.array
 };
 
 SourceListItem.defaultProps = {
-  lastRefresh: 0,
-  onEdit: helpers.noop,
-  onDelete: helpers.noop,
-  onScan: helpers.noop,
-  selectedSources: [],
-  expandedSources: []
+  deleteSource: helpers.noop,
+  expandedSources: [],
+  // lastRefresh: 0,
+  selectedSources: []
 };
+
+const mapDispatchToProps = dispatch => ({
+  deleteSource: id => dispatch(reduxActions.sources.deleteSource(id))
+});
 
 const mapStateToProps = state =>
   Object.assign({
@@ -402,6 +486,9 @@ const mapStateToProps = state =>
     expandedSources: state.viewOptions[reduxTypes.view.SOURCES_VIEW].expandedItems
   });
 
-const ConnectedSourceListItem = connect(mapStateToProps)(SourceListItem);
+const ConnectedSourceListItem = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SourceListItem);
 
 export { ConnectedSourceListItem as default, ConnectedSourceListItem, SourceListItem };

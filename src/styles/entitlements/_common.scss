@@ -1,4 +1,9 @@
 .quipucords {
+  .label abbr {
+    border-bottom: none;
+    text-decoration: none;
+  }
+
   .fadein {
     opacity:0;
     animation:fadein .25s ease-in forwards;
