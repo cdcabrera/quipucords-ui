@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Form, Icon, Spinner } from 'patternfly-react';
+import { Alert, Button, Form, Icon, Modal, Spinner } from 'patternfly-react';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { FormState } from '../formState/formState';
 import { FormField, fieldValidation } from '../formField/formField';
@@ -10,9 +10,30 @@ import apiTypes from '../../constants/apiConstants';
 
 class CreateScanDialog extends React.Component {
   onClose = () => {
-    store.dispatch({
-      type: reduxTypes.scans.EDIT_SCAN_HIDE
-    });
+    const { fulfilled } = this.props;
+
+    const closeDialog = () => {
+      store.dispatch({
+        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+      });
+
+      store.dispatch({
+        type: reduxTypes.scans.EDIT_SCAN_HIDE
+      });
+    };
+
+    if (fulfilled) {
+      closeDialog();
+    } else {
+      store.dispatch({
+        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_SHOW,
+        title: 'Cancel Add Scan',
+        heading: `Are you sure you want to cancel this scan?`,
+        cancelButtonText: 'No',
+        confirmButtonText: 'Yes',
+        onConfirm: closeDialog
+      });
+    }
   };
 
   onValidateForm = ({ checked = {}, values = {} }) => {
@@ -268,6 +289,20 @@ class CreateScanDialog extends React.Component {
     );
   }
 
+  renderErrorMessage() {
+    const { error, errorMessage, submitErrorMessages } = this.props;
+
+    if (error && !Object.keys(submitErrorMessages).length) {
+      return (
+        <Alert type="error">
+          <strong>Error</strong> {errorMessage}
+        </Alert>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     const { pending, show, sources } = this.props;
 
@@ -278,7 +313,7 @@ class CreateScanDialog extends React.Component {
     return (
       <Modal show={show} onHide={this.onClose}>
         <FormState
-          validateOnMount
+          validateOnMount={false}
           setValues={{
             displayScanDirectories: '',
             displayScanSources: sources.map(item => item.name).join(', '),
@@ -309,6 +344,7 @@ class CreateScanDialog extends React.Component {
                     <div className="text-center">Scan updating...</div>
                   </React.Fragment>
                 )}
+                {!pending && this.renderErrorMessage(options)}
                 {!pending && this.renderNameSources(options)}
                 {!pending && this.renderConcurrentScans(options)}
                 {!pending && this.renderAdditionalProducts(options)}
@@ -331,9 +367,12 @@ class CreateScanDialog extends React.Component {
 
 CreateScanDialog.propTypes = {
   addScan: PropTypes.func,
+  error: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  fulfilled: PropTypes.bool,
   pending: PropTypes.bool,
   show: PropTypes.bool.isRequired,
-  sources: PropTypes.array,
+  sources: PropTypes.array.isRequired,
   startScan: PropTypes.func,
   submitErrorMessages: PropTypes.shape({
     scanConcurrency: PropTypes.string,
@@ -345,8 +384,10 @@ CreateScanDialog.propTypes = {
 
 CreateScanDialog.defaultProps = {
   addScan: helpers.noop,
+  error: false,
+  errorMessage: null,
+  fulfilled: false,
   pending: false,
-  sources: [],
   startScan: helpers.noop,
   submitErrorMessages: {}
 };
