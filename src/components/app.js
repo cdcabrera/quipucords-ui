@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Alert, EmptyState, Modal, VerticalNav } from 'patternfly-react';
 import _startsWith from 'lodash/startsWith';
-import { routes } from '../routes';
+import { routes } from './content/routes';
 import { connect, reduxActions, reduxTypes, store } from '../redux';
 import helpers from '../common/helpers';
 import AboutModal from './aboutModal/aboutModal';

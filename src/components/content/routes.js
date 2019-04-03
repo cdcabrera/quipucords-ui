@@ -1,6 +1,6 @@
-import Scans from './components/scans/scans';
-import Sources from './components/sources/sources';
-import Credentials from './components/credentials/credentials';
+import Scans from '../scans/scans';
+import Sources from '../sources/sources';
+import Credentials from '../credentials/credentials';
 
 const baseName = '/client';
 
