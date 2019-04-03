@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Content from '../content';
+import Router from '../router';
 
-describe('ConfirmationModal Component', () => {
+describe('Router Component', () => {
   it('should shallow render a basic component', () => {
-    const wrapper = shallow(<Content />);
+    const wrapper = shallow(<Router />);
 
     expect(wrapper).toMatchSnapshot();
   });
