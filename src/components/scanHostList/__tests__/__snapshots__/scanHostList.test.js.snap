@@ -22,7 +22,7 @@ exports[`ScanHostList Component should render a connected component: connected 1
 </ScanHostList>
 `;
 
-exports[`ScanHostList Component should render a non-connected component error: non-connected error 1`] = `
+exports[`ScanHostList Component should render a non-connected component error: error 1`] = `
 <EmptyState
   className=""
 >
@@ -44,7 +44,7 @@ exports[`ScanHostList Component should render a non-connected component error: n
 </EmptyState>
 `;
 
-exports[`ScanHostList Component should render a non-connected component pending: non-connected pending 1`] = `
+exports[`ScanHostList Component should render a non-connected component pending: pending 1`] = `
 <EmptyState
   className=""
 >
