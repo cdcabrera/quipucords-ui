@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ScansReducer should handle all defined error types: rejected types GET_SCANS_SOURCES 1`] = `
+exports[`ScansEmptyStateReducer should handle all defined error types: rejected types GET_SCANS_SOURCES 1`] = `
 Object {
   "result": Object {
     "error": true,
@@ -13,7 +13,7 @@ Object {
 }
 `;
 
-exports[`ScansReducer should handle all defined fulfilled types: fulfilled types GET_SCANS_SOURCES 1`] = `
+exports[`ScansEmptyStateReducer should handle all defined fulfilled types: fulfilled types GET_SCANS_SOURCES 1`] = `
 Object {
   "result": Object {
     "error": false,
@@ -26,7 +26,7 @@ Object {
 }
 `;
 
-exports[`ScansReducer should handle all defined pending types: pending types GET_SCANS_SOURCES 1`] = `
+exports[`ScansEmptyStateReducer should handle all defined pending types: pending types GET_SCANS_SOURCES 1`] = `
 Object {
   "result": Object {
     "error": false,

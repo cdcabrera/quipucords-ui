@@ -2,7 +2,7 @@ import { scansEmptyStateReducer } from '../scansEmptyStateReducer';
 import { sourcesTypes as types } from '../../constants';
 import helpers from '../../../common/helpers';
 
-describe('ScansReducer', () => {
+describe('ScansEmptyStateReducer', () => {
   it('should return the initial state', () => {
     expect(scansEmptyStateReducer.initialState).toBeDefined();
   });
