@@ -47,7 +47,7 @@ const scansEmptyStateReducer = (state = initialState, action) => {
         },
         {
           state,
-          reset: false
+          initialState
         }
       );
 
