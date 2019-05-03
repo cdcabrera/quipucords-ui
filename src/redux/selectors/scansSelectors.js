@@ -235,8 +235,6 @@ const scanJobsListSelector = createSelector(
       return updatedJob;
     });
 
-    console.log('BEFORE', newScanJobsList);
-
     // cache, concat results, reset if necessary
     if (metaId) {
       previousScansSelectorsCache[metaId] = previousScansSelectorsCache[metaId] || { previous: [] };
@@ -248,8 +246,6 @@ const scanJobsListSelector = createSelector(
       newScanJobsList = [...previousScansSelectorsCache[metaId].previous, ...newScanJobsList];
       previousScansSelectorsCache[metaId].previous = newScanJobsList;
     }
-
-    console.log('AFTER', newScanJobsList);
 
     return {
       ...props,
