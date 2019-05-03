@@ -55,4 +55,25 @@ describe('ScanHostList Component', () => {
 
     expect(component.render()).toMatchSnapshot('non-connected');
   });
+
+  it('should render a non-connected component error', () => {
+    const props = {
+      id: 1,
+      error: true,
+      errorMessage: 'Lorem Ipsum.'
+    };
+
+    const component = shallow(<ScanHostList {...props}>{({ host }) => JSON.stringify(host)}</ScanHostList>);
+    expect(component).toMatchSnapshot('non-connected error');
+  });
+
+  it('should render a non-connected component pending', () => {
+    const props = {
+      id: 1,
+      pending: true
+    };
+
+    const component = shallow(<ScanHostList {...props}>{({ host }) => JSON.stringify(host)}</ScanHostList>);
+    expect(component).toMatchSnapshot('non-connected pending');
+  });
 });
