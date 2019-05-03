@@ -66,7 +66,7 @@ class ScanHostList extends React.Component {
   };
 
   render() {
-    const { children, error, errorMessage, hostsList, id, pending } = this.props;
+    const { children, error, errorMessage, hostsList, pending } = this.props;
 
     if (error) {
       return (
