@@ -5,7 +5,7 @@ import { Button, Checkbox, Grid, Icon, ListView } from 'patternfly-react';
 import _find from 'lodash/find';
 import _get from 'lodash/get';
 import _size from 'lodash/size';
-import * as moment from 'moment';
+import moment from 'moment';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { dictionary } from '../../constants/dictionaryConstants';
