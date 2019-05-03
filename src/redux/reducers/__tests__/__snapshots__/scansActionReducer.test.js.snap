@@ -6,14 +6,7 @@ Object {
     "cancel": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -39,14 +32,7 @@ Object {
     "connection": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -72,14 +58,7 @@ Object {
     "inspection": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -105,14 +84,7 @@ Object {
     "job": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -138,14 +110,7 @@ Object {
     "jobs": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -171,14 +136,7 @@ Object {
     "pause": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -204,14 +162,7 @@ Object {
     "restart": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
@@ -237,14 +188,7 @@ Object {
     "start": Object {
       "1": Object {
         "error": true,
-        "errorMessage": Object {
-          "message": "ERROR",
-          "messages": Object {
-            "detail": "ERROR",
-          },
-          "status": 0,
-          "url": null,
-        },
+        "errorMessage": "ERROR",
         "errorStatus": 0,
         "metaData": Object {},
         "metaId": 1,
