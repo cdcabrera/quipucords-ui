@@ -3,7 +3,6 @@ import configureMockStore from 'redux-mock-store';
 import { mount, shallow } from 'enzyme';
 import { ConnectedScanSourceList, ScanSourceList } from '../scanSourceList';
 
-
 describe('ScanSourceList Component', () => {
   const generateEmptyStore = (obj = {}) => configureMockStore()(obj);
 
@@ -40,6 +39,27 @@ describe('ScanSourceList Component', () => {
     const component = mount(<ScanSourceList {...props} />);
 
     expect(component.render()).toMatchSnapshot('non-connected');
+  });
+
+  it('should render a non-connected component error', () => {
+    const props = {
+      id: 1,
+      error: true,
+      errorMessage: 'Lorem Ipsum.'
+    };
+
+    const component = shallow(<ScanSourceList {...props} />);
+    expect(component).toMatchSnapshot('non-connected error');
+  });
+
+  it('should render a non-connected component pending', () => {
+    const props = {
+      id: 1,
+      pending: true
+    };
+
+    const component = shallow(<ScanSourceList {...props} />);
+    expect(component).toMatchSnapshot('non-connected pending');
   });
 
   it('should handle multiple status messages', () => {
