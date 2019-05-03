@@ -1,18 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ScanHostList Component should shallow render a basic component with an empty state status 1`] = `
-<EmptyState
-  className=""
+exports[`ScanHostList Component should render a connected component: connected 1`] = `
+<ScanHostList
+  error={false}
+  errorMessage={null}
+  filter={
+    Object {
+      "lorem": "ipsum",
+    }
+  }
+  getConnectionScanResults={[Function]}
+  getInspectionScanResults={[Function]}
+  hostsList={Array []}
+  id={1}
+  isMoreResults={true}
+  pending={false}
+  useConnectionResults={true}
+  useInspectionResults={true}
 >
-  <EmptyStateIcon
-    className=""
-    name="warning-triangle-o"
-    type="pf"
-  />
-  <EmptyStateTitle
-    className=""
+  <Component />
+</ScanHostList>
+`;
+
+exports[`ScanHostList Component should render a non-connected component: non-connected 1`] = `
+<div
+  class="host-results"
+>
+  <div
+    class="host-list container-fluid"
   >
-    Successful systems were not available, please refresh.
-  </EmptyStateTitle>
-</EmptyState>
+    {"credentialName":"dolor","jobType":"connection","name":"lorem","sourceId":15,"sourceName":"lorem source"}{"credentialName":"set","jobType":"inspection","name":"ipsum","sourceId":16,"sourceName":"ipsum source"}
+  </div>
+</div>
 `;
