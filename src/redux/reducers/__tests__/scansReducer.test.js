@@ -22,18 +22,7 @@ describe('ScansReducer', () => {
   });
 
   it('should handle all defined error types', () => {
-    const specificTypes = [
-      types.GET_SCANS,
-      types.GET_SCAN,
-      types.GET_SCAN_CONNECTION_RESULTS,
-      types.GET_SCAN_INSPECTION_RESULTS,
-      types.GET_SCAN_JOBS,
-      types.START_SCAN,
-      types.CANCEL_SCAN,
-      types.PAUSE_SCAN,
-      types.RESTART_SCAN,
-      types.DELETE_SCAN
-    ];
+    const specificTypes = [types.GET_SCANS];
 
     specificTypes.forEach(value => {
       const dispatched = {
@@ -58,18 +47,7 @@ describe('ScansReducer', () => {
   });
 
   it('should handle all defined pending types', () => {
-    const specificTypes = [
-      types.GET_SCANS,
-      types.GET_SCAN,
-      types.GET_SCAN_CONNECTION_RESULTS,
-      types.GET_SCAN_INSPECTION_RESULTS,
-      types.GET_SCAN_JOBS,
-      types.START_SCAN,
-      types.CANCEL_SCAN,
-      types.PAUSE_SCAN,
-      types.RESTART_SCAN,
-      types.DELETE_SCAN
-    ];
+    const specificTypes = [types.GET_SCANS];
 
     specificTypes.forEach(value => {
       const dispatched = {
@@ -83,18 +61,7 @@ describe('ScansReducer', () => {
   });
 
   it('should handle all defined fulfilled types', () => {
-    const specificTypes = [
-      types.GET_SCANS,
-      types.GET_SCAN,
-      types.GET_SCAN_CONNECTION_RESULTS,
-      types.GET_SCAN_INSPECTION_RESULTS,
-      types.GET_SCAN_JOBS,
-      types.START_SCAN,
-      types.CANCEL_SCAN,
-      types.PAUSE_SCAN,
-      types.RESTART_SCAN,
-      types.DELETE_SCAN
-    ];
+    const specificTypes = [types.GET_SCANS];
 
     specificTypes.forEach(value => {
       const dispatched = {
