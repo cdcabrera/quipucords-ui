@@ -3,8 +3,7 @@ import configureMockStore from 'redux-mock-store';
 import { mount, shallow } from 'enzyme';
 import { ConnectedMergeReportsDialog, MergeReportsDialog } from '../mergeReportsDialog';
 
-describe('ToastNotificationsList Component', () => {
-  // const generateEmptyStore = () => configureMockStore()({ scans: {} });
+describe('MergeReportsDialog Component', () => {
   const generateEmptyStore = (obj = {}) => configureMockStore()(obj);
 
   it('should render a connected component', () => {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ToastNotificationsList Component should render a connected component: connected 1`] = `
+exports[`MergeReportsDialog Component should render a connected component: connected 1`] = `
 <MergeReportsDialog
   details={false}
   getMergedScanReportDetailsCsv={[Function]}
@@ -26,7 +26,7 @@ exports[`ToastNotificationsList Component should render a connected component: c
 />
 `;
 
-exports[`ToastNotificationsList Component should render a non-connected component, failure and success: non-connected 1`] = `
+exports[`MergeReportsDialog Component should render a non-connected component, failure and success: non-connected 1`] = `
 <div
   role="dialog"
 >
