@@ -4,7 +4,6 @@ exports[`Sources Component should render a connected component with default prop
 <Sources
   error={false}
   errorMessage={null}
-  fulfilled={false}
   getSources={[Function]}
   lastRefresh={0}
   pending={false}
