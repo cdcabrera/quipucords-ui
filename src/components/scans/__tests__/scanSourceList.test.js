@@ -49,7 +49,7 @@ describe('ScanSourceList Component', () => {
     };
 
     const component = shallow(<ScanSourceList {...props} />);
-    expect(component).toMatchSnapshot('non-connected error');
+    expect(component).toMatchSnapshot('error');
   });
 
   it('should render a non-connected component pending', () => {
@@ -59,7 +59,7 @@ describe('ScanSourceList Component', () => {
     };
 
     const component = shallow(<ScanSourceList {...props} />);
-    expect(component).toMatchSnapshot('non-connected pending');
+    expect(component).toMatchSnapshot('pending');
   });
 
   it('should handle multiple status messages', () => {

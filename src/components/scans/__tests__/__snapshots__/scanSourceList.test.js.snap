@@ -122,7 +122,7 @@ exports[`ScanSourceList Component should render a connected component: connected
 />
 `;
 
-exports[`ScanSourceList Component should render a non-connected component error: non-connected error 1`] = `
+exports[`ScanSourceList Component should render a non-connected component error: error 1`] = `
 <EmptyState
   className=""
 >
@@ -144,7 +144,7 @@ exports[`ScanSourceList Component should render a non-connected component error:
 </EmptyState>
 `;
 
-exports[`ScanSourceList Component should render a non-connected component pending: non-connected pending 1`] = `
+exports[`ScanSourceList Component should render a non-connected component pending: pending 1`] = `
 <EmptyState
   className=""
 >
