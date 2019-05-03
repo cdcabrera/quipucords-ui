@@ -88,8 +88,8 @@ class ScanHostList extends React.Component {
     }
 
     return (
-      <div className="host-results" key={`infinite-results-${id}`}>
-        <Grid fluid onScroll={this.onScrollList} className="host-list">
+      <div className="quipucords-infinite-results">
+        <Grid fluid onScroll={this.onScrollList} className="quipucords-infinite-list">
           {hostsList.map(host => children({ host }))}
         </Grid>
       </div>
