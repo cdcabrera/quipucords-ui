@@ -128,11 +128,11 @@ const setStateProp = (prop, data, options) => {
   const { state = {}, initialState = {}, reset = true } = options;
   let obj = { ...state };
 
-  if (prop && !state[prop]) {
+  if (process.env.REACT_APP_ENV === 'development' && prop && !state[prop]) {
     console.error(`Error: Property ${prop} does not exist within the passed state.`, state);
   }
 
-  if (reset && prop && !initialState[prop]) {
+  if (process.env.REACT_APP_ENV === 'development' && reset && prop && !initialState[prop]) {
     console.warn(`Warning: Property ${prop} does not exist within the passed initialState.`, initialState);
   }
 
