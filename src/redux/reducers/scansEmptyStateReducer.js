@@ -42,8 +42,7 @@ const scansEmptyStateReducer = (state = initialState, action) => {
         null,
         {
           fulfilled: true,
-          sourcesExist:
-            ((action.payload.data && action.payload.data[apiTypes.API_RESPONSE_SOURCES_COUNT]) || []).length > 0
+          sourcesExist: (action.payload.data && action.payload.data[apiTypes.API_RESPONSE_SOURCES_COUNT]) > 0
         },
         {
           state,
