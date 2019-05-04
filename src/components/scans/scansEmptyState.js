@@ -53,13 +53,14 @@ class ScansEmptyState extends React.Component {
 ScansEmptyState.propTypes = {
   getScansSources: PropTypes.func,
   history: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  }).isRequired,
+    push: PropTypes.func
+  }),
   sourcesExist: PropTypes.bool
 };
 
 ScansEmptyState.defaultProps = {
   getScansSources: helpers.noop,
+  history: {},
   sourcesExist: false
 };
 

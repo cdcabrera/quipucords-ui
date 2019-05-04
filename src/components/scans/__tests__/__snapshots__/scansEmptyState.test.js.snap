@@ -8,7 +8,7 @@ exports[`ScansEmptyState Component should render a connected component: connecte
 
 exports[`ScansEmptyState Component should render a non-connected component: non-connected do not exist 1`] = `
 <div
-  class="container-fluid"
+  class="fadein container-fluid"
 >
   <div
     class="row"

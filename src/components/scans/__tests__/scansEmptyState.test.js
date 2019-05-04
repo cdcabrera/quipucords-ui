@@ -20,8 +20,7 @@ describe('ScansEmptyState Component', () => {
 
   it('should render a non-connected component', () => {
     const props = {
-      sourcesExist: true,
-      history: { push: helpers.noop }
+      sourcesExist: true
     };
 
     let component = mount(<ScansEmptyState {...props} />);
