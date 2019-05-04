@@ -209,7 +209,7 @@ const scanJobsListSelector = createSelector(
   scanJobs => {
     const { data, metaId, metaQuery, ...props } = scanJobs || {};
 
-    const isMoreResults = _get(scanJobs, apiTypes.API_RESPONSE_JOBS_NEXT) !== null;
+    const isMoreResults = _get(data, apiTypes.API_RESPONSE_JOBS_NEXT) !== null;
 
     // map results to consumable props
     let newScanJobsList = ((data && data[apiTypes.API_RESPONSE_JOBS_RESULTS]) || []).map(job => {
