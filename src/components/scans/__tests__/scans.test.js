@@ -1,6 +1,6 @@
 import React from 'react';
 import configureMockStore from 'redux-mock-store';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { ConnectedScans, Scans } from '../scans';
 import { apiTypes } from '../../../constants/apiConstants';
 
