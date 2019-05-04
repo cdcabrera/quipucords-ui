@@ -4,19 +4,18 @@ import { Button, Icon } from 'patternfly-react';
 import moment from 'moment';
 
 class RefreshTimeButton extends React.Component {
-  constructor(props) {
-    super(props);
+  pollingInterval = null;
 
-    this.pollingInterval = null;
-    this.mounted = false;
-  }
+  mounted = false;
 
   componentDidMount() {
     this.mounted = true;
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.lastRefresh && !this.lastRefresh) {
+  componentDidUpdate() {
+    const { lastRefresh } = this.props;
+
+    if (lastRefresh && !this.lastRefresh) {
       this.startPolling();
     }
   }

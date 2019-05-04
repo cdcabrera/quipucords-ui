@@ -40,6 +40,12 @@ class ScanListItem extends React.Component {
     expandType: null
   };
 
+  onRefresh = () => {
+    store.dispatch({
+      type: reduxTypes.scans.UPDATE_SCANS
+    });
+  };
+
   onItemSelectChange = event => {
     const { checked } = event.target;
     const { scan } = this.props;
@@ -65,37 +71,45 @@ class ScanListItem extends React.Component {
   onStartScan = () => {
     const { scan, startScan } = this.props;
 
-    startScan(scan.id).then(
-      response => ScanListItem.notifyActionStatus(scan, 'started', false, response.value),
-      error => ScanListItem.notifyActionStatus(scan, 'started', true, error)
-    );
+    startScan(scan.id)
+      .then(
+        response => ScanListItem.notifyActionStatus(scan, 'started', false, response.value),
+        error => ScanListItem.notifyActionStatus(scan, 'started', true, error)
+      )
+      .finally(() => this.onRefresh());
   };
 
   onPauseScan = () => {
     const { scan, pauseScan } = this.props;
 
-    pauseScan(scan.mostRecentId).then(
-      response => ScanListItem.notifyActionStatus(scan, 'paused', false, response.value),
-      error => ScanListItem.notifyActionStatus(scan, 'paused', true, error)
-    );
+    pauseScan(scan.mostRecentId)
+      .then(
+        response => ScanListItem.notifyActionStatus(scan, 'paused', false, response.value),
+        error => ScanListItem.notifyActionStatus(scan, 'paused', true, error)
+      )
+      .finally(() => this.onRefresh());
   };
 
   onResumeScan = () => {
     const { scan, restartScan } = this.props;
 
-    restartScan(scan.mostRecentId).then(
-      response => ScanListItem.notifyActionStatus(scan, 'resumed', false, response.value),
-      error => ScanListItem.notifyActionStatus(scan, 'resumed', true, error)
-    );
+    restartScan(scan.mostRecentId)
+      .then(
+        response => ScanListItem.notifyActionStatus(scan, 'resumed', false, response.value),
+        error => ScanListItem.notifyActionStatus(scan, 'resumed', true, error)
+      )
+      .finally(() => this.onRefresh());
   };
 
   onCancelScan = () => {
     const { scan, cancelScan } = this.props;
 
-    cancelScan(scan.mostRecentId).then(
-      response => ScanListItem.notifyActionStatus(scan, 'canceled', false, response.value),
-      error => ScanListItem.notifyActionStatus(scan, 'canceled', true, error)
-    );
+    cancelScan(scan.mostRecentId)
+      .then(
+        response => ScanListItem.notifyActionStatus(scan, 'canceled', false, response.value),
+        error => ScanListItem.notifyActionStatus(scan, 'canceled', true, error)
+      )
+      .finally(() => this.onRefresh());
   };
 
   isSelected() {
