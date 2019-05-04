@@ -1,9 +1,52 @@
 import { reduxHelpers } from '../reduxHelpers';
-import { helpers } from '../helpers';
 
 describe('ReduxHelpers', () => {
   it('should have specific functions', () => {
     expect(reduxHelpers).toMatchSnapshot('reduxHelpers');
+  });
+
+  it('should support generated strings and flags', () => {
+    expect(reduxHelpers.FULFILLED_ACTION('lorem')).toBe(`lorem_FULFILLED`);
+    expect(reduxHelpers.PENDING_ACTION('lorem')).toBe(`lorem_PENDING`);
+    expect(reduxHelpers.REJECTED_ACTION('lorem')).toBe(`lorem_REJECTED`);
+  });
+
+  it('should update a state object', () => {
+    const initialState = {
+      lorem: false,
+      ipsum: true
+    };
+
+    const state = {};
+    state.ipsum = false;
+
+    expect(
+      reduxHelpers.setStateProp(
+        null,
+        {
+          lorem: true
+        },
+        {
+          state,
+          initialState
+        }
+      )
+    ).toMatchSnapshot('reset state object');
+
+    state.ipsum = false;
+
+    expect(
+      reduxHelpers.setStateProp(
+        null,
+        {
+          lorem: true
+        },
+        {
+          state,
+          reset: false
+        }
+      )
+    ).toMatchSnapshot('dont reset state object');
   });
 
   it('should generate a standard reducer from promise actions', () => {
@@ -27,7 +70,7 @@ describe('ReduxHelpers', () => {
       reduxHelpers.generatedPromiseActionReducer(
         [{ ref: 'lorem', type: 'LOREM' }, { ref: 'ipsum', type: 'IPSUM' }],
         state,
-        { ...action, type: helpers.FULFILLED_ACTION('LOREM') }
+        { ...action, type: reduxHelpers.FULFILLED_ACTION('LOREM') }
       )
     ).toMatchSnapshot('generatedPromiseActionReducer fulfilled');
 
@@ -35,7 +78,7 @@ describe('ReduxHelpers', () => {
       reduxHelpers.generatedPromiseActionReducer(
         [{ ref: 'lorem', type: 'LOREM' }, { ref: 'ipsum', type: 'IPSUM' }],
         state,
-        { ...action, type: helpers.REJECTED_ACTION('LOREM') }
+        { ...action, type: reduxHelpers.REJECTED_ACTION('LOREM') }
       )
     ).toMatchSnapshot('generatedPromiseActionReducer rejected');
 
@@ -43,7 +86,7 @@ describe('ReduxHelpers', () => {
       reduxHelpers.generatedPromiseActionReducer(
         [{ ref: 'lorem', type: 'LOREM' }, { ref: 'ipsum', type: 'IPSUM' }],
         state,
-        { ...action, type: helpers.PENDING_ACTION('LOREM') }
+        { ...action, type: reduxHelpers.PENDING_ACTION('LOREM') }
       )
     ).toMatchSnapshot('generatedPromiseActionReducer rejected');
   });
