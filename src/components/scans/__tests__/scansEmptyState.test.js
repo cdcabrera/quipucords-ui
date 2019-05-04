@@ -2,7 +2,6 @@ import React from 'react';
 import configureMockStore from 'redux-mock-store';
 import { mount, shallow } from 'enzyme';
 import { ConnectedScansEmptyState, ScansEmptyState } from '../scansEmptyState';
-import { helpers } from '../../../common/helpers';
 
 describe('ScansEmptyState Component', () => {
   const generateEmptyStore = (obj = {}) => configureMockStore()(obj);
