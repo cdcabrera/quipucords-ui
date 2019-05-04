@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Sources Component should render a connected component with default props: connected 1`] = `
+exports[`Scans Component should render a connected component with default props: connected 1`] = `
 <Scans
   error={false}
   errorMessage={null}
@@ -13,7 +13,7 @@ exports[`Sources Component should render a connected component with default prop
 />
 `;
 
-exports[`Sources Component should render a non-connected component error: error 1`] = `
+exports[`Scans Component should render a non-connected component error: error 1`] = `
 <EmptyState
   className=""
 >
@@ -29,7 +29,7 @@ exports[`Sources Component should render a non-connected component error: error 
 </EmptyState>
 `;
 
-exports[`Sources Component should render a non-connected component pending: pending 1`] = `
+exports[`Scans Component should render a non-connected component pending: pending 1`] = `
 <div
   className="quipucords-view-container"
 >
@@ -80,7 +80,9 @@ exports[`Sources Component should render a non-connected component pending: pend
 </div>
 `;
 
-exports[`Sources Component should render a non-connected component: non-connected 1`] = `
+exports[`Scans Component should render a non-connected component with empty state: empty state 1`] = `<withRouter(Connect(ScansEmptyState)) />`;
+
+exports[`Scans Component should render a non-connected component: non-connected 1`] = `
 <div
   className="quipucords-view-container"
 >

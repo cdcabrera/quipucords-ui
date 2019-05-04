@@ -4,7 +4,7 @@ import { mount, shallow } from 'enzyme';
 import { ConnectedScans, Scans } from '../scans';
 import { apiTypes } from '../../../constants/apiConstants';
 
-describe('Sources Component', () => {
+describe('Scans Component', () => {
   const generateEmptyStore = (obj = {}) => configureMockStore()(obj);
 
   it('should render a connected component with default props', () => {
@@ -53,11 +53,12 @@ describe('Sources Component', () => {
   });
 
   it('should render a non-connected component with empty state', () => {
-    const props = {};
+    const props = {
+      scans: []
+    };
 
-    const component = mount(<Scans {...props} />);
+    const component = shallow(<Scans {...props} />);
 
-    expect(component.find('button').length).toEqual(1);
-    expect(component.render()).toMatchSnapshot('empty state');
+    expect(component).toMatchSnapshot('empty state');
   });
 });
