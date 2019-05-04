@@ -39,7 +39,7 @@ exports[`Sources Component should render a non-connected component pending: pend
 
 exports[`Sources Component should render a non-connected component with empty state: empty state 1`] = `
 <div
-  class="container-fluid"
+  class="fadein container-fluid"
 >
   <div
     class="row"
