@@ -10,8 +10,8 @@ import { apiTypes } from '../../constants/apiConstants';
 const scanHostsListSelectorCache = {};
 
 const scanHostsItem = (state, props) => props;
-const scanHostsConnection = (state, props) => state.scansAction.connection[props.id];
-const scanHostsInspection = (state, props) => state.scansAction.inspection[props.id];
+const scanHostsConnection = (state, props) => state.scans.connection[props.id];
+const scanHostsInspection = (state, props) => state.scans.inspection[props.id];
 
 const scanHostsListSelector = createSelector(
   [scanHostsItem, scanHostsConnection, scanHostsInspection],
@@ -108,7 +108,7 @@ const makeScanHostsListSelector = () => scanHostsListSelector;
 /**
  * Map a job object to consumable prop names and sorted by source
  */
-const scanJobDetail = (state, props) => state.scansAction.job[props.id];
+const scanJobDetail = (state, props) => state.scans.job[props.id];
 
 const scanJobDetailBySourceSelector = createSelector(
   [scanJobDetail],
@@ -202,7 +202,7 @@ const makeScanJobDetailBySourceSelector = () => scanJobDetailBySourceSelector;
  */
 const previousScansSelectorsCache = {};
 
-const previousScanJobs = (state, props) => state.scansAction.jobs[props.id];
+const previousScanJobs = (state, props) => state.scans.jobs[props.id];
 
 const scanJobsListSelector = createSelector(
   [previousScanJobs],
@@ -335,6 +335,46 @@ const scanListItemSelector = createSelector(
 
 const makeScanListItemSelector = () => scanListItemSelector;
 
+/**
+ * Return a check for sources existing
+ */
+const scansEmptyState = state => state.scans.empty;
+
+const scansEmptyStateSelector = createSelector(
+  [scansEmptyState],
+  empty => {
+    const sourcesExist = (empty.data && empty.data[apiTypes.API_RESPONSE_SOURCES_COUNT]) > 0;
+
+    return {
+      ...empty,
+      sourcesExist
+    };
+  }
+);
+
+const makeScansEmptyStateSelector = () => scansEmptyStateSelector;
+
+/**
+ * Return a list of scan objects
+ */
+const scansView = state => state.scans.view;
+
+const scansViewSelector = createSelector(
+  [scansView],
+  view => {
+    const lastRefresh = (view.date && new Date(view.date).getTime()) || 0;
+    const scans = (view.data && view.data[apiTypes.API_RESPONSE_SCANS_RESULTS]) || [];
+
+    return {
+      ...view,
+      lastRefresh,
+      scans
+    };
+  }
+);
+
+const makeScansViewSelector = () => scansViewSelector;
+
 const scansSelectors = {
   scanHostsList: scanHostsListSelector,
   makeScanHostsList: makeScanHostsListSelector,
@@ -343,7 +383,11 @@ const scansSelectors = {
   scanJobsList: scanJobsListSelector,
   makeScanJobsList: makeScanJobsListSelector,
   scanListItem: scanListItemSelector,
-  makeScanListItem: makeScanListItemSelector
+  makeScanListItem: makeScanListItemSelector,
+  scansEmptyState: scansEmptyStateSelector,
+  makeScansEmptyState: makeScansEmptyStateSelector,
+  scansView: scansViewSelector,
+  makeScansView: makeScansViewSelector
 };
 
 export {
@@ -356,5 +400,9 @@ export {
   scanJobsListSelector,
   makeScanJobsListSelector,
   scanListItemSelector,
-  makeScanListItemSelector
+  makeScanListItemSelector,
+  scansEmptyStateSelector,
+  makeScansEmptyStateSelector,
+  scansViewSelector,
+  makeScansViewSelector
 };
