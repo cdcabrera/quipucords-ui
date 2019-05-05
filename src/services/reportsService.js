@@ -82,7 +82,7 @@ const mergeScanReports = (data = {}) =>
   axios(
     serviceConfig({
       method: 'put',
-      url: process.env.REACT_APP_REPORTS_SERVICE_MERGE,
+      url: process.env.REACT_APP_REPORTS_SERVICE_MERGE_ASYNC,
       data
     })
   );
