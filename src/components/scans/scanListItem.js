@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { Button, Checkbox, Grid, Icon, ListView } from 'patternfly-react';
 import _find from 'lodash/find';
-import moment from 'moment';
 import { connect, reduxActions, reduxSelectors, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import Tooltip from '../tooltip/tooltip';
