@@ -142,13 +142,7 @@ class ScanListItem extends React.Component {
         {icon}
         <div className="scan-status-text">
           <div>{(scan.mostRecentStatusMessage && scan.mostRecentStatusMessage) || 'Scan created'}</div>
-          <div className="text-muted">
-            {scanTime &&
-              moment
-                .utc(scanTime)
-                .utcOffset(moment().utcOffset())
-                .fromNow()}
-          </div>
+          <div className="text-muted">{scanTime && helpers.getTimeDisplayHowLongAgo(scanTime)}</div>
         </div>
       </div>
     );
@@ -215,29 +209,31 @@ class ScanListItem extends React.Component {
 
   renderActions() {
     const { scan } = this.props;
-    const downloadActions = scan.mostRecentReportId && (
-      <ScanDownload downloadId={scan.mostRecentReportId} title="Download" pullRight />
-    );
+    const downloadActions = scan.mostRecentReportId && <ScanDownload downloadId={scan.mostRecentReportId} />;
 
     switch (scan.mostRecentStatus) {
       case 'completed':
         return (
-          <Tooltip key="startTip" tooltip="Run Scan">
-            <Button key="restartButton" onClick={() => this.onStartScan(scan)} bsStyle="link">
-              <Icon type="pf" name="spinner2" aria-label="Start" />
-            </Button>
+          <React.Fragment>
+            <Tooltip tooltip="Run Scan">
+              <Button onClick={() => this.onStartScan(scan)} bsStyle="link">
+                <Icon type="pf" name="spinner2" aria-label="Start" />
+              </Button>
+            </Tooltip>
             {downloadActions}
-          </Tooltip>
+          </React.Fragment>
         );
       case 'failed':
       case 'canceled':
         return (
-          <Tooltip tooltip="Retry Scan">
-            <Button key="restartButton" onClick={() => this.onStartScan(scan)} bsStyle="link">
-              <Icon type="pf" name="spinner2" aria-label="Start" />
-            </Button>
+          <React.Fragment>
+            <Tooltip tooltip="Retry Scan">
+              <Button onClick={() => this.onStartScan(scan)} bsStyle="link">
+                <Icon type="pf" name="spinner2" aria-label="Start" />
+              </Button>
+            </Tooltip>
             {downloadActions}
-          </Tooltip>
+          </React.Fragment>
         );
       case 'created':
       case 'running':
@@ -258,30 +254,36 @@ class ScanListItem extends React.Component {
         );
       case 'paused':
         return (
-          <Tooltip tooltip="Resume Scan">
-            <Button key="resumeButton" onClick={this.onResumeScan} bsStyle="link">
-              <Icon type="fa" name="play" aria-label="Resume" />
-            </Button>
+          <React.Fragment>
+            <Tooltip tooltip="Resume Scan">
+              <Button onClick={this.onResumeScan} bsStyle="link">
+                <Icon type="fa" name="play" aria-label="Resume" />
+              </Button>
+            </Tooltip>
             {downloadActions}
-          </Tooltip>
+          </React.Fragment>
         );
       case 'pending':
         return (
-          <Tooltip key="stop" tooltip="Cancel Scan">
-            <Button onClick={this.onCancelScan} bsStyle="link">
-              <Icon type="fa" name="stop" aria-label="Stop" />
-            </Button>
+          <React.Fragment>
+            <Tooltip key="stop" tooltip="Cancel Scan">
+              <Button onClick={this.onCancelScan} bsStyle="link">
+                <Icon type="fa" name="stop" aria-label="Stop" />
+              </Button>
+            </Tooltip>
             {downloadActions}
-          </Tooltip>
+          </React.Fragment>
         );
       default:
         return (
-          <Tooltip tooltip="Start Scan">
-            <Button onClick={this.onStartScan} bsStyle="link">
-              <Icon type="fa" name="play" aria-label="Start" />
-            </Button>
+          <React.Fragment>
+            <Tooltip tooltip="Start Scan">
+              <Button onClick={this.onStartScan} bsStyle="link">
+                <Icon type="fa" name="play" aria-label="Start" />
+              </Button>
+            </Tooltip>
             {downloadActions}
-          </Tooltip>
+          </React.Fragment>
         );
     }
   }
@@ -333,7 +335,7 @@ class ScanListItem extends React.Component {
       case 'sources':
         return <ScanSourceList key={`sources-${lastRefresh}`} id={scan.id} />;
       case 'jobs':
-        return <ScanJobsList key={`jobs-${lastRefresh}`} id={scan.id} />;
+        return <ScanJobsList key={`jobs-${lastRefresh}`} id={scan.id} mostRecentId={scan.mostRecentId} />;
       default:
         return null;
     }

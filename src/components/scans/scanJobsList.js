@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { EmptyState, Grid, Icon, Spinner } from 'patternfly-react';
-import moment from 'moment';
 import { connect, reduxActions, reduxSelectors } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { dictionary } from '../../constants/dictionaryConstants';
@@ -52,7 +51,7 @@ class ScanJobsList extends React.Component {
   };
 
   render() {
-    const { error, errorMessage, pending, scanJobsList } = this.props;
+    const { error, errorMessage, mostRecentId, pending, scanJobsList } = this.props;
 
     if (error) {
       return (
@@ -85,31 +84,33 @@ class ScanJobsList extends React.Component {
     return (
       <div className="quipucords-infinite-results">
         <Grid fluid onScroll={this.onScrollList} className="quipucords-infinite-list">
-          {scanJobsList.map(item => (
-            <Grid.Row className="fadein" key={item.id}>
-              <Grid.Col xs={6} sm={3}>
-                <Icon {...iconProps(item.status)} />
-                {dictionary[item.status] || ''}
-              </Grid.Col>
-              <Grid.Col xs={6} sm={3}>
-                {moment
-                  .utc(item.status === 'pending' || item.status === 'running' ? item.startTime : item.endTime)
-                  .utcOffset(moment().utcOffset())
-                  .fromNow()}
-              </Grid.Col>
-              <Grid.Col xs={3} sm={2}>
-                <Icon className="scan-job-status-icon systems" type="pf" name="ok" />
-                {item.systemsScanned}
-              </Grid.Col>
-              <Grid.Col xs={3} sm={2}>
-                <Icon className="scan-job-status-icon systems" type="pf" name="error-circle-o" />
-                {item.systemsFailed}
-              </Grid.Col>
-              <Grid.Col xs={3} sm={2}>
-                {item.reportId > 0 && <ScanDownload pullRight downloadId={item.reportId} />}
-              </Grid.Col>
-            </Grid.Row>
-          ))}
+          {scanJobsList.map(
+            item =>
+              mostRecentId !== item.id && (
+                <Grid.Row className="fadein" key={item.id}>
+                  <Grid.Col xs={6} sm={3}>
+                    <Icon {...iconProps(item.status)} />
+                    {dictionary[item.status] || ''}
+                  </Grid.Col>
+                  <Grid.Col xs={6} sm={3}>
+                    {helpers.getTimeDisplayHowLongAgo(
+                      item.status === 'pending' || item.status === 'running' ? item.startTime : item.endTime
+                    )}
+                  </Grid.Col>
+                  <Grid.Col xs={3} sm={2}>
+                    <Icon className="scan-job-status-icon systems" type="pf" name="ok" />
+                    {item.systemsScanned}
+                  </Grid.Col>
+                  <Grid.Col xs={3} sm={2}>
+                    <Icon className="scan-job-status-icon systems" type="pf" name="error-circle-o" />
+                    {item.systemsFailed}
+                  </Grid.Col>
+                  <Grid.Col xs={3} sm={2}>
+                    {item.reportId > 0 && <ScanDownload downloadId={item.reportId} />}
+                  </Grid.Col>
+                </Grid.Row>
+              )
+          )}
         </Grid>
       </div>
     );
@@ -121,8 +122,9 @@ ScanJobsList.propTypes = {
   errorMessage: PropTypes.string,
   getScanJobs: PropTypes.func,
   isMoreResults: PropTypes.bool,
-  pending: PropTypes.bool,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  mostRecentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  pending: PropTypes.bool,
   scanJobsList: PropTypes.arrayOf(
     PropTypes.shape({
       endTime: PropTypes.string,
@@ -141,6 +143,7 @@ ScanJobsList.defaultProps = {
   errorMessage: null,
   getScanJobs: helpers.noop,
   isMoreResults: false,
+  mostRecentId: null,
   pending: false,
   scanJobsList: []
 };

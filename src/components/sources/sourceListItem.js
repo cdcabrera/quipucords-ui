@@ -366,12 +366,7 @@ class SourceListItem extends React.Component {
         {icon}
         <div className="scan-status-text">
           <div>{scanDescription}</div>
-          <div>
-            {moment
-              .utc(scanTime)
-              .utcOffset(moment().utcOffset())
-              .fromNow()}
-          </div>
+          <div>{helpers.getTimeDisplayHowLongAgo(scanTime)}</div>
         </div>
       </div>
     );
