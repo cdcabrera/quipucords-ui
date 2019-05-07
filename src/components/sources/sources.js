@@ -22,8 +22,11 @@ class Sources extends React.Component {
   componentDidUpdate(prevProps) {
     const { getSources, updateSources, viewOptions } = this.props;
 
-    if (updateSources || !_isEqual(viewOptions, prevProps.viewOptions)) {
-      getSources(helpers.createViewQueryObject(viewOptions));
+    const prevQuery = helpers.createViewQueryObject(prevProps.viewOptions);
+    const nextQuery = helpers.createViewQueryObject(viewOptions);
+
+    if (updateSources || !_isEqual(prevQuery, nextQuery)) {
+      getSources(nextQuery);
     }
   }
 
