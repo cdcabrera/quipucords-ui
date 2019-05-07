@@ -12,6 +12,7 @@ import SourceCredentialsList from './sourceCredentialsList';
 import ScanHostList from '../scanHostList/scanHostList';
 import ToolTip from '../tooltip/tooltip';
 import ListStatusItem from '../listStatusItem/listStatusItem';
+import Poll from '../poll/poll';
 import { apiTypes } from '../../constants/apiConstants';
 
 class SourceListItem extends React.Component {
@@ -21,6 +22,12 @@ class SourceListItem extends React.Component {
 
   state = {
     expandType: null
+  };
+
+  onRefresh = () => {
+    store.dispatch({
+      type: reduxTypes.sources.UPDATE_SOURCES
+    });
   };
 
   onItemSelectChange = () => {
@@ -373,28 +380,37 @@ class SourceListItem extends React.Component {
 
   render() {
     const { expandType } = this.state;
-    const { item, selectedSources } = this.props;
+    const { item, pollInterval, selectedSources } = this.props;
     const selected = SourceListItem.isSelected(item, selectedSources);
+    const sourceStatus = _get(item, ['connection', 'status']);
 
     return (
-      <ListView.Item
+      <Poll
         key={item.id}
-        stacked
-        className={cx({
-          'list-view-pf-top-align': true,
-          active: selected
-        })}
-        checkboxInput={<Checkbox checked={selected} bsClass="" onChange={this.onItemSelectChange} />}
-        actions={this.renderActions()}
-        leftContent={this.renderSourceType()}
-        description={this.renderDescription()}
-        additionalInfo={this.renderStatusItems()}
-        compoundExpand
-        compoundExpanded={expandType !== null}
-        onCloseCompoundExpand={this.onCloseExpand}
+        interval={pollInterval}
+        itemId={`sourceListItem-${item.id}`}
+        itemIdCheck={/created|pending|running/i.test(sourceStatus)}
+        onPoll={this.onRefresh}
       >
-        {this.renderExpansionContents()}
-      </ListView.Item>
+        <ListView.Item
+          key={item.id}
+          stacked
+          className={cx({
+            'list-view-pf-top-align': true,
+            active: selected
+          })}
+          checkboxInput={<Checkbox checked={selected} bsClass="" onChange={this.onItemSelectChange} />}
+          actions={this.renderActions()}
+          leftContent={this.renderSourceType()}
+          description={this.renderDescription()}
+          additionalInfo={this.renderStatusItems()}
+          compoundExpand
+          compoundExpanded={expandType !== null}
+          onCloseCompoundExpand={this.onCloseExpand}
+        >
+          {this.renderExpansionContents()}
+        </ListView.Item>
+      </Poll>
     );
   }
 }
@@ -403,12 +419,14 @@ SourceListItem.propTypes = {
   deleteSource: PropTypes.func,
   item: PropTypes.object.isRequired,
   lastRefresh: PropTypes.number,
+  pollInterval: PropTypes.number,
   selectedSources: PropTypes.array
 };
 
 SourceListItem.defaultProps = {
   deleteSource: helpers.noop,
   lastRefresh: 0,
+  pollInterval: 120000,
   selectedSources: []
 };
 

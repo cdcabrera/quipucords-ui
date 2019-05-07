@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Button, EmptyState, ListView, Modal, Spinner } from 'patternfly-react';
+import _isEqual from 'lodash/isEqual';
 import _size from 'lodash/size';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import helpers from '../../common/helpers';
@@ -18,10 +19,10 @@ class Sources extends React.Component {
     getSources(helpers.createViewQueryObject(viewOptions));
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { getSources, updateSources, viewOptions } = this.props;
 
-    if (updateSources) {
+    if (updateSources || !_isEqual(viewOptions, prevProps.viewOptions)) {
       getSources(helpers.createViewQueryObject(viewOptions));
     }
   }
