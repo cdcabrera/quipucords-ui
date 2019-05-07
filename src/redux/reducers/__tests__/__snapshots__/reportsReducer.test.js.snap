@@ -3,18 +3,15 @@
 exports[`ReportsReducer should handle all defined error types: rejected types GET_MERGE_REPORT 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {
-      "error": true,
-      "errorMessage": "ERROR",
-      "errorStatus": 0,
-      "fulfilled": false,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": false,
-      "update": false,
-    },
-    "reportsDownload": Object {},
+    "error": true,
+    "errorMessage": "ERROR",
+    "errorStatus": 0,
+    "fulfilled": false,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": false,
+    "update": false,
   },
   "type": "GET_MERGE_REPORT_REJECTED",
 }
@@ -23,18 +20,15 @@ Object {
 exports[`ReportsReducer should handle all defined error types: rejected types GET_REPORTS_DOWNLOAD 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {},
-    "reportsDownload": Object {
-      "error": true,
-      "errorMessage": "ERROR",
-      "errorStatus": 0,
-      "fulfilled": false,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": false,
-      "update": false,
-    },
+    "error": true,
+    "errorMessage": "ERROR",
+    "errorStatus": 0,
+    "fulfilled": false,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": false,
+    "update": false,
   },
   "type": "GET_REPORTS_DOWNLOAD_REJECTED",
 }
@@ -43,21 +37,18 @@ Object {
 exports[`ReportsReducer should handle all defined fulfilled types: fulfilled types GET_MERGE_REPORT 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {
-      "data": Object {
-        "test": "success",
-      },
-      "date": undefined,
-      "error": false,
-      "errorMessage": "",
-      "fulfilled": true,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": false,
-      "update": false,
+    "data": Object {
+      "test": "success",
     },
-    "reportsDownload": Object {},
+    "date": undefined,
+    "error": false,
+    "errorMessage": "",
+    "fulfilled": true,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": false,
+    "update": false,
   },
   "type": "GET_MERGE_REPORT_FULFILLED",
 }
@@ -66,21 +57,18 @@ Object {
 exports[`ReportsReducer should handle all defined fulfilled types: fulfilled types GET_REPORTS_DOWNLOAD 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {},
-    "reportsDownload": Object {
-      "data": Object {
-        "test": "success",
-      },
-      "date": undefined,
-      "error": false,
-      "errorMessage": "",
-      "fulfilled": true,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": false,
-      "update": false,
+    "data": Object {
+      "test": "success",
     },
+    "date": undefined,
+    "error": false,
+    "errorMessage": "",
+    "fulfilled": true,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": false,
+    "update": false,
   },
   "type": "GET_REPORTS_DOWNLOAD_FULFILLED",
 }
@@ -89,17 +77,14 @@ Object {
 exports[`ReportsReducer should handle all defined pending types: pending types GET_MERGE_REPORT 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {
-      "error": false,
-      "errorMessage": "",
-      "fulfilled": false,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": true,
-      "update": false,
-    },
-    "reportsDownload": Object {},
+    "error": false,
+    "errorMessage": "",
+    "fulfilled": false,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": true,
+    "update": false,
   },
   "type": "GET_MERGE_REPORT_PENDING",
 }
@@ -108,17 +93,14 @@ Object {
 exports[`ReportsReducer should handle all defined pending types: pending types GET_REPORTS_DOWNLOAD 1`] = `
 Object {
   "result": Object {
-    "mergeReport": Object {},
-    "reportsDownload": Object {
-      "error": false,
-      "errorMessage": "",
-      "fulfilled": false,
-      "metaData": undefined,
-      "metaId": undefined,
-      "metaQuery": undefined,
-      "pending": true,
-      "update": false,
-    },
+    "error": false,
+    "errorMessage": "",
+    "fulfilled": false,
+    "metaData": undefined,
+    "metaId": undefined,
+    "metaQuery": undefined,
+    "pending": true,
+    "update": false,
   },
   "type": "GET_REPORTS_DOWNLOAD_PENDING",
 }

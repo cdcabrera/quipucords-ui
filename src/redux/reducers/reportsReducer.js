@@ -1,17 +1,11 @@
 import { reportsTypes } from '../constants';
 import { reduxHelpers } from '../common/reduxHelpers';
 
-const initialState = {
-  mergeReport: {},
-  reportsDownload: {}
-};
+const initialState = {};
 
 const reportsReducer = (state = initialState, action) =>
   reduxHelpers.generatedPromiseActionReducer(
-    [
-      { ref: 'reportsDownload', type: reportsTypes.GET_REPORTS_DOWNLOAD },
-      { ref: 'mergeReport', type: reportsTypes.GET_MERGE_REPORT }
-    ],
+    [reportsTypes.GET_REPORTS_DOWNLOAD, reportsTypes.GET_MERGE_REPORT],
     state,
     action
   );
