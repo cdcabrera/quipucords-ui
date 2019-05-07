@@ -115,4 +115,46 @@ describe('ReduxHelpers', () => {
       )
     ).toMatchSnapshot('generatedPromiseActionReducer pending no meta data');
   });
+
+  it('should combine multiple reducer action types', () => {
+    const state = {
+      loremIpsum: {},
+      ipsum: {}
+    };
+
+    const action = {
+      meta: {
+        id: 'lorem-id'
+      },
+      payload: {
+        data: {
+          test: 'test'
+        }
+      }
+    };
+
+    expect(
+      reduxHelpers.generatedPromiseActionReducer(
+        [{ ref: 'loremIpsum', type: ['LOREM', 'IPSUM'] }, { ref: 'ipsum', type: 'IPSUM' }],
+        state,
+        { ...action, type: reduxHelpers.FULFILLED_ACTION('IPSUM') }
+      )
+    ).toMatchSnapshot('combined fulfilled');
+
+    expect(
+      reduxHelpers.generatedPromiseActionReducer(
+        [{ ref: 'loremIpsum', type: ['LOREM', 'IPSUM'] }, { ref: 'ipsum', type: 'IPSUM' }],
+        state,
+        { ...action, type: reduxHelpers.REJECTED_ACTION('IPSUM') }
+      )
+    ).toMatchSnapshot('combined rejected');
+
+    expect(
+      reduxHelpers.generatedPromiseActionReducer(
+        [{ ref: 'loremIpsum', type: ['LOREM', 'IPSUM'] }, { ref: 'ipsum', type: 'IPSUM' }],
+        state,
+        { ...action, type: reduxHelpers.PENDING_ACTION('IPSUM') }
+      )
+    ).toMatchSnapshot('combined pending');
+  });
 });

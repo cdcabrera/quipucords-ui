@@ -47,7 +47,15 @@ const setStateProp = (prop, data, options) => {
 
 const generatedPromiseActionReducer = (types = [], state = {}, action = {}) => {
   const { type } = action;
-  const [whichType] = types.filter(val =>
+  const expandedTypes = [];
+
+  types.forEach(
+    val =>
+      (Array.isArray(val.type) && val.type.forEach(subVal => expandedTypes.push({ ref: val.ref, type: subVal }))) ||
+      expandedTypes.push(val)
+  );
+
+  const [whichType] = expandedTypes.filter(val =>
     new RegExp(
       `^(${REJECTED_ACTION(val.type || val)}|${PENDING_ACTION(val.type || val)}|${FULFILLED_ACTION(val.type || val)})$`
     ).test(type)
