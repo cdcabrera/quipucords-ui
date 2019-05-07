@@ -3,9 +3,8 @@
 exports[`MergeReportsDialog Component should render a connected component: connected 1`] = `
 <MergeReportsDialog
   details={false}
-  getMergedScanReportDetailsCsv={[Function]}
-  getMergedScanReportSummaryCsv={[Function]}
-  mergeScans={[Function]}
+  getReportsDownload={[Function]}
+  mergeReports={[Function]}
   scans={
     Array [
       Object {
@@ -63,7 +62,7 @@ exports[`MergeReportsDialog Component should render a non-connected component, f
           <h4
             class="modal-title"
           >
-            Detailed Merge Report
+            Merge reports
           </h4>
         </div>
         <div
