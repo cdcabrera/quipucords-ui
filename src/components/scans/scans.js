@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Button, DropdownButton, EmptyState, ListView, MenuItem, Modal, Spinner } from 'patternfly-react';
+import { Alert, Button, EmptyState, ListView, Modal, Spinner } from 'patternfly-react';
 import _isEqual from 'lodash/isEqual';
 import _size from 'lodash/size';
 import { connect, reduxActions, reduxSelectors, reduxTypes, store } from '../../redux';
