@@ -11,6 +11,7 @@ import ScanHostList from '../scanHostList/scanHostList';
 import ScanJobsList from './scanJobsList';
 import ScanDownload from './scanDownload';
 import ListStatusItem from '../listStatusItem/listStatusItem';
+import Poll from '../poll/poll';
 import { apiTypes } from '../../constants/apiConstants';
 
 class ScanListItem extends React.Component {
@@ -208,7 +209,10 @@ class ScanListItem extends React.Component {
 
   renderActions() {
     const { scan } = this.props;
-    const downloadActions = scan.mostRecentReportId && <ScanDownload downloadId={scan.mostRecentReportId} />;
+
+    const downloadActions = scan.mostRecentReportId && (
+      <ScanDownload downloadName={scan.name} downloadId={scan.mostRecentReportId} />
+    );
 
     switch (scan.mostRecentStatus) {
       case 'completed':
@@ -342,7 +346,7 @@ class ScanListItem extends React.Component {
 
   render() {
     const { expandType } = this.state;
-    const { scan, selectedScans } = this.props;
+    const { pollInterval, scan, selectedScans } = this.props;
     const selected = this.isSelected(scan, selectedScans);
 
     const classes = cx({
@@ -352,20 +356,28 @@ class ScanListItem extends React.Component {
     });
 
     return (
-      <ListView.Item
+      <Poll
         key={scan.id}
-        className={classes}
-        checkboxInput={<Checkbox checked={selected} bsClass="" onChange={this.onItemSelectChange} />}
-        actions={this.renderActions()}
-        leftContent={<div className="list-item-name">{scan.name}</div>}
-        description={this.renderDescription()}
-        additionalInfo={this.renderStatusItems()}
-        compoundExpand
-        compoundExpanded={expandType !== null}
-        onCloseCompoundExpand={this.onCloseExpand}
+        interval={pollInterval}
+        itemId={`scanListItem-${scan.id}`}
+        itemIdCheck={/pending|running/i.test(scan.mostRecentStatus)}
+        onPoll={this.onRefresh}
       >
-        {this.renderExpansionContents()}
-      </ListView.Item>
+        <ListView.Item
+          key={scan.id}
+          className={classes}
+          checkboxInput={<Checkbox checked={selected} bsClass="" onChange={this.onItemSelectChange} />}
+          actions={this.renderActions()}
+          leftContent={<div className="list-item-name">{scan.name}</div>}
+          description={this.renderDescription()}
+          additionalInfo={this.renderStatusItems()}
+          compoundExpand
+          compoundExpanded={expandType !== null}
+          onCloseCompoundExpand={this.onCloseExpand}
+        >
+          {this.renderExpansionContents()}
+        </ListView.Item>
+      </Poll>
     );
   }
 }
@@ -387,6 +399,7 @@ ScanListItem.propTypes = {
     sourcesTotal: PropTypes.number
   }).isRequired,
   lastRefresh: PropTypes.number,
+  pollInterval: PropTypes.number,
   pauseScan: PropTypes.func,
   restartScan: PropTypes.func,
   selectedScans: PropTypes.array,
@@ -396,6 +409,7 @@ ScanListItem.propTypes = {
 ScanListItem.defaultProps = {
   cancelScan: helpers.noop,
   lastRefresh: 0,
+  pollInterval: 120000,
   pauseScan: helpers.noop,
   restartScan: helpers.noop,
   selectedScans: [],

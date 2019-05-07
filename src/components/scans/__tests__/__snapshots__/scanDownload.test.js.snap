@@ -3,61 +3,28 @@
 exports[`ScanDownload Component should render a connected component: connected 1`] = `
 <ScanDownload
   downloadId={1}
-  getReportDetailsCsv={[Function]}
-  getReportSummaryCsv={[Function]}
-/>
+  downloadName={null}
+  getReportsDownload={[Function]}
+>
+  <Icon
+    name="export"
+    type="pf"
+  />
+</ScanDownload>
 `;
 
 exports[`ScanDownload Component should render a non-connected component: non-connected 1`] = `
-<div
-  class="dropdown btn-group"
->
-  <a
-    aria-expanded="false"
-    aria-haspopup="true"
-    class="btn-link dropdown-toggle"
-    href="#"
+<span>
+  <button
+    class="btn btn-link"
     id="generatedid-"
-    role="button"
+    title="Download"
+    type="button"
   >
     <span
       aria-hidden="true"
-      class="fa fa-download"
+      class="pficon pficon-export"
     />
-     
-    <span
-      class="caret"
-    />
-  </a>
-  <ul
-    aria-labelledby="generatedid-"
-    class="dropdown-menu"
-    role="menu"
-  >
-    <li
-      class=""
-      role="presentation"
-    >
-      <a
-        href="#"
-        role="menuitem"
-        tabindex="-1"
-      >
-        Summary Report
-      </a>
-    </li>
-    <li
-      class=""
-      role="presentation"
-    >
-      <a
-        href="#"
-        role="menuitem"
-        tabindex="-1"
-      >
-        Detailed Report
-      </a>
-    </li>
-  </ul>
-</div>
+  </button>
+</span>
 `;
