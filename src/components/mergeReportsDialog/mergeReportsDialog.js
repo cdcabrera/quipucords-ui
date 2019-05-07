@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Icon } from 'patternfly-react';
+import { Modal, Button, Icon, Spinner } from 'patternfly-react';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { apiTypes } from '../../constants/apiConstants';
@@ -120,7 +120,7 @@ class MergeReportsDialog extends React.Component {
   }
 
   render() {
-    const { show, scans } = this.props;
+    const { pending, show, scans } = this.props;
 
     if (!scans || scans.length === 0) {
       return null;
@@ -161,18 +161,26 @@ class MergeReportsDialog extends React.Component {
           </button>
           <Modal.Title>Merge reports</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="merge-reports-body">
-            <span className="merge-reports-icon">{icon}</span>
-            <span>
-              {heading}
-              <div>
-                {this.renderValidScans()}
-                {this.renderInvalidScans()}
-                {footer}
-              </div>
-            </span>
-          </div>
+        <Modal.Body aria-live="polite">
+          {pending && (
+            <React.Fragment>
+              <Spinner loading size="lg" className="blank-slate-pf-icon" />
+              <div className="text-center">Merging reports...</div>
+            </React.Fragment>
+          )}
+          {!pending && (
+            <div className="merge-reports-body">
+              <span className="merge-reports-icon">{icon}</span>
+              <span>
+                {heading}
+                <div>
+                  {this.renderValidScans()}
+                  {this.renderInvalidScans()}
+                  {footer}
+                </div>
+              </span>
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>{this.renderButtons()}</Modal.Footer>
       </Modal>
@@ -183,6 +191,7 @@ class MergeReportsDialog extends React.Component {
 MergeReportsDialog.propTypes = {
   getReportsDownload: PropTypes.func,
   mergeReports: PropTypes.func,
+  pending: PropTypes.bool,
   scans: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -197,6 +206,7 @@ MergeReportsDialog.propTypes = {
 MergeReportsDialog.defaultProps = {
   getReportsDownload: helpers.noop,
   mergeReports: helpers.noop,
+  pending: false,
   scans: []
 };
 
@@ -206,7 +216,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  ...state.scans.mergeDialog
+  ...state.scans.mergeDialog,
+  ...state.reports
 });
 
 const ConnectedMergeReportsDialog = connect(
