@@ -39,7 +39,7 @@ describe('ReportsActions', () => {
     dispatcher(store.dispatch).then(() => {
       const response = store.getState().reports;
 
-      expect(response.reportsDownload.fulfilled).toEqual(true);
+      expect(response.fulfilled).toEqual(true);
       done();
     });
   });
@@ -51,7 +51,7 @@ describe('ReportsActions', () => {
     dispatcher(store.dispatch).then(() => {
       const response = store.getState().reports;
 
-      expect(response.mergeReport.fulfilled).toEqual(true);
+      expect(response.fulfilled).toEqual(true);
       done();
     });
   });
