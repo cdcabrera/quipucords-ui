@@ -15,7 +15,7 @@ const initialState = {};
 
 const INITAL_VIEW_STATE = {
   currentPage: 1,
-  pageSize: 15,
+  pageSize: 10,
   totalCount: 0,
   totalPages: 0,
   filterType: null,

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PaginationRow, PAGINATION_VIEW } from 'patternfly-react';
+import { Pagination } from '@patternfly/react-core';
 import { reduxTypes, store } from '../../redux';
 
 class ViewPaginationRow extends React.Component {
@@ -45,43 +45,42 @@ class ViewPaginationRow extends React.Component {
     });
   };
 
-  onPerPageSelect = eventKey => {
+  onPerPageSelect = (_e, perPage) => {
     const { viewType } = this.props;
     store.dispatch({
       type: reduxTypes.viewPagination.SET_PER_PAGE,
       viewType,
-      pageSize: eventKey
+      pageSize: perPage
+    });
+  };
+
+  onSetPage = () => {
+    const { viewType } = this.props;
+    store.dispatch({
+      viewType
     });
   };
 
   render() {
-    const perPageOptions = [10, 15, 25, 50, 100];
-    const { currentPage, pageSize, totalCount, totalPages } = this.props;
-
-    const rowPagination = {
-      page: currentPage,
-      perPage: pageSize,
-      perPageOptions
-    };
+    const { currentPage, pageSize, totalCount } = this.props;
 
     const itemsStart = (currentPage - 1) * pageSize + 1;
     const itemsEnd = Math.min(currentPage * pageSize, totalCount);
 
     return (
-      <PaginationRow
+      <Pagination
         className="list-view-pagination-top"
-        viewType={PAGINATION_VIEW.LIST}
-        pagination={rowPagination}
-        amountOfPages={totalPages}
-        pageSizeDropUp={false}
-        pageInputValue={currentPage}
+        perPageComponent="button"
+        perPage={pageSize}
+        page={currentPage}
+        onSetPage={this.onSetPage}
         itemCount={totalCount}
         itemsStart={itemsStart}
         itemsEnd={itemsEnd}
-        onFirstPage={this.onFirstPage}
-        onLastPage={this.onLastPage}
-        onPreviousPage={this.onPreviousPage}
-        onNextPage={this.onNextPage}
+        onFirstClick={this.onFirstPage}
+        onLastClick={this.onLastPage}
+        onPreviousClick={this.onPreviousPage}
+        onNextClick={this.onNextPage}
         onPageInput={this.onPageInput}
         onPerPageSelect={this.onPerPageSelect}
       />
@@ -93,16 +92,14 @@ ViewPaginationRow.propTypes = {
   viewType: PropTypes.string,
   currentPage: PropTypes.number,
   pageSize: PropTypes.number,
-  totalCount: PropTypes.number,
-  totalPages: PropTypes.number
+  totalCount: PropTypes.number
 };
 
 ViewPaginationRow.defaultProps = {
   viewType: null,
   currentPage: 0,
   pageSize: 0,
-  totalCount: 0,
-  totalPages: 0
+  totalCount: 0
 };
 
 export { ViewPaginationRow as default, ViewPaginationRow };
