@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useMount } from 'react-use';
 import { connectRouter, reduxActions } from '../redux';
 import { helpers } from '../common/helpers';
 import I18n from './i18n/i18n';
@@ -14,34 +15,28 @@ import CreateCredentialDialog from './createCredentialDialog/createCredentialDia
 import CreateScanDialog from './createScanDialog/createScanDialog';
 import MergeReportsDialog from './mergeReportsDialog/mergeReportsDialog';
 
-class App extends React.Component {
-  componentDidMount() {
-    const { getLocale } = this.props;
-
+const App = ({ getLocale, locale }) => {
+  useMount(() => {
     getLocale();
-  }
+  });
 
-  render() {
-    const { locale } = this.props;
-
-    return (
-      <I18n locale={(locale && locale.value) || null}>
-        <Authentication>
-          <PageLayout>
-            <Router />
-            <ToastNotificationsList />
-            <ConfirmationModal />
-            <AboutModal />
-            <AddSourceWizard />
-            <CreateCredentialDialog />
-            <CreateScanDialog />
-            <MergeReportsDialog />
-          </PageLayout>
-        </Authentication>
-      </I18n>
-    );
-  }
-}
+  return (
+    <I18n locale={locale?.value || null}>
+      <Authentication>
+        <PageLayout>
+          <Router />
+          <ToastNotificationsList />
+          <ConfirmationModal />
+          <AboutModal />
+          <AddSourceWizard />
+          <CreateCredentialDialog />
+          <CreateScanDialog />
+          <MergeReportsDialog />
+        </PageLayout>
+      </Authentication>
+    </I18n>
+  );
+};
 
 App.propTypes = {
   getLocale: PropTypes.func,
