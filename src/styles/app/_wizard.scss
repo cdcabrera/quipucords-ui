@@ -29,7 +29,7 @@
     @extend .input-group-btn;
   }
 
-  @media (min-width: $screen-sm-min) {
+  @media (min-width: $pf-global--breakpoint--sm) {
     margin: 30px auto;
     padding: 0;
     width: 600px;

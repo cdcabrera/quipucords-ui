@@ -1,19 +1,24 @@
 
-// Variables
+// PF3, Variables
 $font-path:      '~patternfly/dist/fonts/';
 $img-path:       '~patternfly/dist/img/';
 $icon-font-path: '~patternfly/dist/fonts/';
 
-// Include patternfly variables before bootstrap variables
+// PF3, Include patternfly variables before bootstrap variables
 @import 'patternfly/dist/sass/patternfly/variables';
 
 // Bootstrap Core variables and mixins
 @import 'bootstrap-sass/assets/stylesheets/bootstrap/variables';
 @import 'bootstrap-sass/assets/stylesheets/bootstrap/mixins';
 
-// Patternfly Core variables and mixins
+// PF3, Patternfly Core variables and mixins
 @import 'patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
 @import 'patternfly/dist/sass/patternfly/mixins';
+
+// PF4
+// @import '~@patternfly/patternfly/patternfly.scss';
+// @import '~@patternfly/patternfly/patternfly-addons.scss';
+@import '~@patternfly/patternfly/sass-utilities/all';
 
 @import 'app/overrides';
 @import 'app/common';

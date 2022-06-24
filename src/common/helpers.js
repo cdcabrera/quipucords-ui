@@ -527,6 +527,13 @@ const UI_SHORT_NAME = process.env.REACT_APP_UI_SHORT_NAME;
  */
 const UI_VERSION = process.env.REACT_APP_UI_VERSION;
 
+/**
+ * Return a consistent current date.
+ *
+ * @returns {string|Date}
+ */
+const getCurrentDate = () => (TEST_MODE && moment.utc('20220601').toDate()) || moment.utc().toDate();
+
 const helpers = {
   aggregatedError,
   copyClipboard,
@@ -556,7 +563,8 @@ const helpers = {
   UI_NAME,
   UI_SENTENCE_START_NAME,
   UI_SHORT_NAME,
-  UI_VERSION
+  UI_VERSION,
+  getCurrentDate
 };
 
 export { helpers as default, helpers };
