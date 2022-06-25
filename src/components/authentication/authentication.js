@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Alert, EmptyState, Modal } from 'patternfly-react';
+import { Alert, Button } from '@patternfly/react-core';
+import { EmptyState, Modal } from 'patternfly-react';
 import { reduxActions } from '../../redux';
 import helpers from '../../common/helpers';
 import { PageLayout } from '../pageLayout/pageLayout';
+import { translate } from '../i18n/i18n';
 
+/**
+ * Authentication, determine if a user is authorized.
+ */
 class Authentication extends React.Component {
   componentDidMount() {
     const { session, authorizeUser } = this.props;
@@ -16,7 +21,7 @@ class Authentication extends React.Component {
   }
 
   render() {
-    const { children, session } = this.props;
+    const { children, session, t } = this.props;
 
     if (session.authorized) {
       return <React.Fragment>{children}</React.Fragment>;
@@ -27,7 +32,7 @@ class Authentication extends React.Component {
         <Modal bsSize="lg" backdrop={false} show animation={false}>
           <Modal.Body>
             <div className="spinner spinner-xl" />
-            <div className="text-center">Logging in...</div>
+            <div className="text-center">{t('authentication.login', { context: 'pending' })}</div>
           </Modal.Body>
         </Modal>
       );
@@ -36,15 +41,14 @@ class Authentication extends React.Component {
     return (
       <PageLayout>
         <EmptyState className="full-page-blank-slate">
-          <Alert type="error">
+          <Alert variant="danger" title={t('authentication.login', { context: 'error' })}>
             <span>
-              Login error: {session.errorMessage.replace(/\.$/, '')}
+              {session.errorMessage.replace(/\.$/, '')}
               {session.errorMessage && '.'}
-              {!session.authorized && (
-                <React.Fragment>
-                  Please <a href="/login">login</a> to continue.
-                </React.Fragment>
-              )}
+              {!session.authorized &&
+                t('authentication.login-message', { context: 'error' }, [
+                  <Button isInline component="a" variant="link" href="/login" />
+                ])}
             </span>
           </Alert>
         </EmptyState>
@@ -53,6 +57,11 @@ class Authentication extends React.Component {
   }
 }
 
+/**
+ * Prop types
+ *
+ * @type {{authorizeUser: Function, t: Function, children: React.ReactNode, session: object}}
+ */
 Authentication.propTypes = {
   authorizeUser: PropTypes.func,
   children: PropTypes.node.isRequired,
@@ -61,9 +70,16 @@ Authentication.propTypes = {
     error: PropTypes.bool,
     errorMessage: PropTypes.string,
     pending: PropTypes.bool
-  })
+  }),
+  t: PropTypes.func
 };
 
+/**
+ * Default props.
+ *
+ * @type {{authorizeUser: Function, t: translate, session: {authorized: boolean, pending: boolean,
+ *     errorMessage: string, error: boolean}}}
+ */
 Authentication.defaultProps = {
   authorizeUser: helpers.noop,
   session: {
@@ -71,7 +87,8 @@ Authentication.defaultProps = {
     error: false,
     errorMessage: '',
     pending: false
-  }
+  },
+  t: translate
 };
 
 const mapDispatchToProps = dispatch => ({
