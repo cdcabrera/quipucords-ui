@@ -1,26 +1,45 @@
-.quipucords-about-modal-copy-footer {
-  margin-top: -28px;
-  text-align: right;
-}
+.quipucords-about-modal {
+  // background-image: url('../images/about-bg.png');
+  // background-size: 50% auto;
+  // background-position: bottom right;
+  // background-repeat: no-repeat;
 
-.quipucords-about-modal-copy-button {
-  box-shadow: 0 0 3px var(--pf-global--palette--black-300);
-}
-
-.quipucords-about-modal-list {
-  box-shadow: 0 0 2px var(--pf-global--palette--black-300);
-  padding: 10px;
-
-  &:focus,
-  &:hover {
-    box-shadow: 0 0 5px var(--pf-global--palette--black-100);
+  &.pf-c-about-modal-box {
+    // background-color: var(--quipucords--gray-dark:);
   }
 
-  .list-unstyled li {
-    display: flex;
+  .pf-c-about-modal-box__hero {
+    // display: none;
+  }
 
-    strong {
-      white-space: nowrap;
+  .pf-c-content {
+    font-size: inherit;
+  }
+
+  .quipucords-about-modal-copy-footer {
+    // margin-top: -28px;
+    text-align: right;
+  }
+
+  .quipucords-about-modal-copy-button {
+    box-shadow: 0 0 3px var(--pf-global--palette--black-300);
+  }
+
+  .quipucords-about-modal-list {
+    box-shadow: 0 0 2px var(--pf-global--palette--black-300);
+    padding: 10px;
+
+    &:focus,
+    &:hover {
+      box-shadow: 0 0 5px var(--pf-global--palette--black-100);
+    }
+
+    .list-unstyled li {
+      display: flex;
+
+      strong {
+        white-space: nowrap;
+      }
     }
   }
 }
