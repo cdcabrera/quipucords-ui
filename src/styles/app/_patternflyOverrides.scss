@@ -2,3 +2,11 @@
 .cards-pf {
   --pf-global--FontSize--md: 0.8em;
 }
+
+.quipucords-modal {
+  &__hide-backdrop {
+    .pf-c-backdrop {
+      background-color: transparent;
+    }
+  }
+}

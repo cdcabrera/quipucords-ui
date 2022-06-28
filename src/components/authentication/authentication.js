@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Alert, Button } from '@patternfly/react-core';
-import { EmptyState, Modal } from 'patternfly-react';
+import { EmptyState } from 'patternfly-react';
+import { Modal } from '../modal/modal';
 import { reduxActions } from '../../redux';
 import helpers from '../../common/helpers';
 import { PageLayout } from '../pageLayout/pageLayout';
@@ -23,17 +24,15 @@ class Authentication extends React.Component {
   render() {
     const { children, session, t } = this.props;
 
-    if (session.authorized) {
+    if (session.authorized === false) {
       return <React.Fragment>{children}</React.Fragment>;
     }
 
-    if (session.pending) {
+    if (!session.pending) {
       return (
-        <Modal bsSize="lg" backdrop={false} show animation={false}>
-          <Modal.Body>
-            <div className="spinner spinner-xl" />
-            <div className="text-center">{t('authentication.login', { context: 'pending' })}</div>
-          </Modal.Body>
+        <Modal backdrop={false} isOpen disableFocusTrap>
+          <div className="spinner spinner-xl" />
+          <div className="text-center">{t('authentication.login', { context: 'pending' })}</div>
         </Modal>
       );
     }
