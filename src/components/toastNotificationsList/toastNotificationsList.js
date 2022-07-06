@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ToastNotificationList, TimedToastNotification } from 'patternfly-react';
+import { Alert, AlertActionCloseButton, AlertGroup } from '@patternfly/react-core';
 import { connect, reduxTypes, store } from '../../redux';
 import helpers from '../../common/helpers';
 
@@ -20,47 +20,48 @@ class ToastNotificationsList extends React.Component {
     });
   };
 
+  onTimeout = () => {
+    store.dispatch({ type: reduxTypes.toastNotifications.TOAST_CLEAR });
+  };
+
   render() {
-    const { toasts, paused } = this.props;
+    const { toasts, timeout } = this.props;
 
     return (
-      <ToastNotificationList>
+      <AlertGroup isToast className="quipucords-toast-notifications__alert-group">
         {toasts &&
-          toasts.map((toast, index) => {
+          toasts.map(toast => {
             if (!toast.removed) {
               return (
-                <TimedToastNotification
+                <Alert
+                  title={toast.header ?? toast.message}
+                  timeout={timeout}
+                  onTimeout={this.onTimeout}
+                  variant={toast.alertType}
+                  actionClose={<AlertActionCloseButton onClose={() => this.onDismiss(toast)} />}
                   key={helpers.generateId('key')}
-                  toastIndex={index}
-                  type={toast.alertType}
-                  paused={paused}
-                  onDismiss={() => this.onDismiss(toast)}
                   onMouseEnter={this.onHover}
                   onMouseLeave={this.onLeave}
                 >
-                  <span>
-                    <strong>{toast.header}</strong> &nbsp;
-                    {toast.message}
-                  </span>
-                </TimedToastNotification>
+                  {toast.header && toast.message ? toast.message : ''}
+                </Alert>
               );
             }
-
             return null;
           })}
-      </ToastNotificationList>
+      </AlertGroup>
     );
   }
 }
 
 ToastNotificationsList.propTypes = {
   toasts: PropTypes.array,
-  paused: PropTypes.bool
+  timeout: PropTypes.number
 };
 
 ToastNotificationsList.defaultProps = {
   toasts: [],
-  paused: false
+  timeout: 8000
 };
 
 const mapStateToProps = state => ({ ...state.toastNotifications });

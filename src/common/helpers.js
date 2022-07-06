@@ -530,6 +530,13 @@ const UI_SHORT_NAME =
 const UI_VERSION = process.env.REACT_APP_UI_VERSION;
 
 /**
+ * Timeout for toast alert notifications.
+ *
+ * @type {number}
+ */
+const TOAST_NOTIFICATIONS_TIMEOUT = process.env.REACT_APP_TOAST_NOTIFICATIONS_TIMEOUT;
+
+/**
  * Return a consistent current date.
  *
  * @returns {string|Date}
@@ -561,6 +568,7 @@ const helpers = {
   DEV_MODE,
   PROD_MODE,
   TEST_MODE,
+  TOAST_NOTIFICATIONS_TIMEOUT,
   UI_BRAND,
   UI_NAME,
   UI_SENTENCE_START_NAME,

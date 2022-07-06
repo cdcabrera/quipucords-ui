@@ -56,6 +56,14 @@ const toastNotificationsReducer = (state = initialState, action) => {
         }
       };
 
+    case toastNotificationTypes.TOAST_CLEAR:
+      return {
+        ...state,
+        ...{
+          toasts: []
+        }
+      };
+
     default:
       return state;
   }
