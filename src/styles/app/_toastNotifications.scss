@@ -1,6 +1,8 @@
 /* _toastNotifications.scss */
 
-.pf-c-alert-group.quipucords-toast-notifications__alert-group.pf-m-toast {
-    width: fit-content;
+.quipucords-toast-notifications {
+  &__alert-group {
+    width: 25rem !important;
+    max-width: 25rem !important;
   }
-  
+}

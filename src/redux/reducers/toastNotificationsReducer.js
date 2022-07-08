@@ -2,7 +2,6 @@ import { toastNotificationTypes } from '../constants';
 
 const initialState = {
   toasts: [],
-  paused: false,
   displayedToasts: 0
 };
 
@@ -25,12 +24,11 @@ const toastNotificationsReducer = (state = initialState, action) => {
       };
 
     case toastNotificationTypes.TOAST_REMOVE:
-      const displayedToast = state.toasts.find(toast => !toast.removed);
-      let updatedToasts = [];
+      const updatedToasts = [...state.toasts];
+      const updatedToastIndex = state.toasts.indexOf(action.toast);
 
-      if (displayedToast) {
-        updatedToasts = [...state.toasts];
-        updatedToasts[state.toasts.indexOf(action.toast)].removed = true;
+      if (updatedToastIndex > -1) {
+        updatedToasts[updatedToastIndex].removed = true;
       }
 
       return {
@@ -41,26 +39,32 @@ const toastNotificationsReducer = (state = initialState, action) => {
       };
 
     case toastNotificationTypes.TOAST_PAUSE:
+      const updatedPausedToasts = [...state.toasts];
+      const updatedPausedToastIndex = state.toasts.indexOf(action.toast);
+
+      if (updatedPausedToastIndex > -1) {
+        updatedPausedToasts[updatedPausedToastIndex].paused = true;
+      }
+
       return {
         ...state,
         ...{
-          paused: true
+          toasts: updatedPausedToasts
         }
       };
 
     case toastNotificationTypes.TOAST_RESUME:
-      return {
-        ...state,
-        ...{
-          paused: false
-        }
-      };
+      const updatedResumeToasts = [...state.toasts];
+      const updatedResumeToastIndex = state.toasts.indexOf(action.toast);
 
-    case toastNotificationTypes.TOAST_CLEAR:
+      if (updatedResumeToastIndex > -1) {
+        updatedResumeToasts[updatedResumeToastIndex].paused = false;
+      }
+
       return {
         ...state,
         ...{
-          toasts: []
+          toasts: updatedResumeToasts
         }
       };
 

@@ -534,7 +534,7 @@ const UI_VERSION = process.env.REACT_APP_UI_VERSION;
  *
  * @type {number}
  */
-const TOAST_NOTIFICATIONS_TIMEOUT = process.env.REACT_APP_TOAST_NOTIFICATIONS_TIMEOUT;
+const TOAST_NOTIFICATIONS_TIMEOUT = Number.parseInt(process.env.REACT_APP_TOAST_NOTIFICATIONS_TIMEOUT, 10) || undefined;
 
 /**
  * Return a consistent current date.
