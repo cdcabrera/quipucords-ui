@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { MenuItem } from 'patternfly-react';
-import DropdownSelect from '../dropdownSelect';
+import DropdownSelect from '../dropdownSelect.legacy';
 
 describe('DropdownSelect Component', () => {
   it('should render a basic component', () => {

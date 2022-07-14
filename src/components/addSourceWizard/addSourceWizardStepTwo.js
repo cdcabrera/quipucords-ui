@@ -7,7 +7,7 @@ import apiTypes from '../../constants/apiConstants';
 import { dictionary, sslProtocolDictionary } from '../../constants/dictionaryConstants';
 import { FormField, fieldValidation } from '../formField/formField';
 import { FormState } from '../formState/formState';
-import DropdownSelect from '../dropdownSelect/dropdownSelect';
+import DropdownSelect from '../dropdownSelect/dropdownSelect.legacy';
 
 class AddSourceWizardStepTwo extends React.Component {
   static hostValid(value) {
