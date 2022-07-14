@@ -6,7 +6,7 @@ import { Modal } from '../modal/modal';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { authDictionary, dictionary } from '../../constants/dictionaryConstants';
-import DropdownSelect from '../dropdownSelect/dropdownSelect';
+import DropdownSelect from '../dropdownSelect/dropdownSelect.legacy';
 import { translate } from '../i18n/i18n';
 
 class CreateCredentialDialog extends React.Component {
