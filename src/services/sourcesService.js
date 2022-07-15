@@ -1,11 +1,19 @@
 import { serviceCall } from './config';
 
 const addSource = (data = {}, params = {}) =>
-  serviceCall({
-    method: 'post',
-    url: process.env.REACT_APP_SOURCES_SERVICE,
-    data,
-    params
+  new Promise(resolve => {
+    setTimeout(
+      () =>
+        resolve(
+          serviceCall({
+            method: 'post',
+            url: process.env.REACT_APP_SOURCES_SERVICE,
+            data,
+            params
+          })
+        ),
+      6000
+    );
   });
 
 const deleteSource = id =>
@@ -28,10 +36,18 @@ const getSources = (id = '', params = {}) =>
 const getSource = id => getSources(id);
 
 const updateSource = (id, data = {}) =>
-  serviceCall({
-    method: 'put',
-    url: `${process.env.REACT_APP_SOURCES_SERVICE}${id}/`,
-    data
+  new Promise(resolve => {
+    setTimeout(
+      () =>
+        resolve(
+          serviceCall({
+            method: 'put',
+            url: `${process.env.REACT_APP_SOURCES_SERVICE}${id}/`,
+            data
+          })
+        ),
+      6000
+    );
   });
 
 const sourcesService = {
