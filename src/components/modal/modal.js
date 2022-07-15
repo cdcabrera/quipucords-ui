@@ -15,6 +15,7 @@ import { translate } from '../i18n/i18n';
  * @param {string} props.className
  * @param {React.ReactNode|Function} props.header
  * @param {React.ReactNode|Function} props.footer
+ * @param {boolean} props.isContentOnly
  * @param {string} props.position
  * @param {string} props.positionOffset
  * @param {boolean} props.showClose
@@ -30,6 +31,7 @@ const Modal = ({
   className,
   header,
   footer,
+  isContentOnly,
   position,
   positionOffset,
   showClose,
@@ -43,13 +45,13 @@ const Modal = ({
     `quipucords-modal`,
     { 'quipucords-modal__hide-backdrop': backdrop === false },
     { 'quipucords-modal__rcue-width': !variant },
+    { 'quipucords-modal__content-only': isContentOnly === true },
     className
   );
 
   useMount(() => {
     const domElement = document.createElement('div');
     document.body.appendChild(domElement);
-    domElement.className = cssClassName;
     setElement(domElement);
   });
 
@@ -60,6 +62,8 @@ const Modal = ({
   if (!element) {
     return null;
   }
+
+  element.className = cssClassName;
 
   if (header) {
     updatedProps.header = (typeof header === 'function' && header()) || header;
@@ -90,7 +94,8 @@ const Modal = ({
  *
  * @type {{backdrop: boolean, showClose: boolean, t: Function, children: React.ReactNode,
  *     footer: React.ReactNode|Function, variant: string, header: React.ReactNode|Function,
- *     className: string|object, position: string, positionOffset: string, 'aria-label': string}}
+ *     className: string|object, isContentOnly: boolean, position: string, positionOffset: string,
+ *     'aria-label': string}}
  */
 Modal.propTypes = {
   'aria-label': PropTypes.string,
@@ -99,6 +104,7 @@ Modal.propTypes = {
   className: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   footer: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   header: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+  isContentOnly: PropTypes.bool,
   position: PropTypes.oneOf(['top', null]),
   positionOffset: PropTypes.string,
   showClose: PropTypes.bool,
@@ -107,10 +113,10 @@ Modal.propTypes = {
 };
 
 /**
- * Default props.
+ * Default props
  *
  * @type {{backdrop: boolean, showClose: boolean, t: translate, footer: null, variant: null, header: null,
- *     className: null, position: string, positionOffset: string, 'aria-label': null}}
+ *     className: null, isContentOnly: boolean, position: string, positionOffset: string, 'aria-label': null}}
  */
 Modal.defaultProps = {
   'aria-label': null,
@@ -118,6 +124,7 @@ Modal.defaultProps = {
   className: null,
   footer: null,
   header: null,
+  isContentOnly: false,
   position: 'top',
   positionOffset: '5%',
   showClose: false,

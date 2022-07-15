@@ -8,15 +8,15 @@ exports[`Modal Component should allow custom headers and footers: element 1`] = 
     class="pf-l-bullseye"
   >
     <div
-      aria-describedby="pf-modal-part-5"
+      aria-describedby="pf-modal-part-6"
       aria-label="t(modal.aria-label-default)"
-      aria-labelledby="pf-modal-part-3"
+      aria-labelledby="pf-modal-part-4"
       aria-modal="true"
       class="pf-c-modal-box pf-m-align-top"
-      data-ouia-component-id="OUIA-Generated-Modal-4"
+      data-ouia-component-id="OUIA-Generated-Modal-5"
       data-ouia-component-type="PF4/ModalContent"
       data-ouia-safe="true"
-      id="pf-modal-part-3"
+      id="pf-modal-part-4"
       role="dialog"
       style="--pf-c-modal-box--m-align-top--spacer: 5%;"
     >
@@ -28,7 +28,7 @@ exports[`Modal Component should allow custom headers and footers: element 1`] = 
       <div
         aria-live="polite"
         class="pf-c-modal-box__body"
-        id="pf-modal-part-5"
+        id="pf-modal-part-6"
       >
         <div>
           hello world
@@ -52,15 +52,15 @@ exports[`Modal Component should allow custom headers and footers: function 1`] =
     class="pf-l-bullseye"
   >
     <div
-      aria-describedby="pf-modal-part-5"
+      aria-describedby="pf-modal-part-6"
       aria-label="t(modal.aria-label-default)"
-      aria-labelledby="pf-modal-part-3"
+      aria-labelledby="pf-modal-part-4"
       aria-modal="true"
       class="pf-c-modal-box pf-m-align-top"
-      data-ouia-component-id="OUIA-Generated-Modal-4"
+      data-ouia-component-id="OUIA-Generated-Modal-5"
       data-ouia-component-type="PF4/ModalContent"
       data-ouia-safe="true"
-      id="pf-modal-part-3"
+      id="pf-modal-part-4"
       role="dialog"
       style="--pf-c-modal-box--m-align-top--spacer: 5%;"
     >
@@ -72,7 +72,7 @@ exports[`Modal Component should allow custom headers and footers: function 1`] =
       <div
         aria-live="polite"
         class="pf-c-modal-box__body"
-        id="pf-modal-part-5"
+        id="pf-modal-part-6"
       >
         <div>
           hello world
@@ -96,15 +96,15 @@ exports[`Modal Component should allow custom headers and footers: list 1`] = `
     class="pf-l-bullseye"
   >
     <div
-      aria-describedby="pf-modal-part-5"
+      aria-describedby="pf-modal-part-6"
       aria-label="t(modal.aria-label-default)"
-      aria-labelledby="pf-modal-part-3"
+      aria-labelledby="pf-modal-part-4"
       aria-modal="true"
       class="pf-c-modal-box pf-m-align-top"
-      data-ouia-component-id="OUIA-Generated-Modal-4"
+      data-ouia-component-id="OUIA-Generated-Modal-5"
       data-ouia-component-type="PF4/ModalContent"
       data-ouia-safe="true"
-      id="pf-modal-part-3"
+      id="pf-modal-part-4"
       role="dialog"
       style="--pf-c-modal-box--m-align-top--spacer: 5%;"
     >
@@ -116,7 +116,7 @@ exports[`Modal Component should allow custom headers and footers: list 1`] = `
       <div
         aria-live="polite"
         class="pf-c-modal-box__body"
-        id="pf-modal-part-5"
+        id="pf-modal-part-6"
       >
         <div>
           hello world
@@ -140,15 +140,15 @@ exports[`Modal Component should allow custom headers and footers: string 1`] = `
     class="pf-l-bullseye"
   >
     <div
-      aria-describedby="pf-modal-part-5"
+      aria-describedby="pf-modal-part-6"
       aria-label="t(modal.aria-label-default)"
-      aria-labelledby="pf-modal-part-3"
+      aria-labelledby="pf-modal-part-4"
       aria-modal="true"
       class="pf-c-modal-box pf-m-align-top"
-      data-ouia-component-id="OUIA-Generated-Modal-4"
+      data-ouia-component-id="OUIA-Generated-Modal-5"
       data-ouia-component-type="PF4/ModalContent"
       data-ouia-safe="true"
-      id="pf-modal-part-3"
+      id="pf-modal-part-4"
       role="dialog"
       style="--pf-c-modal-box--m-align-top--spacer: 5%;"
     >
@@ -160,7 +160,7 @@ exports[`Modal Component should allow custom headers and footers: string 1`] = `
       <div
         aria-live="polite"
         class="pf-c-modal-box__body"
-        id="pf-modal-part-5"
+        id="pf-modal-part-6"
       >
         <div>
           hello world
@@ -184,22 +184,22 @@ exports[`Modal Component should allow custom headers and footers: undefined 1`] 
     class="pf-l-bullseye"
   >
     <div
-      aria-describedby="pf-modal-part-5"
+      aria-describedby="pf-modal-part-6"
       aria-label="t(modal.aria-label-default)"
-      aria-labelledby="pf-modal-part-3"
+      aria-labelledby="pf-modal-part-4"
       aria-modal="true"
       class="pf-c-modal-box pf-m-align-top"
-      data-ouia-component-id="OUIA-Generated-Modal-4"
+      data-ouia-component-id="OUIA-Generated-Modal-5"
       data-ouia-component-type="PF4/ModalContent"
       data-ouia-safe="true"
-      id="pf-modal-part-3"
+      id="pf-modal-part-4"
       role="dialog"
       style="--pf-c-modal-box--m-align-top--spacer: 5%;"
     >
       <div
         aria-live="polite"
         class="pf-c-modal-box__body"
-        id="pf-modal-part-5"
+        id="pf-modal-part-6"
       >
         <div>
           hello world
@@ -324,6 +324,63 @@ exports[`Modal Component should allow modifying specific and custom props: backd
 </Modal>
 `;
 
+exports[`Modal Component should allow modifying specific and custom props: isContentOnly 1`] = `
+<Modal
+  actions={Array []}
+  appendTo={
+    <div
+      class="quipucords-modal quipucords-modal__hide-backdrop quipucords-modal__rcue-width quipucords-modal__content-only"
+    >
+      <div />
+    </div>
+  }
+  aria-describedby=""
+  aria-label="t(modal.aria-label-default)"
+  aria-labelledby=""
+  aria-live="polite"
+  className=""
+  hasNoBodyWrapper={false}
+  isOpen={false}
+  onClose={[Function]}
+  ouiaSafe={true}
+  position="top"
+  positionOffset="5%"
+  showClose={false}
+  title=""
+  titleIconVariant={null}
+  titleLabel=""
+  variant={null}
+>
+  <Portal
+    containerInfo={<div />}
+  >
+    <ModalContent
+      actions={Array []}
+      aria-describedby=""
+      aria-label="t(modal.aria-label-default)"
+      aria-labelledby=""
+      aria-live="polite"
+      boxId="pf-modal-part-3"
+      className=""
+      descriptorId="pf-modal-part-5"
+      hasNoBodyWrapper={false}
+      isOpen={false}
+      labelId="pf-modal-part-4"
+      onClose={[Function]}
+      ouiaId="OUIA-Generated-Modal-4"
+      ouiaSafe={true}
+      position="top"
+      positionOffset="5%"
+      showClose={false}
+      title=""
+      titleIconVariant={null}
+      titleLabel=""
+      variant={null}
+    />
+  </Portal>
+</Modal>
+`;
+
 exports[`Modal Component should render a basic component: basic 1`] = `
 <Modal
   aria-label={null}
@@ -331,6 +388,7 @@ exports[`Modal Component should render a basic component: basic 1`] = `
   className={null}
   footer={null}
   header={null}
+  isContentOnly={false}
   position="top"
   positionOffset="5%"
   showClose={false}
