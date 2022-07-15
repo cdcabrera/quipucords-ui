@@ -12,6 +12,10 @@
   "form-dialog": {
     "label_cancel": "Cancel",
     "label_close": "Close",
+    "label_field_add-credential_network": "Network Credential",
+    "label_field_add-credential_satellite": "Satellite Credential",
+    "label_field_add-credential_vcenter": "VCenter Credential",
+    "label_placeholder_add-credential": "Add Credential",
     "label_submit": "Submit",
     "label_submit_confirmation": "Confirm",
     "label_submit_create-credential": "Save",
