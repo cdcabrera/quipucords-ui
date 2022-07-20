@@ -391,6 +391,7 @@ class AddSourceWizardStepTwo extends React.Component {
             <FormField label="Connection">
               <DropdownSelect
                 id="optionSslProtocol"
+                isInline={false}
                 onSelect={onChangeSslProtocol}
                 options={sslProtocolOptions}
                 selectedOptions={[(checked.optionDisableSsl && 'disableSsl') || values.optionSslProtocol]}

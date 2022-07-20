@@ -365,9 +365,10 @@ class CreateCredentialDialog extends React.Component {
           <Grid.Col sm={7}>
             <DropdownSelect
               id="become-method-select"
+              isInline={false}
               onSelect={this.onSetBecomeMethod}
-              selectedOptions={becomeMethod}
               options={becomeMethods}
+              selectedOptions={becomeMethod}
             />
           </Grid.Col>
         </Form.FormGroup>
@@ -472,6 +473,7 @@ class CreateCredentialDialog extends React.Component {
                 <Grid.Col sm={7}>
                   <DropdownSelect
                     id="auth-type-select"
+                    isInline={false}
                     onSelect={this.onSetAuthType}
                     options={authenticationTypeOptions}
                     selectedOptions={authorizationType}
