@@ -167,6 +167,8 @@ class DropdownSelect extends React.Component {
         };
 
         updatedOptions[index] = convertedOption;
+      } else if (typeof convertedOption.title === 'function') {
+        convertedOption.title = convertedOption.title();
       }
 
       convertedOption.text = convertedOption.text || convertedOption.title;
@@ -227,6 +229,7 @@ class DropdownSelect extends React.Component {
       className,
       direction,
       isDisabled,
+      isInline,
       isToggleText,
       maxHeight,
       placeholder,
@@ -257,11 +260,11 @@ class DropdownSelect extends React.Component {
      * https://github.com/cssnano/cssnano/issues/1051
      */
     return (
-      <div className="curiosity-select">
+      <div className={`quipucords-select${(isInline && ' quipucords-select__inline') || ''}`}>
         <PfSelect
           menuAppendTo="parent"
-          className={`curiosity-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
-            (position === DropdownPosition.right && 'curiosity-select-pf__position-right') || ''
+          className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
+            (position === DropdownPosition.right && 'quipucords-select-pf__position-right') || ''
           } ${className}`}
           variant={variant}
           aria-label={ariaLabel}
@@ -294,10 +297,9 @@ class DropdownSelect extends React.Component {
 /**
  * Prop types.
  *
- * @type {{toggleIcon: (Node|Function), className: string, ariaLabel: string, onSelect: Function,
- *     isToggleText: boolean, maxHeight: number, name: string, options: (Array|object),
- *     selectedOptions: (number|string|Array), variant: string, id: string, isDisabled: boolean,
- *     placeholder: string, position: string, direction: string}}
+ * @type {{toggleIcon: (React.ReactNode|Function), className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean,
+ *     maxHeight: number, name: string, options: Array|object, selectedOptions: Array|number|string, variant: string,
+ *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: string, direction: string}}
  */
 DropdownSelect.propTypes = {
   ariaLabel: PropTypes.string,
@@ -305,6 +307,7 @@ DropdownSelect.propTypes = {
   direction: PropTypes.oneOf(Object.values(SelectDirection)),
   id: PropTypes.string,
   isDisabled: PropTypes.bool,
+  isInline: PropTypes.bool,
   isToggleText: PropTypes.bool,
   maxHeight: PropTypes.number,
   name: PropTypes.string,
@@ -339,10 +342,10 @@ DropdownSelect.propTypes = {
 /**
  * Default props.
  *
- * @type {{toggleIcon: (Node|Function), className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean,
- *     maxHeight: number, name: string, options: (Array|object), selectedOptions: (number|string|Array),
- *     variant: SelectVariant.single, id: string, isDisabled: boolean, placeholder: string,
- *     position: DropdownPosition.left, direction: DropdownDirection.down}}
+ * @type {{toggleIcon: (React.ReactNode|Function), className: string, ariaLabel: string, onSelect: Function,
+ *     isToggleText: boolean, maxHeight: null, name: null, options: *[], selectedOptions: null, variant: SelectVariant.single,
+ *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: DropdownPosition.left,
+ *     direction: DropdownDirection.down}}
  */
 DropdownSelect.defaultProps = {
   ariaLabel: 'Select option',
@@ -350,6 +353,7 @@ DropdownSelect.defaultProps = {
   direction: SelectDirection.down,
   id: helpers.generateId(),
   isDisabled: false,
+  isInline: true,
   isToggleText: true,
   maxHeight: null,
   name: null,
@@ -362,4 +366,4 @@ DropdownSelect.defaultProps = {
   variant: SelectVariant.single
 };
 
-export { DropdownSelect as default, DropdownSelect, SelectDirection, SelectPosition };
+export { DropdownSelect as default, DropdownSelect, SelectDirection, SelectPosition, SelectVariant };
