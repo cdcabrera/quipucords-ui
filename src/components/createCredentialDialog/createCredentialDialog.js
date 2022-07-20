@@ -6,9 +6,22 @@ import { Modal } from '../modal/modal';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import { helpers } from '../../common/helpers';
 import { authDictionary, dictionary } from '../../constants/dictionaryConstants';
-import DropdownSelect from '../dropdownSelect/dropdownSelect.legacy';
+import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
 import { translate } from '../i18n/i18n';
 
+/**
+ * Generate authentication type options.
+ *
+ * @type {{title: string|Function, value: *}[]}
+ */
+const authenticationTypeOptions = Object.keys(authDictionary).map(type => ({
+  title: () => translate('form-dialog.label', { context: ['option', type] }),
+  value: type
+}));
+
+/**
+ * Create or edit a credential.
+ */
 class CreateCredentialDialog extends React.Component {
   static renderFormLabel(label) {
     return (
@@ -352,9 +365,8 @@ class CreateCredentialDialog extends React.Component {
           <Grid.Col sm={7}>
             <DropdownSelect
               id="become-method-select"
-              multiselect={false}
               onSelect={this.onSetBecomeMethod}
-              selectValue={becomeMethod}
+              selectedOptions={becomeMethod}
               options={becomeMethods}
             />
           </Grid.Col>
@@ -460,10 +472,9 @@ class CreateCredentialDialog extends React.Component {
                 <Grid.Col sm={7}>
                   <DropdownSelect
                     id="auth-type-select"
-                    multiselect={false}
                     onSelect={this.onSetAuthType}
-                    options={authDictionary}
-                    selectValue={authorizationType}
+                    options={authenticationTypeOptions}
+                    selectedOptions={authorizationType}
                   />
                 </Grid.Col>
               </Form.FormGroup>
