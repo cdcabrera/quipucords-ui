@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Dropdown, DropdownItem } from '@patternfly/react-core';
 import { reduxTypes, storeHooks } from '../../redux';
 import { translate } from '../i18n/i18n';
 
@@ -9,7 +10,7 @@ const fieldOptions = [
   { title: 'VCenter', value: 'vcenter' }
 ];
 
-const useAddCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useAddCredentialType = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
   return value => {
@@ -22,15 +23,18 @@ const useAddCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRedu
   };
 };
 
-const AddCredential = ({ options, useAddCredential: useAliasAddCredential } = {}) => {
-  const addCredential = useAliasAddCredential();
+const AddCredentialType = ({ options, useAddCredentialType: useAliasAddCredentialType, t } = {}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const addCredential = useAliasAddCredentialType();
 
-  return (
+  const onToggle = value => {
+    setIsOpen(value);
+  };
 
-  );
+  return <Dropdown isOpen={isOpen} onSelect={addCredential} />;
 };
 
-AddCredential.propTypes = {
+AddCredentialType.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.node,
@@ -39,11 +43,11 @@ AddCredential.propTypes = {
     })
   ),
   t: PropTypes.func,
-  useAddCredential: PropTypes.func
+  useAddCredentialType: PropTypes.func
 };
 
-AddCredential.defaultProps = {
+AddCredentialType.defaultProps = {
   options: fieldOptions,
   t: translate,
-  useAddCredential
+  useAddCredentialType
 };

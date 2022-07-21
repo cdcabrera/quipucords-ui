@@ -1,7 +1,7 @@
-import React from 'react';
+// import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
-import { createMockEvent } from './formHelpers';
+// import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
+// import { createMockEvent } from './formHelpers';
 import { helpers } from '../../common';
 
 /**
@@ -34,10 +34,13 @@ const DropdownButton = ({
   value,
   ...props
 }) => {
+  /*
   const [check, setCheck] = React.useState();
   const updatedChecked = check ?? isChecked ?? false;
   const updatedName = name || helpers.generateId();
   const updatedId = id || updatedName;
+   */
+  console.log(props, ariaLabel, children, id, isChecked, isDisabled, isReadOnly, label, name, onChange, value);
 
   /**
    * onChange event, provide restructured event.
@@ -46,6 +49,7 @@ const DropdownButton = ({
    * @param {boolean} checked
    * @param {object} event
    */
+  /*
   const onCheckboxChange = (checked, event) => {
     const mockEvent = {
       ...createMockEvent(event),
@@ -58,7 +62,10 @@ const DropdownButton = ({
     setCheck(checked);
     onChange(mockEvent);
   };
+  */
 
+  return null;
+  /*
   return (
     <PfCheckbox
       aria-label={ariaLabel || children || label}
@@ -74,6 +81,7 @@ const DropdownButton = ({
       {...props}
     />
   );
+  */
 };
 
 /**
@@ -82,7 +90,7 @@ const DropdownButton = ({
  * @type {{isReadOnly: boolean, onChange: Function, children: Node, name: string, id: string,
  *     isDisabled: boolean, label: string, isChecked: boolean, value: *, ariaLabel: string}}
  */
-Checkbox.propTypes = {
+DropdownButton.propTypes = {
   ariaLabel: PropTypes.string,
   children: PropTypes.node,
   id: PropTypes.string,
@@ -101,7 +109,7 @@ Checkbox.propTypes = {
  * @type {{isReadOnly: boolean, onChange: Function, children: Node, name: string, id: string,
  *     isDisabled: boolean, label: string, isChecked: boolean, value: *, ariaLabel: string}}
  */
-Checkbox.defaultProps = {
+DropdownButton.defaultProps = {
   ariaLabel: null,
   children: null,
   id: null,
@@ -114,4 +122,4 @@ Checkbox.defaultProps = {
   value: undefined
 };
 
-export { Checkbox as default, Checkbox };
+export { DropdownButton as default, DropdownButton };
