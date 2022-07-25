@@ -5,9 +5,9 @@ import { reduxTypes, storeHooks } from '../../redux';
 import { translate } from '../i18n/i18n';
 
 const fieldOptions = [
-  { title: 'Network', value: 'network' },
-  { title: 'Satellite', value: 'satellite' },
-  { title: 'VCenter', value: 'vcenter' }
+  { title: () => translate('Network'), value: 'network' },
+  { title: () => translate('Satellite'), value: 'satellite' },
+  { title: () => translate('VCenter'), value: 'vcenter' }
 ];
 
 const useAddCredentialType = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
