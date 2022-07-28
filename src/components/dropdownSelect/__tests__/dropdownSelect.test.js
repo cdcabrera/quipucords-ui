@@ -1,7 +1,7 @@
 import React from 'react';
-import { SelectVariant } from '@patternfly/react-core';
+import { ButtonVariant, SelectVariant } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
-import { DropdownSelect, SelectDirection, SelectPosition } from '../dropdownSelect';
+import isDropdownButton, { DropdownSelect, SelectDirection, SelectPosition } from '../dropdownSelect';
 
 describe('Select Component', () => {
   it('should render a basic component', async () => {
@@ -205,5 +205,16 @@ describe('Select Component', () => {
 
     const component = await mountHookWrapper(<DropdownSelect {...props} />);
     expect(component.props()).toMatchSnapshot('data- attributes');
+  });
+
+  it('should emulate pf dropdown', async () => {
+    const props = {
+      isDropdownButton: true,
+      buttonVariant: ButtonVariant.secondary,
+      options: ['lorem', 'ipsum', 'hello', 'world']
+    };
+
+    const component = await mountHookWrapper(<DropdownSelect {...props} />);
+    expect(component.render()).toMatchSnapshot('emulated dropdown');
   });
 });
