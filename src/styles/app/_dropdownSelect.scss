@@ -1,8 +1,8 @@
-.quipucords{
+.quipucords {
   &-select {
     position: relative;
 
-    > .quipucords-select-pf {
+    &-pf__position-down {
       transform: unset !important;
     }
 
@@ -22,8 +22,36 @@
       }
     }
 
+    &-pf__button {
+      height: calc(100%);
+      left: 0;
+      position: absolute !important;
+      transform: unset !important;
+      z-index: inherit !important;
+
+      button.pf-c-select__toggle {
+        visibility: hidden;
+      }
+
+      button.pf-c-select__menu-item.pf-m-selected {
+        padding-right: inherit;
+        > .pf-c-select__menu-item-icon {
+          display: none;
+        }
+      }
+    }
+
     &__inline {
       display: inline-block;
     }
+  }
+}
+
+.quiucords-select__dropdown-button {
+  z-index: 1;
+
+  &.pf-c-button {
+    padding-left: var(--pf-global--spacer--sm);
+    padding-right: var(--pf-global--spacer--sm);
   }
 }
