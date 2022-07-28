@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  // Button,
   Button,
+  ButtonVariant,
   DropdownDirection,
   DropdownPosition,
   Select as PfSelect,
@@ -10,8 +10,6 @@ import {
   SelectVariant
 } from '@patternfly/react-core';
 import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
-// import CaretDownIcon from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
-// import CaretUpIcon from '@patternfly/react-icons/dist/esm/icons/caret-up-icon';
 import _cloneDeep from 'lodash/cloneDeep';
 import _isEqual from 'lodash/isEqual';
 import _findIndex from 'lodash/findIndex';
@@ -235,6 +233,7 @@ class DropdownSelect extends React.Component {
     const { options, selected, isExpanded } = this.state;
     const {
       ariaLabel,
+      buttonVariant,
       className,
       direction,
       isDisabled,
@@ -276,7 +275,7 @@ class DropdownSelect extends React.Component {
     return (
       <div className={`quipucords-select${((isInline || isDropdownButton) && ' quipucords-select__inline') || ''}`}>
         {isDropdownButton && (
-          <Button onClick={this.onToggle}>
+          <Button variant={buttonVariant} onClick={this.onToggle}>
             {placeholder || ariaLabel}{' '}
             {(isExpanded && direction === SelectDirection.up && <CaretUpIcon />) || <CaretDownIcon />}
           </Button>
@@ -285,7 +284,9 @@ class DropdownSelect extends React.Component {
           menuAppendTo="parent"
           className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${`quipucords-select-pf${
             (isDropdownButton && '__button') || ''
-          }`} ${(position === DropdownPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
+          }`} ${(direction === SelectDirection.down && 'quipucords-select-pf__position-down') || ''} ${
+            (position === DropdownPosition.right && 'quipucords-select-pf__position-right') || ''
+          } ${className}`}
           variant={variant}
           aria-label={ariaLabel}
           onToggle={(isDropdownButton && Function.prototype) || this.onToggle}
@@ -323,6 +324,7 @@ class DropdownSelect extends React.Component {
  */
 DropdownSelect.propTypes = {
   ariaLabel: PropTypes.string,
+  buttonVariant: PropTypes.oneOf(Object.values(ButtonVariant)),
   className: PropTypes.string,
   direction: PropTypes.oneOf(Object.values(SelectDirection)),
   id: PropTypes.string,
@@ -370,6 +372,7 @@ DropdownSelect.propTypes = {
  */
 DropdownSelect.defaultProps = {
   ariaLabel: 'Select option',
+  buttonVariant: ButtonVariant.primary,
   className: '',
   direction: SelectDirection.down,
   id: helpers.generateId(),

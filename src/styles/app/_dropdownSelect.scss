@@ -2,7 +2,7 @@
   &-select {
     position: relative;
 
-    > .quipucords-select-pf {
+    &-pf__position-down {
       transform: unset !important;
     }
 
@@ -23,20 +23,12 @@
     }
 
     &-pf__button {
-      // display: none !important;
-      // height: 0 !important;
-      // line-height: 0 !important;
-      // width: inherit;
       position: absolute !important;
-      // top: 0;
-      // top: 0 !important;
-      // z-index: inherit !important;
-      // left: 0;
-      // transform: none !important;
+      left: 0;
+      z-index: -1;
 
       button.pf-c-select__toggle {
-        display: none;
-        // visibility: hidden;
+        visibility: hidden;
       }
     }
 
