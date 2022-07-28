@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  // Button,
+  Button,
   DropdownDirection,
   DropdownPosition,
   Select as PfSelect,
   SelectOption as PfSelectOption,
   SelectVariant
 } from '@patternfly/react-core';
+import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
+// import CaretDownIcon from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
+// import CaretUpIcon from '@patternfly/react-icons/dist/esm/icons/caret-up-icon';
 import _cloneDeep from 'lodash/cloneDeep';
 import _isEqual from 'lodash/isEqual';
 import _findIndex from 'lodash/findIndex';
@@ -132,8 +137,12 @@ class DropdownSelect extends React.Component {
    * @param {boolean} expanded
    */
   onToggle = expanded => {
+    const { isExpanded } = this.state;
+    const { isDropdownButton } = this.props;
+    const updatedIsExpanded = isDropdownButton ? !isExpanded : expanded;
+
     this.setState({
-      isExpanded: expanded
+      isExpanded: updatedIsExpanded
     });
   };
 
@@ -229,6 +238,7 @@ class DropdownSelect extends React.Component {
       className,
       direction,
       isDisabled,
+      isDropdownButton,
       isInline,
       isToggleText,
       maxHeight,
@@ -248,6 +258,10 @@ class DropdownSelect extends React.Component {
       pfSelectOptions.isDisabled = true;
     }
 
+    if (placeholder) {
+      pfSelectOptions.hasPlaceholderStyle = true;
+    }
+
     /**
      * FixMe: PFReact quirks around PfSelect, requires children
      * "Null" is a typical fallback we use across the board on a multitude of React apps.
@@ -260,15 +274,21 @@ class DropdownSelect extends React.Component {
      * https://github.com/cssnano/cssnano/issues/1051
      */
     return (
-      <div className={`quipucords-select${(isInline && ' quipucords-select__inline') || ''}`}>
+      <div className={`quipucords-select${((isInline || isDropdownButton) && ' quipucords-select__inline') || ''}`}>
+        {isDropdownButton && (
+          <Button onClick={this.onToggle}>
+            {placeholder || ariaLabel}{' '}
+            {(isExpanded && direction === SelectDirection.up && <CaretUpIcon />) || <CaretDownIcon />}
+          </Button>
+        )}
         <PfSelect
           menuAppendTo="parent"
-          className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
-            (position === DropdownPosition.right && 'quipucords-select-pf__position-right') || ''
-          } ${className}`}
+          className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${`quipucords-select-pf${
+            (isDropdownButton && '__button') || ''
+          }`} ${(position === DropdownPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
           variant={variant}
           aria-label={ariaLabel}
-          onToggle={this.onToggle}
+          onToggle={(isDropdownButton && Function.prototype) || this.onToggle}
           onSelect={this.onSelect}
           selections={selected}
           isOpen={isExpanded}
@@ -307,6 +327,7 @@ DropdownSelect.propTypes = {
   direction: PropTypes.oneOf(Object.values(SelectDirection)),
   id: PropTypes.string,
   isDisabled: PropTypes.bool,
+  isDropdownButton: PropTypes.bool,
   isInline: PropTypes.bool,
   isToggleText: PropTypes.bool,
   maxHeight: PropTypes.number,
@@ -353,6 +374,7 @@ DropdownSelect.defaultProps = {
   direction: SelectDirection.down,
   id: helpers.generateId(),
   isDisabled: false,
+  isDropdownButton: false,
   isInline: true,
   isToggleText: true,
   maxHeight: null,
