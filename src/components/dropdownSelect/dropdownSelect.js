@@ -17,6 +17,13 @@ import _isPlainObject from 'lodash/isPlainObject';
 import { helpers } from '../../common/helpers';
 
 /**
+ * Pass button variant as a select component option.
+ *
+ * @type {ButtonVariant}
+ */
+const SelectButtonVariant = ButtonVariant;
+
+/**
  * Pass direction as select component variant option.
  *
  * @type {DropdownDirection}
@@ -31,7 +38,8 @@ const SelectDirection = DropdownDirection;
 const SelectPosition = DropdownPosition;
 
 /**
- * A wrapper for Patternfly Select. Provides restructured event data for onSelect callback.
+ * A wrapper for Pf Select, and emulator for Pf Dropdown. Provides consistent restructured event data for onSelect callback
+ * for both select and dropdown.
  *
  * @augments React.Component
  * @fires onSelect
@@ -319,12 +327,13 @@ class DropdownSelect extends React.Component {
  * Prop types.
  *
  * @type {{toggleIcon: (React.ReactNode|Function), className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean,
- *     maxHeight: number, name: string, options: Array|object, selectedOptions: Array|number|string, variant: string,
- *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: string, direction: string}}
+ *     isDropdownButton: boolean, maxHeight: number, buttonVariant: string, name: string, options: Array|object,
+ *     selectedOptions: Array|number|string, isInline: boolean, id: string, isDisabled: boolean, placeholder: string,
+ *     position: string, direction: string}}
  */
 DropdownSelect.propTypes = {
   ariaLabel: PropTypes.string,
-  buttonVariant: PropTypes.oneOf(Object.values(ButtonVariant)),
+  buttonVariant: PropTypes.oneOf(Object.values(SelectButtonVariant)),
   className: PropTypes.string,
   direction: PropTypes.oneOf(Object.values(SelectDirection)),
   id: PropTypes.string,
@@ -365,8 +374,8 @@ DropdownSelect.propTypes = {
 /**
  * Default props.
  *
- * @type {{toggleIcon: (React.ReactNode|Function), className: string, ariaLabel: string, onSelect: Function,
- *     isToggleText: boolean, maxHeight: null, name: null, options: *[], selectedOptions: null, variant: SelectVariant.single,
+ * @type {{toggleIcon: null, className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean, isDropdownButton: boolean,
+ *     maxHeight: null, buttonVariant: ButtonVariant.primary, name: null, options: *[], selectedOptions: null, variant: SelectVariant.single,
  *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: DropdownPosition.left,
  *     direction: DropdownDirection.down}}
  */
@@ -391,4 +400,11 @@ DropdownSelect.defaultProps = {
   variant: SelectVariant.single
 };
 
-export { DropdownSelect as default, DropdownSelect, SelectDirection, SelectPosition, SelectVariant };
+export {
+  DropdownSelect as default,
+  DropdownSelect,
+  SelectDirection,
+  SelectPosition,
+  SelectVariant,
+  SelectButtonVariant
+};
