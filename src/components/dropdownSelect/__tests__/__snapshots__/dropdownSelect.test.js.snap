@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Select Component shoudl apply patternfly select props based on wrapper props: patternfly props, disabled 1`] = `
+Object {
+  "isDisabled": true,
+}
+`;
+
+exports[`Select Component shoudl apply patternfly select props based on wrapper props: patternfly props, no options, disabled 1`] = `
+Object {
+  "isDisabled": true,
+}
+`;
+
+exports[`Select Component shoudl apply patternfly select props based on wrapper props: patternfly props, options, disabled 1`] = `
+Object {
+  "isDisabled": true,
+}
+`;
+
+exports[`Select Component shoudl apply patternfly select props based on wrapper props: patternfly props, placeholder 1`] = `
+Object {
+  "hasPlaceholderStyle": true,
+}
+`;
+
 exports[`Select Component should allow alternate array and object options: key value object 1`] = `
 Array [
   Object {
@@ -217,104 +241,7 @@ exports[`Select Component should allow being disabled with missing options: opti
     validated="default"
     variant="single"
     width=""
-  >
-    <SelectOption
-      className=""
-      component="button"
-      data-title="lorem"
-      data-value="lorem"
-      id="bG9yZW0tbG9yZW0="
-      index={0}
-      inputId=""
-      isChecked={false}
-      isDisabled={false}
-      isFavorite={null}
-      isLastOptionBeforeFooter={[Function]}
-      isLoad={false}
-      isLoading={false}
-      isNoResultsOption={false}
-      isPlaceholder={false}
-      isSelected={false}
-      key="bG9yZW0tbG9yZW0="
-      keyHandler={[Function]}
-      onClick={[Function]}
-      sendRef={[Function]}
-      setViewMoreNextIndex={[Function]}
-      value="lorem"
-    />
-    <SelectOption
-      className=""
-      component="button"
-      data-title="ipsum"
-      data-value="ipsum"
-      id="aXBzdW0taXBzdW0="
-      index={0}
-      inputId=""
-      isChecked={false}
-      isDisabled={false}
-      isFavorite={null}
-      isLastOptionBeforeFooter={[Function]}
-      isLoad={false}
-      isLoading={false}
-      isNoResultsOption={false}
-      isPlaceholder={false}
-      isSelected={false}
-      key="aXBzdW0taXBzdW0="
-      keyHandler={[Function]}
-      onClick={[Function]}
-      sendRef={[Function]}
-      setViewMoreNextIndex={[Function]}
-      value="ipsum"
-    />
-    <SelectOption
-      className=""
-      component="button"
-      data-title="hello"
-      data-value="hello"
-      id="aGVsbG8taGVsbG8="
-      index={0}
-      inputId=""
-      isChecked={false}
-      isDisabled={false}
-      isFavorite={null}
-      isLastOptionBeforeFooter={[Function]}
-      isLoad={false}
-      isLoading={false}
-      isNoResultsOption={false}
-      isPlaceholder={false}
-      isSelected={false}
-      key="aGVsbG8taGVsbG8="
-      keyHandler={[Function]}
-      onClick={[Function]}
-      sendRef={[Function]}
-      setViewMoreNextIndex={[Function]}
-      value="hello"
-    />
-    <SelectOption
-      className=""
-      component="button"
-      data-title="world"
-      data-value="world"
-      id="d29ybGQtd29ybGQ="
-      index={0}
-      inputId=""
-      isChecked={false}
-      isDisabled={false}
-      isFavorite={null}
-      isLastOptionBeforeFooter={[Function]}
-      isLoad={false}
-      isLoading={false}
-      isNoResultsOption={false}
-      isPlaceholder={false}
-      isSelected={false}
-      key="d29ybGQtd29ybGQ="
-      keyHandler={[Function]}
-      onClick={[Function]}
-      sendRef={[Function]}
-      setViewMoreNextIndex={[Function]}
-      value="world"
-    />
-  </Select>
+  />
 </div>
 `;
 
@@ -510,7 +437,7 @@ exports[`Select Component should emulate pf dropdown: emulated dropdown 1`] = `
   </button>
   <div
     class="pf-c-select quipucords-select-pf quipucords-select-pf__button quipucords-select-pf__position-down  "
-    data-ouia-component-id="OUIA-Generated-Select-single-7"
+    data-ouia-component-id="OUIA-Generated-Select-single-5"
     data-ouia-component-type="PF4/Select"
     data-ouia-safe="true"
   >
@@ -518,9 +445,9 @@ exports[`Select Component should emulate pf dropdown: emulated dropdown 1`] = `
       aria-expanded="false"
       aria-haspopup="listbox"
       aria-label="Options menu"
-      aria-labelledby=" pf-select-toggle-id-35"
+      aria-labelledby=" pf-select-toggle-id-23"
       class="pf-c-select__toggle pf-m-placeholder"
-      id="pf-select-toggle-id-35"
+      id="pf-select-toggle-id-23"
       type="button"
     >
       <div
@@ -568,9 +495,9 @@ exports[`Select Component should render a basic component: basic component 1`] =
       aria-expanded="false"
       aria-haspopup="listbox"
       aria-label="Options menu"
-      aria-labelledby=" pf-select-toggle-id-2"
+      aria-labelledby=" pf-select-toggle-id-1"
       class="pf-c-select__toggle"
-      id="pf-select-toggle-id-2"
+      id="pf-select-toggle-id-1"
       type="button"
     >
       <div
@@ -617,9 +544,9 @@ exports[`Select Component should render a checkbox select: checkbox select 1`] =
     <button
       aria-expanded="false"
       aria-label="Options menu"
-      aria-labelledby=" pf-select-toggle-id-5"
+      aria-labelledby=" pf-select-toggle-id-3"
       class="pf-c-select__toggle"
-      id="pf-select-toggle-id-5"
+      id="pf-select-toggle-id-3"
       type="button"
     >
       <div
@@ -715,19 +642,20 @@ Array [
 ]
 `;
 
-exports[`Select Component should return an emulated onchange event: checkbox emulated event 1`] = `
+exports[`Select Component should return an emulated onchange event, checklist variant: checklist emulated event 1`] = `
 Object {
   "checked": true,
   "id": "test",
   "name": "test",
   "persist": [Function],
   "selected": Array [
+    "ipsum",
     "hello",
     "world",
   ],
-  "selectedIndex": 3,
+  "selectedIndex": 2,
   "type": "select-multiple",
-  "value": "world",
+  "value": "hello",
 }
 `;
 
