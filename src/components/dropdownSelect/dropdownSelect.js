@@ -2,28 +2,50 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import {
-  Button,
-  ButtonVariant,
+  ButtonVariant as PfButtonVariant,
+  Dropdown,
   DropdownDirection,
+  DropdownItem,
   DropdownPosition,
-  Flex,
-  FlexItem,
+  DropdownToggle,
   Select as PfSelect,
   SelectOption as PfSelectOption,
   SelectVariant
 } from '@patternfly/react-core';
-import { CaretDownIcon, CaretUpIcon } from '@patternfly/react-icons';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
 import _isPlainObject from 'lodash/isPlainObject';
 import { helpers } from '../../common';
 
 /**
+ * Dropdown split button variants
+ *
+ * @type {{checkbox: string, action: string}}
+ */
+const SplitButtonVariant = {
+  action: 'action',
+  checkbox: 'checkbox'
+};
+
+/**
+ * Dropdown toggle button variants
+ *
+ * @type {{secondary: string, default: string, plain: string, text: string, primary: string}}
+ */
+const ButtonVariant = {
+  default: 'default',
+  plain: 'plain',
+  primary: 'primary',
+  secondary: 'secondary',
+  text: 'text'
+};
+
+/**
  * Pass button variant as a select component option.
  *
- * @type {ButtonVariant}
+ * @type {PfButtonVariant}
  */
-const SelectButtonVariant = ButtonVariant;
+const SelectButtonVariant = PfButtonVariant;
 
 /**
  * Pass direction as select component variant option.
@@ -56,7 +78,6 @@ const SelectPosition = DropdownPosition;
  */
 const formatOptions = ({ selectField = { current: null }, options, selectedOptions, variant, ...props } = {}) => {
   const { current: domElement = {} } = selectField;
-  // const { options, selectedOptions, variant } = props;
   const dataAttributes = Object.entries(props).filter(([key]) => /^data-/i.test(key));
   const updatedOptions = _isPlainObject(options)
     ? Object.entries(options).map(([key, value]) => ({ ...value, title: key, value }))
@@ -136,16 +157,41 @@ const formatOptions = ({ selectField = { current: null }, options, selectedOptio
  * @param {object|Array} params.options
  * @returns {{}}
  */
-const formatPfProps = ({ isDisabled, placeholder, options } = {}) => {
+const formatSelectProps = ({ isDisabled, placeholder, options } = {}) => {
   const updatedProps = {};
 
-  // FixMe: investigate "isDisabled", PFReact quirks?
   if (!options || !options.length || isDisabled) {
     updatedProps.isDisabled = true;
   }
 
   if (placeholder) {
     updatedProps.hasPlaceholderStyle = true;
+  }
+
+  return updatedProps;
+};
+
+const formatButtonProps = ({ isDisabled, options, buttonVariant, splitButtonVariant } = {}) => {
+  const buttonVariantPropLookup = {
+    default: { toggleVariant: 'default' },
+    plain: { isPlain: true },
+    primary: { toggleVariant: 'primary' },
+    secondary: { toggleVariant: 'secondary' },
+    text: { isText: true }
+  };
+
+  const splitButtonVariantPropLookup = {
+    action: { splitButtonVariant: 'action' },
+    checkbox: { splitButtonVariant: 'checkbox' }
+  };
+
+  const updatedProps = {
+    ...buttonVariantPropLookup[buttonVariant],
+    ...splitButtonVariantPropLookup[splitButtonVariant]
+  };
+
+  if (!options || !options.length || isDisabled) {
+    updatedProps.isDisabled = true;
   }
 
   return updatedProps;
@@ -174,6 +220,7 @@ const formatPfProps = ({ isDisabled, placeholder, options } = {}) => {
  * @param {string} props.placeholder
  * @param {string} props.position
  * @param {number|string|Array} props.selectedOptions
+ * @param {string} props.splitButtonVariant
  * @param {React.ReactNode|Function} props.toggleIcon
  * @param {string} props.variant
  * @param {object} props.props
@@ -196,6 +243,7 @@ const DropdownSelect = ({
   placeholder,
   position,
   selectedOptions,
+  splitButtonVariant,
   toggleIcon,
   variant,
   ...props
@@ -237,7 +285,12 @@ const DropdownSelect = ({
    */
   const onDropdownSelect = (event, titleSelection) => {
     const updatedOptions = options;
-    const optionsIndex = updatedOptions.findIndex(option => option.title === titleSelection);
+    const optionsIndex = updatedOptions.findIndex(
+      option =>
+        (titleSelection && option.title === titleSelection) ||
+        event.currentTarget.querySelector('[data-title]')?.getAttribute('data-title') === option.title ||
+        event.currentTarget.innerText === option.title
+    );
 
     updatedOptions[optionsIndex].selected =
       variant === SelectVariant.single ? true : !updatedOptions[optionsIndex].selected;
@@ -288,56 +341,93 @@ const DropdownSelect = ({
     }
   };
 
-  const pfProps = { direction, maxHeight, ...formatPfProps({ isDisabled, options: baseOptions, placeholder }) };
-
-  return (
-    <div className={`quipucords-select${((isInline || isDropdownButton) && ' quipucords-select__inline') || ''}`}>
-      {isDropdownButton && (
-        <Button
-          className="quiucords-select__dropdown-button"
-          variant={buttonVariant}
-          onClick={() => onToggle(!isExpanded)}
-        >
-          <Flex component="span">
-            <FlexItem component="span" grow={{ default: 'grow' }} spacer={{ default: 'none' }}>
-              {placeholder || ariaLabel}
-            </FlexItem>
-            <FlexItem component="span" spacer={{ default: 'none' }}>
-              {(isExpanded && direction === SelectDirection.up && <CaretUpIcon />) || <CaretDownIcon />}
-            </FlexItem>
-          </Flex>
-        </Button>
-      )}
-      <PfSelect
-        menuAppendTo="parent"
-        className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${`quipucords-select-pf${
-          (isDropdownButton && '__button') || ''
-        }`} ${(direction === SelectDirection.down && 'quipucords-select-pf__position-down') || ''} ${
-          (position === SelectPosition.right && 'quipucords-select-pf__position-right') || ''
-        } ${className}`}
-        variant={variant}
-        aria-label={ariaLabel}
-        onToggle={onToggle}
-        onSelect={onDropdownSelect}
-        selections={selected}
+  /**
+   * Apply dropdown.
+   *
+   * @returns {React.ReactNode}
+   */
+  const renderDropdownButton = () => (
+    <div ref={selectField}>
+      <Dropdown
+        direction={direction}
         isOpen={isExpanded}
-        toggleIcon={toggleIcon}
-        placeholderText={placeholder}
-        ref={selectField}
-        {...pfProps}
-      >
-        {(options &&
-          options.map(option => (
-            <PfSelectOption
+        position={position}
+        toggle={
+          <DropdownToggle
+            onToggle={onToggle}
+            {...formatButtonProps({ isDisabled, options, buttonVariant, splitButtonVariant })}
+          >
+            {placeholder || ariaLabel}
+          </DropdownToggle>
+        }
+        dropdownItems={
+          options?.map(option => (
+            <DropdownItem
+              onClick={onDropdownSelect}
               key={window.btoa(`${option.title}-${option.value}`)}
               id={window.btoa(`${option.title}-${option.value}`)}
-              value={option.title}
               data-value={(_isPlainObject(option.value) && JSON.stringify([option.value])) || option.value}
               data-title={option.title}
-            />
-          ))) ||
-          []}
-      </PfSelect>
+              data-description={option.description}
+              description={option.description}
+            >
+              {option.title}
+            </DropdownItem>
+          )) || []
+        }
+        {...props}
+      />
+    </div>
+  );
+
+  /**
+   * Apply select.
+   *
+   * @returns {React.ReactNode}
+   */
+  const renderSelect = () => (
+    <PfSelect
+      className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
+        (direction === SelectDirection.down && 'quipucords-select-pf__position-down') || ''
+      } ${(position === SelectPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
+      variant={variant}
+      aria-label={ariaLabel}
+      onToggle={onToggle}
+      onSelect={onDropdownSelect}
+      selections={selected}
+      isOpen={isExpanded}
+      toggleIcon={toggleIcon}
+      placeholderText={placeholder}
+      {...{
+        direction,
+        maxHeight,
+        ...formatSelectProps({
+          isDisabled,
+          options: baseOptions,
+          placeholder
+        })
+      }}
+      {...props}
+    >
+      {options?.map(option => (
+        <PfSelectOption
+          key={window.btoa(`${option.title}-${option.value}`)}
+          id={window.btoa(`${option.title}-${option.value}`)}
+          value={option.title}
+          data-value={(_isPlainObject(option.value) && JSON.stringify([option.value])) || option.value}
+          data-title={option.title}
+          data-description={option.description}
+        />
+      )) || []}
+    </PfSelect>
+  );
+
+  return (
+    <div
+      ref={selectField}
+      className={`quipucords-select${(isInline && ' quipucords-select__inline') || ' quipucords-select__not-inline'}`}
+    >
+      {(isDropdownButton && renderDropdownButton()) || renderSelect()}
     </div>
   );
 };
@@ -348,11 +438,11 @@ const DropdownSelect = ({
  * @type {{toggleIcon: (React.ReactNode|Function), className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean,
  *     isDropdownButton: boolean, maxHeight: number, buttonVariant: string, name: string, options: Array|object,
  *     selectedOptions: Array|number|string, isInline: boolean, id: string, isDisabled: boolean, placeholder: string,
- *     position: string, direction: string}}
+ *     position: string, splitButtonVariant: string, direction: string}}
  */
 DropdownSelect.propTypes = {
   ariaLabel: PropTypes.string,
-  buttonVariant: PropTypes.oneOf(Object.values(SelectButtonVariant)),
+  buttonVariant: PropTypes.oneOf(Object.values(ButtonVariant)),
   className: PropTypes.string,
   direction: PropTypes.oneOf(Object.values(SelectDirection)),
   id: PropTypes.string,
@@ -367,15 +457,17 @@ DropdownSelect.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
     PropTypes.arrayOf(
       PropTypes.shape({
+        description: PropTypes.any,
+        selected: PropTypes.bool,
         title: PropTypes.any,
-        value: PropTypes.any.isRequired,
-        selected: PropTypes.bool
+        value: PropTypes.any.isRequired
       })
     ),
     PropTypes.shape({
+      description: PropTypes.any,
+      selected: PropTypes.bool,
       title: PropTypes.any,
-      value: PropTypes.any.isRequired,
-      selected: PropTypes.bool
+      value: PropTypes.any.isRequired
     }),
     PropTypes.object
   ]),
@@ -386,6 +478,7 @@ DropdownSelect.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]))
   ]),
+  splitButtonVariant: PropTypes.oneOf(Object.values(SplitButtonVariant)),
   toggleIcon: PropTypes.element,
   variant: PropTypes.oneOf([...Object.values(SelectVariant)])
 };
@@ -394,13 +487,13 @@ DropdownSelect.propTypes = {
  * Default props.
  *
  * @type {{toggleIcon: null, className: string, ariaLabel: string, onSelect: Function, isToggleText: boolean, isDropdownButton: boolean,
- *     maxHeight: null, buttonVariant: ButtonVariant.primary, name: null, options: *[], selectedOptions: null, variant: SelectVariant.single,
- *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: DropdownPosition.left,
+ *     maxHeight: null, buttonVariant: string, name: null, options: *[], selectedOptions: null, variant: SelectVariant.single,
+ *     isInline: boolean, id: string, isDisabled: boolean, placeholder: string, position: DropdownPosition.left, splitButtonVariant: null,
  *     direction: DropdownDirection.down}}
  */
 DropdownSelect.defaultProps = {
   ariaLabel: 'Select option',
-  buttonVariant: ButtonVariant.primary,
+  buttonVariant: ButtonVariant.default,
   className: '',
   direction: SelectDirection.down,
   id: helpers.generateId(),
@@ -415,6 +508,7 @@ DropdownSelect.defaultProps = {
   placeholder: 'Select option',
   position: SelectPosition.left,
   selectedOptions: null,
+  splitButtonVariant: null,
   toggleIcon: null,
   variant: SelectVariant.single
 };
@@ -422,10 +516,13 @@ DropdownSelect.defaultProps = {
 export {
   DropdownSelect as default,
   DropdownSelect,
+  ButtonVariant,
   formatOptions,
-  formatPfProps,
+  formatButtonProps,
+  formatSelectProps,
   SelectDirection,
   SelectPosition,
   SelectVariant,
-  SelectButtonVariant
+  SelectButtonVariant,
+  SplitButtonVariant
 };
