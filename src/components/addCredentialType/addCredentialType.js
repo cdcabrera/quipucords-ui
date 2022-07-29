@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DropdownSelect, SelectButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
+import { DropdownSelect, ButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
 import { reduxTypes, storeHooks } from '../../redux';
 import { translate } from '../i18n/i18n';
 
@@ -91,11 +91,4 @@ AddCredentialType.defaultProps = {
   useOnSelect
 };
 
-export {
-  AddCredentialType as default,
-  AddCredentialType,
-  fieldOptions,
-  useOnSelect,
-  SelectButtonVariant,
-  SelectPosition
-};
+export { AddCredentialType as default, AddCredentialType, fieldOptions, useOnSelect, ButtonVariant, SelectPosition };
