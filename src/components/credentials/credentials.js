@@ -203,11 +203,7 @@ class Credentials extends React.Component {
 
     return (
       <div className="form-group">
-        <AddCredentialType
-          buttonVariant={ButtonVariant.secondary}
-          position={SelectPosition.right}
-          placeholder={t('form-dialog.label', { context: 'add' })}
-        />{' '}
+        <AddCredentialType position={SelectPosition.right} placeholder={t('form-dialog.label', { context: 'add' })} />{' '}
         <Button
           variant={ButtonVariant.secondary}
           isDisabled={!viewOptions.selectedItems || viewOptions.selectedItems.length === 0}
