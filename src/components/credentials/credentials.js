@@ -19,7 +19,11 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { Form, ListView } from 'patternfly-react';
 import { Modal, ModalVariant } from '../modal/modal';
-import { AddCredentialType, SelectPosition } from '../addCredentialType/addCredentialType';
+import {
+  AddCredentialType,
+  ButtonVariant as CredentialButtonVariant,
+  SelectPosition
+} from '../addCredentialType/addCredentialType';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import helpers from '../../common/helpers';
 import ViewToolbar from '../viewToolbar/viewToolbar';
@@ -203,7 +207,11 @@ class Credentials extends React.Component {
 
     return (
       <div className="form-group">
-        <AddCredentialType position={SelectPosition.right} placeholder={t('form-dialog.label', { context: 'add' })} />{' '}
+        <AddCredentialType
+          buttonVariant={CredentialButtonVariant.primary}
+          position={SelectPosition.right}
+          placeholder={t('form-dialog.label', { context: 'add' })}
+        />{' '}
         <Button
           variant={ButtonVariant.secondary}
           isDisabled={!viewOptions.selectedItems || viewOptions.selectedItems.length === 0}

@@ -12,7 +12,7 @@ import {
   Title
 } from '@patternfly/react-core';
 import { AddCircleOIcon } from '@patternfly/react-icons';
-import { AddCredentialType } from '../addCredentialType/addCredentialType';
+import { AddCredentialType, ButtonVariant as CredentialButtonVariant } from '../addCredentialType/addCredentialType';
 import helpers from '../../common/helpers';
 import { translate } from '../i18n/i18n';
 
@@ -34,7 +34,7 @@ const CredentialsEmptyState = ({ onAddSource, t, uiSentenceStartName, uiShortNam
       {t('view.empty-state', { context: ['description', 'credentials'], name: uiSentenceStartName })}
     </EmptyStateBody>
     <EmptyStatePrimary>
-      <AddCredentialType />
+      <AddCredentialType buttonVariant={CredentialButtonVariant.primary} />
     </EmptyStatePrimary>
     <EmptyStateSecondaryActions>
       <Button variant={ButtonVariant.link} onClick={onAddSource}>
