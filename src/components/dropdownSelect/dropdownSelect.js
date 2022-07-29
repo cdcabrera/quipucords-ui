@@ -225,8 +225,7 @@ const DropdownSelect = ({
    * @param {boolean} expanded
    */
   const onToggle = expanded => {
-    const updatedIsExpanded = isDropdownButton ? !isExpanded : expanded;
-    setIsExpanded(updatedIsExpanded);
+    setIsExpanded(expanded);
   };
 
   /**
@@ -294,7 +293,11 @@ const DropdownSelect = ({
   return (
     <div className={`quipucords-select${((isInline || isDropdownButton) && ' quipucords-select__inline') || ''}`}>
       {isDropdownButton && (
-        <Button className="quiucords-select__dropdown-button" variant={buttonVariant} onClick={onToggle}>
+        <Button
+          className="quiucords-select__dropdown-button"
+          variant={buttonVariant}
+          onClick={() => onToggle(!isExpanded)}
+        >
           <Flex component="span">
             <FlexItem component="span" grow={{ default: 'grow' }} spacer={{ default: 'none' }}>
               {placeholder || ariaLabel}
