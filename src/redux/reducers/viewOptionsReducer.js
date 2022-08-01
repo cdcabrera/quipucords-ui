@@ -143,39 +143,8 @@ const viewOptionsReducer = (state = initialState, action) => {
       };
       return { ...state, ...updateState };
 
-    case viewPaginationTypes.VIEW_FIRST_PAGE:
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: 1 };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.VIEW_LAST_PAGE:
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: state[action.viewType].totalPages };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.VIEW_PREVIOUS_PAGE:
-      if (state[action.viewType].currentPage < 2) {
-        return state;
-      }
-
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: state[action.viewType].currentPage - 1 };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.VIEW_NEXT_PAGE:
-      if (state[action.viewType].currentPage >= state[action.viewType].totalPages) {
-        return state;
-      }
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: state[action.viewType].currentPage + 1 };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.VIEW_PAGE_NUMBER:
-      if (
-        !Number.isInteger(action.pageNumber) ||
-        action.pageNumber < 1 ||
-        action.pageNumber > state[action.viewType].totalPages
-      ) {
-        return state;
-      }
-
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: action.pageNumber };
+    case viewPaginationTypes.VIEW_PAGE:
+      updateState[action.viewType] = { ...state[action.viewType], currentPage: action.page };
       return { ...state, ...updateState };
 
     case viewPaginationTypes.SET_PER_PAGE:

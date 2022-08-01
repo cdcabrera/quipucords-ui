@@ -176,7 +176,6 @@
 
 .list-view-pagination-top {
   padding: 0 14px;
-  margin-top: 15px;
 }
 
 .toolbar-pf-results .quipucords-view-count {
@@ -282,4 +281,8 @@
 
 .pficon.pficon-disconnected.is-error::before {
   color: var(--pf-global--palette--red-100);
+}
+
+.quipucords-view__pagination {
+  padding-bottom: 0 !important;
 }
