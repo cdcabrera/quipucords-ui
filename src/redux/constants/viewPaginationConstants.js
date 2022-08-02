@@ -1,9 +1,9 @@
 const SET_PER_PAGE = 'SET_PER_PAGE';
 const VIEW_PAGE = 'VIEW_PAGE';
 
-const viewTypes = {
+const viewPaginationTypes = {
   SET_PER_PAGE,
   VIEW_PAGE
 };
 
-export { viewTypes as default, viewTypes, SET_PER_PAGE, VIEW_PAGE };
+export { viewPaginationTypes as default, viewPaginationTypes, SET_PER_PAGE, VIEW_PAGE };
