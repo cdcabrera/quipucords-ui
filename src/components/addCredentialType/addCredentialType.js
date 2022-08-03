@@ -3,17 +3,7 @@ import PropTypes from 'prop-types';
 import { DropdownSelect, ButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
 import { reduxTypes, storeHooks } from '../../redux';
 import { translate } from '../i18n/i18n';
-
-/**
- * Select field options.
- *
- * @type {{title: Function|string, value: string}[]}
- */
-const fieldOptions = [
-  { title: () => translate('form-dialog.label', { context: ['option', 'network'] }), value: 'network' },
-  { title: () => translate('form-dialog.label', { context: ['option', 'satellite'] }), value: 'satellite' },
-  { title: () => translate('form-dialog.label', { context: ['option', 'vcenter'] }), value: 'vcenter' }
-];
+import { fieldOptions } from '../viewToolbar/viewToolbarFieldCredentialType';
 
 /**
  * On select create credential

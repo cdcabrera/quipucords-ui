@@ -1,260 +1,132 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Filter, Sort, Toolbar } from 'patternfly-react';
-import _size from 'lodash/size';
-import { reduxTypes, store } from '../../redux';
-import Tooltip from '../tooltip/tooltip';
-import RefreshTimeButton from '../refreshTimeButton/refreshTimeButton';
-import helpers from '../../common/helpers';
+import {
+  Divider,
+  Toolbar,
+  ToolbarContent,
+  ToolbarFilter,
+  ToolbarGroup,
+  ToolbarItem,
+  ToolbarItemVariant,
+  ToolbarToggleGroup
+} from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons';
+import {
+  useSelectCategoryOptions,
+  useToolbarFieldClear,
+  useToolbarFieldClearAll,
+  useToolbarFieldQueries
+} from './toolbarContext';
+import { ViewToolbarFieldSelectCategory } from './viewToolbarFieldSelectCategory';
+import { ViewToolbarFieldSortType } from './viewToolbarFieldSortType';
+import { RefreshTimeButton } from '../refreshTimeButton/refreshTimeButton';
+import { helpers } from '../../common';
+import { translate } from '../i18n/i18n';
 
-class ViewToolbar extends React.Component {
-  componentDidMount() {
-    const { filterType, sortType, filterFields, sortFields } = this.props;
+const ViewToolbar = ({
+  lastRefresh,
+  onRefresh,
+  categoryFields,
+  sortFields,
+  secondaryFields,
+  useSelectCategoryOptions: useAliasSelectCategoryOptions,
+  useToolbarFieldClear: useAliasToolbarFieldClear,
+  useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
+  useToolbarFieldQueries: useAliasToolbarFieldQueries,
+  t,
+  viewType
+}) => {
+  const { currentCategory, categoryFields: updatedCategoryFields } = useAliasSelectCategoryOptions(
+    viewType,
+    categoryFields
+  );
+  const toolbarFieldQueries = useAliasToolbarFieldQueries(viewType, categoryFields);
+  const clearField = useAliasToolbarFieldClear();
+  const clearAllFields = useAliasToolbarFieldClearAll();
 
-    if (!filterType) {
-      this.onSelectFilterType(filterFields[0]);
-    }
+  /**
+   * Clear a specific value
+   *
+   * @event onClearFilter
+   * @param {object} params
+   * @param {*} params.value
+   * @returns {void}
+   */
+  const onClearFilter = ({ value }) => clearField(value);
 
-    if (!sortType) {
-      this.onUpdateCurrentSortType(sortFields[0]);
-    }
-  }
+  /**
+   * Clear all active filters.
+   *
+   * @event onClearAll
+   * @returns {void}
+   */
+  const onClearAll = () => clearAllFields();
 
-  onFilterAdded = (field, value) => {
-    const { viewType } = this.props;
-
-    let filterText = '';
-    if (field.title) {
-      filterText = field.title;
-    } else {
-      filterText = field;
-    }
-    filterText += ': ';
-
-    if (value.title) {
-      filterText += value.title;
-    } else {
-      filterText += value;
-    }
-
-    const filter = { field, value, label: filterText };
-    store.dispatch({
-      type: reduxTypes.viewToolbar.ADD_FILTER,
-      viewType,
-      filter
-    });
+  /**
+   * Set selected options for chip display.
+   *
+   * @param {*|string} value
+   * @returns {Array}
+   */
+  const setSelectedOptions = value => {
+    const query = toolbarFieldQueries?.[value];
+    return (query && [t(['form-dialog.label', 'toolbar.label'], { context: ['option', query] })]) || [];
   };
 
-  onSelectFilterType = filterType => {
-    const { viewType } = this.props;
-    store.dispatch({
-      type: reduxTypes.viewToolbar.SET_FILTER_TYPE,
-      viewType,
-      filterType
-    });
-  };
+  return (
+    <Toolbar
+      id="quipucords-toolbar"
+      // className="quipucords-toolbar pf-m-toggle-group-container"
+      collapseListedFiltersBreakpoint="sm"
+      clearAllFilters={onClearAll}
+      clearFiltersButtonText={t('toolbar.label', { context: 'clear-filters' })}
+    >
+      <ToolbarContent>
+        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="md">
+          <ToolbarGroup variant="filter-group">
+            {updatedCategoryFields.length > 1 && (
+              <ToolbarItem>
+                <ViewToolbarFieldSelectCategory options={updatedCategoryFields} viewType={viewType} />
+              </ToolbarItem>
+            )}
+            {updatedCategoryFields.map(({ title, value, component: OptionComponent, options: filterOptions }) => {
+              const chipProps = { categoryName: (typeof title === 'function' && title()) || title };
 
-  onFilterValueSelected = newFilterValue => {
-    const { filterType, viewType } = this.props;
+              chipProps.chips = setSelectedOptions(value);
+              chipProps.deleteChip = () => onClearFilter({ options: filterOptions, value });
 
-    store.dispatch({
-      type: reduxTypes.viewToolbar.SET_FILTER_VALUE,
-      viewType,
-      filterValue: newFilterValue
-    });
-
-    if (newFilterValue) {
-      this.onFilterAdded(filterType, newFilterValue);
-    }
-  };
-
-  onValueKeyPress = keyEvent => {
-    const { filterType, viewType } = this.props;
-    const filterValue = keyEvent.target.value;
-
-    if (keyEvent.key === 'Enter' && filterValue && filterValue.length) {
-      this.onFilterAdded(filterType, filterValue);
-      keyEvent.stopPropagation();
-      keyEvent.preventDefault();
-
-      store.dispatch({
-        type: reduxTypes.viewToolbar.SET_FILTER_VALUE,
-        viewType,
-        filterValue
-      });
-    }
-  };
-
-  onRemoveFilter = filter => {
-    const { viewType } = this.props;
-    store.dispatch({
-      type: reduxTypes.viewToolbar.REMOVE_FILTER,
-      viewType,
-      filter
-    });
-  };
-
-  onClearFilters = () => {
-    const { viewType } = this.props;
-    store.dispatch({
-      type: reduxTypes.viewToolbar.CLEAR_FILTERS,
-      viewType
-    });
-  };
-
-  onUpdateCurrentSortType = sortType => {
-    const { viewType } = this.props;
-    store.dispatch({
-      type: reduxTypes.viewToolbar.SET_SORT_TYPE,
-      viewType,
-      sortType
-    });
-  };
-
-  onToggleCurrentSortDirection = () => {
-    const { viewType } = this.props;
-    store.dispatch({
-      type: reduxTypes.viewToolbar.TOGGLE_SORT_ASCENDING,
-      viewType
-    });
-  };
-
-  renderFilterInput() {
-    const { filterType, filterValue } = this.props;
-
-    if (!filterType) {
-      return null;
-    }
-
-    if (filterType.filterType === 'select') {
-      return (
-        <Filter.ValueSelector
-          filterValues={filterType.filterValues}
-          currentValue={filterValue}
-          placeholder={filterType.placeholder}
-          onFilterValueSelected={this.onFilterValueSelected}
-        />
-      );
-    }
-
-    return (
-      <input
-        className="form-control"
-        type={filterType.filterType}
-        defaultValue={filterValue}
-        placeholder={filterType.placeholder}
-        onKeyPress={e => this.onValueKeyPress(e)}
-      />
-    );
-  }
-
-  renderFilter() {
-    const { filterType, filterFields } = this.props;
-
-    if (_size(filterFields)) {
-      return (
-        <Filter>
-          <Filter.TypeSelector
-            filterTypes={filterFields}
-            currentFilterType={filterType}
-            onFilterTypeSelected={this.onSelectFilterType}
-          />
-          {this.renderFilterInput()}
-        </Filter>
-      );
-    }
-
-    return null;
-  }
-
-  renderSort() {
-    const { sortType, sortAscending, sortFields } = this.props;
-
-    if (sortType) {
-      return (
-        <Sort>
-          <Sort.TypeSelector
-            sortTypes={sortFields}
-            currentSortType={sortType}
-            onSortTypeSelected={this.onUpdateCurrentSortType}
-          />
-          <Tooltip content={`Sort by ${sortType.title}`}>
-            <Sort.DirectionSelector
-              isNumeric={sortType.isNumeric}
-              isAscending={sortAscending}
-              onClick={() => this.onToggleCurrentSortDirection()}
-            />
-          </Tooltip>
-        </Sort>
-      );
-    }
-
-    return null;
-  }
-
-  renderRefresh() {
-    const { onRefresh, lastRefresh } = this.props;
-
-    return (
-      <div className="form-group">
-        <RefreshTimeButton onRefresh={onRefresh} lastRefresh={lastRefresh} />
-      </div>
-    );
-  }
-
-  renderCounts() {
-    const { totalCount, selectedCount, itemsType, itemsTypePlural } = this.props;
-
-    return (
-      <h5 className="quipucords-view-count">
-        {selectedCount > 0 ? `${selectedCount} of ` : null}
-        {`${totalCount} ${totalCount === 1 ? itemsType : itemsTypePlural}`}
-        {selectedCount > 0 ? ' selected' : ''}
-      </h5>
-    );
-  }
-
-  renderActiveFilters() {
-    const { activeFilters } = this.props;
-
-    if (_size(activeFilters)) {
-      return [
-        <Filter.ActiveLabel key="label">Active Filters:</Filter.ActiveLabel>,
-        <Filter.List key="list">
-          {activeFilters.map(item => (
-            <Filter.Item key={item.label} onRemove={this.onRemoveFilter} filterData={item}>
-              {item.label}
-            </Filter.Item>
-          ))}
-        </Filter.List>,
-        <Button bsStyle="link" key="clear" onClick={this.onClearFilters}>
-          Clear All Filters
-        </Button>
-      ];
-    }
-
-    return <Filter.ActiveLabel>No Filters</Filter.ActiveLabel>;
-  }
-
-  render() {
-    const { actions } = this.props;
-
-    return (
-      <Toolbar>
-        {this.renderFilter()}
-        {this.renderSort()}
-        {this.renderRefresh()}
-        <Toolbar.RightContent>{actions}</Toolbar.RightContent>
-        <Toolbar.Results>
-          {this.renderActiveFilters()}
-          {this.renderCounts()}
-        </Toolbar.Results>
-      </Toolbar>
-    );
-  }
-}
+              return (
+                <ToolbarFilter
+                  key={value}
+                  showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
+                  {...chipProps}
+                >
+                  <OptionComponent viewType={viewType} />
+                </ToolbarFilter>
+              );
+            })}
+          </ToolbarGroup>
+        </ToolbarToggleGroup>
+        <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />
+        <ToolbarItem key="sortFields" spacer={{ default: 'spacerSm' }}>
+          <ViewToolbarFieldSortType options={sortFields} viewType={viewType} />
+        </ToolbarItem>
+        <ToolbarItem key="sortSeparator" variant={ToolbarItemVariant.separator} />
+        <ToolbarItem key="lastRefresh">
+          <RefreshTimeButton onRefresh={onRefresh} lastRefresh={lastRefresh} />
+        </ToolbarItem>
+        <ToolbarItem key="secondaryFields" alignment={{ lg: 'alignRight', md: 'alignLeft' }}>
+          {secondaryFields}
+        </ToolbarItem>
+        <Divider />
+        <ToolbarItem alignment={{ lg: 'alignRight', md: 'alignLeft' }}>hey</ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  );
+};
 
 ViewToolbar.propTypes = {
+  /*
   viewType: PropTypes.string,
   totalCount: PropTypes.number,
   selectedCount: PropTypes.number,
@@ -268,11 +140,43 @@ ViewToolbar.propTypes = {
   filterType: PropTypes.object,
   filterValue: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   activeFilters: PropTypes.array,
+  sortField: PropTypes.oneOfType(PropTypes.string, PropTypes.number),
   sortType: PropTypes.object,
   sortAscending: PropTypes.bool
+   */
+  categoryFields: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+      value: PropTypes.any,
+      selected: PropTypes.bool,
+      component: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
+    })
+  ),
+  secondaryFields: PropTypes.node,
+  sortFields: PropTypes.array,
+  onRefresh: PropTypes.func,
+  lastRefresh: PropTypes.number,
+  t: PropTypes.func,
+  useSelectCategoryOptions: PropTypes.func,
+  useToolbarFieldClear: PropTypes.func,
+  useToolbarFieldClearAll: PropTypes.func,
+  useToolbarFieldQueries: PropTypes.func,
+  viewType: PropTypes.string
 };
 
 ViewToolbar.defaultProps = {
+  categoryFields: [],
+  secondaryFields: [],
+  sortFields: [],
+  onRefresh: helpers.noop,
+  lastRefresh: 0,
+  useSelectCategoryOptions,
+  useToolbarFieldClear,
+  useToolbarFieldClearAll,
+  useToolbarFieldQueries,
+  t: translate,
+  viewType: null
+  /*
   viewType: null,
   totalCount: 0,
   selectedCount: 0,
@@ -286,8 +190,10 @@ ViewToolbar.defaultProps = {
   filterType: {},
   filterValue: '',
   activeFilters: [],
+  sortField: null,
   sortType: {},
   sortAscending: true
+   */
 };
 
 export { ViewToolbar as default, ViewToolbar };

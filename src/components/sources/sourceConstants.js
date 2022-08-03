@@ -1,6 +1,25 @@
-import { dictionary } from '../../constants/dictionaryConstants';
+import React from 'react';
+import { translate } from '../i18n/i18n';
+// import { dictionary } from '../../constants/dictionaryConstants';
+import { ViewToolbarFieldFilter } from '../viewToolbar/viewToolbarFieldFilter';
 
 const SourceFilterFields = [
+  {
+    title: () => translate('toolbar.label', { context: ['option', 'search_by_name'] }),
+    value: 'search_by_name',
+    component: function SearchName(props) {
+      return <ViewToolbarFieldFilter queryType="search_by_name" {...props} />;
+    },
+    selected: true
+  },
+  {
+    title: () => translate('toolbar.label', { context: ['option', 'search_credentials_by_name'] }),
+    value: 'search_credentials_by_name',
+    component: function SearchName(props) {
+      return <ViewToolbarFieldFilter queryType="search_credentials_by_name" {...props} />;
+    }
+  }
+  /*
   {
     id: 'search_by_name',
     title: 'Name',
@@ -24,6 +43,7 @@ const SourceFilterFields = [
       { title: dictionary.vcenter, id: 'vcenter' }
     ]
   }
+  */
 ];
 
 /**
@@ -31,18 +51,19 @@ const SourceFilterFields = [
  */
 const SourceSortFields = [
   {
-    id: 'name',
-    title: 'Name',
+    title: () => translate('toolbar.label', { context: ['option', 'name'] }),
+    value: 'name',
+    isNumeric: false,
+    selected: true
+  },
+  {
+    title: () => translate('toolbar.label', { context: ['option', 'source_type'] }),
+    value: 'source_type',
     isNumeric: false
   },
   {
-    id: 'source_type',
-    title: 'Source Type',
-    isNumeric: false
-  },
-  {
-    id: 'most_recent_connect_scan__start_time',
-    title: 'Most Recent',
+    title: () => translate('toolbar.label', { context: ['option', 'most_recent'] }),
+    value: 'most_recent_connect_scan__start_time',
     isNumeric: true,
     sortAscending: false
   }

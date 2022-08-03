@@ -24,7 +24,10 @@ const INITAL_VIEW_STATE = {
   sortField: 'name',
   sortAscending: true,
   selectedItems: [],
-  expandedItems: []
+  expandedItems: [],
+
+  currentCategory: null,
+  filterQuery: {}
 };
 
 initialState[viewTypes.SOURCES_VIEW] = Object.assign(INITAL_VIEW_STATE);
@@ -53,6 +56,7 @@ const viewOptionsReducer = (state = initialState, action) => {
   };
 
   switch (action.type) {
+    /*
     case viewToolbarTypes.SET_FILTER_TYPE:
       if (state[action.viewType].filterType === action.filterType) {
         return state;
@@ -112,7 +116,40 @@ const viewOptionsReducer = (state = initialState, action) => {
     case viewToolbarTypes.CLEAR_FILTERS:
       updateState[action.viewType] = { ...state[action.viewType], activeFilters: [], currentPage: 1 };
       return { ...state, ...updateState };
+      */
+    case viewToolbarTypes.SET_FILTER_TYPE:
+      return reduxHelpers.setStateProp(
+        action.viewType,
+        {
+          // filterType: action.filterType
+          currentCategory: action.currentCategory
+        },
+        {
+          state,
+          reset: false
+        }
+      );
 
+    case viewToolbarTypes.SET_FILTER:
+      const resetPaging = {};
+
+      if (state?.[action.viewType].filterQuery?.[action.param] ?? false) {
+        resetPaging.currentPage = 1;
+      }
+
+      return reduxHelpers.setStateProp(
+        action.viewType,
+        {
+          ...resetPaging,
+          filterQuery: { ...state?.[action.viewType].filterQuery, [action.param]: action.value }
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+
+    /*
     case viewToolbarTypes.SET_SORT_TYPE:
       if (state[action.viewType].sortType === action.sortType) {
         return state;
@@ -121,20 +158,48 @@ const viewOptionsReducer = (state = initialState, action) => {
       updateState[action.viewType] = {
         ...state[action.viewType],
         sortType: action.sortType,
-        sortField: action.sortType && action.sortType.id,
+        sortField: action.sortType?.value,
         sortAscending: _get(action, 'sortType.sortAscending', true),
         currentPage: 1
       };
 
       return { ...state, ...updateState };
 
+       */
+    case viewToolbarTypes.SET_SORT_TYPE:
+      return reduxHelpers.setStateProp(
+        action.viewType,
+        {
+          // sortType: action.sortType,
+          sortField: action.sortField,
+          currentPage: 1
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+
     case viewToolbarTypes.TOGGLE_SORT_ASCENDING:
+      return reduxHelpers.setStateProp(
+        action.viewType,
+        {
+          sortAscending: action.sortAscending,
+          currentPage: 1
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    /*
       updateState[action.viewType] = {
         ...state[action.viewType],
         sortAscending: !state[action.viewType].sortAscending,
         currentPage: 1
       };
-      return { ...state, ...updateState };
+      */
+    // return { ...state, ...updateState };
 
     case viewPaginationTypes.VIEW_PAGE:
       updateState[action.viewType] = { ...state[action.viewType], currentPage: action.currentPage };

@@ -1,4 +1,9 @@
+import React from 'react';
+import { translate } from '../i18n/i18n';
+import { ViewToolbarFieldFilter } from '../viewToolbar/viewToolbarFieldFilter';
+
 const ScanFilterFields = [
+  /*
   {
     id: 'search_by_name',
     title: 'Name',
@@ -11,6 +16,22 @@ const ScanFilterFields = [
     placeholder: 'Filter by Source Name',
     filterType: 'text'
   }
+  */
+  {
+    title: () => translate('toolbar.label', { context: ['option', 'search_by_name'] }),
+    value: 'search_by_name',
+    component: function SearchName(props) {
+      return <ViewToolbarFieldFilter queryType="search_by_name" {...props} />;
+    },
+    selected: true
+  },
+  {
+    title: () => translate('toolbar.label', { context: ['option', 'search_sources_by_name'] }),
+    value: 'search_sources_by_name',
+    component: function CredentialType(props) {
+      return <ViewToolbarFieldFilter queryType="search_sources_by_name" {...props} />;
+    }
+  }
 ];
 
 /**
@@ -18,13 +39,14 @@ const ScanFilterFields = [
  */
 const ScanSortFields = [
   {
-    id: 'name',
-    title: 'Name',
-    isNumeric: false
+    title: () => translate('toolbar.label', { context: ['option', 'name'] }),
+    value: 'name',
+    isNumeric: false,
+    selected: true
   },
   {
-    id: 'most_recent_scanjob__start_time',
-    title: 'Most Recent',
+    title: () => translate('toolbar.label', { context: ['option', 'most_recent'] }),
+    value: 'most_recent_scanjob__start_time',
     isNumeric: true,
     sortAscending: false
   }

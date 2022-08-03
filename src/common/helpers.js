@@ -197,9 +197,11 @@ const createViewQueryObject = (viewOptions, queryObj) => {
       queryObject.ordering = viewOptions.sortAscending ? viewOptions.sortField : `-${viewOptions.sortField}`;
     }
 
-    if (viewOptions.activeFilters) {
-      viewOptions.activeFilters.forEach(filter => {
-        queryObject[filter.field.id] = filter.field.filterType === 'select' ? filter.value.id : filter.value;
+    if (viewOptions.filterQuery) {
+      Object.entries(viewOptions.filterQuery).forEach(([key, value]) => {
+        if (value) {
+          queryObject[key] = value;
+        }
       });
     }
 
