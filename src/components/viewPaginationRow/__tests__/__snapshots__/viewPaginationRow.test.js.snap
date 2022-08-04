@@ -2,25 +2,13 @@
 
 exports[`ViewPaginationRow Component should render 1`] = `
 <div
-  class="pf-c-pagination list-view-pagination-top"
-  data-ouia-component-id="OUIA-Generated-Pagination-top-1"
+  class="pf-c-pagination pf-m-bottom quipucords-view__pagination"
+  data-ouia-component-id="OUIA-Generated-Pagination-bottom-1"
   data-ouia-component-type="PF4/Pagination"
   data-ouia-safe="true"
   id="pagination-options-menu-0"
   style="--pf-c-pagination__nav-page-select--c-form-control--width-chars: 2;"
 >
-  <div
-    class="pf-c-pagination__total-items"
-  >
-    <b>
-      1 - 10
-    </b>
-     of 
-    <b>
-      200
-    </b>
-     
-  </div>
   <div
     class="pf-c-options-menu"
     data-ouia-component-type="PF4/PaginationOptionsMenu"

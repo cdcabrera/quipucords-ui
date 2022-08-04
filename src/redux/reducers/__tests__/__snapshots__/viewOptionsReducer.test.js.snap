@@ -704,7 +704,7 @@ Object {
 }
 `;
 
-exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_FIRST_PAGE 1`] = `
+exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_PAGE 1`] = `
 Object {
   "result": Object {
     "CREDENTIALS_VIEW": Object {
@@ -737,7 +737,7 @@ Object {
     },
     "SOURCES_VIEW": Object {
       "activeFilters": Array [],
-      "currentPage": 1,
+      "currentPage": undefined,
       "expandedItems": Array [],
       "filterType": null,
       "filterValue": "",
@@ -750,206 +750,6 @@ Object {
       "totalPages": 0,
     },
   },
-  "type": "VIEW_FIRST_PAGE",
-}
-`;
-
-exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_LAST_PAGE 1`] = `
-Object {
-  "result": Object {
-    "CREDENTIALS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SCANS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SOURCES_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 0,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-  },
-  "type": "VIEW_LAST_PAGE",
-}
-`;
-
-exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_NEXT_PAGE 1`] = `
-Object {
-  "result": Object {
-    "CREDENTIALS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SCANS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SOURCES_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-  },
-  "type": "VIEW_NEXT_PAGE",
-}
-`;
-
-exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_PAGE_NUMBER 1`] = `
-Object {
-  "result": Object {
-    "CREDENTIALS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SCANS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SOURCES_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-  },
-  "type": "VIEW_PAGE_NUMBER",
-}
-`;
-
-exports[`viewOptionsReducer should handle specific defined types: defined type VIEW_PREVIOUS_PAGE 1`] = `
-Object {
-  "result": Object {
-    "CREDENTIALS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SCANS_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-    "SOURCES_VIEW": Object {
-      "activeFilters": Array [],
-      "currentPage": 1,
-      "expandedItems": Array [],
-      "filterType": null,
-      "filterValue": "",
-      "pageSize": 10,
-      "selectedItems": Array [],
-      "sortAscending": true,
-      "sortField": "name",
-      "sortType": null,
-      "totalCount": 0,
-      "totalPages": 0,
-    },
-  },
-  "type": "VIEW_PREVIOUS_PAGE",
+  "type": "VIEW_PAGE",
 }
 `;
