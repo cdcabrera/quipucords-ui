@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import { Grid, GridItem } from '@patternfly/react-core';
 // import { TableComposable, TableVariant, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
-import { SortByDirection, TableComposable, TableVariant } from '@patternfly/react-table';
+import { SortByDirection, TableComposable, TableVariant, Thead, Tbody, Tr, Th, Td } from '@patternfly/react-table';
 import { TableEmpty } from './tableEmpty';
 import { tableData } from './tableHelpers';
 
@@ -13,42 +13,101 @@ const Table = ({ ariaLabel, children, className, columnHeaders, isBorders, isHea
   // const [isSortable, setIsSortable] = useState(false);
   const [updatedHeaders, setUpdatedHeaders] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
-  const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
+  const [updatedIsCollapsibleCell, setUpdatedIsCollapsibleCell] = useState(false);
+  // const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
   const [updatedIsCollapsibleTable, setUpdatedIsCollapsibleTable] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
   // const [selectedRows, setSelectedRows] = useState([]);
   // const [expandedRows, setExpandedRows] = useState([]);
   // const [expandedCells, setExpandedCells] = useState([]);
 
-  console.log(columnHeaders, updatedHeaders, setUpdatedHeaders, setUpdatedRows);
+  // console.log(columnHeaders, updatedHeaders, setUpdatedHeaders, setUpdatedRows);
 
   useShallowCompareEffect(() => {
     const {
       columnHeaders: updatedColumnHeaders,
-      isSortTable,
+      // isSortTable,
       rows: updatedTableRows,
+      isCollapsibleCell,
       isCollapsibleTable,
       isSelectTable
     } = tableData({ columnHeaders, rows });
 
     setUpdatedHeaders(updatedColumnHeaders);
-    setUpdatedIsSortTable(isSortTable);
+    // setUpdatedIsSortTable(isSortTable);
+    setUpdatedIsCollapsibleCell(isCollapsibleCell);
     setUpdatedRows(updatedTableRows);
     setUpdatedIsCollapsibleTable(isCollapsibleTable);
     setUpdatedIsSelectTable(isSelectTable);
   }, [columnHeaders, rows]);
 
-  const renderHeader = () => {
-    return (
-      <Thead>
-        <Tr>
+  const renderHeader = () => (
+    <Thead>
+      <Tr>
+        {updatedIsSelectTable && <Td key="select-table-header" />}
+        {updatedIsCollapsibleTable && <Td key="collapsible-table-header" aria-hidden />}
+        {updatedHeaders.map(({ content, props, sort }) => (
+          <Th key={window.btoa(content)} sort={sort} {...props}>
+            {content}
+          </Th>
+        ))}
+      </Tr>
+    </Thead>
+  );
 
-        </Tr>
-      </Thead>
-    );
+  const renderRows = () => {
+    const generatedBody = [];
+
+    updatedRows.forEach(({ cells, expand, select }) => {
+      console.log('>>>>>>>>>>>>>>', cells, expand, select, updatedIsCollapsibleCell);
+      const tempRow = [];
+
+      // cells.forEach(({ content, isTHeader, isExpanded, onExpand, expandedContent }) => {
+      cells.forEach(({ content, isTHeader }) => {
+        const WrapperCell = (isTHeader && Th) || Td;
+        const wrapperCellProps = {};
+
+        tempRow.push(
+          <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
+            {content}
+          </WrapperCell>
+        );
+      });
+
+      generatedBody.push(<Tr key={window.btoa(JSON.stringify(cells))}>{tempRow}</Tr>);
+      // updatedIsCollapsibleCell
+      /*
+      const tempRow = [];
+      const tempRowProps = { expand, select };
+
+      cells.forEach(({ content, isTHeader, isExpanded, onExpand, expandedContent }) => {
+        const WrapperCell = (isTHeader && Th) || Td;
+        const wrapperCellProps = {};
+
+        if (onExpand) {
+          wrapperCellProps.compoundExpand = {
+            isExpanded,
+            onToggle: (a, b, c) => {
+              console.log(a, b, c, expandedContent);
+            }
+          };
+        }
+
+        tempRow.push(<WrapperCell {...wrapperCellProps}>{content}</WrapperCell>);
+      });
+
+      return <Tr>{tempRow}</Tr>;
+      */
+
+      // content: PropTypes.oneOfType([PropTypes.func, PropTypes.node, PropTypes.instanceOf(Date)]).isRequired,
+      //             isTHeader: PropTypes.bool,
+      //             isExpanded: PropTypes.bool,
+      //             onExpand: PropTypes.func,
+      //             expandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
+    });
+
+    return <Tbody>{generatedBody}</Tbody>;
   };
-
-  const renderRows = () => updatedRows.map();
 
   const renderEmpty = () => children || <TableEmpty />;
 

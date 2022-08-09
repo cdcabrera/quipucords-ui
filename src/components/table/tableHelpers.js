@@ -131,11 +131,14 @@ const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
 const tableRows = (rows = []) => {
   const updatedRows = [];
   let isCollapsibleTable = false;
+  let isCollapsibleCell = false;
   let isSelectTable = false;
 
   rows.forEach(({ cells, isDisabled = false, isExpanded, isSelected = false, onSelect, onExpand, expandedContent }) => {
     const rowObj = {
-      cells: []
+      cells: [],
+      select: undefined,
+      expand: undefined
     };
     updatedRows.push(rowObj);
 
@@ -152,21 +155,18 @@ const tableRows = (rows = []) => {
       };
     }
 
-    if (expandedContent) {
-      isCollapsibleTable = true;
-      rowObj.expand = {
-        rowIndex,
-        isExpanded: isExpanded || false,
-        onToggle: (_event, _index, expanded) => onExpand({ rowIndex, isExpanded: expanded }),
-        // };
-        // rowObj.expandData = {
-        expandedContent,
-        colSpan: cells.length
-      };
-    }
-
     cells.forEach(cell => {
       if (cell?.content !== undefined) {
+        // const updatedCellProps = {};
+
+        if (cell?.expandedContent) {
+          isCollapsibleCell = true;
+          // updatedCellProps.compoundExpand = {
+          //  isExpanded: cell?.isExpanded,
+          //  onToggle:
+          // };
+        }
+
         rowObj.cells.push({ ...cell });
       } else {
         rowObj.cells.push({
@@ -178,10 +178,24 @@ const tableRows = (rows = []) => {
         });
       }
     });
+
+    if (!isCollapsibleCell && expandedContent) {
+      isCollapsibleTable = true;
+      rowObj.expand = {
+        rowIndex,
+        isExpanded: isExpanded || false,
+        onToggle: (_event, _index, expanded) => onExpand({ rowIndex, isExpanded: expanded }),
+        // };
+        // rowObj.expandData = {
+        expandedContent,
+        colSpan: cells.length
+      };
+    }
   });
 
   return {
     rows: updatedRows,
+    isCollapsibleCell,
     isCollapsibleTable,
     isSelectTable
   };

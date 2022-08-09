@@ -30,8 +30,10 @@ import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import CredentialsEmptyState from './credentialsEmptyState';
 import CredentialListItem from './credentialListItem';
+import { CredentialsTable } from './credentialsTable';
 import { CredentialFilterFields, CredentialSortFields } from './credentialConstants';
 import { translate } from '../i18n/i18n';
+import { Table } from '../table/table';
 
 class Credentials extends React.Component {
   credentialsToDelete = [];
@@ -242,8 +244,15 @@ class Credentials extends React.Component {
     const { t } = this.props;
 
     if (_size(items)) {
-      return (
-        <ListView className="quipicords-list-view">
+      const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
+        cells: [name, credType, sources.length]
+      }));
+      console.log('ITEMS >>>>>>>>>>>>>>>>>', items, updatedItemRows);
+
+      return [
+        <Table key="just-table" rows={updatedItemRows} />,
+        <CredentialsTable key="testing" />,
+        <ListView key="original" className="quipicords-list-view">
           {items.map(item => (
             <CredentialListItem
               item={item}
@@ -253,7 +262,7 @@ class Credentials extends React.Component {
             />
           ))}
         </ListView>
-      );
+      ];
     }
 
     return (
