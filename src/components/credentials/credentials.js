@@ -30,7 +30,7 @@ import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import CredentialsEmptyState from './credentialsEmptyState';
 import CredentialListItem from './credentialListItem';
-import { CredentialsTable } from './credentialsTable';
+// import { CredentialsTable } from './credentialsTable';
 import { CredentialFilterFields, CredentialSortFields } from './credentialConstants';
 import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
@@ -244,14 +244,22 @@ class Credentials extends React.Component {
     const { t } = this.props;
 
     if (_size(items)) {
+      const updatedHeaderCols = ['One', 'Two', 'Three'];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
-        cells: [name, credType, sources.length]
+        cells: [name, credType, sources.length],
+        onSelect: (a, b, c) => console.log('selected', a, b, c)
       }));
       console.log('ITEMS >>>>>>>>>>>>>>>>>', items, updatedItemRows);
 
       return [
-        <Table key="just-table" rows={updatedItemRows} />,
-        <CredentialsTable key="testing" />,
+        <Table
+          key="just-table"
+          isHeader
+          onSelect={(a, b, c) => console.log('>>>>> callback', a, b, c)}
+          columnHeaders={updatedHeaderCols}
+          rows={updatedItemRows}
+        />,
+        // <CredentialsTable key="testing" />,
         <ListView key="original" className="quipicords-list-view">
           {items.map(item => (
             <CredentialListItem

@@ -128,8 +128,65 @@ const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
  *           </Tr>
  */
 
-const tableRows = (rows = []) => {
+const tableRows = ({ onSelect, rows = [], selectedRows = {} } = {}) => {
   const updatedRows = [];
+  // const updateSelectedRows = new Set();
+  // let isCollapsibleTable = false;
+  const isCollapsibleCell = false;
+  let isSelectTable = false;
+
+  // rows.forEach(({ cells, isDisabled = false, isExpanded, isSelected = false, expandedContent }) => {
+  rows.forEach(({ cells, isDisabled = false, isSelected = false }) => {
+    const rowObj = {
+      cells: [],
+      select: undefined,
+      expand: undefined
+    };
+    updatedRows.push(rowObj);
+    rowObj.rowIndex = updatedRows.length - 1;
+
+    if (typeof onSelect === 'function') {
+      // const updatedIsSelected = selectedRows?.has(rowObj.rowIndex) ?? isSelected ?? false;
+      const updatedIsSelected = selectedRows[rowObj.rowIndex] === true || isSelected || false;
+
+      isSelectTable = true;
+      rowObj.select = {
+        cells,
+        rowIndex: rowObj.rowIndex,
+        onSelect: (_event, selected) => onSelect({ rowIndex: rowObj.rowIndex, isSelected: selected, cells }),
+        isSelected: updatedIsSelected,
+        disable: isDisabled || false
+      };
+    }
+
+    cells.forEach(cell => {
+      if (cell?.content !== undefined) {
+        rowObj.cells.push({ ...cell });
+      } else {
+        rowObj.cells.push({
+          content:
+            (React.isValidElement(cell) && cell) ||
+            (typeof cell === 'function' && cell()) ||
+            (typeof cell === 'object' && `${cell}`) ||
+            cell
+        });
+      }
+    });
+  });
+
+  return {
+    // selectedRows: updateSelectedRows,
+    rows: updatedRows,
+    isCollapsibleCell,
+    // isCollapsibleTable,
+    isSelectTable
+  };
+};
+
+/*
+const tableRowsOld = (rows = [], selectedRows) => {
+  const updatedRows = [];
+  const updateSelectedRows = selectedRows || new Set();
   let isCollapsibleTable = false;
   let isCollapsibleCell = false;
   let isSelectTable = false;
@@ -145,13 +202,20 @@ const tableRows = (rows = []) => {
     const rowIndex = updatedRows.length - 1;
 
     if (typeof onSelect === 'function') {
+      if (isSelected === true) {
+        updateSelectedRows.add(rowIndex);
+      } else {
+        updateSelectedRows.delete(rowIndex);
+      }
+
       isSelectTable = true;
       rowObj.select = {
+        cells,
         rowIndex,
         // onSelect: (_event, selected, _index) => onSelect({ rowIndex, isSelected: selected, cells }),
-        onSelect: (_event, selected) => onSelect({ rowIndex, isSelected: selected, cells }),
-        isSelected,
-        disable: isDisabled
+        // onSelect: (_event, selected) => onSelect({ rowIndex, isSelected: selected, cells }),
+        isSelected: isSelected || false,
+        disable: isDisabled || false
       };
     }
 
@@ -194,6 +258,7 @@ const tableRows = (rows = []) => {
   });
 
   return {
+    selectedRows: updateSelectedRows,
     rows: updatedRows,
     isCollapsibleCell,
     isCollapsibleTable,
@@ -244,14 +309,15 @@ const tableRows = (rows = []) => {
     isCollapsibleTable,
     isSelectTable
   };
-  */
+  * /
 };
+*/
 
-const tableData = ({ columnHeaders = [], rows = [] } = {}) => {
+const tableData = ({ columnHeaders = [], rows = [], selectedRows } = {}) => {
   // const updatedHeaderCells = [];
   // const updatedRows = [];
   // let isSortableTable = false;
-  const updatedTableRows = tableRows(rows);
+  const updatedTableRows = tableRows(rows, selectedRows);
 
   return {
     // headerCells: updatedHeaderCells,
