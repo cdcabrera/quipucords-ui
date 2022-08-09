@@ -128,7 +128,8 @@ const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
  *           </Tr>
  */
 
-const tableRows = ({ onSelect, rows = [], selectedRows = {} } = {}) => {
+// const tableRows = ({ onSelect, rows = [], selectedRows = {} } = {}) => {
+const tableRows = ({ onSelect, rows = [] } = {}) => {
   const updatedRows = [];
   // const updateSelectedRows = new Set();
   // let isCollapsibleTable = false;
@@ -145,15 +146,18 @@ const tableRows = ({ onSelect, rows = [], selectedRows = {} } = {}) => {
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
 
+    console.log('ON SELECT IS >>>>', typeof onSelect, onSelect);
     if (typeof onSelect === 'function') {
       // const updatedIsSelected = selectedRows?.has(rowObj.rowIndex) ?? isSelected ?? false;
-      const updatedIsSelected = selectedRows[rowObj.rowIndex] === true || isSelected || false;
+      // const updatedIsSelected = selectedRows[rowObj.rowIndex] === true || isSelected || false;
+      const updatedIsSelected = isSelected ?? false;
 
       isSelectTable = true;
       rowObj.select = {
         cells,
         rowIndex: rowObj.rowIndex,
-        onSelect: (_event, selected) => onSelect({ rowIndex: rowObj.rowIndex, isSelected: selected, cells }),
+        onSelect: (_event, selected) =>
+          onSelect({ rowIndex: rowObj.rowIndex, isSelected: selected, cells, parsedRows: updatedRows }),
         isSelected: updatedIsSelected,
         disable: isDisabled || false
       };
