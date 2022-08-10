@@ -3,19 +3,17 @@ import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
-// import { TableComposable, TableVariant, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
 import {
+  ExpandableRowContent,
   SortByDirection,
   TableComposable,
   TableVariant,
   Tbody,
-  Thead,
-  Tr,
-  Th,
   Td,
-  ExpandableRowContent
+  Th,
+  Thead,
+  Tr
 } from '@patternfly/react-table';
-// import _cloneDeep from 'lodash/cloneDeep';
 import { TableEmpty } from './tableEmpty';
 import { tableRows } from './tableHelpers';
 
@@ -47,34 +45,40 @@ const Table = ({
   // let isSelectTable = false;
   // let isExpandableCell = false;
 
-  const onExpandTable = ({ type, rowIndex, cellIndex, isExpanded: passedIsExpanded }) => {
-    // console.log('expanded', rowIndex, cellIndex, isExpanded, cells);
-    // console.log(self.isExpanded);
-    console.log('ON EXPAND TABLE >>>', passedIsExpanded);
-
+  /**
+   * Apply an onExpand handler.
+   *
+   * @param {object} params
+   * @param {string} params.type
+   * @param {number} params.rowIndex
+   * @param {number} params.cellIndex
+   */
+  const onExpandTable = ({ type, rowIndex, cellIndex }) => {
     setUpdatedRows(value => {
-      const updatedValue = _cloneDeep(value);
+      const updatedValue = [...value];
       const isExpanded = !updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded;
 
       updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded = isExpanded;
-
-      if (typeof onExpand === 'function') {
-        // onExpand({ type, rowIndex, cellIndex, isExpanded, cells: _cloneDeep(updatedValue[rowIndex].cells) });
-        onExpand({ type, rowIndex, cellIndex, isExpanded, cells: updatedValue[rowIndex].cells });
-      }
+      onExpand({ type, rowIndex, cellIndex, isExpanded, cells: _cloneDeep(updatedValue[rowIndex].cells) });
 
       return updatedValue;
     });
   };
 
-  const onSelectTable = ({ rowIndex, isSelected }) => {
+  /**
+   * Apply an onSelect handler.
+   *
+   * @param {object} params
+   * @param {string} params.type
+   * @param {number} params.rowIndex
+   */
+  const onSelectTable = ({ type, rowIndex }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
-      updatedValue[rowIndex].select.isSelected = isSelected;
+      const isSelected = !updatedValue[rowIndex].select.isSelected;
 
-      if (typeof onSelect === 'function') {
-        onSelect({ rowIndex, isSelected, cells: _cloneDeep(updatedValue[rowIndex].cells) });
-      }
+      updatedValue[rowIndex].select.isSelected = isSelected;
+      onSelect({ type, rowIndex, isSelected, cells: _cloneDeep(updatedValue[rowIndex].cells) });
 
       return updatedValue;
     });
@@ -92,15 +96,19 @@ const Table = ({
       rows
     });
 
-    // isSelectTable = parsedIsSelectTable; // eslint-disable-line
-    // isExpandableCell = parsedIsExpandableCell; // eslint-disable-line
+    // setUpdatedIsSortableTable
+    // setUpdatedIsExpandableRow
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
     setUpdatedRows(parsedRows);
-    // setUpdatedIsSelectTable(isSelectTable);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
   // {isExpandTable && <Td key="expand-th-cell" />}
+  /**
+   * Apply settings, return thead.
+   *
+   * @returns {React.ReactNode}
+   */
   const renderHeader = () => (
     <Thead>
       <Tr>
@@ -114,7 +122,12 @@ const Table = ({
     </Thead>
   );
 
-  const renderRows = () => {
+  /**
+   * Apply settings, return tbody.
+   *
+   * @returns {React.ReactNode}
+   */
+  const renderBody = () => {
     const BodyWrapper = (updatedIsExpandableCell && React.Fragment) || Tbody;
 
     return (
@@ -162,8 +175,6 @@ const Table = ({
 
   const renderEmpty = () => children || <TableEmpty />;
 
-  console.log('RENDER >>>>>>>>>>>>>>>>>>>>>>>', updatedRows);
-
   return (
     <Grid>
       <GridItem span={12}>
@@ -171,12 +182,12 @@ const Table = ({
           <TableComposable
             aria-label={ariaLabel}
             borders={isBorders}
-            className={`quipucords-table ${className}`}
+            className={className}
             summary={summary}
             variant={variant}
           >
             {isHeader && renderHeader()}
-            {renderRows()}
+            {renderBody()}
           </TableComposable>
         )) ||
           renderEmpty()}
@@ -203,6 +214,8 @@ Table.propTypes = {
   ),
   isBorders: PropTypes.bool,
   isHeader: PropTypes.bool,
+  // isSelected: PropTypes.bool, originally this was for selecting all rows... instead we make it a passive response in the "onSelect" user can
+  // determine how to handle it... it'll be under type: "all"
   onExpand: PropTypes.func,
   onSelect: PropTypes.func,
   rows: PropTypes.arrayOf(
@@ -213,12 +226,9 @@ Table.propTypes = {
           PropTypes.node,
           PropTypes.instanceOf(Date),
           PropTypes.shape({
-            // cells, isDisabled = false, isExpanded, isSelected = false, onSelect, onExpand, expandedContent
-            // title: PropTypes.oneOfType([PropTypes.node, PropTypes.instanceOf(Date)]).isRequired,
             content: PropTypes.oneOfType([PropTypes.func, PropTypes.node, PropTypes.instanceOf(Date)]).isRequired,
             isTHeader: PropTypes.bool,
             isExpanded: PropTypes.bool,
-            // onExpand: PropTypes.func,
             expandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
           })
         ])
@@ -226,8 +236,6 @@ Table.propTypes = {
       isDisabled: PropTypes.bool,
       isExpanded: PropTypes.bool,
       isSelected: PropTypes.bool,
-      // onSelect: PropTypes.func,
-      // onExpand: PropTypes.func,
       expandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
     })
   ),
@@ -238,7 +246,7 @@ Table.propTypes = {
 Table.defaultProps = {
   ariaLabel: null,
   children: null,
-  className: null,
+  className: 'quipucords-table',
   columnHeaders: [],
   isBorders: true,
   isHeader: false,
