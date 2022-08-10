@@ -4,7 +4,17 @@ import { useShallowCompareEffect } from 'react-use';
 // import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
 // import { TableComposable, TableVariant, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
-import { SortByDirection, TableComposable, TableVariant, Tbody, Thead, Tr, Th, Td } from '@patternfly/react-table';
+import {
+  SortByDirection,
+  TableComposable,
+  TableVariant,
+  Tbody,
+  Thead,
+  Tr,
+  Th,
+  Td,
+  ExpandableRowContent
+} from '@patternfly/react-table';
 // import _cloneDeep from 'lodash/cloneDeep';
 import { TableEmpty } from './tableEmpty';
 import { tableRows } from './tableHelpers';
@@ -37,54 +47,11 @@ const Table = ({
   // let isSelectTable = false;
   // let isExpandableCell = false;
 
-  const onExpandTable =
-    typeof onExpand === 'function'
-      ? ({ rowIndex, isSelected, cells }) => {
-          console.log('expanded', rowIndex, isSelected, cells);
-          onExpand();
-        }
-      : undefined;
-
-  /*
-  const selectTable = useCallback(
-    ({ rowIndex, isSelected, cells } = {}) => {
-      if (updatedRows.length && updatedRows[rowIndex]) {
-        console.log('selected >>>>>', updatedRows[rowIndex]);
-        updatedRows[rowIndex].select.isSelected = isSelected;
-        setUpdatedRows(updatedRows);
-        onSelect({ rowIndex, isSelected, cells });
-      }
-    },
-    [onSelect, updatedRows]
-  );
-   */
-
-  // const onSelectTable = selectTable();
-  // const onSelectTable = typeof onSelect === 'function' ? (...args) => selectTable(...args) : undefined;
-  /*
-  const onSelectTable =
-    typeof onSelect === 'function'
-      ? ({ rowIndex, isSelected }) => {
-          window.setTimeout(() => {
-            updatedRows[rowIndex].select.isSelected = isSelected;
-            setUpdatedRows([...updatedRows]);
-
-            console.log('selected >>>>>', updatedRows[rowIndex]);
-          });
-        }
-      : undefined;
-  */
-  /*
-  const onSelectTable = ({ rowIndex, isSelected, cells, parsedRows }) => {
-    const update = parsedRows;
-    update[rowIndex].select.isSelected = isSelected;
-    setUpdatedRows(update);
-
-    console.log('selected >>>>>', update);
-
-    onSelect({ rowIndex, isSelected, cells });
+  const onExpandTable = ({ rowIndex, isSelected, cells }) => {
+    console.log('expanded', rowIndex, isSelected, cells);
+    onExpand();
   };
-  */
+
   const onSelectTable = ({ rowIndex, isSelected, cells }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
@@ -96,24 +63,6 @@ const Table = ({
       onSelect({ rowIndex, isSelected, cells });
     }
   };
-  /*
-  const onSelectTable =
-    typeof onSelect === 'function'
-      ? ({ rowIndex, isSelected, cells }) => {
-          // console.log('selected', rowIndex, isSelected, cells);
-          console.log('selected >>>>>', updatedRows[rowIndex]);
-          // setSelectedRows(selectedRows.add(rowIndex));
-          // selectedRows[rowIndex] = !isSelected;
-          // setSelectedRows(selectedRows);
-          // if (updatedRows[rowIndex]?.select) {
-          const tempRows = _cloneDeep(updatedRows);
-          tempRows[rowIndex].select.isSelected = isSelected;
-          setUpdatedRows(tempRows);
-          onSelect({ rowIndex, isSelected, cells });
-          // }
-        }
-      : undefined;
-  */
 
   useShallowCompareEffect(() => {
     console.log('>>>> update stuff');
@@ -122,7 +71,7 @@ const Table = ({
       isExpandableCell: parsedIsExpandableCell,
       rows: parsedRows
     } = tableRows({
-      // onExpand: typeof onExpand === 'function' && onExpandTable,
+      onExpand: typeof onExpand === 'function' && onExpandTable,
       onSelect: typeof onSelect === 'function' && onSelectTable,
       rows
     });
@@ -156,16 +105,24 @@ const Table = ({
       <BodyWrapper>
         {updatedRows.map(({ cells, select }) => {
           // const isCellExpanded = cells.compoundExpand.isExpanded;
+          const expandedCell = cells.find(cell => cell?.compoundExpand?.isExpanded === true);
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
-          // const = cells.find(cell => );
+          const cellWrapperProps =
+            (updatedIsExpandableCell && { isExpanded: expandedCell?.isExpanded === true }) || undefined;
 
           return (
-            <CellWrapper key={`parent-row-${window.btoa(JSON.stringify(cells))}`}>
+            <CellWrapper key={`parent-row-${window.btoa(JSON.stringify(cells))}`} {...cellWrapperProps}>
               <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
                 {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
-                {cells.map(({ content, isTHeader }) => {
+                {cells.map(({ content, compoundExpand, isTHeader }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
                   const wrapperCellProps = {};
+
+                  if (compoundExpand) {
+                    wrapperCellProps.compoundExpand = compoundExpand;
+                  }
+
+                  console.log('>>>>>>>>> CELL', compoundExpand);
 
                   return (
                     <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
@@ -174,33 +131,18 @@ const Table = ({
                   );
                 })}
               </Tr>
+              {updatedIsExpandableCell && expandedCell && (
+                <Tr isExpanded>
+                  <Td>
+                    <ExpandableRowContent>{expandedCell.expandedContent}</ExpandableRowContent>
+                  </Td>
+                </Tr>
+              )}
             </CellWrapper>
           );
         })}
       </BodyWrapper>
     );
-
-    /*
-    return (
-      <Tbody>
-        {updatedRows.map(({ cells, select }) => (
-          <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
-            {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
-            {cells.map(({ content, isTHeader }) => {
-              const WrapperCell = (isTHeader && Th) || Td;
-              const wrapperCellProps = {};
-
-              return (
-                <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
-                  {content}
-                </WrapperCell>
-              );
-            })}
-          </Tr>
-        ))}
-      </Tbody>
-    );
-     */
   };
 
   const renderEmpty = () => children || <TableEmpty />;
