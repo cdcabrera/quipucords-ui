@@ -173,6 +173,11 @@ const Table = ({
     );
   };
 
+  /**
+   * Return empty results display.
+   *
+   * @returns {React.ReactNode}
+   */
   const renderEmpty = () => children || <TableEmpty />;
 
   return (
