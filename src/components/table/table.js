@@ -26,15 +26,16 @@ const Table = ({
   const [updatedHeaders] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
   // const [updatedIsCollapsibleCell, setUpdatedIsCollapsibleCell] = useState(false);
+  const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   // const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
   // const [updatedIsCollapsibleTable, setUpdatedIsCollapsibleTable] = useState(false);
-  // const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
+  const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
   // const [selectedRows, setSelectedRows] = useState({});
   // const [expandedRows, setExpandedRows] = useState([]);
   // const [expandedCells, setExpandedCells] = useState([]);
-  let isSelectTable = false;
-  let isExpandableCell = false;
+  // let isSelectTable = false;
+  // let isExpandableCell = false;
 
   const onExpandTable =
     typeof onExpand === 'function'
@@ -126,8 +127,10 @@ const Table = ({
       rows
     });
 
-    isSelectTable = parsedIsSelectTable; // eslint-disable-line
-    isExpandableCell = parsedIsExpandableCell; // eslint-disable-line
+    // isSelectTable = parsedIsSelectTable; // eslint-disable-line
+    // isExpandableCell = parsedIsExpandableCell; // eslint-disable-line
+    setUpdatedIsSelectTable(parsedIsSelectTable);
+    setUpdatedIsExpandableCell(parsedIsExpandableCell);
     setUpdatedRows(parsedRows);
     // setUpdatedIsSelectTable(isSelectTable);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
@@ -136,7 +139,7 @@ const Table = ({
   const renderHeader = () => (
     <Thead>
       <Tr>
-        {isSelectTable && <Td key="select-th-cell" />}
+        {updatedIsSelectTable && <Td key="select-th-cell" />}
         {updatedHeaders.map(({ content, props, sort }) => (
           <Th key={`th-cell-${window.btoa(content)}`} sort={sort} {...props}>
             {content}
@@ -146,25 +149,59 @@ const Table = ({
     </Thead>
   );
 
-  const renderRows = () => (
-    <Tbody>
-      {updatedRows.map(({ cells, select }) => (
-        <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
-          {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
-          {cells.map(({ content, isTHeader }) => {
-            const WrapperCell = (isTHeader && Th) || Td;
-            const wrapperCellProps = {};
+  const renderRows = () => {
+    const BodyWrapper = (updatedIsExpandableCell && React.Fragment) || Tbody;
 
-            return (
-              <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
-                {content}
-              </WrapperCell>
-            );
-          })}
-        </Tr>
-      ))}
-    </Tbody>
-  );
+    return (
+      <BodyWrapper>
+        {updatedRows.map(({ cells, select }) => {
+          // const isCellExpanded = cells.compoundExpand.isExpanded;
+          const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
+          // const = cells.find(cell => );
+
+          return (
+            <CellWrapper key={`parent-row-${window.btoa(JSON.stringify(cells))}`}>
+              <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
+                {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
+                {cells.map(({ content, isTHeader }) => {
+                  const WrapperCell = (isTHeader && Th) || Td;
+                  const wrapperCellProps = {};
+
+                  return (
+                    <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
+                      {content}
+                    </WrapperCell>
+                  );
+                })}
+              </Tr>
+            </CellWrapper>
+          );
+        })}
+      </BodyWrapper>
+    );
+
+    /*
+    return (
+      <Tbody>
+        {updatedRows.map(({ cells, select }) => (
+          <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
+            {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
+            {cells.map(({ content, isTHeader }) => {
+              const WrapperCell = (isTHeader && Th) || Td;
+              const wrapperCellProps = {};
+
+              return (
+                <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
+                  {content}
+                </WrapperCell>
+              );
+            })}
+          </Tr>
+        ))}
+      </Tbody>
+    );
+     */
+  };
 
   const renderEmpty = () => children || <TableEmpty />;
 

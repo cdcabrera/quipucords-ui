@@ -246,7 +246,7 @@ class Credentials extends React.Component {
     if (_size(items)) {
       const updatedHeaderCols = ['One', 'Two', 'Three'];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
-        cells: [name, credType, { value: sources.length, expandedContent: 'Hello world' }]
+        cells: [name, credType, { content: sources.length, expandedContent: 'Hello world' }]
         // isSelected: true
         // onSelect: (a, b, c) => console.log('selected', a, b, c)
       }));
