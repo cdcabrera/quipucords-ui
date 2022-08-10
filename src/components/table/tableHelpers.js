@@ -159,6 +159,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
         disable: isDisabled || false
       };
     }
+    console.log('HEY >>>>>', cells);
 
     cells.forEach((cell, cellIndex) => {
       if (cell?.content !== undefined) {
@@ -166,13 +167,20 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
         if (cell?.expandedContent) {
           isExpandableCell = true;
+          const updateIsExpanded = cell?.isExpanded ?? false;
 
           cellProps.compoundExpand = {
-            isExpanded: cell?.isExpanded ?? false,
-            onToggle: () => {
-              const self = this;
-              return onExpand({ self, type: 'compound', rowIndex: rowObj.rowIndex, cellIndex, cells });
-            }
+            isExpanded: updateIsExpanded,
+            onToggle: () =>
+              // const self = this;
+              onExpand({
+                self: cellProps.compoundExpand,
+                isExpanded: !updateIsExpanded,
+                type: 'compound',
+                rowIndex: rowObj.rowIndex,
+                cellIndex,
+                cells
+              })
           };
         }
 

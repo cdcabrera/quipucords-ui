@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
-// import _cloneDeep from 'lodash/cloneDeep';
+import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
 // import { TableComposable, TableVariant, Thead, Tbody, Tr, Th, Td, ExpandableRowContent } from '@patternfly/react-table';
 import {
@@ -47,21 +47,37 @@ const Table = ({
   // let isSelectTable = false;
   // let isExpandableCell = false;
 
-  const onExpandTable = ({ rowIndex, isSelected, cells }) => {
-    console.log('expanded', rowIndex, isSelected, cells);
-    onExpand();
+  const onExpandTable = ({ type, rowIndex, cellIndex, isExpanded: passedIsExpanded }) => {
+    // console.log('expanded', rowIndex, cellIndex, isExpanded, cells);
+    // console.log(self.isExpanded);
+    console.log('ON EXPAND TABLE >>>', passedIsExpanded);
+
+    setUpdatedRows(value => {
+      const updatedValue = _cloneDeep(value);
+      const isExpanded = !updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded;
+
+      updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded = isExpanded;
+
+      if (typeof onExpand === 'function') {
+        // onExpand({ type, rowIndex, cellIndex, isExpanded, cells: _cloneDeep(updatedValue[rowIndex].cells) });
+        onExpand({ type, rowIndex, cellIndex, isExpanded, cells: updatedValue[rowIndex].cells });
+      }
+
+      return updatedValue;
+    });
   };
 
-  const onSelectTable = ({ rowIndex, isSelected, cells }) => {
+  const onSelectTable = ({ rowIndex, isSelected }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
       updatedValue[rowIndex].select.isSelected = isSelected;
+
+      if (typeof onSelect === 'function') {
+        onSelect({ rowIndex, isSelected, cells: _cloneDeep(updatedValue[rowIndex].cells) });
+      }
+
       return updatedValue;
     });
-
-    if (typeof onSelect === 'function') {
-      onSelect({ rowIndex, isSelected, cells });
-    }
   };
 
   useShallowCompareEffect(() => {
@@ -104,11 +120,11 @@ const Table = ({
     return (
       <BodyWrapper>
         {updatedRows.map(({ cells, select }) => {
-          // const isCellExpanded = cells.compoundExpand.isExpanded;
           const expandedCell = cells.find(cell => cell?.compoundExpand?.isExpanded === true);
+
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
           const cellWrapperProps =
-            (updatedIsExpandableCell && { isExpanded: expandedCell?.isExpanded === true }) || undefined;
+            (updatedIsExpandableCell && { isExpanded: expandedCell?.compoundExpand?.isExpanded === true }) || undefined;
 
           return (
             <CellWrapper key={`parent-row-${window.btoa(JSON.stringify(cells))}`} {...cellWrapperProps}>
@@ -120,9 +136,8 @@ const Table = ({
 
                   if (compoundExpand) {
                     wrapperCellProps.compoundExpand = compoundExpand;
+                    console.log('>>>>>>>>> CELL', compoundExpand);
                   }
-
-                  console.log('>>>>>>>>> CELL', compoundExpand);
 
                   return (
                     <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
@@ -133,7 +148,7 @@ const Table = ({
               </Tr>
               {updatedIsExpandableCell && expandedCell && (
                 <Tr isExpanded>
-                  <Td>
+                  <Td colSpan={cells.length}>
                     <ExpandableRowContent>{expandedCell.expandedContent}</ExpandableRowContent>
                   </Td>
                 </Tr>
