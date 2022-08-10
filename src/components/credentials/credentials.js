@@ -246,8 +246,9 @@ class Credentials extends React.Component {
     if (_size(items)) {
       const updatedHeaderCols = ['One', 'Two', 'Three'];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
-        cells: [name, credType, sources.length],
-        onSelect: (a, b, c) => console.log('selected', a, b, c)
+        cells: [name, credType, { value: sources.length, expandedContent: 'Hello world' }]
+        // isSelected: true
+        // onSelect: (a, b, c) => console.log('selected', a, b, c)
       }));
       console.log('ITEMS >>>>>>>>>>>>>>>>>', items, updatedItemRows);
 
@@ -255,7 +256,8 @@ class Credentials extends React.Component {
         <Table
           key="just-table"
           isHeader
-          onSelect={(a, b, c) => console.log('>>>>> callback', a, b, c)}
+          onSelect={(a, b, c) => console.log('>>>>> on select', a, b, c)}
+          onExpand={(a, b, c) => console.log('>>>> on expand', a, b, c)}
           columnHeaders={updatedHeaderCols}
           rows={updatedItemRows}
         />,

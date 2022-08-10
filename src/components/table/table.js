@@ -34,6 +34,7 @@ const Table = ({
   // const [expandedRows, setExpandedRows] = useState([]);
   // const [expandedCells, setExpandedCells] = useState([]);
   let isSelectTable = false;
+  let isExpandableCell = false;
 
   const onExpandTable =
     typeof onExpand === 'function'
@@ -84,13 +85,15 @@ const Table = ({
   };
   */
   const onSelectTable = ({ rowIndex, isSelected, cells }) => {
-    setUpdatedRows(arr => {
-      const updatedArr = [...arr];
-      updatedArr[rowIndex].select.isSelected = isSelected;
-      return updatedArr;
+    setUpdatedRows(value => {
+      const updatedValue = [...value];
+      updatedValue[rowIndex].select.isSelected = isSelected;
+      return updatedValue;
     });
 
-    onSelect({ rowIndex, isSelected, cells });
+    if (typeof onSelect === 'function') {
+      onSelect({ rowIndex, isSelected, cells });
+    }
   };
   /*
   const onSelectTable =
@@ -113,18 +116,23 @@ const Table = ({
 
   useShallowCompareEffect(() => {
     console.log('>>>> update stuff');
-    const { isSelectTable: parsedIsSelectTable, rows: parsedRows } = tableRows({
-      onExpand: onExpandTable,
+    const {
+      isSelectTable: parsedIsSelectTable,
+      isExpandableCell: parsedIsExpandableCell,
+      rows: parsedRows
+    } = tableRows({
+      // onExpand: typeof onExpand === 'function' && onExpandTable,
       onSelect: typeof onSelect === 'function' && onSelectTable,
       rows
-      // selectedRows: {}
     });
 
     isSelectTable = parsedIsSelectTable; // eslint-disable-line
+    isExpandableCell = parsedIsExpandableCell; // eslint-disable-line
     setUpdatedRows(parsedRows);
     // setUpdatedIsSelectTable(isSelectTable);
-  }, [columnHeaders, rows, onExpandTable, onSelect, onSelectTable]);
+  }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
+  // {isExpandTable && <Td key="expand-th-cell" />}
   const renderHeader = () => (
     <Thead>
       <Tr>
