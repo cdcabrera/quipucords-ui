@@ -244,9 +244,18 @@ class Credentials extends React.Component {
     const { t } = this.props;
 
     if (_size(items)) {
-      const updatedHeaderCols = ['One', 'Two', 'Three'];
+      const updatedHeaderCols = ['One', 'Two', 'Three', 'Four'];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
-        cells: [name, credType, { content: sources.length, expandedContent: 'Hello world' }]
+        cells: [
+          name,
+          { content: credType, width: 15 },
+          { content: sources.length, width: 10, expandedContent: 'Hello world', dataValue: sources },
+          {
+            content: 'other',
+            width: 15,
+            expandedContent: <React.Fragment>{JSON.stringify(sources, null, 2)}</React.Fragment>
+          }
+        ]
         // isSelected: true
         // onSelect: (a, b, c) => console.log('selected', a, b, c)
       }));
