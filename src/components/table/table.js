@@ -59,7 +59,19 @@ const Table = ({
       const updatedValue = [...value];
 
       if (type === 'row') {
-        console.log('>>>>>>>>> row expand', type, rowIndex);
+        const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
+
+        updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+
+        onExpand({
+          type,
+          rowIndex,
+          cellIndex: -1,
+          isExpanded: isRowExpanded,
+          cells: _cloneDeep(updatedValue[rowIndex].cells)
+        });
+
+        console.log('>>>> ROW EXPAND', updatedValue[rowIndex], updatedValue);
       }
 
       if (type === 'compound') {
@@ -255,26 +267,28 @@ const Table = ({
    * @returns {React.ReactNode}
    */
   const renderBody = () => {
-    // const bodyWrapperProps = (updatedIsExpandableRow && { isExpanded }) || undefined;
+    const bodyWrapperProps =
+      // (updatedIsExpandableRow && { isExpanded: updatedRows.find(row => row?.expand?.isExpanded === true) }) ||
+      undefined;
     const BodyWrapper = (updatedIsExpandableCell && React.Fragment) || Tbody;
 
     return (
-      <BodyWrapper>
+      <BodyWrapper {...bodyWrapperProps}>
         {updatedRows.map(({ cells, expand, select, expandedContent }) => {
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
-            (updatedIsExpandableRow && expand.isExpanded === true);
+            undefined;
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
           const cellWrapperProps =
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
             undefined;
           // const rowProps = (updatedIsExpandableRow && { expand }) || undefined;
-          const expandedRow = false;
-          console.log('>>>>>>>>>>>>>> ROW PROPS', expandedContent);
+          const expandedRow = (updatedIsExpandableRow && expand.isExpanded === true) || undefined;
+          console.log('>>>>>>>>>>>>>> ROW PROPS', expand);
 
           return (
             <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
-              <Tr key={tableHelpers.generateTableKey(cells, 'row')}>
+              <Tr key={tableHelpers.generateTableKey(cells, 'row')} isExpanded={updatedIsExpandableRow && expandedRow}>
                 {expand && <Td key={tableHelpers.generateTableKey(cells, 'expand-col')} expand={expand} />}
                 {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
                 {cells.map(({ content, isTHeader, props: cellProps }) => {
