@@ -244,7 +244,12 @@ class Credentials extends React.Component {
     const { t } = this.props;
 
     if (_size(items)) {
-      const updatedHeaderCols = ['One', 'Two', 'Three', 'Four'];
+      const updatedHeaderCols = [
+        { content: 'One', isSortActive: true },
+        { content: 'Two', isSort: true },
+        'Three',
+        'Four'
+      ];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
         cells: [
           name,
@@ -264,6 +269,7 @@ class Credentials extends React.Component {
         <Table
           key="just-table"
           isHeader
+          onSort={(a, b, c) => console.log('>>>>> on sort', a, b, c)}
           onSelect={(a, b, c) => console.log('>>>>> on select', a, b, c)}
           onExpand={(a, b, c) => console.log('>>>> on expand', a, b, c)}
           columnHeaders={updatedHeaderCols}

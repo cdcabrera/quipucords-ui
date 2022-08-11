@@ -53,7 +53,7 @@ const generateTableKey = (value, prefix = 'table') => {
   return key;
 };
 
-const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand, onSelect } = {}) => {
+const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand, onSelect, onSort } = {}) => {
   const updatedColumnHeaders = [];
   const updatedHeaderSelectProps = {};
   const isSelectTable = typeof onSelect === 'function';
@@ -68,13 +68,15 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
 
   columnHeaders.forEach((columnHeader, index) => {
     if (columnHeader?.content !== undefined) {
-      const { onSort, isSortActive, sortDirection, content, ...props } = columnHeader;
+      const { isSort, isSortActive, sortDirection = SortByDirection.asc, content, ...props } = columnHeader;
       const tempColumnHeader = {
         content,
         props
       };
 
-      if (typeof onSort === 'function') {
+      console.log('>>>>>>>>>>>>> ONSORT 001', onSort);
+
+      if (typeof onSort === 'function' && (isSort === true || isSortActive === true)) {
         isSortTable = true;
         let updatedColumnIndex = index;
 
@@ -86,21 +88,20 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
           updatedColumnIndex += 1;
         }
 
-        tempColumnHeader.sort = {
+        tempColumnHeader.props.sort = {
+          columnIndex: updatedColumnIndex,
           sortBy: {},
-          onSort: (_event, _colIndex, direction) => onSort({ index: updatedColumnIndex, direction })
+          onSort: (_event, _colIndex, direction) =>
+            onSort({ cellIndex: updatedColumnIndex, direction, originalIndex: index })
         };
 
         if (isSortActive) {
-          tempColumnHeader.sort.sortBy = {
-            index: updatedColumnIndex,
-            direction: SortByDirection.asc
-          };
+          tempColumnHeader.props.sort.sortBy.index = updatedColumnIndex;
         }
 
-        if (sortDirection) {
-          tempColumnHeader.sort.sortBy = { ...tempColumnHeader.sort.sortBy, direction: sortDirection };
-        }
+        tempColumnHeader.props.sort.sortBy.direction = sortDirection;
+
+        console.log('>>>>>>>>>>>>> ONSORT 002', tempColumnHeader.props);
       }
 
       updatedColumnHeaders.push(tempColumnHeader);

@@ -28,6 +28,7 @@ const Table = ({
   summary,
   variant,
   onSelect,
+  onSort,
   onExpand
 }) => {
   const [updatedHeaders, setUpdatedHeaders] = useState([]);
@@ -143,6 +144,46 @@ const Table = ({
     }
   };
 
+  /**
+   * Apply an onSort handler.
+   *
+   * @param {object} params
+   * @param {number} params.cellIndex
+   * @param {string} params.direction
+   * @param {number} params.originalIndex
+   */
+  const onSortTable = ({ cellIndex, direction, originalIndex }) => {
+    setUpdatedHeaders(prevState => {
+      console.log('sort table', prevState, direction, originalIndex);
+      const nextState = [...prevState];
+
+      // if (nextState[originalIndex].props.sort) {
+      // nextState[originalIndex].props.sort.sortBy = {
+      //  index: cellIndex,
+      //  direction
+      // };
+      // }
+
+      nextState.forEach((headerCell, index) => {
+        const updatedHeaderCell = headerCell;
+        if (updatedHeaderCell?.props?.sort) {
+          const isCell = index === originalIndex;
+          // updatedRow.select.isSelected = index === cellIndex;
+          delete updatedHeaderCell.props.sort.sortBy.index;
+
+          if (isCell) {
+            updatedHeaderCell.props.sort.sortBy.index = cellIndex;
+            updatedHeaderCell.props.sort.sortBy.direction = direction;
+          }
+        }
+      });
+
+      onSort({ cellIndex: originalIndex });
+
+      return nextState;
+    });
+  };
+
   useShallowCompareEffect(() => {
     console.log('>>>> update stuff');
     const {
@@ -159,7 +200,8 @@ const Table = ({
     const { columnHeaders: parsedColumnHeaders, headerSelectProps } = tableHelpers.tableHeader({
       columnHeaders,
       allRowsSelected,
-      onSelect: typeof onSelect === 'function' && onSelectTable
+      onSelect: typeof onSelect === 'function' && onSelectTable,
+      onSort: typeof onSort === 'function' && onSortTable
       // isSelectTable: parsedIsSelectTable
     });
 
@@ -183,9 +225,10 @@ const Table = ({
     let selectProps = {};
 
     if (updatedHeaderSelectProps.select) {
-      console.log('updated select props header >>>>>>', updatedHeaderSelectProps);
       selectProps = updatedHeaderSelectProps;
     }
+
+    console.log('updated props header >>>>>>', updatedHeaders);
 
     return (
       <Thead>
@@ -285,7 +328,8 @@ Table.propTypes = {
       PropTypes.shape({
         content: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
         isSort: PropTypes.bool,
-        onSort: PropTypes.func,
+        isSortActive: PropTypes.bool, // used to initialize a column... as the first sorted column
+        // onSort: PropTypes.func,
         sortDirection: PropTypes.oneOf([...Object.values(SortByDirection)])
       })
     ])
@@ -296,6 +340,7 @@ Table.propTypes = {
   // determine how to handle it... it'll be under type: "all"
   onExpand: PropTypes.func,
   onSelect: PropTypes.func,
+  onSort: PropTypes.func,
   rows: PropTypes.arrayOf(
     PropTypes.shape({
       cells: PropTypes.arrayOf(
@@ -330,6 +375,7 @@ Table.defaultProps = {
   isHeader: false,
   onExpand: null,
   onSelect: null,
+  onSort: null,
   rows: [],
   summary: null,
   variant: TableVariant.compact
