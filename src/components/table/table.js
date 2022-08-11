@@ -112,7 +112,7 @@ const Table = ({
             rowIndex,
             isSelected,
             rows: _cloneDeep(nextRowsState),
-            cells: []
+            cells: _cloneDeep(updatedHeaders)
           });
 
           return nextRowsState;
@@ -120,19 +120,6 @@ const Table = ({
 
         return nextState;
       });
-
-      // setUpdatedHeaderSelectProps(prevState => ({
-      //         ...prevState,
-      //         isSelected: !prevState.isSelected
-      //       }));
-      // if (type === 'all') {
-      //           onSelect({
-      //             type,
-      //             rowIndex,
-      //             // isSelected,
-      //             rows: _cloneDeep(nextState[rowIndex])
-      //           });
-      //         }
     }
 
     if (type === 'row') {
