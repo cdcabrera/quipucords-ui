@@ -245,7 +245,7 @@ class Credentials extends React.Component {
 
     if (_size(items)) {
       const updatedHeaderCols = [
-        { content: 'One', isSortActive: true },
+        { content: 'One', isSortActive: true, info: { tooltip: 'hello' } },
         { content: 'Two', isSort: true },
         'Three',
         'Four'
@@ -259,6 +259,10 @@ class Credentials extends React.Component {
             content: 'other',
             width: 15,
             expandedContent: <React.Fragment>{JSON.stringify(sources, null, 2)}</React.Fragment>
+          },
+          {
+            content: 'actions',
+            isActionCell: true
           }
         ]
         // isSelected: true

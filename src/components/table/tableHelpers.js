@@ -163,8 +163,8 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
     cells.forEach((cell, cellIndex) => {
       if (cell?.content !== undefined) {
-        const { dataLabel, noPadding, width, ...remainingProps } = cell;
-        const cellProps = { dataLabel, noPadding, width };
+        const { dataLabel, isActionCell, noPadding, width, ...remainingProps } = cell;
+        const cellProps = { dataLabel, isActionCell, noPadding, width };
 
         if (cell?.expandedContent) {
           isExpandableCell = true;
