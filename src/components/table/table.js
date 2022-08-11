@@ -48,6 +48,7 @@ const Table = ({
    * @param {number} params.cellIndex
    */
   const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
+    const isCallback = typeof onExpand === 'function';
     setUpdatedRows(value => {
       const updatedValue = [...value];
 
@@ -56,13 +57,15 @@ const Table = ({
 
         updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
 
-        onExpand({
-          type,
-          rowIndex,
-          cellIndex: -1,
-          isExpanded: isRowExpanded,
-          cells: _cloneDeep(updatedValue[rowIndex].cells)
-        });
+        if (isCallback) {
+          onExpand({
+            type,
+            rowIndex,
+            cellIndex: -1,
+            isExpanded: isRowExpanded,
+            cells: _cloneDeep(updatedValue[rowIndex].cells)
+          });
+        }
       }
 
       if (type === 'compound') {
@@ -80,13 +83,15 @@ const Table = ({
 
         updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
 
-        onExpand({
-          type,
-          rowIndex,
-          cellIndex,
-          isExpanded: isCompoundExpanded,
-          cells: _cloneDeep(updatedValue[rowIndex].cells)
-        });
+        if (isCallback) {
+          onExpand({
+            type,
+            rowIndex,
+            cellIndex,
+            isExpanded: isCompoundExpanded,
+            cells: _cloneDeep(updatedValue[rowIndex].cells)
+          });
+        }
       }
 
       return updatedValue;
@@ -196,7 +201,7 @@ const Table = ({
       isExpandableRow: parsedIsExpandableRow,
       rows: parsedRows
     } = tableHelpers.tableRows({
-      onExpand: typeof onExpand === 'function' && onExpandTable,
+      onExpand: onExpandTable,
       onSelect: typeof onSelect === 'function' && onSelectTable,
       rows
     });

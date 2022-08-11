@@ -170,7 +170,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
       };
     }
 
-    if (expandedContent) {
+    if (expandedContent && typeof onExpand === 'function') {
       isExpandableRow = true;
 
       rowObj.expand = {
@@ -189,7 +189,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
         const { dataLabel, isActionCell, noPadding, width, ...remainingProps } = cell;
         const cellProps = { dataLabel, isActionCell, noPadding, width };
 
-        if (!isExpandableRow && cell?.expandedContent) {
+        if (!isExpandableRow && cell?.expandedContent && typeof onExpand === 'function') {
           isExpandableCell = true;
           const updateIsExpanded = cell?.isExpanded ?? false;
 
