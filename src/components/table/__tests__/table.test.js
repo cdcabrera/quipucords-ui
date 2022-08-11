@@ -40,7 +40,7 @@ describe('Table Component', () => {
     expect(component.find(TableComposable).props()).toMatchSnapshot('className and variant');
   });
 
-  it('should allow expandable content', async () => {
+  it('should allow expandable row content', async () => {
     const mockOnExpand = jest.fn();
     const props = {
       columnHeaders: ['lorem ipsum'],
@@ -49,12 +49,29 @@ describe('Table Component', () => {
     };
 
     const component = await mountHookComponent(<Table {...props} />);
-    expect(component.find(TableComposable)).toMatchSnapshot('expandable content');
+    expect(component.find(TableComposable)).toMatchSnapshot('expandable row content');
 
     component.find('button').first().simulate('click');
 
-    expect(mockOnExpand.mock.calls).toMatchSnapshot('expand event');
+    expect(mockOnExpand.mock.calls).toMatchSnapshot('expand row event');
     expect(component.find(TableComposable)).toMatchSnapshot('expanded row');
+  });
+
+  it('should allow expandable cell content', async () => {
+    const mockOnExpand = jest.fn();
+    const props = {
+      columnHeaders: ['lorem ipsum'],
+      onExpand: mockOnExpand,
+      rows: [{ cells: [{ content: 'dolor', expandedContent: 'dolor expandable content' }] }, { cells: ['sit'] }]
+    };
+
+    const component = await mountHookComponent(<Table {...props} />);
+    expect(component.find(TableComposable)).toMatchSnapshot('expandable cell content');
+
+    component.find('button').first().simulate('click');
+
+    expect(mockOnExpand.mock.calls).toMatchSnapshot('expand cell event');
+    expect(component.find(TableComposable)).toMatchSnapshot('expanded cell');
   });
 
   it('should allow sortable content', async () => {
