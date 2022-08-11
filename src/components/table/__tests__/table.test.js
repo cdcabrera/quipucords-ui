@@ -1,10 +1,11 @@
 import React from 'react';
-import { TableComposable, Tbody, TableVariant, Th } from '@patternfly/react-table';
+import { TableComposable, TableVariant, Th } from '@patternfly/react-table';
 import { Table } from '../table';
 
 describe('Table Component', () => {
   it('should render a non-connected component', async () => {
     const props = {
+      isHeader: true,
       columnHeaders: ['lorem', 'ipsum', 'dolor', 'sit']
     };
 
@@ -14,12 +15,13 @@ describe('Table Component', () => {
 
   it('should allow variations in table layout', async () => {
     const props = {
+      isHeader: true,
       columnHeaders: ['lorem ipsum'],
       rows: [{ cells: ['dolor'] }, { cells: ['sit'] }]
     };
 
     const component = await mountHookComponent(<Table {...props} />);
-    expect(component.find(Tbody)).toMatchSnapshot('generated rows');
+    expect(component.find(TableComposable)).toMatchSnapshot('generated rows');
 
     component.setProps({
       isBorders: false,
@@ -43,7 +45,6 @@ describe('Table Component', () => {
   it('should allow expandable row content', async () => {
     const mockOnExpand = jest.fn();
     const props = {
-      columnHeaders: ['lorem ipsum'],
       onExpand: mockOnExpand,
       rows: [{ cells: ['dolor'], expandedContent: 'dolor sit expandable content' }, { cells: ['sit'] }]
     };
@@ -60,7 +61,6 @@ describe('Table Component', () => {
   it('should allow expandable cell content', async () => {
     const mockOnExpand = jest.fn();
     const props = {
-      columnHeaders: ['lorem ipsum'],
       onExpand: mockOnExpand,
       rows: [{ cells: [{ content: 'dolor', expandedContent: 'dolor expandable content' }] }, { cells: ['sit'] }]
     };
@@ -115,6 +115,7 @@ describe('Table Component', () => {
 
   it('should pass child components, nodes when there are no rows', async () => {
     const props = {
+      isHeader: true,
       columnHeaders: ['lorem ipsum'],
       rows: []
     };
