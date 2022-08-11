@@ -34,7 +34,7 @@ const Table = ({
   const [updatedHeaders, setUpdatedHeaders] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
   const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
-  // const [updatedIsExpandableRow] = useState(false);
+  const [updatedIsExpandableRow, setUpdatedIsExpandableRow] = useState(false);
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   // const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
   // const [updatedIsCollapsibleTable, setUpdatedIsCollapsibleTable] = useState(false);
@@ -57,6 +57,10 @@ const Table = ({
   const onExpandTable = ({ type, rowIndex, cellIndex }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
+
+      if (type === 'row') {
+        console.log('>>>>>>>>> row expand', type, rowIndex);
+      }
 
       if (type === 'compound') {
         const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
@@ -190,6 +194,7 @@ const Table = ({
       allRowsSelected,
       isSelectTable: parsedIsSelectTable,
       isExpandableCell: parsedIsExpandableCell,
+      isExpandableRow: parsedIsExpandableRow,
       rows: parsedRows
     } = tableHelpers.tableRows({
       onExpand: typeof onExpand === 'function' && onExpandTable,
@@ -207,7 +212,7 @@ const Table = ({
 
     console.log('header props >>>', headerSelectProps);
     // setUpdatedIsSortableTable
-    // setUpdatedIsExpandableRow
+    setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
     setUpdatedRows(parsedRows);
@@ -215,7 +220,6 @@ const Table = ({
     setUpdatedHeaderSelectProps(headerSelectProps);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
-  // {updatedIsExpandableRow && <Td key="expand-th-cell" />}
   /**
    * Apply settings, return thead.
    *
@@ -233,6 +237,7 @@ const Table = ({
     return (
       <Thead>
         <Tr>
+          {updatedIsExpandableRow && <Td key="expand-th-cell" />}
           {updatedIsSelectTable && <Td key="select-th-cell" {...selectProps} />}
           {updatedHeaders.map(({ content, props, sort }) => (
             <Th key={tableHelpers.generateTableKey(content, 'th-cell')} sort={sort} {...props}>
@@ -250,20 +255,27 @@ const Table = ({
    * @returns {React.ReactNode}
    */
   const renderBody = () => {
+    // const bodyWrapperProps = (updatedIsExpandableRow && { isExpanded }) || undefined;
     const BodyWrapper = (updatedIsExpandableCell && React.Fragment) || Tbody;
 
     return (
       <BodyWrapper>
-        {updatedRows.map(({ cells, select }) => {
-          const expandedCell = cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true);
+        {updatedRows.map(({ cells, expand, select, expandedContent }) => {
+          const expandedCell =
+            (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
+            (updatedIsExpandableRow && expand.isExpanded === true);
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
           const cellWrapperProps =
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
             undefined;
+          // const rowProps = (updatedIsExpandableRow && { expand }) || undefined;
+          const expandedRow = false;
+          console.log('>>>>>>>>>>>>>> ROW PROPS', expandedContent);
 
           return (
             <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
               <Tr key={tableHelpers.generateTableKey(cells, 'row')}>
+                {expand && <Td key={tableHelpers.generateTableKey(cells, 'expand-col')} expand={expand} />}
                 {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
                 {cells.map(({ content, isTHeader, props: cellProps }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
@@ -275,6 +287,13 @@ const Table = ({
                   );
                 })}
               </Tr>
+              {updatedIsExpandableRow && expandedRow && (
+                <Tr isExpanded>
+                  <Td colSpan={cells.length}>
+                    <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
+                  </Td>
+                </Tr>
+              )}
               {updatedIsExpandableCell && expandedCell && (
                 <Tr isExpanded>
                   <Td colSpan={cells.length}>

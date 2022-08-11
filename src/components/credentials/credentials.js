@@ -251,6 +251,7 @@ class Credentials extends React.Component {
         'Four'
       ];
       const updatedItemRows = items.map(({ name, cred_type: credType, sources }) => ({
+        expandedContent: 'checking row expand',
         cells: [
           name,
           { content: credType, width: 15 },

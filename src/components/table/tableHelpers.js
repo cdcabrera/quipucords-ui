@@ -130,16 +130,18 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   // const updateSelectedRows = new Set();
   // let isCollapsibleTable = false;
   // const isCollapsibleCell = false;
+  let isExpandableRow = false;
   let isExpandableCell = false;
   let isSelectTable = false;
   let selectedRows = 0;
 
   // rows.forEach(({ cells, isDisabled = false, isExpanded, isSelected = false, expandedContent }) => {
-  rows.forEach(({ cells, isDisabled = false, isSelected = false }) => {
+  rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent }) => {
     const rowObj = {
       cells: [],
       select: undefined,
-      expand: undefined
+      expand: undefined,
+      expandedContent
     };
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
@@ -161,12 +163,26 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
       };
     }
 
+    if (expandedContent) {
+      isExpandableRow = true;
+
+      rowObj.expand = {
+        rowIndex: rowObj.rowIndex,
+        isExpanded,
+        onToggle: () =>
+          onExpand({
+            rowIndex: rowObj.rowIndex,
+            type: 'row'
+          })
+      };
+    }
+
     cells.forEach((cell, cellIndex) => {
       if (cell?.content !== undefined) {
         const { dataLabel, isActionCell, noPadding, width, ...remainingProps } = cell;
         const cellProps = { dataLabel, isActionCell, noPadding, width };
 
-        if (cell?.expandedContent) {
+        if (!isExpandableRow && cell?.expandedContent) {
           isExpandableCell = true;
           const updateIsExpanded = cell?.isExpanded ?? false;
 
@@ -198,6 +214,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
     // selectedRows: updateSelectedRows,
     allRowsSelected: selectedRows === rows.length,
     // isCollapsibleCell,
+    isExpandableRow,
     isExpandableCell,
     // isCollapsibleTable,
     isSelectTable,
