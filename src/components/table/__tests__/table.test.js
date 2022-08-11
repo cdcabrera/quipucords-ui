@@ -1,82 +1,90 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { TableVariant, SortByDirection } from '@patternfly/react-table';
+import { TableComposable, Tbody, TableVariant, Th } from '@patternfly/react-table';
 import { Table } from '../table';
 
 describe('Table Component', () => {
-  it('should render a non-connected component', () => {
+  it('should render a non-connected component', async () => {
     const props = {
       columnHeaders: ['lorem', 'ipsum', 'dolor', 'sit']
     };
 
-    const component = shallow(<Table {...props} />);
+    const component = await shallowHookComponent(<Table {...props} />);
     expect(component).toMatchSnapshot('non-connected');
   });
 
-  it('should allow variations in table layout', () => {
+  it('should allow variations in table layout', async () => {
     const props = {
       columnHeaders: ['lorem ipsum'],
       rows: [{ cells: ['dolor'] }, { cells: ['sit'] }]
     };
 
-    const component = shallow(<Table {...props} />);
-    expect(component).toMatchSnapshot('generated rows');
+    const component = await mountHookComponent(<Table {...props} />);
+    expect(component.find(Tbody)).toMatchSnapshot('generated rows');
 
     component.setProps({
-      borders: false,
+      isBorders: false,
       isHeader: false
     });
-    expect(component).toMatchSnapshot('borders and table header removed');
+    expect(component.find(TableComposable)).toMatchSnapshot('borders and table header removed');
 
     component.setProps({
       ariaLabel: 'lorem ipsum aria-label',
       summary: 'lorem ipsum summary'
     });
-    expect(component).toMatchSnapshot('ariaLabel and summary');
+    expect(component.find(TableComposable).props()).toMatchSnapshot('ariaLabel and summary');
 
     component.setProps({
       className: 'lorem-ipsum-class',
       variant: TableVariant.compact
     });
-    expect(component).toMatchSnapshot('className and variant');
+    expect(component.find(TableComposable).props()).toMatchSnapshot('className and variant');
   });
 
-  it('should allow expandable content', () => {
+  it('should allow expandable content', async () => {
+    const mockOnExpand = jest.fn();
     const props = {
       columnHeaders: ['lorem ipsum'],
+      onExpand: mockOnExpand,
       rows: [{ cells: ['dolor'], expandedContent: 'dolor sit expandable content' }, { cells: ['sit'] }]
     };
 
-    const component = shallow(<Table {...props} />);
-    expect(component).toMatchSnapshot('expandable content');
+    const component = await mountHookComponent(<Table {...props} />);
+    expect(component.find(TableComposable)).toMatchSnapshot('expandable content');
 
-    const componentInstance = component.instance();
-    componentInstance.onCollapse({ index: 0, isOpen: true });
-    expect(component).toMatchSnapshot('expanded row');
+    component.find('button').first().simulate('click');
+
+    expect(mockOnExpand.mock.calls).toMatchSnapshot('expand event');
+    expect(component.find(TableComposable)).toMatchSnapshot('expanded row');
   });
 
-  it('should allow sortable content', () => {
+  it('should allow sortable content', async () => {
+    const mockOnSort = jest.fn();
     const props = {
-      columnHeaders: [{ title: 'lorem ipsum', onSort: jest.fn() }],
+      isHeader: true,
+      onSort: mockOnSort,
+      columnHeaders: [{ content: 'lorem ipsum', isSort: true }],
       rows: [{ cells: ['dolor'] }, { cells: ['sit'] }]
     };
 
-    const component = shallow(<Table {...props} />);
-    expect(component).toMatchSnapshot('sortable content');
+    const component = await mountHookComponent(<Table {...props} />);
+    expect(component.find(Th).first()).toMatchSnapshot('sortable content');
 
-    const componentInstance = component.instance();
-    componentInstance.onSort({ index: 0, direction: SortByDirection.asc });
-    expect(component).toMatchSnapshot('sorted column callback');
-    expect(props.columnHeaders[0].onSort).toHaveBeenCalledTimes(1);
+    component.find('button').first().simulate('click');
+    expect(component.find(Th).first()).toMatchSnapshot('sorted column, asc');
+
+    component.find('button').first().simulate('click');
+    expect(component.find(Th).first()).toMatchSnapshot('sorted column, desc');
+
+    expect(mockOnSort.mock.calls).toMatchSnapshot('sort event');
   });
 
-  it('should pass child components, nodes when there are no rows', () => {
+  it('should pass child components, nodes when there are no rows', async () => {
     const props = {
       columnHeaders: ['lorem ipsum'],
       rows: []
     };
 
-    const component = shallow(<Table {...props}>Loading...</Table>);
+    const component = await shallowHookComponent(<Table {...props}>Loading...</Table>);
     expect(component).toMatchSnapshot('children');
   });
 });

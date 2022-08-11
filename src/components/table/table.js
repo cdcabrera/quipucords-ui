@@ -267,7 +267,7 @@ const Table = ({
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
             undefined;
-          const expandedRow = (updatedIsExpandableRow && expand.isExpanded === true) || undefined;
+          const expandedRow = (updatedIsExpandableRow && expand?.isExpanded === true) || undefined;
 
           const CellWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && Tbody) || React.Fragment;
           const cellWrapperProps =
