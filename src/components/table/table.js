@@ -22,6 +22,7 @@ const Table = ({
   children,
   className,
   columnHeaders,
+  componentClassNames,
   isBorders,
   isHeader,
   rows,
@@ -267,28 +268,31 @@ const Table = ({
    * @returns {React.ReactNode}
    */
   const renderBody = () => {
-    const bodyWrapperProps =
-      // (updatedIsExpandableRow && { isExpanded: updatedRows.find(row => row?.expand?.isExpanded === true) }) ||
-      undefined;
-    const BodyWrapper = (updatedIsExpandableCell && React.Fragment) || Tbody;
+    // const bodyWrapperProps =
+    // (updatedIsExpandableRow && { isExpanded: updatedRows.find(row => row?.expand?.isExpanded === true) }) ||
+    //  undefined;
+    const BodyWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && React.Fragment) || Tbody;
 
     return (
-      <BodyWrapper {...bodyWrapperProps}>
+      <BodyWrapper>
         {updatedRows.map(({ cells, expand, select, expandedContent }) => {
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
             undefined;
-          const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
+          const expandedRow = (updatedIsExpandableRow && expand.isExpanded === true) || undefined;
+
+          const CellWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && Tbody) || React.Fragment;
           const cellWrapperProps =
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
+            (updatedIsExpandableRow && { isExpanded: expand?.isExpanded === true }) ||
             undefined;
           // const rowProps = (updatedIsExpandableRow && { expand }) || undefined;
-          const expandedRow = (updatedIsExpandableRow && expand.isExpanded === true) || undefined;
+
           console.log('>>>>>>>>>>>>>> ROW PROPS', expand);
 
           return (
             <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
-              <Tr key={tableHelpers.generateTableKey(cells, 'row')} isExpanded={updatedIsExpandableRow && expandedRow}>
+              <Tr key={tableHelpers.generateTableKey(cells, 'row')}>
                 {expand && <Td key={tableHelpers.generateTableKey(cells, 'expand-col')} expand={expand} />}
                 {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
                 {cells.map(({ content, isTHeader, props: cellProps }) => {
@@ -303,7 +307,7 @@ const Table = ({
               </Tr>
               {updatedIsExpandableRow && expandedRow && (
                 <Tr isExpanded>
-                  <Td colSpan={cells.length}>
+                  <Td className="" colSpan={cells.length}>
                     <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
                   </Td>
                 </Tr>
@@ -336,7 +340,7 @@ const Table = ({
           <TableComposable
             aria-label={ariaLabel}
             borders={isBorders}
-            className={className}
+            className={`${componentClassNames.table} ${className}`}
             summary={summary}
             variant={variant}
           >
@@ -367,6 +371,17 @@ Table.propTypes = {
       })
     ])
   ),
+  componentClassNames: PropTypes.shape({
+    table: PropTypes.string,
+    tr: PropTypes.string,
+    td: PropTypes.string,
+    trExpand: PropTypes.string,
+    trExpanded: PropTypes.string,
+    trExpandedContent: PropTypes.string,
+    tdExpand: PropTypes.string,
+    tdExpanded: PropTypes.string,
+    tdExpandedContent: PropTypes.string
+  }),
   isBorders: PropTypes.bool,
   isHeader: PropTypes.bool,
   // isSelected: PropTypes.bool, originally this was for selecting all rows... instead we make it a passive response in the "onSelect" user can... user should be setting every row they need
@@ -402,8 +417,19 @@ Table.propTypes = {
 Table.defaultProps = {
   ariaLabel: null,
   children: null,
-  className: 'quipucords-table',
+  className: '',
   columnHeaders: [],
+  componentClassNames: {
+    table: 'quipucords-table',
+    tr: 'quipucords-table__tr',
+    td: 'quipucords-table__td',
+    trExpand: 'quipucords-table__tr-expand',
+    trExpanded: 'quipucords-table__tr-expand-expanded',
+    trExpandedContent: 'quipucords-table__tr-expand-content',
+    tdExpand: 'quipucords-table__td-expand',
+    tdExpanded: 'quipucords-table__td-expand-expanded',
+    tdExpandedContent: 'quipucords-table__td-expand-content'
+  },
   isBorders: true,
   isHeader: false,
   onExpand: null,
