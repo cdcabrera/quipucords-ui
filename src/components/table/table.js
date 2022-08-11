@@ -30,10 +30,10 @@ const Table = ({
   onSelect,
   onExpand
 }) => {
-  // const [updatedHeaders, setUpdatedHeaders] = useState([]);
-  const [updatedHeaders] = useState([]);
+  const [updatedHeaders, setUpdatedHeaders] = useState([]);
   const [updatedRows, setUpdatedRows] = useState([]);
-  // const [updatedIsCollapsibleCell, setUpdatedIsCollapsibleCell] = useState(false);
+  const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
+  // const [updatedIsExpandableRow] = useState(false);
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   // const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
   // const [updatedIsCollapsibleTable, setUpdatedIsCollapsibleTable] = useState(false);
@@ -93,28 +93,73 @@ const Table = ({
    * @param {number} params.rowIndex
    */
   const onSelectTable = ({ type, rowIndex }) => {
-    setUpdatedRows(value => {
-      const updatedValue = [...value];
+    if (type === 'all') {
+      setUpdatedHeaderSelectProps(prevState => {
+        const nextState = { ...prevState };
+        const isSelected = !prevState.isSelected;
 
-      if (type === 'row') {
-        const isSelected = !updatedValue[rowIndex].select.isSelected;
-        updatedValue[rowIndex].select.isSelected = isSelected;
+        nextState.isSelected = isSelected;
+
+        setUpdatedRows(prevRowsState => {
+          const nextRowsState = [...prevRowsState];
+          nextRowsState.forEach(row => {
+            const updatedRow = row;
+            updatedRow.select.isSelected = isSelected;
+          });
+
+          onSelect({
+            type,
+            rowIndex,
+            isSelected,
+            rows: _cloneDeep(nextRowsState),
+            cells: []
+          });
+
+          return nextRowsState;
+        });
+
+        return nextState;
+      });
+
+      // setUpdatedHeaderSelectProps(prevState => ({
+      //         ...prevState,
+      //         isSelected: !prevState.isSelected
+      //       }));
+      // if (type === 'all') {
+      //           onSelect({
+      //             type,
+      //             rowIndex,
+      //             // isSelected,
+      //             rows: _cloneDeep(nextState[rowIndex])
+      //           });
+      //         }
+    }
+
+    if (type === 'row') {
+      setUpdatedRows(prevState => {
+        const nextState = [...prevState];
+        const isSelected = !nextState[rowIndex].select.isSelected;
+
+        nextState[rowIndex].select.isSelected = isSelected;
+        const clonedRows = _cloneDeep(nextState);
 
         onSelect({
           type,
           rowIndex,
           isSelected,
-          cells: _cloneDeep(updatedValue[rowIndex].cells)
+          rows: clonedRows,
+          cells: clonedRows[rowIndex].cells
         });
-      }
 
-      return updatedValue;
-    });
+        return nextState;
+      });
+    }
   };
 
   useShallowCompareEffect(() => {
     console.log('>>>> update stuff');
     const {
+      allRowsSelected,
       isSelectTable: parsedIsSelectTable,
       isExpandableCell: parsedIsExpandableCell,
       rows: parsedRows
@@ -124,31 +169,50 @@ const Table = ({
       rows
     });
 
+    const { columnHeaders: parsedColumnHeaders, headerSelectProps } = tableHelpers.tableHeader({
+      columnHeaders,
+      allRowsSelected,
+      onSelect: typeof onSelect === 'function' && onSelectTable
+      // isSelectTable: parsedIsSelectTable
+    });
+
+    console.log('header props >>>', headerSelectProps);
     // setUpdatedIsSortableTable
     // setUpdatedIsExpandableRow
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
     setUpdatedRows(parsedRows);
+    setUpdatedHeaders(parsedColumnHeaders);
+    setUpdatedHeaderSelectProps(headerSelectProps);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
-  // {isExpandTable && <Td key="expand-th-cell" />}
+  // {updatedIsExpandableRow && <Td key="expand-th-cell" />}
   /**
    * Apply settings, return thead.
    *
    * @returns {React.ReactNode}
    */
-  const renderHeader = () => (
-    <Thead>
-      <Tr>
-        {updatedIsSelectTable && <Td key="select-th-cell" />}
-        {updatedHeaders.map(({ content, props, sort }) => (
-          <Th key={tableHelpers.generateTableKey(content, 'th-cell')} sort={sort} {...props}>
-            {content}
-          </Th>
-        ))}
-      </Tr>
-    </Thead>
-  );
+  const renderHeader = () => {
+    let selectProps = {};
+
+    if (updatedHeaderSelectProps.select) {
+      console.log('updated select props header >>>>>>', updatedHeaderSelectProps);
+      selectProps = updatedHeaderSelectProps;
+    }
+
+    return (
+      <Thead>
+        <Tr>
+          {updatedIsSelectTable && <Td key="select-th-cell" {...selectProps} />}
+          {updatedHeaders.map(({ content, props, sort }) => (
+            <Th key={tableHelpers.generateTableKey(content, 'th-cell')} sort={sort} {...props}>
+              {content}
+            </Th>
+          ))}
+        </Tr>
+      </Thead>
+    );
+  };
 
   /**
    * Apply settings, return tbody.
@@ -162,7 +226,6 @@ const Table = ({
       <BodyWrapper>
         {updatedRows.map(({ cells, select }) => {
           const expandedCell = cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true);
-
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
           const cellWrapperProps =
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
@@ -242,7 +305,7 @@ Table.propTypes = {
   ),
   isBorders: PropTypes.bool,
   isHeader: PropTypes.bool,
-  // isSelected: PropTypes.bool, originally this was for selecting all rows... instead we make it a passive response in the "onSelect" user can
+  // isSelected: PropTypes.bool, originally this was for selecting all rows... instead we make it a passive response in the "onSelect" user can... user should be setting every row they need
   // determine how to handle it... it'll be under type: "all"
   onExpand: PropTypes.func,
   onSelect: PropTypes.func,
@@ -258,7 +321,6 @@ Table.propTypes = {
             isTHeader: PropTypes.bool,
             isExpanded: PropTypes.bool,
             expandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
-            // dataExpandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
           })
         ])
       ),

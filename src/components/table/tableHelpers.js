@@ -53,9 +53,18 @@ const generateTableKey = (value, prefix = 'table') => {
   return key;
 };
 
-const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
+const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand, onSelect } = {}) => {
   const updatedColumnHeaders = [];
+  const updatedHeaderSelectProps = {};
+  const isSelectTable = typeof onSelect === 'function';
   let isSortTable = false;
+
+  if (isSelectTable) {
+    updatedHeaderSelectProps.select = {
+      onSelect: () => onSelect({ rowIndex: -1, type: 'all' }),
+      isSelected: allRowsSelected
+    };
+  }
 
   columnHeaders.forEach((columnHeader, index) => {
     if (columnHeader?.content !== undefined) {
@@ -69,7 +78,7 @@ const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
         isSortTable = true;
         let updatedColumnIndex = index;
 
-        if (isCollapsibleTable) {
+        if (isRowExpand) {
           updatedColumnIndex += 1;
         }
 
@@ -106,8 +115,11 @@ const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
     }
   });
 
+  console.log('>>>>>>>>>>>> header', updatedHeaderSelectProps);
+
   return {
     columnHeaders: updatedColumnHeaders,
+    headerSelectProps: updatedHeaderSelectProps,
     isSortTable
   };
 };
@@ -119,6 +131,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   // const isCollapsibleCell = false;
   let isExpandableCell = false;
   let isSelectTable = false;
+  let selectedRows = 0;
 
   // rows.forEach(({ cells, isDisabled = false, isExpanded, isSelected = false, expandedContent }) => {
   rows.forEach(({ cells, isDisabled = false, isSelected = false }) => {
@@ -132,6 +145,10 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
     if (typeof onSelect === 'function') {
       const updatedIsSelected = isSelected ?? false;
+
+      if (updatedIsSelected === true) {
+        selectedRows += 1;
+      }
 
       isSelectTable = true;
       rowObj.select = {
@@ -178,11 +195,12 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
   return {
     // selectedRows: updateSelectedRows,
-    rows: updatedRows,
+    allRowsSelected: selectedRows === rows.length,
     // isCollapsibleCell,
     isExpandableCell,
     // isCollapsibleTable,
-    isSelectTable
+    isSelectTable,
+    rows: updatedRows
   };
 };
 
