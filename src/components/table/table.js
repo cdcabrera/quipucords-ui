@@ -249,11 +249,16 @@ const Table = ({
 
     return (
       <Thead>
-        <Tr>
-          {updatedIsExpandableRow && <Td key="expand-th-cell" />}
-          {updatedIsSelectTable && <Td key="select-th-cell" {...selectProps} />}
+        <Tr className={componentClassNames.tr}>
+          {updatedIsExpandableRow && <Td className={componentClassNames.th} key="expand-th-cell" />}
+          {updatedIsSelectTable && <Td className={componentClassNames.th} key="select-th-cell" {...selectProps} />}
           {updatedHeaders.map(({ content, props, sort }) => (
-            <Th key={tableHelpers.generateTableKey(content, 'th-cell')} sort={sort} {...props}>
+            <Th
+              className={componentClassNames.th}
+              key={tableHelpers.generateTableKey(content, 'th-cell')}
+              sort={sort}
+              {...props}
+            >
               {content}
             </Th>
           ))}
@@ -292,29 +297,51 @@ const Table = ({
 
           return (
             <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
-              <Tr key={tableHelpers.generateTableKey(cells, 'row')}>
-                {expand && <Td key={tableHelpers.generateTableKey(cells, 'expand-col')} expand={expand} />}
-                {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
+              <Tr className={componentClassNames.tr} key={tableHelpers.generateTableKey(cells, 'row')}>
+                {expand && (
+                  <Td
+                    className={componentClassNames.td}
+                    key={tableHelpers.generateTableKey(cells, 'expand-col')}
+                    expand={expand}
+                  />
+                )}
+                {select && (
+                  <Td
+                    className={componentClassNames.td}
+                    key={tableHelpers.generateTableKey(cells, 'select-col')}
+                    select={select}
+                  />
+                )}
                 {cells.map(({ content, isTHeader, props: cellProps }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
 
                   return (
-                    <WrapperCell key={tableHelpers.generateTableKey(content, 'cell')} {...cellProps}>
+                    <WrapperCell
+                      className={componentClassNames.td}
+                      key={tableHelpers.generateTableKey(content, 'cell')}
+                      {...cellProps}
+                    >
                       {content}
                     </WrapperCell>
                   );
                 })}
               </Tr>
               {updatedIsExpandableRow && expandedRow && (
-                <Tr isExpanded>
-                  <Td className="" colSpan={cells.length}>
+                <Tr className={componentClassNames.tr} isExpanded>
+                  <Td
+                    className={`${componentClassNames.td} ${componentClassNames.trExpandedContent}`}
+                    colSpan={cells.length}
+                  >
                     <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
                   </Td>
                 </Tr>
               )}
               {updatedIsExpandableCell && expandedCell && (
-                <Tr isExpanded>
-                  <Td colSpan={cells.length}>
+                <Tr className={componentClassNames.tr} isExpanded>
+                  <Td
+                    className={`${componentClassNames.td} ${componentClassNames.tdExpandedContent}`}
+                    colSpan={cells.length}
+                  >
                     <ExpandableRowContent>{expandedCell.expandedContent}</ExpandableRowContent>
                   </Td>
                 </Tr>
@@ -373,8 +400,9 @@ Table.propTypes = {
   ),
   componentClassNames: PropTypes.shape({
     table: PropTypes.string,
-    tr: PropTypes.string,
     td: PropTypes.string,
+    th: PropTypes.string,
+    tr: PropTypes.string,
     trExpand: PropTypes.string,
     trExpanded: PropTypes.string,
     trExpandedContent: PropTypes.string,
@@ -421,8 +449,9 @@ Table.defaultProps = {
   columnHeaders: [],
   componentClassNames: {
     table: 'quipucords-table',
-    tr: 'quipucords-table__tr',
     td: 'quipucords-table__td',
+    th: 'quipucords-table__th',
+    tr: 'quipucords-table__tr',
     trExpand: 'quipucords-table__tr-expand',
     trExpanded: 'quipucords-table__tr-expand-expanded',
     trExpandedContent: 'quipucords-table__tr-expand-content',
