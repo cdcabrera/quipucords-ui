@@ -96,9 +96,9 @@ const Table = ({
     if (type === 'all') {
       setUpdatedHeaderSelectProps(prevState => {
         const nextState = { ...prevState };
-        const isSelected = !prevState.isSelected;
+        const isSelected = !prevState.select.isSelected;
 
-        nextState.isSelected = isSelected;
+        nextState.select.isSelected = isSelected;
 
         setUpdatedRows(prevRowsState => {
           const nextRowsState = [...prevRowsState];
