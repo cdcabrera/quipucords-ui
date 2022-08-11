@@ -278,7 +278,7 @@ class Credentials extends React.Component {
           // onSelect={a => console.log('>>>>> on select', a)}
           onExpand={a => console.log('>>>> on expand', a)}
           columnHeaders={updatedHeaderCols}
-          rows={updatedItemRows}
+          rows={[] || updatedItemRows}
         />,
         // <CredentialsTable key="testing" />,
         <ListView key="original" className="quipicords-list-view">
