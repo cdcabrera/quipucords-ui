@@ -95,6 +95,24 @@ describe('Table Component', () => {
     expect(mockOnSort.mock.calls).toMatchSnapshot('sort event');
   });
 
+  it('should allow selectable row content', async () => {
+    const mockOnSelect = jest.fn();
+    const props = {
+      isHeader: true,
+      columnHeaders: ['lorem ipsum'],
+      onSelect: mockOnSelect,
+      rows: [{ cells: [{ content: 'dolor' }] }, { cells: ['sit'] }]
+    };
+
+    const component = await mountHookComponent(<Table {...props} />);
+    expect(component.find('input')).toMatchSnapshot('select row content');
+
+    component.find('input').first().simulate('change');
+
+    expect(mockOnSelect.mock.calls).toMatchSnapshot('select row event');
+    expect(component.find('input')).toMatchSnapshot('selected row');
+  });
+
   it('should pass child components, nodes when there are no rows', async () => {
     const props = {
       columnHeaders: ['lorem ipsum'],

@@ -887,6 +887,117 @@ exports[`Table Component should allow expandable row content: expanded row 1`] =
 </TableComposable>
 `;
 
+exports[`Table Component should allow selectable row content: select row content 1`] = `
+Array [
+  <input
+    aria-label="Select all rows"
+    name="check-all"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+  <input
+    aria-label="Select row 0"
+    checked={false}
+    name="checkrow0"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+  <input
+    aria-label="Select row 1"
+    checked={false}
+    name="checkrow1"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+]
+`;
+
+exports[`Table Component should allow selectable row content: select row event 1`] = `
+Array [
+  Array [
+    Object {
+      "cells": Array [],
+      "isSelected": true,
+      "rowIndex": -1,
+      "rows": Array [
+        Object {
+          "cells": Array [
+            Object {
+              "content": "dolor",
+              "props": Object {
+                "dataLabel": undefined,
+                "isActionCell": undefined,
+                "noPadding": undefined,
+                "width": undefined,
+              },
+            },
+          ],
+          "expand": undefined,
+          "expandedContent": undefined,
+          "rowIndex": 0,
+          "select": Object {
+            "cells": Array [
+              Object {
+                "content": "dolor",
+              },
+            ],
+            "disable": false,
+            "isSelected": true,
+            "onSelect": [Function],
+            "rowIndex": 0,
+          },
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "content": "sit",
+            },
+          ],
+          "expand": undefined,
+          "expandedContent": undefined,
+          "rowIndex": 1,
+          "select": Object {
+            "cells": Array [
+              "sit",
+            ],
+            "disable": false,
+            "isSelected": true,
+            "onSelect": [Function],
+            "rowIndex": 1,
+          },
+        },
+      ],
+      "type": "all",
+    },
+  ],
+]
+`;
+
+exports[`Table Component should allow selectable row content: selected row 1`] = `
+Array [
+  <input
+    aria-label="Select all rows"
+    name="check-all"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+  <input
+    aria-label="Select row 0"
+    checked={true}
+    name="checkrow0"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+  <input
+    aria-label="Select row 1"
+    checked={true}
+    name="checkrow1"
+    onChange={[Function]}
+    type="checkbox"
+  />,
+]
+`;
+
 exports[`Table Component should allow sortable content: sort event 1`] = `
 Array [
   Array [
