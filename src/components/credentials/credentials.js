@@ -259,7 +259,6 @@ class Credentials extends React.Component {
         // isSelected: true
         // onSelect: (a, b, c) => console.log('selected', a, b, c)
       }));
-      console.log('ITEMS >>>>>>>>>>>>>>>>>', items, updatedItemRows);
 
       return [
         <Table

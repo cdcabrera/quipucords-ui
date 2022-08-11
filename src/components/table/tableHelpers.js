@@ -145,21 +145,6 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
     cells.forEach((cell, cellIndex) => {
       if (cell?.content !== undefined) {
-        // 'dataLabel',
-        //   'select',
-        //   'actions',
-        //   'expand',
-        //   'compoundExpand',
-        //   'favorites',
-        //   'treeRow',
-        //   'draggableRow',
-        //   'noPadding',
-        //   'isActionCell',
-        //   'width',
-        //   'onSelect'
-        // const cellProps = { width: cell?.width, dataLabel: cell?.dataLabel, noPadding: cell?.noPadding };
-        // const { content, isTHeader, isExpanded, expandedContent } = cell;
-        // const cellProps = { ...remainingCellProps };
         const { dataLabel, noPadding, width, ...remainingProps } = cell;
         const cellProps = { dataLabel, noPadding, width };
 

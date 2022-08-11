@@ -174,14 +174,6 @@ const Table = ({
                 {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
                 {cells.map(({ content, isTHeader, props: cellProps }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
-                  // const wrapperCellProps = {
-                  //   ...cellProps
-                  // };
-
-                  if (cellProps?.compoundExpand) {
-                    // wrapperCellProps.compoundExpand = compoundExpand;
-                    console.log('>>>>>>>>> CELL', cellProps.compoundExpand);
-                  }
 
                   return (
                     <WrapperCell key={tableHelpers.generateTableKey(content, 'cell')} {...cellProps}>
