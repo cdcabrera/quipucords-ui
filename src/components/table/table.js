@@ -15,7 +15,7 @@ import {
   Tr
 } from '@patternfly/react-table';
 import { TableEmpty } from './tableEmpty';
-import { tableRows } from './tableHelpers';
+import { tableHelpers } from './tableHelpers';
 
 const Table = ({
   ariaLabel,
@@ -56,10 +56,30 @@ const Table = ({
   const onExpandTable = ({ type, rowIndex, cellIndex }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
-      const isExpanded = !updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded;
 
-      updatedValue[rowIndex].cells[cellIndex].compoundExpand.isExpanded = isExpanded;
-      onExpand({ type, rowIndex, cellIndex, isExpanded, cells: _cloneDeep(updatedValue[rowIndex].cells) });
+      if (type === 'compound') {
+        const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+
+        updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+          const updatedCompoundExpand = cellProps?.compoundExpand;
+
+          if (updatedCompoundExpand) {
+            updatedCompoundExpand.isExpanded = false;
+          }
+
+          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+        });
+
+        updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+
+        onExpand({
+          type,
+          rowIndex,
+          cellIndex,
+          isExpanded: isCompoundExpanded,
+          cells: _cloneDeep(updatedValue[rowIndex].cells)
+        });
+      }
 
       return updatedValue;
     });
@@ -75,10 +95,18 @@ const Table = ({
   const onSelectTable = ({ type, rowIndex }) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
-      const isSelected = !updatedValue[rowIndex].select.isSelected;
 
-      updatedValue[rowIndex].select.isSelected = isSelected;
-      onSelect({ type, rowIndex, isSelected, cells: _cloneDeep(updatedValue[rowIndex].cells) });
+      if (type === 'row') {
+        const isSelected = !updatedValue[rowIndex].select.isSelected;
+        updatedValue[rowIndex].select.isSelected = isSelected;
+
+        onSelect({
+          type,
+          rowIndex,
+          isSelected,
+          cells: _cloneDeep(updatedValue[rowIndex].cells)
+        });
+      }
 
       return updatedValue;
     });
@@ -90,7 +118,7 @@ const Table = ({
       isSelectTable: parsedIsSelectTable,
       isExpandableCell: parsedIsExpandableCell,
       rows: parsedRows
-    } = tableRows({
+    } = tableHelpers.tableRows({
       onExpand: typeof onExpand === 'function' && onExpandTable,
       onSelect: typeof onSelect === 'function' && onSelectTable,
       rows
@@ -114,7 +142,7 @@ const Table = ({
       <Tr>
         {updatedIsSelectTable && <Td key="select-th-cell" />}
         {updatedHeaders.map(({ content, props, sort }) => (
-          <Th key={`th-cell-${window.btoa(content)}`} sort={sort} {...props}>
+          <Th key={tableHelpers.generateTableKey(content, 'th-cell')} sort={sort} {...props}>
             {content}
           </Th>
         ))}
@@ -133,27 +161,30 @@ const Table = ({
     return (
       <BodyWrapper>
         {updatedRows.map(({ cells, select }) => {
-          const expandedCell = cells.find(cell => cell?.compoundExpand?.isExpanded === true);
+          const expandedCell = cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true);
 
           const CellWrapper = (updatedIsExpandableCell && Tbody) || React.Fragment;
           const cellWrapperProps =
-            (updatedIsExpandableCell && { isExpanded: expandedCell?.compoundExpand?.isExpanded === true }) || undefined;
+            (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
+            undefined;
 
           return (
-            <CellWrapper key={`parent-row-${window.btoa(JSON.stringify(cells))}`} {...cellWrapperProps}>
-              <Tr key={`row-${window.btoa(JSON.stringify(cells))}`}>
-                {select && <Td key={`row-${window.btoa(JSON.stringify(cells))}`} select={select} />}
-                {cells.map(({ content, compoundExpand, isTHeader }) => {
+            <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
+              <Tr key={tableHelpers.generateTableKey(cells, 'row')}>
+                {select && <Td key={tableHelpers.generateTableKey(cells, 'select-col')} select={select} />}
+                {cells.map(({ content, isTHeader, props: cellProps }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
-                  const wrapperCellProps = {};
+                  // const wrapperCellProps = {
+                  //   ...cellProps
+                  // };
 
-                  if (compoundExpand) {
-                    wrapperCellProps.compoundExpand = compoundExpand;
-                    console.log('>>>>>>>>> CELL', compoundExpand);
+                  if (cellProps?.compoundExpand) {
+                    // wrapperCellProps.compoundExpand = compoundExpand;
+                    console.log('>>>>>>>>> CELL', cellProps.compoundExpand);
                   }
 
                   return (
-                    <WrapperCell key={window.btoa(content)} {...wrapperCellProps}>
+                    <WrapperCell key={tableHelpers.generateTableKey(content, 'cell')} {...cellProps}>
                       {content}
                     </WrapperCell>
                   );
@@ -235,6 +266,7 @@ Table.propTypes = {
             isTHeader: PropTypes.bool,
             isExpanded: PropTypes.bool,
             expandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
+            // dataExpandedContent: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
           })
         ])
       ),

@@ -1,5 +1,57 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
+import { helpers } from '../../common';
+
+const tableKeyCache = {};
+/*
+const TdProps = [
+  'dataLabel',
+  'select',
+  'actions',
+  'expand',
+  'compoundExpand',
+  'favorites',
+  'treeRow',
+  'draggableRow',
+  'noPadding',
+  'isActionCell',
+  'width',
+  'onSelect'
+];
+*/
+
+const generateTableKey = (value, prefix = 'table') => {
+  let updatedValue = helpers.generateId();
+
+  if (value === undefined || value === null || Number.isNaN(value)) {
+    return `${prefix}-${updatedValue}`;
+  }
+
+  switch (typeof value) {
+    case 'string':
+      updatedValue = value;
+      break;
+    case 'object':
+      try {
+        updatedValue = JSON.stringify(value);
+      } catch (e) {
+        //
+      }
+      break;
+    default:
+      updatedValue = value.toString();
+  }
+
+  let key = `${prefix}-${updatedValue}`;
+
+  if (tableKeyCache[key]) {
+    key = helpers.generateId();
+  }
+
+  tableKeyCache[key] = true;
+
+  return key;
+};
 
 const tableHeader = (columnHeaders = [], isCollapsibleTable, isSelectTable) => {
   const updatedColumnHeaders = [];
@@ -93,7 +145,23 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
     cells.forEach((cell, cellIndex) => {
       if (cell?.content !== undefined) {
-        const cellProps = {};
+        // 'dataLabel',
+        //   'select',
+        //   'actions',
+        //   'expand',
+        //   'compoundExpand',
+        //   'favorites',
+        //   'treeRow',
+        //   'draggableRow',
+        //   'noPadding',
+        //   'isActionCell',
+        //   'width',
+        //   'onSelect'
+        // const cellProps = { width: cell?.width, dataLabel: cell?.dataLabel, noPadding: cell?.noPadding };
+        // const { content, isTHeader, isExpanded, expandedContent } = cell;
+        // const cellProps = { ...remainingCellProps };
+        const { dataLabel, noPadding, width, ...remainingProps } = cell;
+        const cellProps = { dataLabel, noPadding, width };
 
         if (cell?.expandedContent) {
           isExpandableCell = true;
@@ -110,7 +178,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
           };
         }
 
-        rowObj.cells.push({ ...cell, ...cellProps });
+        rowObj.cells.push({ ...remainingProps, props: cellProps });
       } else {
         rowObj.cells.push({
           content:
@@ -134,8 +202,9 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 };
 
 const tableHelpers = {
+  generateTableKey,
   tableHeader,
   tableRows
 };
 
-export { tableHelpers as default, tableHelpers, tableHeader, tableRows };
+export { tableHelpers as default, tableHelpers, generateTableKey, tableHeader, tableRows };
