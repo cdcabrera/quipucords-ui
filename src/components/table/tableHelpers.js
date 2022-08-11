@@ -2,24 +2,21 @@ import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
 import { helpers } from '../../common';
 
+// ToDo: evaluate potential storage issues.
+/**
+ * Store generated keys, check for repeats.
+ *
+ * @type {{}}
+ */
 const tableKeyCache = {};
-/*
-const TdProps = [
-  'dataLabel',
-  'select',
-  'actions',
-  'expand',
-  'compoundExpand',
-  'favorites',
-  'treeRow',
-  'draggableRow',
-  'noPadding',
-  'isActionCell',
-  'width',
-  'onSelect'
-];
-*/
 
+/**
+ * Generate table keys, avoid potential repeats.
+ *
+ * @param {*} value
+ * @param {string} prefix
+ * @returns {string}
+ */
 const generateTableKey = (value, prefix = 'table') => {
   let updatedValue = helpers.generateId();
 
@@ -53,6 +50,17 @@ const generateTableKey = (value, prefix = 'table') => {
   return key;
 };
 
+/**
+ * Parse table header settings, props.
+ *
+ * @param {object} params
+ * @param {boolean} params.allRowsSelected
+ * @param {Array} params.columnHeaders
+ * @param {boolean} params.isRowExpand
+ * @param {Function} params.onSelect
+ * @param {Function} params.onSort
+ * @returns {{columnHeaders: *[], isSortTable: boolean, headerSelectProps: {}}}
+ */
 const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand, onSelect, onSort } = {}) => {
   const updatedColumnHeaders = [];
   const updatedHeaderSelectProps = {};
@@ -73,8 +81,6 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
         content,
         props
       };
-
-      console.log('>>>>>>>>>>>>> ONSORT 001', onSort);
 
       if (typeof onSort === 'function' && (isSort === true || isSortActive === true)) {
         isSortTable = true;
@@ -100,8 +106,6 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
         }
 
         tempColumnHeader.props.sort.sortBy.direction = sortDirection;
-
-        console.log('>>>>>>>>>>>>> ONSORT 002', tempColumnHeader.props);
       }
 
       updatedColumnHeaders.push(tempColumnHeader);
@@ -116,8 +120,6 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
     }
   });
 
-  console.log('>>>>>>>>>>>> header', updatedHeaderSelectProps);
-
   return {
     columnHeaders: updatedColumnHeaders,
     headerSelectProps: updatedHeaderSelectProps,
@@ -125,17 +127,22 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
   };
 };
 
+/**
+ * Parse table body settings, props.
+ *
+ * @param {object} params
+ * @param {Function} params.onExpand
+ * @param {Function} params.onSelect
+ * @param {Array} params.rows
+ * @returns {{isExpandableCell: boolean, isSelectTable: boolean, isExpandableRow: boolean, allRowsSelected: boolean, rows: *[]}}
+ */
 const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   const updatedRows = [];
-  // const updateSelectedRows = new Set();
-  // let isCollapsibleTable = false;
-  // const isCollapsibleCell = false;
   let isExpandableRow = false;
   let isExpandableCell = false;
   let isSelectTable = false;
   let selectedRows = 0;
 
-  // rows.forEach(({ cells, isDisabled = false, isExpanded, isSelected = false, expandedContent }) => {
   rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent }) => {
     const rowObj = {
       cells: [],
@@ -211,12 +218,9 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   });
 
   return {
-    // selectedRows: updateSelectedRows,
     allRowsSelected: selectedRows === rows.length,
-    // isCollapsibleCell,
     isExpandableRow,
     isExpandableCell,
-    // isCollapsibleTable,
     isSelectTable,
     rows: updatedRows
   };

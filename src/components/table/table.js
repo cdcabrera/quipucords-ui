@@ -37,15 +37,7 @@ const Table = ({
   const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
   const [updatedIsExpandableRow, setUpdatedIsExpandableRow] = useState(false);
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
-  // const [updatedIsSortTable, setUpdatedIsSortTable] = useState(false);
-  // const [updatedIsCollapsibleTable, setUpdatedIsCollapsibleTable] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
-
-  // const [selectedRows, setSelectedRows] = useState({});
-  // const [expandedRows, setExpandedRows] = useState([]);
-  // const [expandedCells, setExpandedCells] = useState([]);
-  // let isSelectTable = false;
-  // let isExpandableCell = false;
 
   /**
    * Apply an onExpand handler.
@@ -55,7 +47,7 @@ const Table = ({
    * @param {number} params.rowIndex
    * @param {number} params.cellIndex
    */
-  const onExpandTable = ({ type, rowIndex, cellIndex }) => {
+  const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
     setUpdatedRows(value => {
       const updatedValue = [...value];
 
@@ -71,8 +63,6 @@ const Table = ({
           isExpanded: isRowExpanded,
           cells: _cloneDeep(updatedValue[rowIndex].cells)
         });
-
-        console.log('>>>> ROW EXPAND', updatedValue[rowIndex], updatedValue);
       }
 
       if (type === 'compound') {
@@ -110,7 +100,7 @@ const Table = ({
    * @param {string} params.type
    * @param {number} params.rowIndex
    */
-  const onSelectTable = ({ type, rowIndex }) => {
+  const onSelectTable = ({ type, rowIndex } = {}) => {
     if (type === 'all') {
       setUpdatedHeaderSelectProps(prevState => {
         const nextState = { ...prevState };
@@ -169,23 +159,14 @@ const Table = ({
    * @param {string} params.direction
    * @param {number} params.originalIndex
    */
-  const onSortTable = ({ cellIndex, direction, originalIndex }) => {
+  const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
     setUpdatedHeaders(prevState => {
-      console.log('sort table', prevState, direction, originalIndex);
       const nextState = [...prevState];
-
-      // if (nextState[originalIndex].props.sort) {
-      // nextState[originalIndex].props.sort.sortBy = {
-      //  index: cellIndex,
-      //  direction
-      // };
-      // }
 
       nextState.forEach((headerCell, index) => {
         const updatedHeaderCell = headerCell;
         if (updatedHeaderCell?.props?.sort) {
           const isCell = index === originalIndex;
-          // updatedRow.select.isSelected = index === cellIndex;
           delete updatedHeaderCell.props.sort.sortBy.index;
 
           if (isCell) {
@@ -202,7 +183,6 @@ const Table = ({
   };
 
   useShallowCompareEffect(() => {
-    console.log('>>>> update stuff');
     const {
       allRowsSelected,
       isSelectTable: parsedIsSelectTable,
@@ -220,11 +200,8 @@ const Table = ({
       allRowsSelected,
       onSelect: typeof onSelect === 'function' && onSelectTable,
       onSort: typeof onSort === 'function' && onSortTable
-      // isSelectTable: parsedIsSelectTable
     });
 
-    console.log('header props >>>', headerSelectProps);
-    // setUpdatedIsSortableTable
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
@@ -244,8 +221,6 @@ const Table = ({
     if (updatedHeaderSelectProps.select) {
       selectProps = updatedHeaderSelectProps;
     }
-
-    console.log('updated props header >>>>>>', updatedHeaders);
 
     return (
       <Thead>
@@ -273,9 +248,6 @@ const Table = ({
    * @returns {React.ReactNode}
    */
   const renderBody = () => {
-    // const bodyWrapperProps =
-    // (updatedIsExpandableRow && { isExpanded: updatedRows.find(row => row?.expand?.isExpanded === true) }) ||
-    //  undefined;
     const BodyWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && React.Fragment) || Tbody;
 
     return (
@@ -291,9 +263,6 @@ const Table = ({
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
             (updatedIsExpandableRow && { isExpanded: expand?.isExpanded === true }) ||
             undefined;
-          // const rowProps = (updatedIsExpandableRow && { expand }) || undefined;
-
-          console.log('>>>>>>>>>>>>>> ROW PROPS', expand);
 
           return (
             <CellWrapper key={tableHelpers.generateTableKey(cells, 'parent-row')} {...cellWrapperProps}>
@@ -392,8 +361,7 @@ Table.propTypes = {
       PropTypes.shape({
         content: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
         isSort: PropTypes.bool,
-        isSortActive: PropTypes.bool, // used to initialize a column... as the first sorted column
-        // onSort: PropTypes.func,
+        isSortActive: PropTypes.bool,
         sortDirection: PropTypes.oneOf([...Object.values(SortByDirection)])
       })
     ])
@@ -412,8 +380,6 @@ Table.propTypes = {
   }),
   isBorders: PropTypes.bool,
   isHeader: PropTypes.bool,
-  // isSelected: PropTypes.bool, originally this was for selecting all rows... instead we make it a passive response in the "onSelect" user can... user should be setting every row they need
-  // determine how to handle it... it'll be under type: "all"
   onExpand: PropTypes.func,
   onSelect: PropTypes.func,
   onSort: PropTypes.func,

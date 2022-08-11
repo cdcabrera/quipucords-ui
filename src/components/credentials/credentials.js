@@ -274,9 +274,9 @@ class Credentials extends React.Component {
         <Table
           key="just-table"
           isHeader
-          onSort={(a, b, c) => console.log('>>>>> on sort', a, b, c)}
-          // onSelect={(a, b, c) => console.log('>>>>> on select', a, b, c)}
-          onExpand={(a, b, c) => console.log('>>>> on expand', a, b, c)}
+          onSort={a => console.log('>>>>> on sort', a)}
+          // onSelect={a => console.log('>>>>> on select', a)}
+          onExpand={a => console.log('>>>> on expand', a)}
           columnHeaders={updatedHeaderCols}
           rows={updatedItemRows}
         />,
