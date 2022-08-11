@@ -177,7 +177,12 @@ const Table = ({
       });
 
       const clonedRow = _cloneDeep(nextState);
-      onSort({ cellIndex: originalIndex, direction, cell: clonedRow[originalIndex], cells: clonedRow });
+      onSort({
+        cellIndex: originalIndex,
+        direction,
+        cell: clonedRow[originalIndex],
+        cells: clonedRow
+      });
 
       return nextState;
     });
