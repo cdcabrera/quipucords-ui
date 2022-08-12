@@ -1,185 +1,310 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import _isEqual from 'lodash/isEqual';
-import _size from 'lodash/size';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStatePrimary,
-  EmptyStateVariant,
-  Title,
-  TitleSizes
-} from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { ListView, Spinner } from 'patternfly-react';
+// import _isEqual from 'lodash/isEqual';
+// import _size from 'lodash/size';
+// import { Alert, AlertVariant, Button, ButtonVariant, EmptyState } from '@patternfly/react-core';
+import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from '@patternfly/react-core';
+import { IconSize } from '@patternfly/react-icons';
+// import { Grid, Icon, ListView, Spinner } from 'patternfly-react';
+// import { Spinner } from 'patternfly-react';
+// import _get from 'lodash/get';
+// import cx from 'classnames';
+import { useShallowCompareEffect } from 'react-use';
 import { Modal, ModalVariant } from '../modal/modal';
-import { connect, reduxActions, reduxTypes, store } from '../../redux';
+// import { connect, reduxActions, reduxTypes, store } from '../../redux';
+import {
+  // connect,
+  reduxActions,
+  reduxTypes,
+  // store,
+  storeHooks
+} from '../../redux';
 import helpers from '../../common/helpers';
 import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import SourcesEmptyState from './sourcesEmptyState';
-import SourceListItem from './sourceListItem';
 import { SourceFilterFields, SourceSortFields } from './sourceConstants';
-import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
+import { Table } from '../table/table';
+import { sourcesTableCells } from './sourcesTableCells';
+import { useOnDelete, useOnEdit, useOnScan, usePoll } from './sourcesContext';
+
+// import _size from 'lodash/size'
+// import useGetSources from './sourcesContext'
+// import { Tooltip } from '../tooltip/tooltip';
+// import { dictionary } from '../../constants/dictionaryConstants';
+// import SourceCredentialsList from './sourceCredentialsList';
+// import ScanHostList from '../scanHostList/scanHostList';
+// import { apiTypes } from '../../constants/apiConstants';
 
 /**
  * A sources view.
+ *
+ * @param {object} props
+ * @param {boolean} props.error
+ * @param {string} props.errorMessage
+ * @param {Function} props.getSources
+ * @param {number} props.lastRefresh
+ * @param {boolean} props.pending
+ * @param {Array} props.sources
+ * @param {Function} props.t
+ * @param {boolean} props.updateSources
+ * @param {Function} props.useDispatch
+ * @param {object} props.viewOptions
+ * @param props.data
+ * @param props.useOnEdit
+ * @param props.useOnDelete
+ * @param props.date
+ * @param props.update
+ * @param props.useOnScan
+ * @param props.usePoll
+ * @param props.useSelectors
+ * @param props.useSelectorsResponse
+ * @returns {React.ReactNode}
  */
-class Sources extends React.Component {
-  componentDidMount() {
-    const { getSources, viewOptions } = this.props;
+// const Sources = ({ lastRefresh, t, useGetSources: useAliasGetSources, viewOptions }) => {
+const Sources = ({
+  // date,
+  // error,
+  // errorMessage,
+  getSources,
+  // lastRefresh,
+  // pending,
+  // data: tempData,
+  t,
+  // update: refreshUpdate,
+  // updateSources,
+  useOnEdit: useAliasOnEdit,
+  useOnDelete: useAliasOnDelete,
+  useOnScan: useAliasOnScan,
+  useDispatch: useAliasDispatch,
+  useSelectors: useAliasSelectors,
+  useSelectorsResponse: useAliasSelectorsResponse,
+  usePoll: useAliasPoll
+}) => {
+  // const [selectedSources, setSelectedSources] = useState();
+  const [refreshUpdate, selectedSources, expandedSources, viewOptions] = useAliasSelectors([
+    ({ sources }) => sources.update,
+    ({ sources }) => sources.selected,
+    ({ sources }) => sources.expanded,
+    ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
+  ]);
+  const {
+    data: responseData,
+    error,
+    message: errorMessage,
+    pending,
+    responses = {}
+  } = useAliasSelectorsResponse({ id: 'view', selector: ({ sources }) => sources.view });
+  const [{ date } = {}] = responses.list || [];
+  const { results: sources = [] } = responseData.view || {};
+  const updatedSelectedSources = Object.values(selectedSources).filter(val => val !== null);
 
-    getSources(helpers.createViewQueryObject(viewOptions));
-  }
+  console.log('>>>>>>>>> RESPONSES', sources, useState);
 
-  componentDidUpdate(prevProps) {
-    const { getSources, updateSources, viewOptions } = this.props;
+  // const [updatedSources, setUpdatedSources] = useState([]);
+  const pollUpdate = useAliasPoll();
+  // const setPoll = useAliasPoll();
+  const dispatch = useAliasDispatch();
+  const query = helpers.createViewQueryObject(viewOptions);
+  const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || sources?.length > 0 || false;
+  const onDelete = useAliasOnDelete();
+  const onEdit = useAliasOnEdit();
+  const onScan = useAliasOnScan();
 
-    const prevQuery = helpers.createViewQueryObject(prevProps.viewOptions);
-    const nextQuery = helpers.createViewQueryObject(viewOptions);
+  useShallowCompareEffect(() => {
+    getSources(query)(dispatch);
+    // }, [dispatch, getSources, query]);
+  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
 
-    if (updateSources || !_isEqual(prevQuery, nextQuery)) {
-      getSources(nextQuery);
-    }
-  }
+  // useShallowCompareEffect(() => {
+  // setUpdatedSources(sources);
+  // }, [sources]);
+  /*
+  useShallowCompareEffect(() => {
+    const parsedSources = [];
 
-  onShowAddSourceWizard = () => {
-    store.dispatch({
-      type: reduxTypes.sources.CREATE_SOURCE_SHOW
-    });
-  };
+    sources.forEach(item =>
+      parsedSources.push({
+        source: item,
+        cells: [
+          {
+            content: sourcesTableCells.description(item),
+            width: 20,
+            dataLabel: 'Description'
+          }
+        ]
+      })
+    );
 
-  onScanSources = () => {
-    const { viewOptions } = this.props;
+    setUpdatedSources(parsedSources);
+    / *
+    setUpdatedSources(() =>
+      )
+    );
+    * /
+  }, [onDelete, onEdit, onScan]);
+  */
 
-    store.dispatch({
-      type: reduxTypes.scans.EDIT_SCAN_SHOW,
-      sources: viewOptions.selectedItems
-    });
-  };
-
-  onRefresh = () => {
-    store.dispatch({
+  const onRefresh = () => {
+    dispatch({
       type: reduxTypes.sources.UPDATE_SOURCES
     });
   };
 
-  onClearFilters = () => {
-    store.dispatch({
-      type: reduxTypes.viewToolbar.CLEAR_FILTERS,
-      viewType: reduxTypes.view.SOURCES_VIEW
+  const onSelect = ({ isSelected, data: sourceData }) => {
+    // console.log('>>>>>>>>>>', isSelected, sourceData);
+    // console.log('>>>>>>>>>>', selectedRows);
+    dispatch({
+      type: isSelected ? reduxTypes.sources.SELECT_SOURCE : reduxTypes.sources.DESELECT_SOURCE,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      source: sourceData.source
+    });
+    /*
+    dispatch({
+      type: isSelected ? reduxTypes.view.SELECT_ITEM : reduxTypes.view.DESELECT_ITEM,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      item: sourceData.source
+    });
+     */
+  };
+
+  const onExpand = ({ isExpanded, cellIndex, data: sourceData }) => {
+    dispatch({
+      type: isExpanded ? reduxTypes.sources.EXPANDED_SOURCE : reduxTypes.sources.NOT_EXPANDED_SOURCE,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      source: sourceData.source,
+      cellIndex
     });
   };
 
-  renderSourceActions() {
-    const { viewOptions } = this.props;
+  const onScanSources = () => {
+    dispatch({
+      type: reduxTypes.scans.EDIT_SCAN_SHOW,
+      sources: updatedSelectedSources
+    });
+  };
 
+  const onShowAddSourceWizard = () => {
+    dispatch({
+      type: reduxTypes.sources.CREATE_SOURCE_SHOW
+    });
+  };
+
+  const renderToolbarActions = () => (
+    <React.Fragment>
+      <Button onClick={onShowAddSourceWizard}>Add</Button>{' '}
+      <Button
+        variant={ButtonVariant.secondary}
+        isDisabled={updatedSelectedSources.length === 0}
+        onClick={onScanSources}
+      >
+        Scan
+      </Button>
+    </React.Fragment>
+  );
+
+  // const renderActions = () => {};
+
+  if (pending) {
     return (
-      <React.Fragment>
-        <Button onClick={this.onShowAddSourceWizard}>Add</Button>{' '}
-        <Button
-          variant={ButtonVariant.secondary}
-          isDisabled={!viewOptions.selectedItems || viewOptions.selectedItems.length === 0}
-          onClick={this.onScanSources}
-        >
-          Scan
-        </Button>
-      </React.Fragment>
+      <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
+        <Spinner isSVG size={IconSize.lg} />
+        <div className="text-center">{t('view.loading', { context: 'sources' })}</div>
+      </Modal>
     );
   }
 
-  renderPendingMessage() {
-    const { pending, t } = this.props;
-
-    if (pending) {
-      return (
-        <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
-          <Spinner loading size="lg" className="blank-slate-pf-icon" />
-          <div className="text-center">{t('view.loading', { context: 'sources' })}</div>
-        </Modal>
-      );
-    }
-
-    return null;
-  }
-
-  renderSourcesList(sources) {
-    const { lastRefresh, t } = this.props;
-
-    if (sources.length) {
-      return (
-        <ListView className="quipicords-list-view">
-          {sources.map(source => (
-            <SourceListItem item={source} key={source[apiTypes.API_RESPONSE_SOURCE_ID]} lastRefresh={lastRefresh} />
-          ))}
-        </ListView>
-      );
-    }
-
+  if (error) {
     return (
-      <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
-        <EmptyStateIcon icon={SearchIcon} />
-        <Title size={TitleSizes.lg} headingLevel="h1">
-          {t('view.empty-state', { context: ['filter', 'title'] })}
-        </Title>
-        <EmptyStateBody>{t('view.empty-state', { context: ['filter', 'description'] })}</EmptyStateBody>
-        <EmptyStatePrimary>
-          <Button variant={ButtonVariant.link} onClick={this.onClearFilters}>
-            {t('view.empty-state', { context: ['label', 'clear'] })}
-          </Button>
-        </EmptyStatePrimary>
+      <EmptyState className="quipucords-empty-state__alert">
+        <Alert variant={AlertVariant.danger} title={t('view.error', { context: 'sources' })}>
+          {t('view.error-message', { context: ['sources'], message: errorMessage })}
+        </Alert>
       </EmptyState>
     );
   }
 
-  render() {
-    const { error, errorMessage, lastRefresh, pending, sources, t, viewOptions } = this.props;
+  // console.log(expandedSources, onExpand);
 
-    if (pending && !sources.length) {
-      return this.renderPendingMessage();
-    }
-
-    if (error) {
-      return (
-        <EmptyState className="quipucords-empty-state__alert">
-          <Alert variant={AlertVariant.danger} title={t('view.error', { context: 'sources' })}>
-            {t('view.error-message', { context: ['sources'], message: errorMessage })}
-          </Alert>
-        </EmptyState>
-      );
-    }
-
-    if (sources.length || _size(viewOptions.activeFilters)) {
-      return (
-        <div className="quipucords-view-container">
+  return (
+    <div className="quipucords-view-container">
+      {filtersOrSourcesActive && (
+        <React.Fragment>
           <ViewToolbar
             viewType={reduxTypes.view.SOURCES_VIEW}
             filterFields={SourceFilterFields}
             sortFields={SourceSortFields}
-            onRefresh={this.onRefresh}
-            lastRefresh={lastRefresh}
-            actions={this.renderSourceActions()}
+            onRefresh={() => onRefresh()}
+            lastRefresh={new Date(date).getTime()}
+            actions={renderToolbarActions()}
             itemsType="Source"
             itemsTypePlural="Sources"
             selectedCount={viewOptions.selectedItems.length}
             {...viewOptions}
           />
           <ViewPaginationRow viewType={reduxTypes.view.SOURCES_VIEW} {...viewOptions} />
-          <div className="quipucords-list-container">{this.renderSourcesList(sources)}</div>
-          {this.renderPendingMessage()}
-        </div>
-      );
-    }
-
-    return <SourcesEmptyState onAddSource={this.onShowAddSourceWizard} />;
-  }
-}
+        </React.Fragment>
+      )}
+      <div className="quipucords-list-container">
+        <Table
+          onExpand={onExpand}
+          onSelect={onSelect}
+          rows={sources.map(item => ({
+            isSelected: (selectedSources?.[item.id] && true) || false,
+            source: item,
+            cells: [
+              {
+                content: sourcesTableCells.description(item),
+                dataLabel: 'Description'
+              },
+              {
+                content: sourcesTableCells.scanStatus(item),
+                width: 20,
+                dataLabel: 'Scan'
+              },
+              {
+                ...sourcesTableCells.credentialsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 2,
+                width: 8,
+                dataLabel: 'Credentials'
+              },
+              {
+                ...sourcesTableCells.okHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 3,
+                width: 8,
+                dataLabel: 'Ok hosts'
+              },
+              {
+                ...sourcesTableCells.failedHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 4,
+                width: 8,
+                dataLabel: 'Failed hosts'
+              },
+              {
+                ...sourcesTableCells.unreachableHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 5,
+                width: 8,
+                dataLabel: 'Unreachable hosts'
+              },
+              {
+                content: sourcesTableCells.actionsCell({
+                  item,
+                  onDelete: () => onDelete(item),
+                  onEdit: () => onEdit(item),
+                  onScan: () => onScan(item)
+                }),
+                isActionCell: true
+              }
+            ]
+          }))}
+        >
+          <SourcesEmptyState onAddSource={onShowAddSourceWizard} />
+        </Table>
+      </div>
+    </div>
+  );
+};
 
 /**
  * Prop types
@@ -188,15 +313,24 @@ class Sources extends React.Component {
  *     getSources: Function, error: boolean, updateSources: boolean, viewOptions: object}}
  */
 Sources.propTypes = {
-  error: PropTypes.bool,
-  errorMessage: PropTypes.string,
+  // error: PropTypes.bool,
+  // errorMessage: PropTypes.string,
+  // date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   getSources: PropTypes.func,
-  lastRefresh: PropTypes.number,
-  pending: PropTypes.bool,
-  sources: PropTypes.array,
+  // lastRefresh: PropTypes.number,
+  // pending: PropTypes.bool,
+  // data: PropTypes.object,
   t: PropTypes.func,
-  updateSources: PropTypes.bool,
-  viewOptions: PropTypes.object
+  // updateSources: PropTypes.bool,
+  // update: PropTypes.number,
+  useDispatch: PropTypes.func,
+  useOnDelete: PropTypes.func,
+  useOnEdit: PropTypes.func,
+  useOnScan: PropTypes.func,
+  usePoll: PropTypes.func,
+  useSelectors: PropTypes.func,
+  useSelectorsResponse: PropTypes.func
+  // viewOptions: PropTypes.object
 };
 
 /**
@@ -206,26 +340,40 @@ Sources.propTypes = {
  *     getSources: Function, error: boolean, updateSources: boolean, viewOptions: {}}}
  */
 Sources.defaultProps = {
-  error: false,
-  errorMessage: null,
-  getSources: helpers.noop,
-  lastRefresh: 0,
-  pending: false,
-  sources: [],
+  // date: null,
+  // error: false,
+  // errorMessage: null,
+  getSources: reduxActions.sources.getSources,
+  // lastRefresh: 0,
+  // pending: false,
+  // sources: [],
+  // data: {},
   t: translate,
-  updateSources: false,
-  viewOptions: {}
+  // update: 0,
+  // updateSources: false,
+  useDispatch: storeHooks.reactRedux.useDispatch,
+  useOnDelete,
+  useOnEdit,
+  useOnScan,
+  usePoll,
+  // viewOptions: {}
+  useSelectors: storeHooks.reactRedux.useSelectors,
+  useSelectorsResponse: storeHooks.reactRedux.useSelectorsResponse
 };
 
-const mapDispatchToProps = dispatch => ({
-  getSources: queryObj => dispatch(reduxActions.sources.getSources(queryObj))
-});
-
+// const mapDispatchToProps = dispatch => ({
+//  getSources: queryObj => dispatch(reduxActions.sources.getSources(queryObj))
+// });
+/*
 const mapStateToProps = state => ({
   ...state.sources.view,
+  // lastRefresh: state.sources.lastRefresh,
+  update: state.sources.update,
   viewOptions: state.viewOptions[reduxTypes.view.SOURCES_VIEW]
 });
+ */
 
-const ConnectedSources = connect(mapStateToProps, mapDispatchToProps)(Sources);
+// const ConnectedSources = connect(mapStateToProps, mapDispatchToProps)(Sources);
+const ConnectedSources = Sources;
 
-export { ConnectedSources as default, ConnectedSources, Sources };
+export { Sources as default, ConnectedSources, Sources };
