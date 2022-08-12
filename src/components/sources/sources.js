@@ -2,31 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _isEqual from 'lodash/isEqual';
 import _size from 'lodash/size';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStatePrimary,
-  EmptyStateVariant,
-  Title,
-  TitleSizes
-} from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
-import { ListView, Spinner } from 'patternfly-react';
+import { Alert, AlertVariant, Button, ButtonVariant, EmptyState } from '@patternfly/react-core';
+import { IdCardIcon, PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
+import { Grid, Icon, ListView, Spinner } from 'patternfly-react';
+import _get from 'lodash/get';
+import cx from 'classnames';
 import { Modal, ModalVariant } from '../modal/modal';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import helpers from '../../common/helpers';
 import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import SourcesEmptyState from './sourcesEmptyState';
-import SourceListItem from './sourceListItem';
 import { SourceFilterFields, SourceSortFields } from './sourceConstants';
-import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
+import { Table } from '../table/table';
+import { Tooltip } from '../tooltip/tooltip';
+import { dictionary } from '../../constants/dictionaryConstants';
+import SourceCredentialsList from './sourceCredentialsList';
+import ScanHostList from '../scanHostList/scanHostList';
+import { apiTypes } from '../../constants/apiConstants';
 
 /**
  * A sources view.
@@ -94,21 +88,7 @@ class Sources extends React.Component {
     );
   }
 
-  renderPendingMessage() {
-    const { pending, t } = this.props;
-
-    if (pending) {
-      return (
-        <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
-          <Spinner loading size="lg" className="blank-slate-pf-icon" />
-          <div className="text-center">{t('view.loading', { context: 'sources' })}</div>
-        </Modal>
-      );
-    }
-
-    return null;
-  }
-
+  /*
   renderSourcesList(sources) {
     const { lastRefresh, t } = this.props;
 
@@ -137,12 +117,212 @@ class Sources extends React.Component {
       </EmptyState>
     );
   }
+  */
+  static renderSourceType(item) {
+    const typeIcon = helpers.sourceTypeIcon(item.source_type);
+
+    return (
+      <Tooltip content={dictionary[item.source_type]}>
+        <ListView.Icon type={typeIcon.type} name={typeIcon.name} />
+      </Tooltip>
+    );
+  }
+
+  static renderDescription(item) {
+    const itemHostsPopover = (
+      <div className="quipucords-sources-popover-scroll">
+        {item.hosts && item.hosts.length > 1 && (
+          <ul className="quipucords-popover-list">
+            {item.hosts.map(host => (
+              <li key={host}>{host}</li>
+            ))}
+          </ul>
+        )}
+        {item.hosts && item.hosts.length === 1 && <div>{item.hosts[0]}</div>}
+      </div>
+    );
+
+    let itemDescription;
+
+    if (_size(item.hosts)) {
+      if (item.source_type === 'network') {
+        itemDescription = (
+          <Tooltip isPopover content={itemHostsPopover} placement="left">
+            <Button variant={ButtonVariant.link} isInline>
+              Network Range
+            </Button>
+          </Tooltip>
+        );
+      } else {
+        [itemDescription] = item.hosts;
+      }
+    }
+
+    return (
+      <div className="scan-description">
+        <div>
+          <div>
+            <ListView.DescriptionHeading>{item.name}</ListView.DescriptionHeading>
+          </div>
+          {itemDescription}
+        </div>
+      </div>
+    );
+  }
+
+  static renderScanStatus(item) {
+    const scan = _get(item, 'connection');
+    let scanDescription = '';
+    let scanTime = _get(scan, 'end_time');
+    let icon = null;
+
+    switch (_get(scan, 'status')) {
+      case 'completed':
+        scanDescription = 'Last Connected';
+        icon = <Icon className="scan-status-icon" type="pf" name="ok" />;
+        break;
+      case 'failed':
+        scanDescription = 'Connection Failed';
+        icon = <Icon className="scan-status-icon" type="pf" name="error-circle-o" />;
+        break;
+      case 'canceled':
+        scanDescription = 'Connection Canceled';
+        icon = <Icon className="scan-status-icon" type="pf" name="error-circle-o" />;
+        break;
+      case 'created':
+      case 'pending':
+      case 'running':
+        scanTime = _get(scan, 'start_time');
+        scanDescription = 'Connection in Progress';
+        icon = <Icon className="scan-status-icon fa-spin" type="fa" name="spinner" />;
+        break;
+      case 'paused':
+        scanDescription = 'Connection Paused';
+        icon = <Icon className="scan-status-icon" type="pf" name="warning-triangle-o" />;
+        break;
+      default:
+        return null;
+    }
+
+    return (
+      <div className="scan-description">
+        {icon}
+        <div className="scan-status-text">
+          <div>{scanDescription}</div>
+          {helpers.getTimeDisplayHowLongAgo(scanTime)}
+        </div>
+      </div>
+    );
+  }
+
+  static renderCredentials(item) {
+    const credentialCount = _size(_get(item, 'credentials', []));
+
+    return (
+      <React.Fragment>
+        <IdCardIcon /> {credentialCount}
+      </React.Fragment>
+    );
+  }
+
+  static renderHostRow(host) {
+    const iconInfo = helpers.scanStatusIcon(host.status);
+
+    return (
+      <Grid.Row key={helpers.generateId('hostRow')}>
+        <Grid.Col xs={host.status === 'success' ? 6 : 12} sm={4}>
+          <span>
+            <Icon type={iconInfo.type} name={iconInfo.name} className={cx(...iconInfo.classNames)} />
+            &nbsp; {host.name}
+          </span>
+        </Grid.Col>
+        {host.status === 'success' && (
+          <Grid.Col xs={6} sm={4}>
+            <span>
+              <Icon type="fa" name="id-card" />
+              &nbsp; {host.credentialName}
+            </span>
+          </Grid.Col>
+        )}
+      </Grid.Row>
+    );
+  }
+
+  static renderOkHosts(item) {
+    return (
+      <ScanHostList
+        key="okHosts-hey"
+        id={item.connection.id}
+        filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: item.id, [apiTypes.API_QUERY_STATUS]: 'success' }}
+        useConnectionResults
+      >
+        {({ host }) => Sources.renderHostRow(host)}
+      </ScanHostList>
+    );
+  }
+
+  static renderFailedHosts(item) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> FAILED HOSTS', item);
+
+    return (
+      <ScanHostList
+        key={`failedHosts-${item.connection.id}`}
+        id={item.connection.id}
+        filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: item.id, [apiTypes.API_QUERY_STATUS]: 'failed' }}
+        useConnectionResults
+      >
+        {({ host }) => Sources.renderHostRow(host)}
+      </ScanHostList>
+    );
+  }
+
+  static renderActions(item) {
+    const onScan = source => {
+      store.dispatch({
+        type: reduxTypes.scans.EDIT_SCAN_SHOW,
+        sources: [source]
+      });
+    };
+
+    return (
+      <React.Fragment>
+        <Tooltip key="tooltip-edit" content="Edit">
+          <Button
+            className="quipucords-view__row-button"
+            onClick={() => this.onEdit(item)}
+            aria-label="Edit"
+            variant={ButtonVariant.plain}
+          >
+            <PencilAltIcon />
+          </Button>
+        </Tooltip>
+        <Tooltip key="tooltip-delete" content="Delete">
+          <Button
+            className="quipucords-view__row-button"
+            onClick={() => this.onDelete(item)}
+            aria-label="Delete"
+            variant={ButtonVariant.plain}
+          >
+            <TrashIcon />
+          </Button>
+        </Tooltip>
+        <Button key="button-scan" variant={ButtonVariant.secondary} onClick={() => onScan(item)}>
+          Scan
+        </Button>
+      </React.Fragment>
+    );
+  }
 
   render() {
     const { error, errorMessage, lastRefresh, pending, sources, t, viewOptions } = this.props;
 
     if (pending && !sources.length) {
-      return this.renderPendingMessage();
+      return (
+        <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
+          <Spinner loading size="lg" className="blank-slate-pf-icon" />
+          <div className="text-center">{t('view.loading', { context: 'sources' })}</div>
+        </Modal>
+      );
     }
 
     if (error) {
@@ -155,7 +335,67 @@ class Sources extends React.Component {
       );
     }
 
-    if (sources.length || _size(viewOptions.activeFilters)) {
+    const filtersActive = _size(viewOptions.activeFilters) >= 0;
+    const updatedSources = sources.map(source => ({
+      cells: [
+        { content: Sources.renderSourceType(source), width: 1 },
+        { content: Sources.renderDescription(source), width: 10 },
+        { content: Sources.renderScanStatus(source), width: 10 },
+        {
+          content: Sources.renderCredentials(source),
+          expandedContent: _size(_get(source, 'credentials', [])) > 0 && <SourceCredentialsList source={source} />,
+          width: 1
+        },
+        {
+          content: 'successful',
+          expandedContent: Sources.renderOkHosts(source),
+          width: 1
+        },
+        {
+          content: 'failed',
+          expandedContent: Sources.renderFailedHosts(source),
+          width: 1
+        },
+        {
+          content: 'unreachable',
+          expandedContent: 'unreachable',
+          width: 1
+        },
+        {
+          content: Sources.renderActions(source),
+          isActionCell: true
+        }
+      ]
+    }));
+
+    return (
+      <div className="quipucords-view-container">
+        {filtersActive && (
+          <React.Fragment>
+            <ViewToolbar
+              viewType={reduxTypes.view.SOURCES_VIEW}
+              filterFields={SourceFilterFields}
+              sortFields={SourceSortFields}
+              onRefresh={this.onRefresh}
+              lastRefresh={lastRefresh}
+              actions={this.renderSourceActions()}
+              itemsType="Source"
+              itemsTypePlural="Sources"
+              selectedCount={viewOptions.selectedItems.length}
+              {...viewOptions}
+            />
+            <ViewPaginationRow viewType={reduxTypes.view.SOURCES_VIEW} {...viewOptions} />
+          </React.Fragment>
+        )}
+        <div className="quipucords-list-container">
+          <Table onSelect={Function.prototype} rows={updatedSources}>
+            <SourcesEmptyState onAddSource={this.onShowAddSourceWizard} />
+          </Table>
+        </div>
+      </div>
+    );
+
+    /*
       return (
         <div className="quipucords-view-container">
           <ViewToolbar
@@ -178,6 +418,7 @@ class Sources extends React.Component {
     }
 
     return <SourcesEmptyState onAddSource={this.onShowAddSourceWizard} />;
+    */
   }
 }
 
