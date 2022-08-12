@@ -72,6 +72,28 @@
     "refreshed": "Refreshed just now",
     "refreshed_load": "Refreshed {{refresh}}"
   },
+  "table": {
+    "label_network-range": "Network Range",
+    "label": "{{context}}",
+    "label_status": "{{context}}",
+    "label_status_completed": "Last Connected",
+    "label_status_failed": "Connection Failed",
+    "label_status_canceled": "Connection Canceled",
+    "label_status_cancelled": "Connection Canceled",
+    "label_status_created": "Connection in Progress",
+    "label_status_pending": "Connection in Progress",
+    "label_status_running": "Connection in Progress",
+    "label_status_paused": "Connection Paused",
+    "label_status_cell": "<0/> <1>{{count}}</1>",
+    "label_status_tooltip_failed": "{{count}} Failed Authentication",
+    "label_status_tooltip_failed_other": "{{count}} Failed Authentications",
+    "label_status_tooltip_idCard": "{{count}} Credential",
+    "label_status_tooltip_idCard_other": "{{count}} Credentials",
+    "label_status_tooltip_success": "{{count}} Successful Authentication",
+    "label_status_tooltip_success_other": "{{count}} Successful Authentications",
+    "label_status_tooltip_unreachable": "{{count}} Unreachable System",
+    "label_status_tooltip_unreachable_other": "{{count}} Unreachable Systems"
+  },
   "toast-notifications": {
     "description_add-source_hidden": "Source {{name}} was created",
     "description_add-source_hidden_edit": "Source {{name}} was updated",
