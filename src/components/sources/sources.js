@@ -215,7 +215,7 @@ class Sources extends React.Component {
     );
   }
 
-  static renderCredentials(item) {
+  static renderCredentialsStatus(item) {
     const credentialCount = _size(_get(item, 'credentials', []));
 
     return (
@@ -223,6 +223,10 @@ class Sources extends React.Component {
         <IdCardIcon /> {credentialCount}
       </React.Fragment>
     );
+  }
+
+  static renderCredentialsContent(item) {
+    return _size(_get(item, 'credentials', [])) > 0 && <SourceCredentialsList source={item} />;
   }
 
   static renderHostRow(host) {
@@ -248,7 +252,57 @@ class Sources extends React.Component {
     );
   }
 
-  static renderOkHosts(item) {
+  // <ListStatusItem
+  //         key="okHosts"
+  //         id="okHosts"
+  //         count={okHostCount}
+  //         emptyText="0 Successful"
+  //         tipSingular="Successful Authentication"
+  //         tipPlural="Successful Authentications"
+  //         expanded={expandType === 'okHosts'}
+  //         expandType="okHosts"
+  //         toggleExpand={this.onToggleExpand}
+  //         iconInfo={helpers.scanStatusIcon('success')}
+  //       />
+  static renderOkHostsStatus(item) {
+    let count = _get(item, 'connection.source_systems_scanned', 0);
+
+    if (helpers.DEV_MODE) {
+      count = helpers.devModeNormalizeCount(count);
+    }
+
+    const iconInfo = helpers.scanStatusIcon('success');
+    const tipSingular = 'Successful Authentication';
+    const tipPlural = 'Successful Authentications';
+    const emptyText = '0 Successful';
+
+    if (count <= 0) {
+      return <Tooltip content={`0 ${tipPlural}`}>{emptyText}</Tooltip>;
+    }
+
+    return (
+      <Tooltip content={`${count}  ${count === 1 ? tipSingular : tipPlural}`}>
+        {iconInfo && (
+          <React.Fragment>
+            <Icon
+              className={cx('list-view-compound-item-icon', ..._get(iconInfo, 'classNames', []))}
+              type={iconInfo.type}
+              name={iconInfo.name}
+            />{' '}
+            <strong>{count}</strong>
+          </React.Fragment>
+        )}
+        {!iconInfo && (
+          <span>
+            <strong>{count}</strong>
+            {` ${tipPlural}`}
+          </span>
+        )}
+      </Tooltip>
+    );
+  }
+
+  static renderOkHostsContent(item) {
     return (
       <ScanHostList
         key="okHosts-hey"
@@ -261,14 +315,101 @@ class Sources extends React.Component {
     );
   }
 
-  static renderFailedHosts(item) {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> FAILED HOSTS', item);
+  static renderFailedHostsStatus(item) {
+    let count = _get(item, 'connection.source_systems_failed', 0);
 
+    if (helpers.DEV_MODE) {
+      count = helpers.devModeNormalizeCount(count);
+    }
+
+    const iconInfo = helpers.scanStatusIcon('failed');
+    const tipSingular = 'Failed Authentication';
+    const tipPlural = 'Failed Authentications';
+    const emptyText = '0 Failed';
+
+    if (count <= 0) {
+      return <Tooltip content={`0 ${tipPlural}`}>{emptyText}</Tooltip>;
+    }
+
+    return (
+      <Tooltip content={`${count}  ${count === 1 ? tipSingular : tipPlural}`}>
+        {iconInfo && (
+          <React.Fragment>
+            <Icon
+              className={cx('list-view-compound-item-icon', ..._get(iconInfo, 'classNames', []))}
+              type={iconInfo.type}
+              name={iconInfo.name}
+            />{' '}
+            <strong>{count}</strong>
+          </React.Fragment>
+        )}
+        {!iconInfo && (
+          <span>
+            <strong>{count}</strong>
+            {` ${tipPlural}`}
+          </span>
+        )}
+      </Tooltip>
+    );
+  }
+
+  static renderFailedHostsContent(item) {
     return (
       <ScanHostList
         key={`failedHosts-${item.connection.id}`}
         id={item.connection.id}
         filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: item.id, [apiTypes.API_QUERY_STATUS]: 'failed' }}
+        useConnectionResults
+      >
+        {({ host }) => Sources.renderHostRow(host)}
+      </ScanHostList>
+    );
+  }
+
+  static renderUnreachableStatus(item) {
+    let count = _get(item, 'connection.source_systems_unreachable', 0);
+
+    if (helpers.DEV_MODE) {
+      count = helpers.devModeNormalizeCount(count);
+    }
+
+    const iconInfo = helpers.scanStatusIcon('unreachable');
+    const tipSingular = 'Unreachable System';
+    const tipPlural = 'Unreachable Systems';
+    const emptyText = '0 Unreachable';
+
+    if (count <= 0) {
+      return <Tooltip content={`0 ${tipPlural}`}>{emptyText}</Tooltip>;
+    }
+
+    return (
+      <Tooltip content={`${count}  ${count === 1 ? tipSingular : tipPlural}`}>
+        {iconInfo && (
+          <React.Fragment>
+            <Icon
+              className={cx('list-view-compound-item-icon', ..._get(iconInfo, 'classNames', []))}
+              type={iconInfo.type}
+              name={iconInfo.name}
+            />{' '}
+            <strong>{count}</strong>
+          </React.Fragment>
+        )}
+        {!iconInfo && (
+          <span>
+            <strong>{count}</strong>
+            {` ${tipPlural}`}
+          </span>
+        )}
+      </Tooltip>
+    );
+  }
+
+  static renderUnreachableContent(item) {
+    return (
+      <ScanHostList
+        key={`systemsUnreachable-${item.connection.id}`}
+        id={item.connection.id}
+        filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: item.id, [apiTypes.API_QUERY_STATUS]: 'unreachable' }}
         useConnectionResults
       >
         {({ host }) => Sources.renderHostRow(host)}
@@ -338,28 +479,32 @@ class Sources extends React.Component {
     const filtersActive = _size(viewOptions.activeFilters) >= 0;
     const updatedSources = sources.map(source => ({
       cells: [
-        { content: Sources.renderSourceType(source), width: 1 },
-        { content: Sources.renderDescription(source), width: 10 },
-        { content: Sources.renderScanStatus(source), width: 10 },
+        { content: Sources.renderSourceType(source), width: 5, dataLabel: 'Source type' },
+        { content: Sources.renderDescription(source), width: 15, dataLabel: 'Description' },
+        { content: Sources.renderScanStatus(source), width: 15, dataLabel: 'Scan' },
         {
-          content: Sources.renderCredentials(source),
-          expandedContent: _size(_get(source, 'credentials', [])) > 0 && <SourceCredentialsList source={source} />,
-          width: 1
+          content: Sources.renderCredentialsStatus(source),
+          expandedContent: Sources.renderCredentialsContent(source),
+          width: 10,
+          dataLabel: 'Credentials'
         },
         {
-          content: 'successful',
-          expandedContent: Sources.renderOkHosts(source),
-          width: 1
+          content: Sources.renderOkHostsStatus(source),
+          expandedContent: Sources.renderOkHostsContent(source),
+          width: 10,
+          dataLabel: 'Ok hosts'
         },
         {
-          content: 'failed',
-          expandedContent: Sources.renderFailedHosts(source),
-          width: 1
+          content: Sources.renderFailedHostsStatus(source),
+          expandedContent: Sources.renderFailedHostsContent(source),
+          width: 10,
+          dataLabel: 'Failed hosts'
         },
         {
-          content: 'unreachable',
-          expandedContent: 'unreachable',
-          width: 1
+          content: Sources.renderUnreachableStatus(source),
+          expandedContent: Sources.renderUnreachableContent(source),
+          width: 10,
+          dataLabel: 'Unreachable hosts'
         },
         {
           content: Sources.renderActions(source),
