@@ -88,38 +88,6 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
 const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
   const { end_time: endTime, start_time: startTime, status } = scan;
   const scanTime = ((status === 'created' || status === 'pending' || status === 'running') && startTime) || endTime;
-  // const scanDescription = t('table.label', { context: ['status', status] });
-  // const icon = <Icon symbol={IconVariant[status]} />;
-
-  /*
-  switch (status) {
-    case 'completed':
-      scanDescription = 'Last Connected';
-      icon = <Icon symbol={IconVariant.completed} />;
-      break;
-    case 'failed':
-      scanDescription = 'Connection Failed';
-      icon = <Icon symbol={IconVariant.failed} />;
-      break;
-    case 'canceled':
-      scanDescription = 'Connection Canceled';
-      icon = <Icon symbol={IconVariant.canceled} />;
-      break;
-    case 'created':
-    case 'pending':
-    case 'running':
-      scanTime = startTime;
-      scanDescription = 'Connection in Progress';
-      icon = <Icon symbol={IconVariant.pending} />;
-      break;
-    case 'paused':
-      scanDescription = 'Connection Paused';
-      icon = <Icon symbol={IconVariant.paused} />;
-      break;
-    default:
-      return null;
-  }
-  */
 
   return (
     <div className="scan-description">
@@ -179,70 +147,17 @@ const statusCell = ({ count, status = IconVariant.unknown, t = translate } = {})
       ])}
     </Tooltip>
   );
-
-  // "label_status_success": "Successful Authentication",
-  //     "label_status_success_other": "Successful Authentications",
-  //     "label_status_success_empty": "{{count}} Successful"
-
-  /*
-  const iconInfo = helpers.scanStatusIcon('success');
-  const tipSingular = 'Successful Authentication';
-  const tipPlural = 'Successful Authentications';
-  const emptyText = '0 Successful';
-
-  if (count <= 0) {
-    return <Tooltip content={`0 ${tipPlural}`}>{emptyText}</Tooltip>;
-  }
-
-  return (
-    <Tooltip content={`${count}  ${count === 1 ? tipSingular : tipPlural}`}>
-      {iconInfo && (
-        <React.Fragment>
-          <Icon symbol={IconVariant.success}/>{' '}
-          <strong>{count}</strong>
-        </React.Fragment>
-      )}
-      {!iconInfo && (
-        <span>
-          <strong>{count}</strong>
-          {` ${tipPlural}`}
-        </span>
-      )}
-    </Tooltip>
-  );
-  */
 };
 
 /**
  * Generate a consistent display row for expandable content.
  *
  * @param {object} params
+ * @param {object} params.connection
+ * @param {string} params.id
  * @param {string} params.status
- * @param {string} params.name
- * @param {string} params.credentialName
  * @returns {React.ReactNode}
  */
-/*
-const hostRow = ({ status, name, credentialName } = {}) => (
-  <Grid.Row key={`hostsRow-${credentialName}`}>
-    <Grid.Col xs={status === 'success' ? 6 : 12} sm={4}>
-      <span>
-        <Icon symbol={IconVariant[status]} />
-        &nbsp; {name}
-      </span>
-    </Grid.Col>
-    {status === 'success' && (
-      <Grid.Col xs={6} sm={4}>
-        <span>
-          <Icon symbol={IconVariant.idCard} />
-          &nbsp; {credentialName}
-        </span>
-      </Grid.Col>
-    )}
-  </Grid.Row>
-);
-*/
-
 const statusContent = ({ connection, id, status } = {}) => (
   <ScanHostList
     key={`status-content-${id}-${status}`}
@@ -271,7 +186,15 @@ const statusContent = ({ connection, id, status } = {}) => (
   </ScanHostList>
 );
 
-const failedHostsStatusContent = ({ connection, id } = {}) => {
+/**
+ * Failed hosts cell and expandable content.
+ *
+ * @param {object} params
+ * @param {object} params.connection
+ * @param {string} params.id
+ * @returns {{cell: React.ReactNode, content: React.ReactNode}}
+ */
+const failedHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_failed, 10);
 
   return {
@@ -280,7 +203,15 @@ const failedHostsStatusContent = ({ connection, id } = {}) => {
   };
 };
 
-const okHostsStatusContent = ({ connection, id } = {}) => {
+/**
+ * Ok hosts cell and expandable content.
+ *
+ * @param {object} params
+ * @param {object} params.connection
+ * @param {string} params.id
+ * @returns {{cell: React.ReactNode, content: React.ReactNode}}
+ */
+const okHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_scanned, 10);
 
   return {
@@ -289,7 +220,15 @@ const okHostsStatusContent = ({ connection, id } = {}) => {
   };
 };
 
-const unreachableHostsStatusContent = ({ connection, id } = {}) => {
+/**
+ * Unreachable hosts cell and expandable content.
+ *
+ * @param {object} params
+ * @param {object} params.connection
+ * @param {string} params.id
+ * @returns {{cell: React.ReactNode, content: React.ReactNode}}
+ */
+const unreachableHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_unreachable, 10);
 
   return {
@@ -301,13 +240,25 @@ const unreachableHostsStatusContent = ({ connection, id } = {}) => {
 const sourcesTableCells = {
   credentialsStatusContent,
   description,
-  failedHostsStatusContent,
-  okHostsStatusContent,
+  failedHostsCellContent,
+  okHostsCellContent,
   scanStatus,
   statusCell,
   statusContent,
   typeIcon,
-  unreachableHostsStatusContent
+  unreachableHostsCellContent
 };
 
-export { sourcesTableCells as default, sourcesTableCells };
+export {
+  sourcesTableCells as default,
+  sourcesTableCells,
+  credentialsStatusContent,
+  description,
+  failedHostsCellContent,
+  okHostsCellContent,
+  scanStatus,
+  statusCell,
+  statusContent,
+  typeIcon,
+  unreachableHostsCellContent
+};
