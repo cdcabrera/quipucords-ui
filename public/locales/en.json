@@ -72,6 +72,18 @@
     "refreshed": "Refreshed just now",
     "refreshed_load": "Refreshed {{refresh}}"
   },
+  "table": {
+    "label_network-range": "Network Range",
+    "label": "{{context}}",
+    "label_status_failed": "<0/> <1>{{count}}</1>",
+    "label_status_failed_zero": "{{count}} Failed",
+    "label_status_tooltip_failed": "Failed Authentication",
+    "label_status_tooltip_failed_other": "Failed Authentications",
+    "label_status_success": "<0/> <1>{{count}}</1>",
+    "label_status_success_zero": "{{count}} Successful",
+    "label_status_tooltip_success": "Successful Authentication",
+    "label_status_tooltip_success_other": "Successful Authentications"
+  },
   "toast-notifications": {
     "description_add-source_hidden": "Source {{name}} was created",
     "description_add-source_hidden_edit": "Source {{name}} was updated",
