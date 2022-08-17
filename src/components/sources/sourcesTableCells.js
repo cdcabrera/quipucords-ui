@@ -81,14 +81,17 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
  *
  * @param {object} params
  * @param {object} params.connection
+ * @param {object} options
+ * @param {Function} options.t
  * @returns {React.ReactNode|null}
  */
-const scanStatus = ({ connection: scan = {} } = {}) => {
+const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
   const { end_time: endTime, start_time: startTime, status } = scan;
-  let scanDescription = '';
-  let scanTime = endTime;
-  let icon = null;
+  const scanTime = ((status === 'created' || status === 'pending' || status === 'running') && startTime) || endTime;
+  // const scanDescription = t('table.label', { context: ['status', status] });
+  // const icon = <Icon symbol={IconVariant[status]} />;
 
+  /*
   switch (status) {
     case 'completed':
       scanDescription = 'Last Connected';
@@ -116,12 +119,13 @@ const scanStatus = ({ connection: scan = {} } = {}) => {
     default:
       return null;
   }
+  */
 
   return (
     <div className="scan-description">
-      {icon}
+      <Icon symbol={IconVariant[status]} />
       <div className="scan-status-text">
-        <div>{scanDescription}</div>
+        <div>{t('table.label', { context: ['status', status] })}</div>
         {helpers.getTimeDisplayHowLongAgo(scanTime)}
       </div>
     </div>
@@ -156,11 +160,11 @@ const credentialsStatusContent = (item = {}) => {
  *
  * @param {object} params
  * @param {number} params.count
- * @param {string} params.symbol
+ * @param {string} params.status
  * @param {Function} params.t
  * @returns {React.ReactNode}
  */
-const statusCell = ({ count, symbol = IconVariant.unknown, t = translate } = {}) => {
+const statusCell = ({ count, status = IconVariant.unknown, t = translate } = {}) => {
   let updatedCount = count || 0;
 
   if (helpers.DEV_MODE) {
@@ -168,8 +172,11 @@ const statusCell = ({ count, symbol = IconVariant.unknown, t = translate } = {})
   }
 
   return (
-    <Tooltip content={t('table.label', { context: ['status', 'tooltip', symbol], count: updatedCount })}>
-      {t('table.label', { context: ['status', symbol], count: updatedCount }, [<Icon symbol={symbol} />, <strong />])}
+    <Tooltip content={t('table.label', { context: ['status', 'tooltip', status], count: updatedCount })}>
+      {t('table.label', { context: ['status', 'cell', status], count: updatedCount }, [
+        <Icon symbol={status} />,
+        <strong />
+      ])}
     </Tooltip>
   );
 
@@ -236,11 +243,11 @@ const hostRow = ({ status, name, credentialName } = {}) => (
 );
 */
 
-const statusContent = ({ connection, id, type } = {}) => (
+const statusContent = ({ connection, id, status } = {}) => (
   <ScanHostList
-    key={`status-content-${id}-${type}`}
+    key={`status-content-${id}-${status}`}
     id={connection.id}
-    filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: id, [apiTypes.API_QUERY_STATUS]: type }}
+    filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: id, [apiTypes.API_QUERY_STATUS]: status }}
     useConnectionResults
   >
     {({ host }) => (
@@ -265,29 +272,29 @@ const statusContent = ({ connection, id, type } = {}) => (
 );
 
 const failedHostsStatusContent = ({ connection, id } = {}) => {
-  const count = connection?.source_systems_failed;
+  const count = Number.parseInt(connection?.source_systems_failed, 10);
 
   return {
-    cell: statusCell({ count, symbol: IconVariant.failed }),
-    content: statusContent({ connection, id, type: IconVariant.failed })
+    cell: statusCell({ count, status: IconVariant.failed }),
+    content: statusContent({ connection, id, status: IconVariant.failed })
   };
 };
 
 const okHostsStatusContent = ({ connection, id } = {}) => {
-  const count = connection?.source_systems_scanned;
+  const count = Number.parseInt(connection?.source_systems_scanned, 10);
 
   return {
-    cell: statusCell({ count, symbol: IconVariant.success }),
-    content: statusContent({ connection, id, type: IconVariant.success })
+    cell: statusCell({ count, status: IconVariant.success }),
+    content: statusContent({ connection, id, status: IconVariant.success })
   };
 };
 
 const unreachableHostsStatusContent = ({ connection, id } = {}) => {
-  const count = connection?.source_systems_unreachable;
+  const count = Number.parseInt(connection?.source_systems_unreachable, 10);
 
   return {
-    cell: statusCell({ count, symbol: IconVariant.unreachable }),
-    content: statusContent({ connection, id, type: IconVariant.unreachable })
+    cell: statusCell({ count, status: IconVariant.unreachable }),
+    content: statusContent({ connection, id, status: IconVariant.unreachable })
   };
 };
 
