@@ -12,7 +12,13 @@ import { IconSize } from '@patternfly/react-icons';
 import { useShallowCompareEffect } from 'react-use';
 import { Modal, ModalVariant } from '../modal/modal';
 // import { connect, reduxActions, reduxTypes, store } from '../../redux';
-import { connect, reduxActions, reduxTypes, storeHooks } from '../../redux';
+import {
+  connect,
+  reduxActions,
+  reduxTypes,
+  // store,
+  storeHooks
+} from '../../redux';
 import helpers from '../../common/helpers';
 import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
@@ -21,6 +27,8 @@ import { SourceFilterFields, SourceSortFields } from './sourceConstants';
 import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { sourcesTableCells } from './sourcesTableCells';
+import { useOnDelete, useOnEdit, useOnScan, usePoll } from './sourcesContext';
+
 // import _size from 'lodash/size'
 // import useGetSources from './sourcesContext'
 // import { Tooltip } from '../tooltip/tooltip';
@@ -43,75 +51,109 @@ import { sourcesTableCells } from './sourcesTableCells';
  * @param {boolean} props.updateSources
  * @param {Function} props.useDispatch
  * @param {object} props.viewOptions
+ * @param props.data
+ * @param props.useOnEdit
+ * @param props.useOnDelete
+ * @param props.date
+ * @param props.update
+ * @param props.useOnScan
+ * @param props.usePoll
  * @returns {React.ReactNode}
  */
 // const Sources = ({ lastRefresh, t, useGetSources: useAliasGetSources, viewOptions }) => {
 const Sources = ({
+  date,
   error,
   errorMessage,
   getSources,
-  lastRefresh,
+  // lastRefresh,
   pending,
-  sources,
+  data: tempData,
   t,
-  updateSources,
+  update: refreshUpdate,
+  // updateSources,
+  useOnEdit: useAliasOnEdit,
+  useOnDelete: useAliasOnDelete,
+  useOnScan: useAliasOnScan,
   useDispatch: useAliasDispatch,
+  usePoll: useAliasPoll,
   viewOptions
 }) => {
+  const { results: sources = [] } = tempData || {};
   const [updatedSources, setUpdatedSources] = useState([]);
+  const pollUpdate = useAliasPoll();
+  // const setPoll = useAliasPoll();
   const dispatch = useAliasDispatch();
   const query = helpers.createViewQueryObject(viewOptions);
   const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || sources?.length > 0 || false;
+  const onDelete = useAliasOnDelete();
+  const onEdit = useAliasOnEdit();
+  const onScan = useAliasOnScan();
+
+  console.log('HEY >>>>>>>>>', pollUpdate, refreshUpdate);
 
   useShallowCompareEffect(() => {
     getSources(query);
-  }, [updateSources, query]);
+  }, [pollUpdate, refreshUpdate, query]);
 
   useShallowCompareEffect(() => {
     setUpdatedSources(
-      sources.map(item => ({
-        source: item,
-        cells: [
-          {
-            content: sourcesTableCells.description(item),
-            width: 20,
-            dataLabel: 'Description'
-          },
-          {
-            content: sourcesTableCells.scanStatus(item),
-            width: 15,
-            dataLabel: 'Scan'
-          },
-          {
-            ...sourcesTableCells.credentialsStatusContent(item),
-            width: 10,
-            dataLabel: 'Credentials'
-          },
-          {
-            ...sourcesTableCells.okHostsCellContent(item),
-            width: 10,
-            dataLabel: 'Ok hosts'
-          },
-          {
-            ...sourcesTableCells.failedHostsCellContent(item),
-            width: 10,
-            dataLabel: 'Failed hosts'
-          },
-          {
-            ...sourcesTableCells.unreachableHostsCellContent(item),
-            width: 10,
-            dataLabel: 'Unreachable hosts'
-          },
-          {
-            ...sourcesTableCells.actionsCellContent(item),
-            isActionCell: true
-          }
-        ]
-      }))
+      sources.map(item =>
+        // const itemIsPending = ;
+        // if (itemIsPending) {
+        //  setPoll();
+        // }
+
+        ({
+          source: item,
+          cells: [
+            {
+              content: sourcesTableCells.description(item),
+              width: 20,
+              dataLabel: 'Description'
+            },
+            {
+              content: sourcesTableCells.scanStatus(item),
+              width: 15,
+              dataLabel: 'Scan'
+            },
+            {
+              ...sourcesTableCells.credentialsStatusContent(item),
+              width: 10,
+              dataLabel: 'Credentials'
+            },
+            {
+              ...sourcesTableCells.okHostsCellContent(item),
+              width: 10,
+              dataLabel: 'Ok hosts'
+            },
+            {
+              ...sourcesTableCells.failedHostsCellContent(item),
+              width: 10,
+              dataLabel: 'Failed hosts'
+            },
+            {
+              ...sourcesTableCells.unreachableHostsCellContent(item),
+              width: 10,
+              dataLabel: 'Unreachable hosts'
+            },
+            {
+              content: sourcesTableCells.actionsCell({
+                item,
+                onDelete: () => onDelete(item),
+                onEdit: () => onEdit(item),
+                onScan: () => onScan(item)
+              }),
+              isActionCell: true
+            }
+          ]
+        })
+      )
     );
   }, [sources]);
 
   const onRefresh = () => {
+    console.log('>>>>>>>>>>>> REFRESH worked for sources!');
     dispatch({
       type: reduxTypes.sources.UPDATE_SOURCES
     });
@@ -180,8 +222,8 @@ const Sources = ({
             viewType={reduxTypes.view.SOURCES_VIEW}
             filterFields={SourceFilterFields}
             sortFields={SourceSortFields}
-            onRefresh={onRefresh}
-            lastRefresh={lastRefresh}
+            onRefresh={() => onRefresh()}
+            lastRefresh={new Date(date).getTime()}
             actions={renderToolbarActions()}
             itemsType="Source"
             itemsTypePlural="Sources"
@@ -209,13 +251,19 @@ const Sources = ({
 Sources.propTypes = {
   error: PropTypes.bool,
   errorMessage: PropTypes.string,
+  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   getSources: PropTypes.func,
-  lastRefresh: PropTypes.number,
+  // lastRefresh: PropTypes.number,
   pending: PropTypes.bool,
-  sources: PropTypes.array,
+  data: PropTypes.object,
   t: PropTypes.func,
-  updateSources: PropTypes.bool,
+  // updateSources: PropTypes.bool,
+  update: PropTypes.number,
   useDispatch: PropTypes.func,
+  useOnDelete: PropTypes.func,
+  useOnEdit: PropTypes.func,
+  useOnScan: PropTypes.func,
+  usePoll: PropTypes.func,
   viewOptions: PropTypes.object
 };
 
@@ -226,15 +274,22 @@ Sources.propTypes = {
  *     getSources: Function, error: boolean, updateSources: boolean, viewOptions: {}}}
  */
 Sources.defaultProps = {
+  date: null,
   error: false,
   errorMessage: null,
   getSources: helpers.noop,
-  lastRefresh: 0,
+  // lastRefresh: 0,
   pending: false,
-  sources: [],
+  // sources: [],
+  data: {},
   t: translate,
-  updateSources: false,
+  update: 0,
+  // updateSources: false,
   useDispatch: storeHooks.reactRedux.useDispatch,
+  useOnDelete,
+  useOnEdit,
+  useOnScan,
+  usePoll,
   viewOptions: {}
 };
 
@@ -244,6 +299,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   ...state.sources.view,
+  // lastRefresh: state.sources.lastRefresh,
+  update: state.sources.update,
   viewOptions: state.viewOptions[reduxTypes.view.SOURCES_VIEW]
 });
 

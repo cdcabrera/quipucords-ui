@@ -1,76 +1,47 @@
 import { sourcesTypes } from '../constants';
-import { helpers } from '../../common/helpers';
-import { reduxHelpers } from '../common/reduxHelpers';
-import apiTypes from '../../constants/apiConstants';
+import { helpers } from '../../common';
+import { reduxHelpers } from '../common';
 
 const initialState = {
-  view: {
-    error: false,
-    errorMessage: '',
-    pending: false,
-    fulfilled: false,
-    lastRefresh: 0,
-    sources: [],
-    updateSources: false
-  }
+  update: 0,
+  view: {},
+  confirmDelete: {},
+  deleted: {}
 };
 
 const sourcesReducer = (state = initialState, action) => {
   switch (action.type) {
     case sourcesTypes.UPDATE_SOURCES:
       return reduxHelpers.setStateProp(
-        'view',
+        null,
         {
-          updateSources: true
+          update: helpers.getCurrentDate().getTime()
         },
         {
           state,
           reset: false
         }
       );
-
-    case reduxHelpers.REJECTED_ACTION(sourcesTypes.GET_SOURCES):
+    case sourcesTypes.CONFIRM_DELETE_SOURCE:
       return reduxHelpers.setStateProp(
-        'view',
+        'confirmDelete',
         {
-          error: action.error,
-          errorMessage: helpers.getMessageFromResults(action.payload).message
+          source: action.source
         },
         {
           state,
           initialState
         }
       );
-
-    case reduxHelpers.PENDING_ACTION(sourcesTypes.GET_SOURCES):
-      return reduxHelpers.setStateProp(
-        'view',
-        {
-          pending: true,
-          sources: state.view.sources
-        },
-        {
-          state,
-          initialState
-        }
-      );
-
-    case reduxHelpers.FULFILLED_ACTION(sourcesTypes.GET_SOURCES):
-      return reduxHelpers.setStateProp(
-        'view',
-        {
-          fulfilled: true,
-          lastRefresh: (action.payload.headers && new Date(action.payload.headers.date).getTime()) || 0,
-          sources: (action.payload.data && action.payload.data[apiTypes.API_RESPONSE_SOURCES_RESULTS]) || []
-        },
-        {
-          state,
-          initialState
-        }
-      );
-
     default:
-      return state;
+      return reduxHelpers.generatedPromiseActionReducer(
+        [
+          { ref: 'deleted', type: [sourcesTypes.DELETE_SOURCE, sourcesTypes.DELETE_SOURCES] },
+          { ref: 'view', type: sourcesTypes.GET_SOURCES }
+        ],
+        state,
+        action
+      );
   }
 };
 

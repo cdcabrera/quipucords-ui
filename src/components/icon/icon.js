@@ -15,6 +15,12 @@ import {
   UnknownIcon,
   IconSize
 } from '@patternfly/react-icons';
+import {
+  global_Color_dark_100 as gray,
+  global_success_color_100 as green,
+  global_warning_color_100 as yellow,
+  global_danger_color_100 as red
+} from '@patternfly/react-tokens';
 
 /**
  * App icon variants
@@ -62,13 +68,13 @@ const IconVariant = {
 const Icon = ({ symbol, ...props }) => {
   switch (symbol) {
     case IconVariant.failed:
-      return <ErrorCircleOIcon {...props} />;
+      return <ErrorCircleOIcon {...{ ...{ color: red.value }, ...props }} />;
     case IconVariant.idCard:
-      return <IdCardIcon {...props} />;
+      return <IdCardIcon {...{ ...{ color: gray.value }, ...props }} />;
     case IconVariant.network:
       return <PficonNetworkRangeIcon {...props} />;
     case IconVariant.paused:
-      return <ExclamationTriangleIcon {...props} />;
+      return <ExclamationTriangleIcon {...{ ...{ color: yellow.value }, ...props }} />;
     // return { type: 'pf', name: 'warning-triangle-o', classNames: [] };
     case IconVariant.pencil:
       return <PencilAltIcon {...props} />;
@@ -78,11 +84,11 @@ const Icon = ({ symbol, ...props }) => {
     case IconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
     case IconVariant.success:
-      return <CheckCircleIcon {...props} />;
+      return <CheckCircleIcon {...{ ...{ color: green.value }, ...props }} />;
     case IconVariant.trash:
       return <TrashIcon {...props} />;
     case IconVariant.unreachable:
-      return <DisconnectedIcon {...props} />;
+      return <DisconnectedIcon {...{ ...{ color: red.value }, ...props }} />;
     // return { type: 'pf', name: 'disconnected', classNames: ['is-error'] };
     case IconVariant.vcenter:
       return <PficonVcenterIcon {...props} />;

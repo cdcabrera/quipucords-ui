@@ -1,36 +1,241 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useShallowCompareEffect } from 'react-use';
-// import { AlertVariant } from '@patternfly/react-core';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-// import apiTypes from '../../constants/apiConstants';
-// import { translate } from '../i18n/i18n';
+import { apiTypes } from '../../constants/apiConstants';
+import { helpers } from '../../common';
+// import useSelectorsResponse from '../../redux/hooks/useReactRedux';
+// import { useShallowCompareEffect } from 'react-use'
 
-const useGetSources = (
-  // query,
-  {
-    getSources = reduxActions.sources.getSources,
-    useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-    // useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
-    useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors
-  } = {}
-) => {
-  // const [] = useState();
-  const dispatch = useAliasDispatch();
-  const { view, options } = useAliasSelectors([
-    { id: 'view', selector: ({ sources }) => ({ ...sources.view }) },
-    { id: 'options', selector: ({ viewOptions }) => ({ ...viewOptions[reduxTypes.view.SOURCES_VIEW] }) }
-  ]);
-
-  // const query = helpers.createViewQueryObject(viewOptions);
+const usePoll = ({
+  pollInterval = helpers.POLL_INTERVAL,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
+} = {}) => {
+  const [updatePoll, setUpdatePoll] = useState(0);
+  // const [timer, setTimer] = useState();
+  const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []); // const { results: sources = [] } = tempData || {};
 
   useShallowCompareEffect(() => {
-    const query = helpers.createViewQueryObject(options);
-    getSources(query);
-  }, [dispatch, options]);
+    const shouldUpdate = updatedSources.find(
+      ({ connection }) =>
+        connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
+    );
+
+    // if (timer) {
+    // clearTimeout(timer);
+    // }
+
+    if (shouldUpdate) {
+      window.setTimeout(() => {
+        setUpdatePoll(helpers.getCurrentDate().getTime());
+        // } else {
+        //  setUpdatePoll(false);
+        // }
+        // setUpdatePoll(helpers.getCurrentDate().getTime());
+      }, pollInterval);
+    }
+    /*
+      setTimer(
+        window.setTimeout(() => {
+          // if (shouldUpdate) {
+          // setUpdatePoll(true);
+          // } else {
+          //  setUpdatePoll(false);
+          // }
+          setUpdatePoll(helpers.getCurrentDate().getTime());
+        }, pollInterval)
+      );
+      */
+    // }
+  }, [updatedSources]);
+
+  return updatePoll;
+};
+
+const useDeleteSource = ({
+  // deleteSource = reduxActions.sources.deleteSource,
+  // useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
+} = {}) => {
+  // reduxActions.sources.deleteSource(id)
+  // const dispatch = useAliasDispatch();
+  // deleteSource(id)(dispatch);
+  // const { confirm, deleted } = useAliasSelectors([
+  //  { id: 'confirm', selector: ({ sources }) => sources?.confirmDelete?.source },
+  //  { id: 'deleted', selector: ({ sources }) => sources?.deleted }
+  // ]);
+  const result = useAliasSelector(({ sources }) => sources?.confirmDelete);
+
+  // console.log('>>>>>>>>>>>>>>> IT WORKED', confirm, deleted);
+
+  return {
+    // confirm,
+    // deleted
+    result
+  };
+};
+
+//
+// const useOnConfirm = () => {};
+
+const useOnDelete = ({
+  deleteSource = reduxActions.sources.deleteSource,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+} = {}) => {
+  const { error, fulfilled, message } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
+  const dispatch = useAliasDispatch();
+  // const { confirm, deleted, result } = useDeleteSource();
+  const { sourceId } = useAliasSelectors([
+    { id: 'sourceId', selector: ({ sources }) => sources?.confirmDelete?.source?.[apiTypes.API_RESPONSE_SOURCE_ID] }
+    // { id: 'deleted', selector: ({ sources }) => sources?.deleted }
+  ]);
+
+  // const onCofirm = useAliasOnConfirm();
+  // console.log('>>>>>>>>>>>>>>> ON DELETE 001', fulfilled, data);
+
+  useShallowCompareEffect(() => {
+    if (sourceId) {
+      dispatch({
+        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+      });
+
+      deleteSource(sourceId)(dispatch);
+    }
+  }, [sourceId, deleteSource, dispatch]);
+
+  useShallowCompareEffect(() => {
+    if (fulfilled) {
+      // console.log('FULFILLED', sourceId);
+      dispatch([
+        {
+          type: reduxTypes.toastNotifications.TOAST_ADD,
+          alertType: 'success',
+          message: <span>Deleted source.</span>
+        },
+        // {
+        //  type: reduxTypes.view.DESELECT_ITEM,
+        //  viewType: reduxTypes.view.SOURCES_VIEW,
+        //  item: sourceToDelete
+        // },
+        {
+          type: reduxTypes.sources.UPDATE_SOURCES
+        }
+      ]);
+    }
+
+    if (error) {
+      dispatch({
+        type: reduxTypes.toastNotifications.TOAST_ADD,
+        alertType: 'danger',
+        header: 'Error',
+        message
+      });
+    }
+  }, [error, fulfilled, message, dispatch]);
+
+  /*
+  if (confirm && !deleted) {
+    dispatch({
+      type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+    });
+
+    deleteSource(confirm[apiTypes.API_RESPONSE_SOURCE_ID]);
+  }
+
+  if (deleted && !confirm) {
+    console.log('>>>>>>>>>>>>>>> DELETED');
+  }
+  */
+
+  return source => {
+    // console.log('>>>>>>>>>>>>>>> ON DELETE 002', confirm, deleted);
+    /*
+    const onConfirm = () => {
+      dispatch({
+        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+      });
+
+      deleteSource(source[apiTypes.API_RESPONSE_SOURCE_ID]).then(
+        () => {
+          dispatch([
+            {
+              type: reduxTypes.toastNotifications.TOAST_ADD,
+              alertType: 'success',
+              message: (
+                <span>
+                  Deleted source <strong>{source[apiTypes.API_RESPONSE_SOURCE_NAME]}</strong>.
+                </span>
+              )
+            },
+            {
+              type: reduxTypes.view.DESELECT_ITEM,
+              viewType: reduxTypes.view.SOURCES_VIEW,
+              item: source
+            },
+            {
+              type: reduxTypes.sources.UPDATE_SOURCES
+            }
+          ]);
+        },
+        error => {
+          dispatch({
+            type: reduxTypes.toastNotifications.TOAST_ADD,
+            alertType: 'danger',
+            header: 'Error',
+            message: helpers.getMessageFromResults(error).message
+          });
+        }
+      );
+    };
+     */
+
+    dispatch({
+      type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_SHOW,
+      title: 'Delete Source',
+      heading: (
+        <span>
+          Are you sure you want to delete the source <strong>{source[apiTypes.API_RESPONSE_SOURCE_NAME]}</strong>?
+        </span>
+      ),
+      confirmButtonText: 'Delete',
+      onConfirm: () =>
+        dispatch({
+          type: reduxTypes.sources.CONFIRM_DELETE_SOURCE,
+          source
+        })
+    });
+  };
+};
+
+const useOnEdit = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+  const dispatch = useAliasDispatch();
+
+  return source => {
+    dispatch({
+      type: reduxTypes.sources.EDIT_SOURCE_SHOW,
+      source
+    });
+  };
+};
+
+const useOnScan = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+  const dispatch = useAliasDispatch();
+
+  return source => {
+    dispatch({
+      type: reduxTypes.scans.EDIT_SCAN_SHOW,
+      sources: [source]
+    });
+  };
 };
 
 const context = {
-  useGetSources
+  useDeleteSource,
+  useOnDelete,
+  useOnEdit,
+  useOnScan,
+  usePoll
 };
 
-export { context as default, context, useGetSources };
+export { context as default, context, useDeleteSource, useOnDelete, useOnEdit, useOnScan, usePoll };

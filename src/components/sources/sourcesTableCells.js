@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, ButtonVariant, Grid, GridItem } from '@patternfly/react-core';
+import { PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
 import { Icon, IconVariant } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
@@ -8,6 +9,8 @@ import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostL
 import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
+// import { Poll } from '../poll/poll';
+// import { reduxTypes, store } from '../../redux';
 
 /**
  * Source description and type icon
@@ -74,13 +77,23 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
  * @param {object} params.connection
  * @param {object} options
  * @param {Function} options.t
+ * @param params.id
+ * @param options.pollInterval
+ * @param options.onRefresh
  * @returns {React.ReactNode|null}
  */
-const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
+const scanStatus = (
+  // { id, connection: scan = {} } = {},
+  { connection: scan = {} } = {},
+  // { t = translate, pollInterval = 10000, onRefresh = () => console.log('POLL WORKS >>>') } = {}
+  { t = translate } = {}
+) => {
   const { end_time: endTime, start_time: startTime, status } = scan;
-  const scanTime = ((status === 'created' || status === 'pending' || status === 'running') && startTime) || endTime;
+  const isPending = status === 'created' || status === 'pending' || status === 'running';
+  const scanTime = (isPending && startTime) || endTime;
 
   return (
+    // <Poll interval={pollInterval} itemId={`sourceListItem-${id}`} itemIdCheck={isPending} onPoll={onRefresh}>
     <Grid hasGutter={false}>
       <GridItem sm={2}>
         <Icon symbol={IconVariant[status]} />
@@ -90,6 +103,7 @@ const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
         {helpers.getTimeDisplayHowLongAgo(scanTime)}
       </GridItem>
     </Grid>
+    // </Poll>
   );
 };
 
@@ -215,15 +229,36 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
   };
 };
 
-const actionsCellContent = (item = {}) => {
-  console.log(item);
-  return {
-    content: 'actions'
-  };
-};
+const actionsCell = ({ item = {}, onScan = helpers.noop, onDelete = helpers.noop, onEdit = helpers.noop } = {}) => (
+  <React.Fragment>
+    <Tooltip key="tooltip-edit" content="Edit">
+      <Button
+        className="quipucords-view__row-button"
+        onClick={() => onEdit(item)}
+        aria-label="Edit"
+        variant={ButtonVariant.plain}
+      >
+        <PencilAltIcon />
+      </Button>
+    </Tooltip>
+    <Tooltip key="tooltip-delete" content="Delete">
+      <Button
+        className="quipucords-view__row-button"
+        onClick={() => onDelete(item)}
+        aria-label="Delete"
+        variant={ButtonVariant.plain}
+      >
+        <TrashIcon />
+      </Button>
+    </Tooltip>
+    <Button key="button-scan" variant={ButtonVariant.secondary} onClick={() => onScan(item)}>
+      Scan
+    </Button>
+  </React.Fragment>
+);
 
 const sourcesTableCells = {
-  actionsCellContent,
+  actionsCell,
   credentialsStatusContent,
   description,
   failedHostsCellContent,
@@ -238,7 +273,7 @@ const sourcesTableCells = {
 export {
   sourcesTableCells as default,
   sourcesTableCells,
-  actionsCellContent,
+  actionsCell,
   credentialsStatusContent,
   description,
   failedHostsCellContent,
