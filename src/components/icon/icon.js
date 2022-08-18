@@ -12,7 +12,8 @@ import {
   PficonSatelliteIcon,
   PficonVcenterIcon,
   TrashIcon,
-  UnknownIcon
+  UnknownIcon,
+  IconSize
 } from '@patternfly/react-icons';
 
 /**
@@ -72,7 +73,7 @@ const Icon = ({ symbol, ...props }) => {
     case IconVariant.pencil:
       return <PencilAltIcon {...props} />;
     case IconVariant.pending:
-      return <Spinner isSVG {...props} />;
+      return <Spinner isSVG {...{ ...{ size: IconSize.md }, ...props }} />;
     // return { type: 'fa', name: 'spinner', classNames: ['fa-spin'] };
     case IconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
