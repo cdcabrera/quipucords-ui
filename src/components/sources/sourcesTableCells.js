@@ -110,16 +110,16 @@ const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
 const credentialsStatusContent = (item = {}) => {
   const { credentials = [] } = item;
 
-  const status = (
+  const content = (
     <React.Fragment>
       <Icon symbol={IconVariant.idCard} /> {credentials?.length || 0}
     </React.Fragment>
   );
-  const content = credentials?.length && <SourceCredentialsList source={item} />;
+  const expandedContent = credentials?.length && <SourceCredentialsList source={item} />;
 
   return {
-    status,
-    content
+    content,
+    expandedContent
   };
 };
 
@@ -198,8 +198,8 @@ const failedHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_failed, 10);
 
   return {
-    cell: statusCell({ count, status: IconVariant.failed }),
-    content: statusContent({ connection, id, status: IconVariant.failed })
+    content: statusCell({ count, status: IconVariant.failed }),
+    expandedContent: statusContent({ connection, id, status: IconVariant.failed })
   };
 };
 
@@ -215,8 +215,8 @@ const okHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_scanned, 10);
 
   return {
-    cell: statusCell({ count, status: IconVariant.success }),
-    content: statusContent({ connection, id, status: IconVariant.success })
+    content: statusCell({ count, status: IconVariant.success }),
+    expandedContent: statusContent({ connection, id, status: IconVariant.success })
   };
 };
 
@@ -232,8 +232,8 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_unreachable, 10);
 
   return {
-    cell: statusCell({ count, status: IconVariant.unreachable }),
-    content: statusContent({ connection, id, status: IconVariant.unreachable })
+    content: statusCell({ count, status: IconVariant.unreachable }),
+    expandedContent: statusContent({ connection, id, status: IconVariant.unreachable })
   };
 };
 

@@ -6,20 +6,27 @@ import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 // import { translate } from '../i18n/i18n';
 
 const useGetSources = (
-  query,
+  // query,
   {
     getSources = reduxActions.sources.getSources,
     useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-    useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+    // useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+    useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors
   } = {}
 ) => {
   // const [] = useState();
   const dispatch = useAliasDispatch();
+  const { view, options } = useAliasSelectors([
+    { id: 'view', selector: ({ sources }) => ({ ...sources.view }) },
+    { id: 'options', selector: ({ viewOptions }) => ({ ...viewOptions[reduxTypes.view.SOURCES_VIEW] }) }
+  ]);
+
   // const query = helpers.createViewQueryObject(viewOptions);
 
   useShallowCompareEffect(() => {
-
-  }, [dispatch, query]);
+    const query = helpers.createViewQueryObject(options);
+    getSources(query);
+  }, [dispatch, options]);
 };
 
 const context = {
