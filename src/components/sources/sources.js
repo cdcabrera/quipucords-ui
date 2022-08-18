@@ -70,16 +70,11 @@ const Sources = ({
   useShallowCompareEffect(() => {
     setUpdatedSources(
       sources.map(item => ({
-        // source: item,
+        source: item,
         cells: [
           {
-            content: sourcesTableCells.typeIcon(item),
-            width: 5,
-            dataLabel: 'Source type'
-          },
-          {
             content: sourcesTableCells.description(item),
-            width: 15,
+            width: 20,
             dataLabel: 'Description'
           },
           {
@@ -108,7 +103,7 @@ const Sources = ({
             dataLabel: 'Unreachable hosts'
           },
           {
-            content: 'action cell',
+            ...sourcesTableCells.actionsCellContent(item),
             isActionCell: true
           }
         ]
@@ -122,13 +117,12 @@ const Sources = ({
     });
   };
 
-  const onSelect = value => {
-    console.log('>>> on select', value);
-    // dispatch({
-    //   type: checked ? reduxTypes.view.SELECT_ITEM : reduxTypes.view.DESELECT_ITEM,
-    //   viewType: reduxTypes.view.SOURCES_VIEW,
-    //   item
-    // });
+  const onSelect = ({ isSelected, data }) => {
+    dispatch({
+      type: isSelected ? reduxTypes.view.SELECT_ITEM : reduxTypes.view.DESELECT_ITEM,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      item: data.source
+    });
   };
 
   const onScanSources = () => {

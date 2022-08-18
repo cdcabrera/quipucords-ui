@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, ButtonVariant } from '@patternfly/react-core';
-import { Grid, ListView } from 'patternfly-react';
+import { Button, ButtonVariant, Grid, GridItem } from '@patternfly/react-core';
 import { Icon, IconVariant } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
@@ -11,20 +10,7 @@ import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
 
 /**
- * Source type icon
- *
- * @param {object} params
- * @param {string} params.source_type
- * @returns {React.ReactNode}
- */
-const typeIcon = ({ source_type: sourceType } = {}) => (
-  <Tooltip content={dictionary[sourceType]}>
-    <Icon symbol={IconVariant[sourceType]} />
-  </Tooltip>
-);
-
-/**
- * Source description
+ * Source description and type icon
  *
  * @param {object} params
  * @param {Array} params.hosts
@@ -65,14 +51,19 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
   }
 
   return (
-    <div className="scan-description">
-      <div>
+    <Grid hasGutter={false}>
+      <GridItem sm={2}>
+        <Tooltip content={dictionary[sourceType]}>
+          <Icon symbol={IconVariant[sourceType]} />
+        </Tooltip>
+      </GridItem>
+      <GridItem sm={10}>
         <div>
-          <ListView.DescriptionHeading>{name}</ListView.DescriptionHeading>
+          <strong>{name}</strong>
         </div>
         {itemDescription}
-      </div>
-    </div>
+      </GridItem>
+    </Grid>
   );
 };
 
@@ -90,37 +81,16 @@ const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
   const scanTime = ((status === 'created' || status === 'pending' || status === 'running') && startTime) || endTime;
 
   return (
-    <div className="scan-description">
-      <Icon symbol={IconVariant[status]} />
-      <div className="scan-status-text">
+    <Grid hasGutter={false}>
+      <GridItem sm={2}>
+        <Icon symbol={IconVariant[status]} />
+      </GridItem>
+      <GridItem sm={10}>
         <div>{t('table.label', { context: ['status', status] })}</div>
         {helpers.getTimeDisplayHowLongAgo(scanTime)}
-      </div>
-    </div>
+      </GridItem>
+    </Grid>
   );
-};
-
-/**
- * Credentials cell status, and expandable content
- *
- * @param {object} item
- * @param {Array} item.credentials
- * @returns {{content: React.ReactNode, status: React.ReactNode}}
- */
-const credentialsStatusContent = (item = {}) => {
-  const { credentials = [] } = item;
-
-  const content = (
-    <React.Fragment>
-      <Icon symbol={IconVariant.idCard} /> {credentials?.length || 0}
-    </React.Fragment>
-  );
-  const expandedContent = credentials?.length && <SourceCredentialsList source={item} />;
-
-  return {
-    content,
-    expandedContent
-  };
 };
 
 /**
@@ -141,10 +111,7 @@ const statusCell = ({ count, status = IconVariant.unknown, t = translate } = {})
 
   return (
     <Tooltip content={t('table.label', { context: ['status', 'tooltip', status], count: updatedCount })}>
-      {t('table.label', { context: ['status', 'cell', status], count: updatedCount }, [
-        <Icon symbol={status} />,
-        <strong />
-      ])}
+      {t('table.label', { context: ['status', 'cell'], count: updatedCount }, [<Icon symbol={status} />, <strong />])}
     </Tooltip>
   );
 };
@@ -166,25 +133,36 @@ const statusContent = ({ connection, id, status } = {}) => (
     useConnectionResults
   >
     {({ host }) => (
-      <Grid.Row key={`hostsRow-${host?.credentialName}`}>
-        <Grid.Col xs={host?.status === 'success' ? 6 : 12} sm={4}>
-          <span>
-            <Icon symbol={IconVariant[host?.status]} />
-            &nbsp; {host?.name}
-          </span>
-        </Grid.Col>
+      <Grid key={`hostsRow-${host?.credentialName}`}>
+        <GridItem sm={host?.status === 'success' ? 6 : 12} md={4}>
+          <Icon symbol={IconVariant[host?.status]} /> {host?.name}
+        </GridItem>
         {host?.status === 'success' && (
-          <Grid.Col xs={6} sm={4}>
-            <span>
-              <Icon symbol={IconVariant.idCard} />
-              &nbsp; {host?.credentialName}
-            </span>
-          </Grid.Col>
+          <GridItem sm={6} md={4}>
+            <Icon symbol={IconVariant.idCard} /> {host?.credentialName}
+          </GridItem>
         )}
-      </Grid.Row>
+      </Grid>
     )}
   </ScanHostList>
 );
+
+/**
+ * Credentials cell status, and expandable content
+ *
+ * @param {object} item
+ * @param {Array} item.credentials
+ * @returns {{content: React.ReactNode, status: React.ReactNode}}
+ */
+const credentialsStatusContent = (item = {}) => {
+  const { credentials = [] } = item;
+  const count = credentials?.length;
+
+  return {
+    content: statusCell({ count, status: IconVariant.idCard }),
+    expandedContent: credentials?.length && <SourceCredentialsList source={item} />
+  };
+};
 
 /**
  * Failed hosts cell and expandable content.
@@ -237,7 +215,15 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
   };
 };
 
+const actionsCellContent = (item = {}) => {
+  console.log(item);
+  return {
+    content: 'actions'
+  };
+};
+
 const sourcesTableCells = {
+  actionsCellContent,
   credentialsStatusContent,
   description,
   failedHostsCellContent,
@@ -245,13 +231,14 @@ const sourcesTableCells = {
   scanStatus,
   statusCell,
   statusContent,
-  typeIcon,
+  // typeIcon,
   unreachableHostsCellContent
 };
 
 export {
   sourcesTableCells as default,
   sourcesTableCells,
+  actionsCellContent,
   credentialsStatusContent,
   description,
   failedHostsCellContent,
@@ -259,6 +246,6 @@ export {
   scanStatus,
   statusCell,
   statusContent,
-  typeIcon,
+  // typeIcon,
   unreachableHostsCellContent
 };
