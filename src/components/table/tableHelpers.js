@@ -108,13 +108,14 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   let isSelectTable = false;
   let selectedRows = 0;
 
-  rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent }) => {
+  rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent, ...rowData }) => {
     const rowObj = {
       key: undefined,
       cells: [],
       select: undefined,
       expand: undefined,
-      expandedContent
+      expandedContent,
+      data: rowData
     };
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
@@ -151,7 +152,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
       };
     }
 
-    cells.forEach((cell, cellIndex) => {
+    cells?.forEach((cell, cellIndex) => {
       const cellKey = `${helpers.generateId('cell')}-${cellIndex}`;
       if (cell?.content !== undefined) {
         const { content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;

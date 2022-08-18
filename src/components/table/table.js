@@ -139,11 +139,14 @@ const Table = ({
             updatedRow.select.isSelected = isSelected;
           });
 
+          const clonedRows = _cloneDeep(nextState);
+
           onSelect({
             type,
             rowIndex,
             isSelected,
-            rows: _cloneDeep(nextRowsState),
+            rows: clonedRows,
+            data: clonedRows.map(({ data }) => data || {}),
             cells: _cloneDeep(updatedHeaders)
           });
 
@@ -167,6 +170,7 @@ const Table = ({
           rowIndex,
           isSelected,
           rows: clonedRows,
+          data: clonedRows[rowIndex].data,
           cells: clonedRows[rowIndex].cells
         });
 
