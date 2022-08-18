@@ -88,10 +88,14 @@
     "label_status_cell_failed_zero": "{{count}} Failed",
     "label_status_cell_success": "<0/> <1>{{count}}</1>",
     "label_status_cell_success_zero": "{{count}} Successful",
+    "label_status_cell_unreachable": "<0/> <1>{{count}}</1>",
+    "label_status_cell_unreachable_zero": "{{count}} Unreachable",
     "label_status_tooltip_failed": "Failed Authentication",
     "label_status_tooltip_failed_other": "Failed Authentications",
     "label_status_tooltip_success": "Successful Authentication",
-    "label_status_tooltip_success_other": "Successful Authentications"
+    "label_status_tooltip_success_other": "Successful Authentications",
+    "label_status_tooltip_unreachable": "Unreachable System",
+    "label_status_tooltip_unreachable_other": "Unreachable Systems"
   },
   "toast-notifications": {
     "description_add-source_hidden": "Source {{name}} was created",
