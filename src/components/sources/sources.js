@@ -61,7 +61,7 @@ const Sources = ({
   const [updatedSources, setUpdatedSources] = useState([]);
   const dispatch = useAliasDispatch();
   const query = helpers.createViewQueryObject(viewOptions);
-  const filtersActive = viewOptions?.activeFilters?.length >= 0;
+  const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || sources?.length > 0 || false;
 
   useShallowCompareEffect(() => {
     getSources(query);
@@ -174,7 +174,7 @@ const Sources = ({
 
   return (
     <div className="quipucords-view-container">
-      {filtersActive && (
+      {filtersOrSourcesActive && (
         <React.Fragment>
           <ViewToolbar
             viewType={reduxTypes.view.SOURCES_VIEW}
