@@ -156,7 +156,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
 
     cells?.forEach((cell, cellIndex) => {
       // const cellKey = `${helpers.generateId('cell')}-${cellIndex}`;
-      const cellKey = `${window.btoa(cell)}-${cellIndex}`;
+      const cellKey = `${window.btoa(cell)}-${rowObj.rowIndex}-${cellIndex}`;
       if (cell?.content !== undefined) {
         const { content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
         const cellProps = { dataLabel, isActionCell, noPadding, style };
