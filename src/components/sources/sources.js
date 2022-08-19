@@ -83,9 +83,10 @@ const Sources = ({
   usePoll: useAliasPoll
 }) => {
   // const [selectedSources, setSelectedSources] = useState();
-  const [refreshUpdate, selectedSources, viewOptions] = useAliasSelectors([
+  const [refreshUpdate, selectedSources, expandedSources, viewOptions] = useAliasSelectors([
     ({ sources }) => sources.update,
     ({ sources }) => sources.selected,
+    ({ sources }) => sources.expanded,
     ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
   ]);
   const {
@@ -152,6 +153,8 @@ const Sources = ({
   };
 
   const onSelect = ({ isSelected, data: sourceData }) => {
+    // console.log('>>>>>>>>>>', isSelected, sourceData);
+    // console.log('>>>>>>>>>>', selectedRows);
     dispatch({
       type: isSelected ? reduxTypes.sources.SELECT_SOURCE : reduxTypes.sources.DESELECT_SOURCE,
       viewType: reduxTypes.view.SOURCES_VIEW,
@@ -164,6 +167,15 @@ const Sources = ({
       item: sourceData.source
     });
      */
+  };
+
+  const onExpand = ({ isExpanded, cellIndex, data: sourceData }) => {
+    dispatch({
+      type: isExpanded ? reduxTypes.sources.EXPANDED_SOURCE : reduxTypes.sources.NOT_EXPANDED_SOURCE,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      source: sourceData.source,
+      cellIndex
+    });
   };
 
   const onScanSources = () => {
@@ -213,6 +225,8 @@ const Sources = ({
     );
   }
 
+  // console.log(expandedSources, onExpand);
+
   return (
     <div className="quipucords-view-container">
       {filtersOrSourcesActive && (
@@ -234,6 +248,7 @@ const Sources = ({
       )}
       <div className="quipucords-list-container">
         <Table
+          onExpand={onExpand}
           onSelect={onSelect}
           rows={sources.map(item => ({
             isSelected: (selectedSources?.[item.id] && true) || false,
@@ -250,22 +265,26 @@ const Sources = ({
                 dataLabel: 'Scan'
               },
               {
-                ...sourcesTableCells.credentialsStatusContent(item),
+                ...sourcesTableCells.credentialsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 2,
                 width: 10,
                 dataLabel: 'Credentials'
               },
               {
                 ...sourcesTableCells.okHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 3,
                 width: 10,
                 dataLabel: 'Ok hosts'
               },
               {
                 ...sourcesTableCells.failedHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 4,
                 width: 10,
                 dataLabel: 'Failed hosts'
               },
               {
                 ...sourcesTableCells.unreachableHostsCellContent(item),
+                isExpanded: expandedSources?.[item.id] === 5,
                 width: 10,
                 dataLabel: 'Unreachable hosts'
               },

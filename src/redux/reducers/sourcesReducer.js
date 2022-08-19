@@ -6,6 +6,7 @@ const initialState = {
   confirmDelete: {},
   deleted: {},
   selected: {},
+  expanded: {},
   update: 0,
   view: {}
 };
@@ -48,6 +49,28 @@ const sourcesReducer = (state = initialState, action) => {
     case sourcesTypes.DESELECT_SOURCE:
       return reduxHelpers.setStateProp(
         'selected',
+        {
+          [action.source.id]: null
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case sourcesTypes.EXPANDED_SOURCE:
+      return reduxHelpers.setStateProp(
+        'expanded',
+        {
+          [action.source.id]: action.cellIndex
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case sourcesTypes.NOT_EXPANDED_SOURCE:
+      return reduxHelpers.setStateProp(
+        'expanded',
         {
           [action.source.id]: null
         },

@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, ButtonVariant, Grid, GridItem } from '@patternfly/react-core';
+import { Button, ButtonVariant, Grid, GridItem, List, ListItem } from '@patternfly/react-core';
 import { PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
 import { Icon, IconVariant } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
-import { SourceCredentialsList } from './sourceCredentialsList';
 import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostList';
 import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
@@ -162,19 +161,48 @@ const statusContent = ({ connection, id, status } = {}) => (
 );
 
 /**
+ * Generate credentials expandable content.
+ *
+ * @param {object} source
+ * @returns {React.ReactNode}
+ */
+const credentialsContent = ({ [apiTypes.API_RESPONSE_SOURCE_CREDENTIALS]: sourceCredentials } = {}) => {
+  const credentials = (sourceCredentials && [...sourceCredentials]) || [];
+
+  credentials.sort((item1, item2) =>
+    item1[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME].localeCompare(
+      item2[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME]
+    )
+  );
+
+  return (
+    <List isPlain>
+      {credentials?.map(credential => (
+        <ListItem
+          key={credential[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME]}
+          icon={<Icon symbol={IconVariant.idCard} />}
+        >
+          {credential[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME]}
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+/**
  * Credentials cell status, and expandable content
  *
  * @param {object} item
  * @param {Array} item.credentials
  * @returns {{content: React.ReactNode, status: React.ReactNode}}
  */
-const credentialsStatusContent = (item = {}) => {
+const credentialsCellContent = (item = {}) => {
   const { credentials = [] } = item;
   const count = credentials?.length;
 
   return {
     content: statusCell({ count, status: IconVariant.idCard }),
-    expandedContent: credentials?.length && <SourceCredentialsList source={item} />
+    expandedContent: credentials?.length && credentialsContent(item)
   };
 };
 
@@ -259,7 +287,7 @@ const actionsCell = ({ item = {}, onScan = helpers.noop, onDelete = helpers.noop
 
 const sourcesTableCells = {
   actionsCell,
-  credentialsStatusContent,
+  credentialsCellContent,
   description,
   failedHostsCellContent,
   okHostsCellContent,
@@ -274,7 +302,7 @@ export {
   sourcesTableCells as default,
   sourcesTableCells,
   actionsCell,
-  credentialsStatusContent,
+  credentialsCellContent,
   description,
   failedHostsCellContent,
   okHostsCellContent,
