@@ -1,6 +1,6 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
-import { helpers } from '../../common';
+// import { helpers } from '../../common';
 
 /**
  * Allow additional content to display in cells.
@@ -40,7 +40,8 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
   }
 
   columnHeaders.forEach((columnHeader, index) => {
-    const key = `${helpers.generateId('head')}-${index}`;
+    // const key = `${helpers.generateId('head')}-${index}`;
+    const key = `${window.btoa(columnHeader)}-${index}`;
 
     if (columnHeader?.content !== undefined) {
       const { isSort, isSortActive, sortDirection = SortByDirection.asc, content, ...props } = columnHeader;

@@ -19,10 +19,10 @@ import _isEqual from 'lodash/isEqual';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers';
 
-const tableFuncCache = {
-  // selected: {},
-  expanded: {}
-};
+// const tableFuncCache = {
+// selected: {},
+// expanded: {}
+// };
 
 /**
  * A PF Composable table wrapper
@@ -302,7 +302,7 @@ const Table = ({
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
             undefined;
-          const expandedCellIndex = (updatedIsExpandableCell && cells.indexOf(expandedCell)) || undefined;
+          // const expandedCellIndex = (updatedIsExpandableCell && cells.indexOf(expandedCell)) || undefined;
           const expandedRow = (updatedIsExpandableRow && expand?.isExpanded === true) || undefined;
 
           const CellWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && Tbody) || React.Fragment;
@@ -311,6 +311,7 @@ const Table = ({
             (updatedIsExpandableRow && { isExpanded: expand?.isExpanded === true }) ||
             undefined;
 
+          /*
           let tempExpandedCell;
 
           if (!tableFuncCache[expandedCellIndex]) {
@@ -327,6 +328,7 @@ const Table = ({
               tableFuncCache[expandedCellIndex][tempExpandedCell] = tempExpandedCell;
             }
           }
+          */
 
           return (
             <CellWrapper key={`${rowKey}-parent-row`} {...cellWrapperProps}>
@@ -359,7 +361,10 @@ const Table = ({
                     className={`${componentClassNames.td} ${componentClassNames.tdExpandedContent}`}
                     colSpan={cells.length}
                   >
-                    <ExpandableRowContent>{tableFuncCache[expandedCellIndex][tempExpandedCell]}</ExpandableRowContent>
+                    <ExpandableRowContent>
+                      {(typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
+                        expandedCell.expandedContent}
+                    </ExpandableRowContent>
                   </Td>
                 </Tr>
               )}
