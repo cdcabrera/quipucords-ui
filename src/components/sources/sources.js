@@ -256,7 +256,6 @@ const Sources = ({
             cells: [
               {
                 content: sourcesTableCells.description(item),
-                width: 20,
                 dataLabel: 'Description'
               },
               {
@@ -267,25 +266,25 @@ const Sources = ({
               {
                 ...sourcesTableCells.credentialsCellContent(item),
                 isExpanded: expandedSources?.[item.id] === 2,
-                width: 10,
+                width: 8,
                 dataLabel: 'Credentials'
               },
               {
                 ...sourcesTableCells.okHostsCellContent(item),
                 isExpanded: expandedSources?.[item.id] === 3,
-                width: 10,
+                width: 8,
                 dataLabel: 'Ok hosts'
               },
               {
                 ...sourcesTableCells.failedHostsCellContent(item),
                 isExpanded: expandedSources?.[item.id] === 4,
-                width: 10,
+                width: 8,
                 dataLabel: 'Failed hosts'
               },
               {
                 ...sourcesTableCells.unreachableHostsCellContent(item),
                 isExpanded: expandedSources?.[item.id] === 5,
-                width: 10,
+                width: 8,
                 dataLabel: 'Unreachable hosts'
               },
               {
