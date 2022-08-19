@@ -4,57 +4,28 @@ import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 
-const usePoll = ({
-  pollInterval = helpers.POLL_INTERVAL,
-  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
-} = {}) => {
-  const [timer, setTimer] = useState();
-  const [updatePoll, setUpdatePoll] = useState(0);
-  const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
-
-  useUnmount(() => {
-    window.clearTimeout(timer);
-  });
-
-  useShallowCompareEffect(() => {
-    const shouldUpdate = updatedSources.find(
-      ({ connection }) =>
-        connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
-    );
-
-    if (shouldUpdate || !updatedSources.length) {
-      window.clearTimeout(timer);
-    }
-
-    if (shouldUpdate) {
-      setTimer(
-        window.setTimeout(() => {
-          setUpdatePoll(helpers.getCurrentDate().getTime());
-        }, 10000 || pollInterval)
-      );
-    }
-  }, [updatedSources]);
-
-  return updatePoll;
-};
-
 const useOnDelete = ({
   deleteSource = reduxActions.sources.deleteSource,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector,
   useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
 } = {}) => {
-  const { error, fulfilled, message } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
   const dispatch = useAliasDispatch();
-  const { sourceId } = useAliasSelectors([
-    { id: 'sourceId', selector: ({ sources }) => sources?.confirmDelete?.source?.[apiTypes.API_RESPONSE_SOURCE_ID] }
-  ]);
+  const sourceToDelete = useAliasSelector(({ sources }) => sources?.confirmDelete?.source, {});
+  const { error, fulfilled, message, responses } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
+
+  console.log('>>>>>>>>> DELETE RESPONSE', responses);
+
+  const { [apiTypes.API_RESPONSE_SOURCE_ID]: sourceId, [apiTypes.API_RESPONSE_SOURCE_NAME]: sourceName } =
+    sourceToDelete;
 
   useShallowCompareEffect(() => {
     if (sourceId) {
-      dispatch({
-        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
-      });
+      dispatch([
+        {
+          type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
+        }
+      ]);
 
       deleteSource(sourceId)(dispatch);
     }
@@ -62,18 +33,21 @@ const useOnDelete = ({
 
   useShallowCompareEffect(() => {
     if (fulfilled) {
-      // console.log('FULFILLED', sourceId);
       dispatch([
         {
           type: reduxTypes.toastNotifications.TOAST_ADD,
           alertType: 'success',
-          message: <span>Deleted source.</span>
+          message: (
+            <React.Fragment>
+              Deleted source <strong>{sourceName}</strong>.
+            </React.Fragment>
+          )
         },
-        // {
-        //  type: reduxTypes.view.DESELECT_ITEM,
-        //  viewType: reduxTypes.view.SOURCES_VIEW,
-        //  item: sourceToDelete
-        // },
+        {
+          type: reduxTypes.view.DESELECT_ITEM,
+          viewType: reduxTypes.view.SOURCES_VIEW,
+          item: sourceToDelete
+        },
         {
           type: reduxTypes.sources.UPDATE_SOURCES
         }
@@ -90,49 +64,7 @@ const useOnDelete = ({
     }
   }, [error, fulfilled, message, dispatch]);
 
-
   return source => {
-    // console.log('>>>>>>>>>>>>>>> ON DELETE 002', confirm, deleted);
-    /*
-    const onConfirm = () => {
-      dispatch({
-        type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
-      });
-
-      deleteSource(source[apiTypes.API_RESPONSE_SOURCE_ID]).then(
-        () => {
-          dispatch([
-            {
-              type: reduxTypes.toastNotifications.TOAST_ADD,
-              alertType: 'success',
-              message: (
-                <span>
-                  Deleted source <strong>{source[apiTypes.API_RESPONSE_SOURCE_NAME]}</strong>.
-                </span>
-              )
-            },
-            {
-              type: reduxTypes.view.DESELECT_ITEM,
-              viewType: reduxTypes.view.SOURCES_VIEW,
-              item: source
-            },
-            {
-              type: reduxTypes.sources.UPDATE_SOURCES
-            }
-          ]);
-        },
-        error => {
-          dispatch({
-            type: reduxTypes.toastNotifications.TOAST_ADD,
-            alertType: 'danger',
-            header: 'Error',
-            message: helpers.getMessageFromResults(error).message
-          });
-        }
-      );
-    };
-     */
-
     dispatch({
       type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_SHOW,
       title: 'Delete Source',
@@ -173,8 +105,41 @@ const useOnScan = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDi
   };
 };
 
+const usePoll = ({
+  pollInterval = helpers.POLL_INTERVAL,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
+} = {}) => {
+  const [timer, setTimer] = useState();
+  const [updatePoll, setUpdatePoll] = useState(0);
+  const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
+
+  useUnmount(() => {
+    window.clearTimeout(timer);
+  });
+
+  useShallowCompareEffect(() => {
+    const shouldUpdate = updatedSources.find(
+      ({ connection }) =>
+        connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
+    );
+
+    if (shouldUpdate || !updatedSources.length) {
+      window.clearTimeout(timer);
+    }
+
+    if (shouldUpdate) {
+      setTimer(
+        window.setTimeout(() => {
+          setUpdatePoll(helpers.getCurrentDate().getTime());
+        }, pollInterval)
+      );
+    }
+  }, [updatedSources]);
+
+  return updatePoll;
+};
+
 const context = {
-  useDeleteSource,
   useOnDelete,
   useOnEdit,
   useOnScan,
