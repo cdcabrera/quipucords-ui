@@ -3,10 +3,11 @@ import { helpers } from '../../common';
 import { reduxHelpers } from '../common';
 
 const initialState = {
-  update: 0,
-  view: {},
   confirmDelete: {},
-  deleted: {}
+  deleted: {},
+  selected: {},
+  update: 0,
+  view: {}
 };
 
 const sourcesReducer = (state = initialState, action) => {
@@ -31,6 +32,28 @@ const sourcesReducer = (state = initialState, action) => {
         {
           state,
           initialState
+        }
+      );
+    case sourcesTypes.SELECT_SOURCE:
+      return reduxHelpers.setStateProp(
+        'selected',
+        {
+          [action.source.id]: action.source
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case sourcesTypes.DESELECT_SOURCE:
+      return reduxHelpers.setStateProp(
+        'selected',
+        {
+          [action.source.id]: null
+        },
+        {
+          state,
+          reset: false
         }
       );
     default:

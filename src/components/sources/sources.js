@@ -13,7 +13,7 @@ import { useShallowCompareEffect } from 'react-use';
 import { Modal, ModalVariant } from '../modal/modal';
 // import { connect, reduxActions, reduxTypes, store } from '../../redux';
 import {
-  connect,
+  // connect,
   reduxActions,
   reduxTypes,
   // store,
@@ -58,29 +58,50 @@ import { useOnDelete, useOnEdit, useOnScan, usePoll } from './sourcesContext';
  * @param props.update
  * @param props.useOnScan
  * @param props.usePoll
+ * @param props.useSelectors
+ * @param props.useSelectorsResponse
  * @returns {React.ReactNode}
  */
 // const Sources = ({ lastRefresh, t, useGetSources: useAliasGetSources, viewOptions }) => {
 const Sources = ({
-  date,
-  error,
-  errorMessage,
+  // date,
+  // error,
+  // errorMessage,
   getSources,
   // lastRefresh,
-  pending,
-  data: tempData,
+  // pending,
+  // data: tempData,
   t,
-  update: refreshUpdate,
+  // update: refreshUpdate,
   // updateSources,
   useOnEdit: useAliasOnEdit,
   useOnDelete: useAliasOnDelete,
   useOnScan: useAliasOnScan,
   useDispatch: useAliasDispatch,
-  usePoll: useAliasPoll,
-  viewOptions
+  useSelectors: useAliasSelectors,
+  useSelectorsResponse: useAliasSelectorsResponse,
+  usePoll: useAliasPoll
 }) => {
-  const { results: sources = [] } = tempData || {};
-  const [updatedSources, setUpdatedSources] = useState([]);
+  // const [selectedSources, setSelectedSources] = useState();
+  const [refreshUpdate, selectedSources, viewOptions] = useAliasSelectors([
+    ({ sources }) => sources.update,
+    ({ sources }) => sources.selected,
+    ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
+  ]);
+  const {
+    data: responseData,
+    error,
+    message: errorMessage,
+    pending,
+    responses = {}
+  } = useAliasSelectorsResponse({ id: 'view', selector: ({ sources }) => sources.view });
+  const [{ date } = {}] = responses.list || [];
+  const { results: sources = [] } = responseData.view || {};
+  const updatedSelectedSources = Object.values(selectedSources).filter(val => val !== null);
+
+  console.log('>>>>>>>>> RESPONSES', sources, useState);
+
+  // const [updatedSources, setUpdatedSources] = useState([]);
   const pollUpdate = useAliasPoll();
   // const setPoll = useAliasPoll();
   const dispatch = useAliasDispatch();
@@ -90,87 +111,65 @@ const Sources = ({
   const onEdit = useAliasOnEdit();
   const onScan = useAliasOnScan();
 
-  console.log('HEY >>>>>>>>>', pollUpdate, refreshUpdate);
-
   useShallowCompareEffect(() => {
-    getSources(query);
-  }, [pollUpdate, refreshUpdate, query]);
+    getSources(query)(dispatch);
+    // }, [dispatch, getSources, query]);
+  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
 
+  // useShallowCompareEffect(() => {
+  // setUpdatedSources(sources);
+  // }, [sources]);
+  /*
   useShallowCompareEffect(() => {
-    setUpdatedSources(
-      sources.map(item =>
-        // const itemIsPending = ;
-        // if (itemIsPending) {
-        //  setPoll();
-        // }
+    const parsedSources = [];
 
-        ({
-          source: item,
-          cells: [
-            {
-              content: sourcesTableCells.description(item),
-              width: 20,
-              dataLabel: 'Description'
-            },
-            {
-              content: sourcesTableCells.scanStatus(item),
-              width: 15,
-              dataLabel: 'Scan'
-            },
-            {
-              ...sourcesTableCells.credentialsStatusContent(item),
-              width: 10,
-              dataLabel: 'Credentials'
-            },
-            {
-              ...sourcesTableCells.okHostsCellContent(item),
-              width: 10,
-              dataLabel: 'Ok hosts'
-            },
-            {
-              ...sourcesTableCells.failedHostsCellContent(item),
-              width: 10,
-              dataLabel: 'Failed hosts'
-            },
-            {
-              ...sourcesTableCells.unreachableHostsCellContent(item),
-              width: 10,
-              dataLabel: 'Unreachable hosts'
-            },
-            {
-              content: sourcesTableCells.actionsCell({
-                item,
-                onDelete: () => onDelete(item),
-                onEdit: () => onEdit(item),
-                onScan: () => onScan(item)
-              }),
-              isActionCell: true
-            }
-          ]
-        })
+    sources.forEach(item =>
+      parsedSources.push({
+        source: item,
+        cells: [
+          {
+            content: sourcesTableCells.description(item),
+            width: 20,
+            dataLabel: 'Description'
+          }
+        ]
+      })
+    );
+
+    setUpdatedSources(parsedSources);
+    / *
+    setUpdatedSources(() =>
       )
     );
-  }, [sources]);
+    * /
+  }, [onDelete, onEdit, onScan]);
+  */
 
   const onRefresh = () => {
-    console.log('>>>>>>>>>>>> REFRESH worked for sources!');
     dispatch({
       type: reduxTypes.sources.UPDATE_SOURCES
     });
   };
 
-  const onSelect = ({ isSelected, data }) => {
+  const onSelect = ({ isSelected, data: sourceData }) => {
+    dispatch({
+      type: isSelected ? reduxTypes.sources.SELECT_SOURCE : reduxTypes.sources.DESELECT_SOURCE,
+      viewType: reduxTypes.view.SOURCES_VIEW,
+      source: sourceData.source
+    });
+    /*
     dispatch({
       type: isSelected ? reduxTypes.view.SELECT_ITEM : reduxTypes.view.DESELECT_ITEM,
       viewType: reduxTypes.view.SOURCES_VIEW,
-      item: data.source
+      item: sourceData.source
     });
+     */
   };
 
   const onScanSources = () => {
     dispatch({
       type: reduxTypes.scans.EDIT_SCAN_SHOW,
-      sources: viewOptions.selectedItems
+      sources: updatedSelectedSources
     });
   };
 
@@ -185,7 +184,7 @@ const Sources = ({
       <Button onClick={onShowAddSourceWizard}>Add</Button>{' '}
       <Button
         variant={ButtonVariant.secondary}
-        isDisabled={!viewOptions.selectedItems || viewOptions.selectedItems.length === 0}
+        isDisabled={updatedSelectedSources.length === 0}
         onClick={onScanSources}
       >
         Scan
@@ -234,7 +233,54 @@ const Sources = ({
         </React.Fragment>
       )}
       <div className="quipucords-list-container">
-        <Table onSelect={onSelect} rows={updatedSources}>
+        <Table
+          onSelect={onSelect}
+          rows={sources.map(item => ({
+            isSelected: (selectedSources?.[item.id] && true) || false,
+            source: item,
+            cells: [
+              {
+                content: sourcesTableCells.description(item),
+                width: 20,
+                dataLabel: 'Description'
+              },
+              {
+                content: sourcesTableCells.scanStatus(item),
+                width: 15,
+                dataLabel: 'Scan'
+              },
+              {
+                ...sourcesTableCells.credentialsStatusContent(item),
+                width: 10,
+                dataLabel: 'Credentials'
+              },
+              {
+                ...sourcesTableCells.okHostsCellContent(item),
+                width: 10,
+                dataLabel: 'Ok hosts'
+              },
+              {
+                ...sourcesTableCells.failedHostsCellContent(item),
+                width: 10,
+                dataLabel: 'Failed hosts'
+              },
+              {
+                ...sourcesTableCells.unreachableHostsCellContent(item),
+                width: 10,
+                dataLabel: 'Unreachable hosts'
+              },
+              {
+                content: sourcesTableCells.actionsCell({
+                  item,
+                  onDelete: () => onDelete(item),
+                  onEdit: () => onEdit(item),
+                  onScan: () => onScan(item)
+                }),
+                isActionCell: true
+              }
+            ]
+          }))}
+        >
           <SourcesEmptyState onAddSource={onShowAddSourceWizard} />
         </Table>
       </div>
@@ -249,22 +295,24 @@ const Sources = ({
  *     getSources: Function, error: boolean, updateSources: boolean, viewOptions: object}}
  */
 Sources.propTypes = {
-  error: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+  // error: PropTypes.bool,
+  // errorMessage: PropTypes.string,
+  // date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   getSources: PropTypes.func,
   // lastRefresh: PropTypes.number,
-  pending: PropTypes.bool,
-  data: PropTypes.object,
+  // pending: PropTypes.bool,
+  // data: PropTypes.object,
   t: PropTypes.func,
   // updateSources: PropTypes.bool,
-  update: PropTypes.number,
+  // update: PropTypes.number,
   useDispatch: PropTypes.func,
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnScan: PropTypes.func,
   usePoll: PropTypes.func,
-  viewOptions: PropTypes.object
+  useSelectors: PropTypes.func,
+  useSelectorsResponse: PropTypes.func
+  // viewOptions: PropTypes.object
 };
 
 /**
@@ -274,36 +322,40 @@ Sources.propTypes = {
  *     getSources: Function, error: boolean, updateSources: boolean, viewOptions: {}}}
  */
 Sources.defaultProps = {
-  date: null,
-  error: false,
-  errorMessage: null,
-  getSources: helpers.noop,
+  // date: null,
+  // error: false,
+  // errorMessage: null,
+  getSources: reduxActions.sources.getSources,
   // lastRefresh: 0,
-  pending: false,
+  // pending: false,
   // sources: [],
-  data: {},
+  // data: {},
   t: translate,
-  update: 0,
+  // update: 0,
   // updateSources: false,
   useDispatch: storeHooks.reactRedux.useDispatch,
   useOnDelete,
   useOnEdit,
   useOnScan,
   usePoll,
-  viewOptions: {}
+  // viewOptions: {}
+  useSelectors: storeHooks.reactRedux.useSelectors,
+  useSelectorsResponse: storeHooks.reactRedux.useSelectorsResponse
 };
 
-const mapDispatchToProps = dispatch => ({
-  getSources: queryObj => dispatch(reduxActions.sources.getSources(queryObj))
-});
-
+// const mapDispatchToProps = dispatch => ({
+//  getSources: queryObj => dispatch(reduxActions.sources.getSources(queryObj))
+// });
+/*
 const mapStateToProps = state => ({
   ...state.sources.view,
   // lastRefresh: state.sources.lastRefresh,
   update: state.sources.update,
   viewOptions: state.viewOptions[reduxTypes.view.SOURCES_VIEW]
 });
+ */
 
-const ConnectedSources = connect(mapStateToProps, mapDispatchToProps)(Sources);
+// const ConnectedSources = connect(mapStateToProps, mapDispatchToProps)(Sources);
+const ConnectedSources = Sources;
 
-export { ConnectedSources as default, ConnectedSources, Sources };
+export { Sources as default, ConnectedSources, Sources };

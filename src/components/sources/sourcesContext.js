@@ -139,6 +139,46 @@ const usePoll = ({
   return updatePoll;
 };
 
+/*
+const usePollTest = (
+  isUpdate,
+  {
+    pollInterval = helpers.POLL_INTERVAL
+    // useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
+  } = {}
+) => {
+  const [timer, setTimer] = useState();
+  const [updatePoll, setUpdatePoll] = useState(0);
+  // const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
+
+  useUnmount(() => {
+    window.clearTimeout(timer);
+  });
+
+  useShallowCompareEffect(() => {
+    // const shouldUpdate = updatedSources.find(
+    //  ({ connection }) =>
+    //    connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
+    // );
+
+    // if (shouldUpdate || !updatedSources.length) {
+    if (isUpdate) {
+      window.clearTimeout(timer);
+    }
+
+    if (isUpdate) {
+      setTimer(
+        window.setTimeout(() => {
+          setUpdatePoll(helpers.getCurrentDate().getTime());
+        }, pollInterval)
+      );
+    }
+  }, [isUpdate]);
+
+  return updatePoll;
+};
+ */
+
 const context = {
   useOnDelete,
   useOnEdit,
