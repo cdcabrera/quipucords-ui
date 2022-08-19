@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useShallowCompareEffect } from 'react-use';
+import { useShallowCompareEffect, useUnmount } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
@@ -10,9 +10,14 @@ const usePoll = ({
   pollInterval = helpers.POLL_INTERVAL,
   useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
 } = {}) => {
+  const [timer, setTimer] = useState();
   const [updatePoll, setUpdatePoll] = useState(0);
   // const [timer, setTimer] = useState();
   const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []); // const { results: sources = [] } = tempData || {};
+
+  useUnmount(() => {
+    window.clearTimeout(timer);
+  });
 
   useShallowCompareEffect(() => {
     const shouldUpdate = updatedSources.find(
@@ -20,18 +25,25 @@ const usePoll = ({
         connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
     );
 
-    // if (timer) {
-    // clearTimeout(timer);
-    // }
+    if (shouldUpdate || !updatedSources.length) {
+      window.clearTimeout(timer);
+    }
+
+    /*
+    const pollingTimer = window.setTimeout(() => {
+      console.log('>>>>>>>>>>>>> FIRING POLL');
+      setUpdatePoll(helpers.getCurrentDate().getTime());
+      setTimer(pollingTimer);
+    }, 10000 || pollInterval);
+    */
 
     if (shouldUpdate) {
-      window.setTimeout(() => {
-        setUpdatePoll(helpers.getCurrentDate().getTime());
-        // } else {
-        //  setUpdatePoll(false);
-        // }
-        // setUpdatePoll(helpers.getCurrentDate().getTime());
-      }, pollInterval);
+      setTimer(
+        window.setTimeout(() => {
+          console.log('>>>>>>>>>>>>> FIRING POLL');
+          setUpdatePoll(helpers.getCurrentDate().getTime());
+        }, 10000 || pollInterval)
+      );
     }
     /*
       setTimer(
