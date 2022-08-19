@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+// import { useShallowCompareEffect, useDeepCompareEffect } from 'react-use';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
@@ -14,8 +15,14 @@ import {
   Thead,
   Tr
 } from '@patternfly/react-table';
+import _isEqual from 'lodash/isEqual';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers';
+
+const tableFuncCache = {
+  // selected: {},
+  expanded: {}
+};
 
 /**
  * A PF Composable table wrapper
@@ -75,6 +82,7 @@ const Table = ({
         const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
 
         updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
           onExpand({
@@ -82,7 +90,8 @@ const Table = ({
             rowIndex,
             cellIndex: -1,
             isExpanded: isRowExpanded,
-            cells: _cloneDeep(updatedValue[rowIndex].cells)
+            data: clonedRow.data,
+            cells: clonedRow.cells
           });
         }
       }
@@ -101,6 +110,7 @@ const Table = ({
         });
 
         updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
           onExpand({
@@ -108,7 +118,8 @@ const Table = ({
             rowIndex,
             cellIndex,
             isExpanded: isCompoundExpanded,
-            cells: _cloneDeep(updatedValue[rowIndex].cells)
+            data: clonedRow.data,
+            cells: clonedRow.cells
           });
         }
       }
@@ -146,6 +157,7 @@ const Table = ({
             rowIndex,
             isSelected,
             rows: clonedRows,
+            selectedRows: clonedRows,
             data: clonedRows.map(({ data }) => data || {}),
             cells: _cloneDeep(updatedHeaders)
           });
@@ -170,6 +182,7 @@ const Table = ({
           rowIndex,
           isSelected,
           rows: clonedRows,
+          selectedRows: clonedRows.filter(row => row.select.isSelected === true),
           data: clonedRows[rowIndex].data,
           cells: clonedRows[rowIndex].cells
         });
@@ -239,7 +252,11 @@ const Table = ({
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
-    setUpdatedRows(parsedRows);
+
+    if (!_isEqual(parsedRows, updatedRows)) {
+      setUpdatedRows(parsedRows);
+    }
+
     setUpdatedHeaders(parsedColumnHeaders);
     setUpdatedHeaderSelectProps(headerSelectProps);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
@@ -285,6 +302,7 @@ const Table = ({
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
             undefined;
+          const expandedCellIndex = (updatedIsExpandableCell && cells.indexOf(expandedCell)) || undefined;
           const expandedRow = (updatedIsExpandableRow && expand?.isExpanded === true) || undefined;
 
           const CellWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && Tbody) || React.Fragment;
@@ -292,6 +310,23 @@ const Table = ({
             (updatedIsExpandableCell && { isExpanded: expandedCell?.props?.compoundExpand?.isExpanded === true }) ||
             (updatedIsExpandableRow && { isExpanded: expand?.isExpanded === true }) ||
             undefined;
+
+          let tempExpandedCell;
+
+          if (!tableFuncCache[expandedCellIndex]) {
+            tableFuncCache[expandedCellIndex] = {};
+          }
+
+          if (expandedCell) {
+            console.log('table func cache', tableFuncCache[expandedCellIndex]);
+            tempExpandedCell =
+              (typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
+              expandedCell.expandedContent;
+
+            if (!tableFuncCache[expandedCellIndex][tempExpandedCell]) {
+              tableFuncCache[expandedCellIndex][tempExpandedCell] = tempExpandedCell;
+            }
+          }
 
           return (
             <CellWrapper key={`${rowKey}-parent-row`} {...cellWrapperProps}>
@@ -324,10 +359,7 @@ const Table = ({
                     className={`${componentClassNames.td} ${componentClassNames.tdExpandedContent}`}
                     colSpan={cells.length}
                   >
-                    <ExpandableRowContent>
-                      {(typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
-                        expandedCell.expandedContent}
-                    </ExpandableRowContent>
+                    <ExpandableRowContent>{tableFuncCache[expandedCellIndex][tempExpandedCell]}</ExpandableRowContent>
                   </Td>
                 </Tr>
               )}

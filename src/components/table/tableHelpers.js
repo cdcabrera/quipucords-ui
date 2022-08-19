@@ -119,7 +119,8 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
     };
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
-    rowObj.key = `${helpers.generateId('row')}-${rowObj.rowIndex}`;
+    // rowObj.key = `${helpers.generateId('row')}-${rowObj.rowIndex}`;
+    rowObj.key = `${window.btoa(rowObj)}-${rowObj.rowIndex}`;
 
     if (typeof onSelect === 'function') {
       const updatedIsSelected = isSelected ?? false;
@@ -153,7 +154,8 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
     }
 
     cells?.forEach((cell, cellIndex) => {
-      const cellKey = `${helpers.generateId('cell')}-${cellIndex}`;
+      // const cellKey = `${helpers.generateId('cell')}-${cellIndex}`;
+      const cellKey = `${window.btoa(cell)}-${cellIndex}`;
       if (cell?.content !== undefined) {
         const { content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
         const cellProps = { dataLabel, isActionCell, noPadding, style };
