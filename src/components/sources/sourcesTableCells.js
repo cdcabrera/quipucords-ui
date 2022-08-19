@@ -1,6 +1,20 @@
 import React from 'react';
-import { Button, ButtonVariant, Grid, GridItem, List, ListItem } from '@patternfly/react-core';
-import { PencilAltIcon, TrashIcon } from '@patternfly/react-icons';
+import {
+  Button,
+  ButtonVariant,
+  Grid,
+  GridItem,
+  List,
+  ListItem,
+  OverflowMenu,
+  OverflowMenuControl,
+  OverflowMenuContent,
+  OverflowMenuGroup,
+  OverflowMenuItem
+  // OverflowMenuDropdownItem
+} from '@patternfly/react-core';
+import { PencilAltIcon, TrashIcon, EllipsisVIcon } from '@patternfly/react-icons';
+// import { global_breakpoint_lg as lgBreakpoint } from '@patternfly/react-tokens';
 import { Icon, IconVariant } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
@@ -8,6 +22,7 @@ import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostL
 import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
+import { DropdownSelect, SelectButtonVariant } from '../dropdownSelect/dropdownSelect';
 // import { Poll } from '../poll/poll';
 // import { reduxTypes, store } from '../../redux';
 
@@ -257,33 +272,71 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
   };
 };
 
-const actionsCell = ({ item = {}, onScan = helpers.noop, onDelete = helpers.noop, onEdit = helpers.noop } = {}) => (
-  <React.Fragment>
-    <Tooltip key="tooltip-edit" content="Edit">
-      <Button
-        className="quipucords-view__row-button"
-        onClick={() => onEdit(item)}
-        aria-label="Edit"
-        variant={ButtonVariant.plain}
-      >
-        <PencilAltIcon />
-      </Button>
-    </Tooltip>
-    <Tooltip key="tooltip-delete" content="Delete">
-      <Button
-        className="quipucords-view__row-button"
-        onClick={() => onDelete(item)}
-        aria-label="Delete"
-        variant={ButtonVariant.plain}
-      >
-        <TrashIcon />
-      </Button>
-    </Tooltip>
-    <Button key="button-scan" variant={ButtonVariant.secondary} onClick={() => onScan(item)}>
-      Scan
-    </Button>
-  </React.Fragment>
-);
+// FixMe: PF Overflow menu is attempting state updates on unmounted components
+const actionsCell = ({ item = {}, onScan = helpers.noop, onDelete = helpers.noop, onEdit = helpers.noop } = {}) => {
+  const onSelect = ({ value }) => {
+    switch (value) {
+      case 'edit':
+        return onEdit(item);
+      case 'delete':
+        return onDelete(item);
+      case 'scan':
+      default:
+        return onScan(item);
+    }
+  };
+
+  return (
+    <OverflowMenu breakpoint="lg">
+      <OverflowMenuContent>
+        <OverflowMenuGroup groupType="button">
+          <OverflowMenuItem key="tooltip-edit">
+            <Tooltip content="Edit">
+              <Button
+                className="quipucords-view__row-button"
+                onClick={() => onEdit(item)}
+                aria-label="Edit"
+                variant={ButtonVariant.plain}
+              >
+                <PencilAltIcon />
+              </Button>
+            </Tooltip>
+          </OverflowMenuItem>
+          <OverflowMenuItem key="tooltip-delete">
+            <Tooltip content="Delete">
+              <Button
+                className="quipucords-view__row-button"
+                onClick={() => onDelete(item)}
+                aria-label="Delete"
+                variant={ButtonVariant.plain}
+              >
+                <TrashIcon />
+              </Button>
+            </Tooltip>
+          </OverflowMenuItem>
+          <OverflowMenuItem key="button-scan">
+            <Button variant={ButtonVariant.secondary} onClick={() => onScan(item)}>
+              Scan
+            </Button>
+          </OverflowMenuItem>
+        </OverflowMenuGroup>
+      </OverflowMenuContent>
+      <OverflowMenuControl>
+        <DropdownSelect
+          onSelect={onSelect}
+          isDropdownButton
+          buttonVariant={SelectButtonVariant.plain}
+          placeholder={<EllipsisVIcon />}
+          options={[
+            { title: 'Edit', value: 'edit' },
+            { title: 'Delete', value: 'delete' },
+            { title: 'Scan', value: 'scan' }
+          ]}
+        />
+      </OverflowMenuControl>
+    </OverflowMenu>
+  );
+};
 
 const sourcesTableCells = {
   actionsCell,

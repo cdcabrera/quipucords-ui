@@ -261,7 +261,7 @@ const Sources = ({
               },
               {
                 content: sourcesTableCells.scanStatus(item),
-                width: 15,
+                width: 20,
                 dataLabel: 'Scan'
               },
               {
