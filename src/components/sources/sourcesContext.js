@@ -3,8 +3,6 @@ import { useShallowCompareEffect, useUnmount } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
-// import useSelectorsResponse from '../../redux/hooks/useReactRedux';
-// import { useShallowCompareEffect } from 'react-use'
 
 const usePoll = ({
   pollInterval = helpers.POLL_INTERVAL,
@@ -12,8 +10,7 @@ const usePoll = ({
 } = {}) => {
   const [timer, setTimer] = useState();
   const [updatePoll, setUpdatePoll] = useState(0);
-  // const [timer, setTimer] = useState();
-  const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []); // const { results: sources = [] } = tempData || {};
+  const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
 
   useUnmount(() => {
     window.clearTimeout(timer);
@@ -29,65 +26,17 @@ const usePoll = ({
       window.clearTimeout(timer);
     }
 
-    /*
-    const pollingTimer = window.setTimeout(() => {
-      console.log('>>>>>>>>>>>>> FIRING POLL');
-      setUpdatePoll(helpers.getCurrentDate().getTime());
-      setTimer(pollingTimer);
-    }, 10000 || pollInterval);
-    */
-
     if (shouldUpdate) {
       setTimer(
         window.setTimeout(() => {
-          console.log('>>>>>>>>>>>>> FIRING POLL');
           setUpdatePoll(helpers.getCurrentDate().getTime());
         }, 10000 || pollInterval)
       );
     }
-    /*
-      setTimer(
-        window.setTimeout(() => {
-          // if (shouldUpdate) {
-          // setUpdatePoll(true);
-          // } else {
-          //  setUpdatePoll(false);
-          // }
-          setUpdatePoll(helpers.getCurrentDate().getTime());
-        }, pollInterval)
-      );
-      */
-    // }
   }, [updatedSources]);
 
   return updatePoll;
 };
-
-const useDeleteSource = ({
-  // deleteSource = reduxActions.sources.deleteSource,
-  // useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
-} = {}) => {
-  // reduxActions.sources.deleteSource(id)
-  // const dispatch = useAliasDispatch();
-  // deleteSource(id)(dispatch);
-  // const { confirm, deleted } = useAliasSelectors([
-  //  { id: 'confirm', selector: ({ sources }) => sources?.confirmDelete?.source },
-  //  { id: 'deleted', selector: ({ sources }) => sources?.deleted }
-  // ]);
-  const result = useAliasSelector(({ sources }) => sources?.confirmDelete);
-
-  // console.log('>>>>>>>>>>>>>>> IT WORKED', confirm, deleted);
-
-  return {
-    // confirm,
-    // deleted
-    result
-  };
-};
-
-//
-// const useOnConfirm = () => {};
 
 const useOnDelete = ({
   deleteSource = reduxActions.sources.deleteSource,
@@ -97,14 +46,9 @@ const useOnDelete = ({
 } = {}) => {
   const { error, fulfilled, message } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
   const dispatch = useAliasDispatch();
-  // const { confirm, deleted, result } = useDeleteSource();
   const { sourceId } = useAliasSelectors([
     { id: 'sourceId', selector: ({ sources }) => sources?.confirmDelete?.source?.[apiTypes.API_RESPONSE_SOURCE_ID] }
-    // { id: 'deleted', selector: ({ sources }) => sources?.deleted }
   ]);
-
-  // const onCofirm = useAliasOnConfirm();
-  // console.log('>>>>>>>>>>>>>>> ON DELETE 001', fulfilled, data);
 
   useShallowCompareEffect(() => {
     if (sourceId) {
@@ -146,19 +90,6 @@ const useOnDelete = ({
     }
   }, [error, fulfilled, message, dispatch]);
 
-  /*
-  if (confirm && !deleted) {
-    dispatch({
-      type: reduxTypes.confirmationModal.CONFIRMATION_MODAL_HIDE
-    });
-
-    deleteSource(confirm[apiTypes.API_RESPONSE_SOURCE_ID]);
-  }
-
-  if (deleted && !confirm) {
-    console.log('>>>>>>>>>>>>>>> DELETED');
-  }
-  */
 
   return source => {
     // console.log('>>>>>>>>>>>>>>> ON DELETE 002', confirm, deleted);
@@ -250,4 +181,4 @@ const context = {
   usePoll
 };
 
-export { context as default, context, useDeleteSource, useOnDelete, useOnEdit, useOnScan, usePoll };
+export { context as default, context, useOnDelete, useOnEdit, useOnScan, usePoll };
