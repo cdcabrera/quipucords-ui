@@ -1,6 +1,5 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
-import { helpers } from '../../common';
 
 /**
  * Allow additional content to display in cells.
@@ -40,7 +39,8 @@ const tableHeader = ({ allRowsSelected = false, columnHeaders = [], isRowExpand,
   }
 
   columnHeaders.forEach((columnHeader, index) => {
-    const key = `${helpers.generateId('head')}-${index}`;
+    // const key = `${helpers.generateId('head')}-${index}`;
+    const key = `${window.btoa(columnHeader)}-${index}`;
 
     if (columnHeader?.content !== undefined) {
       const { isSort, isSortActive, sortDirection = SortByDirection.asc, content, ...props } = columnHeader;
@@ -108,17 +108,18 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   let isSelectTable = false;
   let selectedRows = 0;
 
-  rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent }) => {
+  rows.forEach(({ cells, isDisabled = false, isExpanded = false, isSelected = false, expandedContent, ...rowData }) => {
     const rowObj = {
       key: undefined,
       cells: [],
       select: undefined,
       expand: undefined,
-      expandedContent
+      expandedContent,
+      data: rowData
     };
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
-    rowObj.key = `${helpers.generateId('row')}-${rowObj.rowIndex}`;
+    rowObj.key = `${window.btoa(rowObj)}-${rowObj.rowIndex}`;
 
     if (typeof onSelect === 'function') {
       const updatedIsSelected = isSelected ?? false;
@@ -151,22 +152,22 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
       };
     }
 
-    cells.forEach((cell, cellIndex) => {
-      const cellKey = `${helpers.generateId('cell')}-${cellIndex}`;
+    cells?.forEach((cell, cellIndex) => {
+      const cellKey = `${window.btoa(cell)}-${rowObj.rowIndex}-${cellIndex}`;
       if (cell?.content !== undefined) {
-        const { content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
-        const cellProps = { dataLabel, isActionCell, noPadding, style };
-        let updatedWidth = width;
+        const { className, content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
+        const cellProps = { className, dataLabel, isActionCell, noPadding, style };
+        let updatedWidthClassName;
 
-        // FixMe: PF doesn't appear to allow cell widths less than 10
+        // FixMe: PF doesn't appear to apply cell width classNames when less than 10
         if (width < 10) {
-          updatedWidth = `${width}%`;
+          updatedWidthClassName = `pf-m-width-${width}`;
         }
 
-        if (typeof updatedWidth === 'string' || style) {
-          cellProps.style = { ...style, width: updatedWidth };
-        } else {
-          cellProps.width = width;
+        if (typeof width === 'string' || style) {
+          cellProps.style = { ...style, width };
+        } else if (updatedWidthClassName) {
+          cellProps.className = `${cellProps.className || ''} ${updatedWidthClassName}`;
         }
 
         if (!isExpandableRow && cell?.expandedContent && typeof onExpand === 'function') {

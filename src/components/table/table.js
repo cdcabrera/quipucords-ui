@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+// import { useShallowCompareEffect, useDeepCompareEffect } from 'react-use';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
@@ -14,8 +15,14 @@ import {
   Thead,
   Tr
 } from '@patternfly/react-table';
+import _isEqual from 'lodash/isEqual';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers';
+
+// const tableFuncCache = {
+// selected: {},
+// expanded: {}
+// };
 
 /**
  * A PF Composable table wrapper
@@ -75,6 +82,7 @@ const Table = ({
         const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
 
         updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
           onExpand({
@@ -82,7 +90,8 @@ const Table = ({
             rowIndex,
             cellIndex: -1,
             isExpanded: isRowExpanded,
-            cells: _cloneDeep(updatedValue[rowIndex].cells)
+            data: clonedRow.data,
+            cells: clonedRow.cells
           });
         }
       }
@@ -101,6 +110,7 @@ const Table = ({
         });
 
         updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
           onExpand({
@@ -108,7 +118,8 @@ const Table = ({
             rowIndex,
             cellIndex,
             isExpanded: isCompoundExpanded,
-            cells: _cloneDeep(updatedValue[rowIndex].cells)
+            data: clonedRow.data,
+            cells: clonedRow.cells
           });
         }
       }
@@ -139,11 +150,15 @@ const Table = ({
             updatedRow.select.isSelected = isSelected;
           });
 
+          const clonedRows = _cloneDeep(nextState);
+
           onSelect({
             type,
             rowIndex,
             isSelected,
-            rows: _cloneDeep(nextRowsState),
+            rows: clonedRows,
+            selectedRows: clonedRows,
+            data: clonedRows.map(({ data }) => data || {}),
             cells: _cloneDeep(updatedHeaders)
           });
 
@@ -167,6 +182,8 @@ const Table = ({
           rowIndex,
           isSelected,
           rows: clonedRows,
+          selectedRows: clonedRows.filter(row => row.select.isSelected === true),
+          data: clonedRows[rowIndex].data,
           cells: clonedRows[rowIndex].cells
         });
 
@@ -235,7 +252,11 @@ const Table = ({
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
-    setUpdatedRows(parsedRows);
+
+    if (!_isEqual(parsedRows, updatedRows)) {
+      setUpdatedRows(parsedRows);
+    }
+
     setUpdatedHeaders(parsedColumnHeaders);
     setUpdatedHeaderSelectProps(headerSelectProps);
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
@@ -256,7 +277,13 @@ const Table = ({
       <Thead>
         <Tr className={componentClassNames.tr}>
           {updatedIsExpandableRow && <Td className={componentClassNames.th} key="expand-th-cell" />}
-          {updatedIsSelectTable && <Td className={componentClassNames.th} key="select-th-cell" {...selectProps} />}
+          {updatedIsSelectTable && (
+            <Td
+              className={`${componentClassNames.th} ${componentClassNames.tdSelect}`}
+              key="select-th-cell"
+              {...selectProps}
+            />
+          )}
           {updatedHeaders.map(({ key: cellKey, content, props, sort }) => (
             <Th className={componentClassNames.th} key={cellKey} sort={sort} {...props}>
               {content}
@@ -281,6 +308,7 @@ const Table = ({
           const expandedCell =
             (updatedIsExpandableCell && cells.find(cell => cell?.props?.compoundExpand?.isExpanded === true)) ||
             undefined;
+          // const expandedCellIndex = (updatedIsExpandableCell && cells.indexOf(expandedCell)) || undefined;
           const expandedRow = (updatedIsExpandableRow && expand?.isExpanded === true) || undefined;
 
           const CellWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && Tbody) || React.Fragment;
@@ -289,16 +317,53 @@ const Table = ({
             (updatedIsExpandableRow && { isExpanded: expand?.isExpanded === true }) ||
             undefined;
 
+          /*
+          let tempExpandedCell;
+
+          if (!tableFuncCache[expandedCellIndex]) {
+            tableFuncCache[expandedCellIndex] = {};
+          }
+
+          if (expandedCell) {
+            console.log('table func cache', tableFuncCache[expandedCellIndex]);
+            tempExpandedCell =
+              (typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
+              expandedCell.expandedContent;
+
+            if (!tableFuncCache[expandedCellIndex][tempExpandedCell]) {
+              tableFuncCache[expandedCellIndex][tempExpandedCell] = tempExpandedCell;
+            }
+          }
+          */
+
           return (
             <CellWrapper key={`${rowKey}-parent-row`} {...cellWrapperProps}>
               <Tr className={componentClassNames.tr} key={`${rowKey}-row`}>
-                {expand && <Td className={componentClassNames.td} key={`${rowKey}-expand-col`} expand={expand} />}
-                {select && <Td className={componentClassNames.td} key={`${rowKey}-select-col`} select={select} />}
+                {expand && (
+                  <Td
+                    className={`${componentClassNames.td} ${componentClassNames.tdExpand}`}
+                    key={`${rowKey}-expand-col`}
+                    expand={expand}
+                  />
+                )}
+                {select && (
+                  <Td
+                    className={`${componentClassNames.td} ${componentClassNames.tdSelect}`}
+                    key={`${rowKey}-select-col`}
+                    select={select}
+                  />
+                )}
                 {cells.map(({ key: cellKey, content, isTHeader, props: cellProps }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
 
                   return (
-                    <WrapperCell className={componentClassNames.td} key={cellKey} {...cellProps}>
+                    <WrapperCell
+                      key={cellKey}
+                      {...cellProps}
+                      className={`${cellProps.className} ${componentClassNames.td} ${
+                        (cellProps.isActionCell && componentClassNames.tdAction) || ''
+                      }`}
+                    >
                       {content}
                     </WrapperCell>
                   );
@@ -307,23 +372,27 @@ const Table = ({
               {updatedIsExpandableRow && expandedRow && (
                 <Tr className={componentClassNames.tr} isExpanded key={`${rowKey}-expandedrow`}>
                   <Td
-                    className={`${componentClassNames.td} ${componentClassNames.trExpandedContent}`}
-                    colSpan={cells.length}
+                    className={`${componentClassNames.td} ${componentClassNames.tdExpanded} ${componentClassNames.tdExpandedWrapper}`}
+                    colSpan={cells.length + ((expand && 1) || 0) + ((select && 1) || 0)}
                   >
-                    <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
+                    <div className={componentClassNames.tdExpandedContent}>
+                      <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
+                    </div>
                   </Td>
                 </Tr>
               )}
               {updatedIsExpandableCell && expandedCell && (
                 <Tr className={componentClassNames.tr} isExpanded key={`${rowKey}-expandedcol`}>
                   <Td
-                    className={`${componentClassNames.td} ${componentClassNames.tdExpandedContent}`}
-                    colSpan={cells.length}
+                    className={`${componentClassNames.td} ${componentClassNames.tdExpanded} ${componentClassNames.tdExpandedWrapper}`}
+                    colSpan={cells.length + ((expand && 1) || 0) + ((select && 1) || 0)}
                   >
-                    <ExpandableRowContent>
-                      {(typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
-                        expandedCell.expandedContent}
-                    </ExpandableRowContent>
+                    <div className={componentClassNames.tdExpandedContent}>
+                      <ExpandableRowContent>
+                        {(typeof expandedCell.expandedContent === 'function' && expandedCell.expandedContent()) ||
+                          expandedCell.expandedContent}
+                      </ExpandableRowContent>
+                    </div>
                   </Td>
                 </Tr>
               )}
@@ -388,6 +457,8 @@ Table.propTypes = {
   componentClassNames: PropTypes.shape({
     table: PropTypes.string,
     td: PropTypes.string,
+    tdAction: PropTypes.string,
+    tdSelect: PropTypes.string,
     th: PropTypes.string,
     tr: PropTypes.string,
     trExpand: PropTypes.string,
@@ -395,6 +466,7 @@ Table.propTypes = {
     trExpandedContent: PropTypes.string,
     tdExpand: PropTypes.string,
     tdExpanded: PropTypes.string,
+    tdExpandedWrapper: PropTypes.string,
     tdExpandedContent: PropTypes.string
   }),
   isBorders: PropTypes.bool,
@@ -443,6 +515,8 @@ Table.defaultProps = {
   componentClassNames: {
     table: 'quipucords-table',
     td: 'quipucords-table__td',
+    tdAction: 'quipucords-table__td-action',
+    tdSelect: 'quipucords-table__td-select',
     th: 'quipucords-table__th',
     tr: 'quipucords-table__tr',
     trExpand: 'quipucords-table__tr-expand',
@@ -450,6 +524,7 @@ Table.defaultProps = {
     trExpandedContent: 'quipucords-table__tr-expand-content',
     tdExpand: 'quipucords-table__td-expand',
     tdExpanded: 'quipucords-table__td-expand-expanded',
+    tdExpandedWrapper: 'quipucords-table__td-expand-wrapper',
     tdExpandedContent: 'quipucords-table__td-expand-content'
   },
   isBorders: true,
