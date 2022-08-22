@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-// import { useShallowCompareEffect, useDeepCompareEffect } from 'react-use';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
@@ -18,11 +17,6 @@ import {
 import _isEqual from 'lodash/isEqual';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers';
-
-// const tableFuncCache = {
-// selected: {},
-// expanded: {}
-// };
 
 /**
  * A PF Composable table wrapper
@@ -73,63 +67,66 @@ const Table = ({
    * @param {number} params.rowIndex
    * @param {number} params.cellIndex
    */
-  const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
-    const isCallback = typeof onExpand === 'function';
+  const onExpandTable = useCallback(
+    ({ type, rowIndex, cellIndex } = {}) => {
+      const isCallback = typeof onExpand === 'function';
 
-    const updatedValue = updatedRows;
+      const updatedValue = updatedRows;
 
-    if (type === 'row') {
-      const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
+      if (type === 'row' && updatedValue[rowIndex]) {
+        const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
 
-      updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
-      const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+        updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
-      setUpdatedRows(() => updatedValue);
+        setUpdatedRows(() => updatedValue);
 
-      if (isCallback) {
-        onExpand({
-          type,
-          rowIndex,
-          cellIndex: -1,
-          isExpanded: isRowExpanded,
-          data: clonedRow.data,
-          cells: clonedRow.cells
-        });
-      }
-
-      return;
-    }
-
-    if (type === 'compound') {
-      const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
-
-      updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
-        const updatedCompoundExpand = cellProps?.compoundExpand;
-
-        if (updatedCompoundExpand) {
-          updatedCompoundExpand.isExpanded = false;
+        if (isCallback) {
+          onExpand({
+            type,
+            rowIndex,
+            cellIndex: -1,
+            isExpanded: isRowExpanded,
+            data: clonedRow.data,
+            cells: clonedRow.cells
+          });
         }
 
-        return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
-      });
-
-      updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
-      const clonedRow = _cloneDeep(updatedValue[rowIndex]);
-
-      setUpdatedRows(() => updatedValue);
-
-      if (isCallback) {
-        onExpand({
-          type,
-          rowIndex,
-          cellIndex,
-          isExpanded: isCompoundExpanded,
-          data: clonedRow.data,
-          cells: clonedRow.cells
-        });
+        return;
       }
-    }
-  };
+
+      if (type === 'compound' && updatedValue[rowIndex]) {
+        const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+
+        updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+          const updatedCompoundExpand = cellProps?.compoundExpand;
+
+          if (updatedCompoundExpand) {
+            updatedCompoundExpand.isExpanded = false;
+          }
+
+          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+        });
+
+        updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+
+        setUpdatedRows(() => updatedValue);
+
+        if (isCallback) {
+          onExpand({
+            type,
+            rowIndex,
+            cellIndex,
+            isExpanded: isCompoundExpanded,
+            data: clonedRow.data,
+            cells: clonedRow.cells
+          });
+        }
+      }
+    },
+    [onExpand, updatedRows]
+  );
 
   /**
    * Apply an onSelect handler.
