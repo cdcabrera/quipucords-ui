@@ -71,61 +71,68 @@ const Table = ({
     ({ type, rowIndex, cellIndex } = {}) => {
       const isCallback = typeof onExpand === 'function';
 
-      const updatedValue = updatedRows;
+      setUpdatedRows(prevState => {
+        const updatedValue = prevState;
 
-      if (type === 'row' && updatedValue[rowIndex]) {
-        const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
+        if (type === 'row' && updatedValue[rowIndex]) {
+          const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
 
-        updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
-        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+          updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+          const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
-        setUpdatedRows(() => updatedValue);
+          // setUpdatedRows(() => updatedValue);
 
-        if (isCallback) {
-          onExpand({
-            type,
-            rowIndex,
-            cellIndex: -1,
-            isExpanded: isRowExpanded,
-            data: clonedRow.data,
-            cells: clonedRow.cells
-          });
-        }
-
-        return;
-      }
-
-      if (type === 'compound' && updatedValue[rowIndex]) {
-        const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
-
-        updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
-          const updatedCompoundExpand = cellProps?.compoundExpand;
-
-          if (updatedCompoundExpand) {
-            updatedCompoundExpand.isExpanded = false;
+          if (isCallback) {
+            onExpand({
+              type,
+              rowIndex,
+              cellIndex: -1,
+              isExpanded: isRowExpanded,
+              data: clonedRow.data,
+              cells: clonedRow.cells
+            });
           }
 
-          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
-        });
-
-        updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
-        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
-
-        setUpdatedRows(() => updatedValue);
-
-        if (isCallback) {
-          onExpand({
-            type,
-            rowIndex,
-            cellIndex,
-            isExpanded: isCompoundExpanded,
-            data: clonedRow.data,
-            cells: clonedRow.cells
-          });
+          return;
         }
-      }
+
+        if (type === 'compound' && updatedValue[rowIndex]) {
+          const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+
+          updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+            const updatedCompoundExpand = cellProps?.compoundExpand;
+
+            if (updatedCompoundExpand) {
+              updatedCompoundExpand.isExpanded = false;
+            }
+
+            return {
+              ...cell,
+              props: { ...cellProps, compoundExpand: updatedCompoundExpand }
+            };
+          });
+
+          updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+          const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+
+          // setUpdatedRows(() => updatedValue);
+
+          if (isCallback) {
+            onExpand({
+              type,
+              rowIndex,
+              cellIndex,
+              isExpanded: isCompoundExpanded,
+              data: clonedRow.data,
+              cells: clonedRow.cells
+            });
+          }
+        }
+
+        return updatedValue;
+      });
     },
-    [onExpand, updatedRows]
+    [onExpand]
   );
 
   /**

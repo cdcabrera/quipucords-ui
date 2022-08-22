@@ -1,5 +1,6 @@
 import React from 'react';
-import { TableComposable, TableVariant, Th } from '@patternfly/react-table';
+import { Button } from '@patternfly/react-core';
+import { TableComposable, TableVariant, Th, Td } from '@patternfly/react-table';
 import { Table } from '../table';
 
 describe('Table Component', () => {
@@ -68,7 +69,8 @@ describe('Table Component', () => {
     const component = await mountHookComponent(<Table {...props} />);
     expect(component.find(TableComposable)).toMatchSnapshot('expandable cell content');
 
-    component.find('button').first().simulate('click');
+    component.find('button').first().simulate('click', { key: 'Enter' });
+    // console.log(component.find(Button).render());
 
     expect(mockOnExpand.mock.calls).toMatchSnapshot('expand cell event');
     expect(component.find(TableComposable)).toMatchSnapshot('expanded cell');
