@@ -84,6 +84,8 @@ const Table = ({
       updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
       const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
+      setUpdatedRows(() => updatedValue);
+
       if (isCallback) {
         onExpand({
           type,
@@ -94,6 +96,8 @@ const Table = ({
           cells: clonedRow.cells
         });
       }
+
+      return;
     }
 
     if (type === 'compound') {
@@ -112,6 +116,8 @@ const Table = ({
       updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
       const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
+      setUpdatedRows(() => updatedValue);
+
       if (isCallback) {
         onExpand({
           type,
@@ -123,8 +129,6 @@ const Table = ({
         });
       }
     }
-
-    setUpdatedRows(() => updatedValue);
   };
 
   /**
