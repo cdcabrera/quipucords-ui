@@ -156,7 +156,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
       const cellKey = `${window.btoa(cell)}-${rowObj.rowIndex}-${cellIndex}`;
       if (cell?.content !== undefined) {
         const { className, content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
-        const cellProps = { className, dataLabel, isActionCell, noPadding, style };
+        const cellProps = { className: className || '', dataLabel, isActionCell, noPadding, style: style || {} };
         let updatedWidthClassName;
 
         // FixMe: PF doesn't appear to apply cell width classNames when less than 10
@@ -165,7 +165,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
         }
 
         if (typeof width === 'string' || style) {
-          cellProps.style = { ...style, width };
+          cellProps.style = { ...cellProps.style, width };
         } else if (updatedWidthClassName) {
           cellProps.className = `${cellProps.className || ''} ${updatedWidthClassName}`;
         }

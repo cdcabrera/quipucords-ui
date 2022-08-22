@@ -361,7 +361,7 @@ const Table = ({
                     select={select}
                   />
                 )}
-                {cells.map(({ key: cellKey, content, isTHeader, props: cellProps }) => {
+                {cells.map(({ key: cellKey, content, isTHeader, props: cellProps = {} }) => {
                   const WrapperCell = (isTHeader && Th) || Td;
 
                   return (
