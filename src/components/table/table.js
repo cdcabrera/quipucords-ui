@@ -142,25 +142,26 @@ const Table = ({
    * @param {string} params.type
    * @param {number} params.rowIndex
    */
-  const onSelectTable = ({ type, rowIndex } = {}) => {
-    if (type === 'all') {
-      setUpdatedHeaderSelectProps(prevState => {
-        const nextState = { ...prevState };
-        const isSelected = !prevState.select.isSelected;
+  const onSelectTable = useCallback(
+    ({ type, rowIndex } = {}) => {
+      if (type === 'all') {
+        setUpdatedHeaderSelectProps(prevState => {
+          const nextState = { ...prevState };
+          const isSelected = !prevState.select.isSelected;
 
-        nextState.select.isSelected = isSelected;
+          nextState.select.isSelected = isSelected;
 
-        setUpdatedRows(prevRowsState => {
-          const nextRowsState = [...prevRowsState];
-          nextRowsState.forEach(row => {
-            const updatedRow = row;
-            updatedRow.select.isSelected = isSelected;
-          });
+          setUpdatedRows(prevRowsState => {
+            const nextRowsState = [...prevRowsState];
+            nextRowsState.forEach(row => {
+              const updatedRow = row;
+              updatedRow.select.isSelected = isSelected;
+            });
 
-          const clonedRows = _cloneDeep(nextRowsState);
+            const clonedRows = _cloneDeep(nextRowsState);
 
-          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
-          window.setTimeout(() =>
+            // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+            // window.setTimeout(() =>
             onSelect({
               type,
               rowIndex,
@@ -169,36 +170,42 @@ const Table = ({
               selectedRows: clonedRows,
               data: clonedRows.map(({ data }) => data || {}),
               cells: _cloneDeep(updatedHeaders)
-            })
-          );
+            });
+            // );
 
-          return nextRowsState;
+            return nextRowsState;
+          });
+
+          return nextState;
         });
+      }
 
-        return nextState;
-      });
-    }
+      if (type === 'row') {
+        setUpdatedRows(prevState => {
+          const nextState = prevState;
+          const isSelected = !nextState[rowIndex].select.isSelected;
 
-    if (type === 'row') {
-      const nextState = updatedRows;
-      const isSelected = !nextState[rowIndex].select.isSelected;
+          nextState[rowIndex].select.isSelected = isSelected;
+          const clonedRows = _cloneDeep(nextState);
 
-      nextState[rowIndex].select.isSelected = isSelected;
-      const clonedRows = _cloneDeep(nextState);
+          // window.setTimeout(() =>
+          onSelect({
+            type,
+            rowIndex,
+            isSelected,
+            rows: clonedRows,
+            selectedRows: clonedRows.filter(row => row.select.isSelected === true),
+            data: clonedRows[rowIndex].data,
+            cells: clonedRows[rowIndex].cells
+          });
+          // );
 
-      setUpdatedRows(() => nextState);
-
-      onSelect({
-        type,
-        rowIndex,
-        isSelected,
-        rows: clonedRows,
-        selectedRows: clonedRows.filter(row => row.select.isSelected === true),
-        data: clonedRows[rowIndex].data,
-        cells: clonedRows[rowIndex].cells
-      });
-    }
-  };
+          return nextState;
+        });
+      }
+    },
+    [onSelect, updatedHeaders]
+  );
 
   /**
    * Apply an onSort handler.

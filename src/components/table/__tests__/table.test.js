@@ -111,7 +111,7 @@ describe('Table Component', () => {
 
     component.find('input').first().simulate('change');
 
-    expect(mockOnSelect.mock.calls).toMatchSnapshot('select row event');
+    expect(mockOnSelect.mock.calls).toMatchSnapshot('select all rows event');
     expect(component.find('input')).toMatchSnapshot('selected row');
   });
 
