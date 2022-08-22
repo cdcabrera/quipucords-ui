@@ -75,63 +75,56 @@ const Table = ({
    */
   const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
     const isCallback = typeof onExpand === 'function';
-    setUpdatedRows(value => {
-      const updatedValue = [...value];
 
-      if (type === 'row') {
-        const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
+    const updatedValue = updatedRows;
 
-        updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
-        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+    if (type === 'row') {
+      const isRowExpanded = !updatedValue[rowIndex].expand.isExpanded;
 
-        if (isCallback) {
-          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
-          window.setTimeout(() =>
-            onExpand({
-              type,
-              rowIndex,
-              cellIndex: -1,
-              isExpanded: isRowExpanded,
-              data: clonedRow.data,
-              cells: clonedRow.cells
-            })
-          );
-        }
-      }
+      updatedValue[rowIndex].expand.isExpanded = isRowExpanded;
+      const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
-      if (type === 'compound') {
-        const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
-
-        updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
-          const updatedCompoundExpand = cellProps?.compoundExpand;
-
-          if (updatedCompoundExpand) {
-            updatedCompoundExpand.isExpanded = false;
-          }
-
-          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+      if (isCallback) {
+        onExpand({
+          type,
+          rowIndex,
+          cellIndex: -1,
+          isExpanded: isRowExpanded,
+          data: clonedRow.data,
+          cells: clonedRow.cells
         });
-
-        updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
-        const clonedRow = _cloneDeep(updatedValue[rowIndex]);
-
-        if (isCallback) {
-          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
-          window.setTimeout(() =>
-            onExpand({
-              type,
-              rowIndex,
-              cellIndex,
-              isExpanded: isCompoundExpanded,
-              data: clonedRow.data,
-              cells: clonedRow.cells
-            })
-          );
-        }
       }
+    }
 
-      return updatedValue;
-    });
+    if (type === 'compound') {
+      const isCompoundExpanded = !updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+
+      updatedValue[rowIndex].cells = updatedValue[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+        const updatedCompoundExpand = cellProps?.compoundExpand;
+
+        if (updatedCompoundExpand) {
+          updatedCompoundExpand.isExpanded = false;
+        }
+
+        return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+      });
+
+      updatedValue[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+      const clonedRow = _cloneDeep(updatedValue[rowIndex]);
+
+      if (isCallback) {
+        onExpand({
+          type,
+          rowIndex,
+          cellIndex,
+          isExpanded: isCompoundExpanded,
+          data: clonedRow.data,
+          cells: clonedRow.cells
+        });
+      }
+    }
+
+    setUpdatedRows(() => updatedValue);
   };
 
   /**
