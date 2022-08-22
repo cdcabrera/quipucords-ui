@@ -85,14 +85,17 @@ const Table = ({
         const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
-          onExpand({
-            type,
-            rowIndex,
-            cellIndex: -1,
-            isExpanded: isRowExpanded,
-            data: clonedRow.data,
-            cells: clonedRow.cells
-          });
+          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+          window.setTimeout(() =>
+            onExpand({
+              type,
+              rowIndex,
+              cellIndex: -1,
+              isExpanded: isRowExpanded,
+              data: clonedRow.data,
+              cells: clonedRow.cells
+            })
+          );
         }
       }
 
@@ -113,14 +116,17 @@ const Table = ({
         const clonedRow = _cloneDeep(updatedValue[rowIndex]);
 
         if (isCallback) {
-          onExpand({
-            type,
-            rowIndex,
-            cellIndex,
-            isExpanded: isCompoundExpanded,
-            data: clonedRow.data,
-            cells: clonedRow.cells
-          });
+          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+          window.setTimeout(() =>
+            onExpand({
+              type,
+              rowIndex,
+              cellIndex,
+              isExpanded: isCompoundExpanded,
+              data: clonedRow.data,
+              cells: clonedRow.cells
+            })
+          );
         }
       }
 
@@ -150,17 +156,20 @@ const Table = ({
             updatedRow.select.isSelected = isSelected;
           });
 
-          const clonedRows = _cloneDeep(nextState);
+          const clonedRows = _cloneDeep(nextRowsState);
 
-          onSelect({
-            type,
-            rowIndex,
-            isSelected,
-            rows: clonedRows,
-            selectedRows: clonedRows,
-            data: clonedRows.map(({ data }) => data || {}),
-            cells: _cloneDeep(updatedHeaders)
-          });
+          // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+          window.setTimeout(() =>
+            onSelect({
+              type,
+              rowIndex,
+              isSelected,
+              rows: clonedRows,
+              selectedRows: clonedRows,
+              data: clonedRows.map(({ data }) => data || {}),
+              cells: _cloneDeep(updatedHeaders)
+            })
+          );
 
           return nextRowsState;
         });
@@ -177,15 +186,18 @@ const Table = ({
         nextState[rowIndex].select.isSelected = isSelected;
         const clonedRows = _cloneDeep(nextState);
 
-        onSelect({
-          type,
-          rowIndex,
-          isSelected,
-          rows: clonedRows,
-          selectedRows: clonedRows.filter(row => row.select.isSelected === true),
-          data: clonedRows[rowIndex].data,
-          cells: clonedRows[rowIndex].cells
-        });
+        // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+        window.setTimeout(() =>
+          onSelect({
+            type,
+            rowIndex,
+            isSelected,
+            rows: clonedRows,
+            selectedRows: clonedRows.filter(row => row.select.isSelected === true),
+            data: clonedRows[rowIndex].data,
+            cells: clonedRows[rowIndex].cells
+          })
+        );
 
         return nextState;
       });
@@ -218,12 +230,16 @@ const Table = ({
       });
 
       const clonedRow = _cloneDeep(nextState);
-      onSort({
-        cellIndex: originalIndex,
-        direction,
-        cell: clonedRow[originalIndex],
-        cells: clonedRow
-      });
+
+      // FixMe: quick fix work-around for allowing internal set state WITH external props updates
+      window.setTimeout(() =>
+        onSort({
+          cellIndex: originalIndex,
+          direction,
+          cell: clonedRow[originalIndex],
+          cells: clonedRow
+        })
+      );
 
       return nextState;
     });
