@@ -39,7 +39,7 @@ const sourcesReducer = (state = initialState, action) => {
       return reduxHelpers.setStateProp(
         'selected',
         {
-          [action.source.id]: action.source
+          [action.source?.id]: action.source
         },
         {
           state,
@@ -50,7 +50,7 @@ const sourcesReducer = (state = initialState, action) => {
       return reduxHelpers.setStateProp(
         'selected',
         {
-          [action.source.id]: null
+          [action.source?.id]: null
         },
         {
           state,
@@ -61,7 +61,7 @@ const sourcesReducer = (state = initialState, action) => {
       return reduxHelpers.setStateProp(
         'expanded',
         {
-          [action.source.id]: action.cellIndex
+          [action.source?.id]: action.cellIndex
         },
         {
           state,
@@ -72,7 +72,7 @@ const sourcesReducer = (state = initialState, action) => {
       return reduxHelpers.setStateProp(
         'expanded',
         {
-          [action.source.id]: null
+          [action.source?.id]: null
         },
         {
           state,
