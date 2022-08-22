@@ -179,27 +179,22 @@ const Table = ({
     }
 
     if (type === 'row') {
-      setUpdatedRows(prevState => {
-        const nextState = [...prevState];
-        const isSelected = !nextState[rowIndex].select.isSelected;
+      const nextState = updatedRows;
+      const isSelected = !nextState[rowIndex].select.isSelected;
 
-        nextState[rowIndex].select.isSelected = isSelected;
-        const clonedRows = _cloneDeep(nextState);
+      nextState[rowIndex].select.isSelected = isSelected;
+      const clonedRows = _cloneDeep(nextState);
 
-        // FixMe: quick fix work-around for allowing internal set state WITH external props updates
-        window.setTimeout(() =>
-          onSelect({
-            type,
-            rowIndex,
-            isSelected,
-            rows: clonedRows,
-            selectedRows: clonedRows.filter(row => row.select.isSelected === true),
-            data: clonedRows[rowIndex].data,
-            cells: clonedRows[rowIndex].cells
-          })
-        );
+      setUpdatedRows(() => nextState);
 
-        return nextState;
+      onSelect({
+        type,
+        rowIndex,
+        isSelected,
+        rows: clonedRows,
+        selectedRows: clonedRows.filter(row => row.select.isSelected === true),
+        data: clonedRows[rowIndex].data,
+        cells: clonedRows[rowIndex].cells
       });
     }
   };
