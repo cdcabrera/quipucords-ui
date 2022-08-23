@@ -117,15 +117,15 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
       rowObj.expand = {
         rowIndex: rowObj.rowIndex,
         isExpanded,
-        onToggle: (_event, rowIndex, isToggleExpanded) => {
+        onToggle: (_event, rowIndex, isRowToggleExpanded) => {
           // console.log(a.currentTarget);
           console.log('rowIndex', rowIndex);
-          console.log('isExpanded', isExpanded);
+          console.log('isExpanded', isRowToggleExpanded);
           // console.log('someObj', someObj);
           // console.log(this.props);
           //
           return onExpand({
-            isExpanded: isToggleExpanded,
+            isExpanded: isRowToggleExpanded,
             rowIndex: rowObj.rowIndex,
             type: 'row'
           });
@@ -157,9 +157,15 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
 
           cellProps.compoundExpand = {
             isExpanded: updateIsExpanded,
-            onToggle: (_event, rowIndex, isToggleExpanded) =>
+            onToggle: (_event, rowIndex, isRowToggleExpanded, isCellToggleExpanded) =>
+              // console.log('dom element', _event.currentTarget.getAttribute('aria-expanded'));
+              // console.log('rowIndex', rowIndex);
+              // console.log('isToggleExpanded', isToggleExpanded);
+              // console.log('updateIsExpanded', updateIsExpanded);
+              // console.log('other', !other);
+
               onExpand({
-                isExpanded: isToggleExpanded,
+                isExpanded: !isCellToggleExpanded,
                 rowIndex: rowObj.rowIndex,
                 cellIndex,
                 type: 'compound'
