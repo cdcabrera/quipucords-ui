@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
-// import _cloneDeep from 'lodash/cloneDeep';
+import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
 import {
   ExpandableRowContent,
@@ -25,21 +25,26 @@ import { tableHelpers } from './tableHelpers-temp';
  * the problem, and this is a bug. PF should allow both Td and Th equally for the Thead select
  * options. HTML markup allows the use of both td and th within thead and tbody, not every cell
  * in a thead requires the use of th.
+ */
+
+/**
+ * A PF Composable table wrapper
  *
- * @param root0
- * @param root0.ariaLabel
- * @param root0.children
- * @param root0.className
- * @param root0.columnHeaders
- * @param root0.componentClassNames
- * @param root0.isBorders
- * @param root0.isHeader
- * @param root0.onSelect
- * @param root0.onSort
- * @param root0.onExpand
- * @param root0.rows
- * @param root0.summary
- * @param root0.variant
+ * @param {object} props
+ * @param {string} props.ariaLabel
+ * @param {React.ReactNode} props.children
+ * @param {string} props.className
+ * @param {Array} props.columnHeaders
+ * @param {object} props.componentClassNames
+ * @param {boolean} props.isBorders
+ * @param {boolean} props.isHeader
+ * @param {Function} props.onSelect
+ * @param {Function} props.onSort
+ * @param {Function} props.onExpand
+ * @param {Array} props.rows
+ * @param {string} props.summary
+ * @param {string} props.variant
+ * @returns {React.ReactNode}
  */
 const Table = ({
   ariaLabel,
@@ -57,15 +62,57 @@ const Table = ({
   variant
 }) => {
   const [updatedHeaderAndRows, setUpdatedHeaderAndRows] = useState({});
-  // const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
-  // const [updatedIsAllSelected, setUpdatedIsAllSelected] = useState(false);
   const [updatedIsExpandableRow, setUpdatedIsExpandableRow] = useState(false);
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
   const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
-    const isCallback = typeof onExpand === 'function';
-    console.log('on expand table', isCallback, type, rowIndex, cellIndex);
+    if (type === 'compound') {
+      setUpdatedHeaderAndRows(prevState => {
+        const nextBodyRows = [...prevState.bodyRows];
+        const isCompoundExpanded = !nextBodyRows?.[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+
+        const nextBodyRowCells = nextBodyRows?.[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+          const updatedCompoundExpand = cellProps?.compoundExpand;
+
+          if (updatedCompoundExpand) {
+            updatedCompoundExpand.isExpanded = false;
+          }
+
+          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+        });
+
+        nextBodyRowCells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
+        nextBodyRows[rowIndex].cells = nextBodyRowCells;
+
+        return {
+          ...prevState,
+          bodyRows: nextBodyRows
+        };
+      });
+    } else {
+      updatedHeaderAndRows(prevState => {
+        const nextBodyRows = [...prevState.bodyRows];
+        const isRowExpanded = !nextBodyRows[rowIndex].expand.isExpanded;
+
+        nextBodyRows[rowIndex].expand.isExpanded = isRowExpanded;
+
+        return {
+          ...prevState,
+          bodyRows: nextBodyRows
+        };
+      });
+    }
+
+    if (typeof onExpand === 'function') {
+      onExpand({
+        type,
+        rowIndex,
+        cellIndex: (type === 'row' && -1) || cellIndex,
+        isExpanded: !updatedHeaderAndRows.bodyRows[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded,
+        data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
+      });
+    }
   };
 
   const onSelectTable = ({ type, isSelected, rowIndex } = {}) => {
@@ -103,7 +150,14 @@ const Table = ({
     }
 
     if (typeof onSelect === 'function') {
-      // onSelect({ type, isSelected, rowIndex });
+      onSelect({
+        type,
+        rowIndex,
+        isSelected,
+        data:
+          (type === 'all' && _cloneDeep(updatedHeaderAndRows.bodyRows).map(({ data }) => data || {})) ||
+          _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
+      });
     }
   };
 
