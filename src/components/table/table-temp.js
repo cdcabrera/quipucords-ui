@@ -25,6 +25,21 @@ import { tableHelpers } from './tableHelpers-temp';
  * the problem, and this is a bug. PF should allow both Td and Th equally for the Thead select
  * options. HTML markup allows the use of both td and th within thead and tbody, not every cell
  * in a thead requires the use of th.
+ *
+ * @param root0
+ * @param root0.ariaLabel
+ * @param root0.children
+ * @param root0.className
+ * @param root0.columnHeaders
+ * @param root0.componentClassNames
+ * @param root0.isBorders
+ * @param root0.isHeader
+ * @param root0.onSelect
+ * @param root0.onSort
+ * @param root0.onExpand
+ * @param root0.rows
+ * @param root0.summary
+ * @param root0.variant
  */
 const Table = ({
   ariaLabel,
@@ -42,7 +57,7 @@ const Table = ({
   variant
 }) => {
   const [updatedHeaderAndRows, setUpdatedHeaderAndRows] = useState({});
-  const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
+  // const [updatedHeaderSelectProps, setUpdatedHeaderSelectProps] = useState({});
   // const [updatedIsAllSelected, setUpdatedIsAllSelected] = useState(false);
   const [updatedIsExpandableRow, setUpdatedIsExpandableRow] = useState(false);
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
@@ -58,42 +73,49 @@ const Table = ({
     console.log('on select table', isCallback, type, isSelected, rowIndex);
 
     if (type === 'all') {
-      // setUpdatedIsAllSelected(isSelected);
       setUpdatedHeaderAndRows(prevState => {
         const nextBodyRows = prevState.bodyRows?.map(row => ({
           ...row,
           select: { ...row.select, isSelected }
         }));
 
+        const nextHeaderSelectProps = prevState.headerSelectProps;
+        nextHeaderSelectProps.isSelected = isSelected;
+
         return {
           ...prevState,
-          bodyRows: nextBodyRows
+          bodyRows: nextBodyRows,
+          headerSelectProps: nextHeaderSelectProps
+          // isAllSelected: isSelected
         };
       });
     } else {
-      // if (isSelected === false) {
-      //  setUpdatedIsAllSelected(false);
-      /*
-      setUpdatedHeaderSelectProps(prevState => ({
-        ...prevState,
-        isSelected: false
-      }));
-      */
-      // }
-
       setUpdatedHeaderAndRows(prevState => {
         const nextBodyRows = prevState.bodyRows?.map(row => row);
         nextBodyRows[rowIndex].select.isSelected = isSelected;
 
+        const nextHeaderSelectProps = prevState.headerSelectProps;
+        nextHeaderSelectProps.isSelected =
+          nextBodyRows.filter(row => row.select.isSelected === true).length === nextBodyRows.length;
+
+        // const isAllSelected = nextBodyRows.filter(row => row.select.isSelected === true).length === nextBodyRows.length;
+
         return {
           ...prevState,
-          bodyRows: nextBodyRows
+          bodyRows: nextBodyRows,
+          // isAllSelected
+          headerSelectProps: nextHeaderSelectProps
         };
       });
     }
 
-    // const allSelected = updatedHeaderAndRows.filter(row => row.select.isSelected === true).length === updatedHeaderAndRows.length;
-    // setUpdatedIsAllSelected(allSelected);
+    /*
+    const isAllSelected =
+      updatedHeaderAndRows.bodyRows.filter(row => row.select.isSelected === true).length ===
+      updatedHeaderAndRows.bodyRows.length;
+
+    setUpdatedIsAllSelected(isAllSelected);
+    */
   };
 
   const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
@@ -127,49 +149,43 @@ const Table = ({
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(isSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
-    setUpdatedHeaderSelectProps(parsedHeaderSelectProps);
+    // setUpdatedHeaderSelectProps(parsedHeaderSelectProps);
     // setUpdatedIsAllSelected(parsedIsAllSelected);
 
     setUpdatedHeaderAndRows({
       headerRow: parsedHeaderRow,
-      bodyRows: parsedRows
+      bodyRows: parsedRows,
+      headerSelectProps: parsedHeaderSelectProps
+      // headerOnSelect
+      // isAllSelected: parsedIsAllSelected
     });
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
-  const renderHeader = () => {
-    const isAllSelected =
-      updatedHeaderAndRows.bodyRows.filter(row => row.select.isSelected === true).length ===
-      updatedHeaderAndRows.bodyRows.length;
-    console.log('>>>>>>>>>>>>> are all rows selected', isAllSelected);
-    // console.log('>>>>>>>>>>>>> are all rows selected', updatedIsAllSelected);
-    // console.log('>>>>>>>>>>>>> are all rows selected', updatedHeaderSelectProps);
+  const renderHeader = () => (
+    // console.log('check >>>', updatedHeaderAndRows.isAllSelected);
+    // const isAllSelected =
+    //  updatedHeaderAndRows.bodyRows.filter(row => row.select.isSelected === true).length ===
+    //  updatedHeaderAndRows.bodyRows.length;
 
-    const updatedProps = { onSelect: updatedHeaderSelectProps.onSelect, isSelected: isAllSelected };
-
-    return (
-      <Thead>
-        <Tr className={componentClassNames.tr}>
-          {updatedIsExpandableRow && <Td className={componentClassNames.th} key="expand-th-cell" />}
-          {updatedIsSelectTable && (
-            <Th
-              key={window.btoa(isAllSelected)}
-              // key={`primary-thead-${updatedIsSelectTable}-${isAllSelected}`}
-              // key="select-cell"
-              className={`${componentClassNames.th} ${componentClassNames.tdSelect}`}
-              // onClick={(_event, isSelected) => onSelectTable({ type: 'all' , isSelected: _event.currentTarget.querySelector('input').checked, rowIndex: -1 })}
-              select={updatedProps}
-            />
-          )}
-          {updatedHeaderAndRows?.headerRow.map(({ key: cellKey, content, props, sort }) => (
-            <Th className={componentClassNames.th} key={cellKey} sort={sort} {...props}>
-              {content}
-            </Th>
-          ))}
-        </Tr>
-      </Thead>
-    );
-  };
-
+    <Thead>
+      <Tr className={componentClassNames.tr}>
+        {updatedIsExpandableRow && <Td className={componentClassNames.th} key="expand-th-cell" />}
+        {updatedIsSelectTable && (
+          <Th
+            key="select-cell"
+            className={`${componentClassNames.th} ${componentClassNames.tdSelect}`}
+            // select={{ onSelect: updatedHeaderSelectProps.onSelect, isSelected: updatedHeaderAndRows.isAllSelected }}
+            select={updatedHeaderAndRows.headerSelectProps}
+          />
+        )}
+        {updatedHeaderAndRows?.headerRow.map(({ key: cellKey, content, props, sort }) => (
+          <Th className={componentClassNames.th} key={cellKey} sort={sort} {...props}>
+            {content}
+          </Th>
+        ))}
+      </Tr>
+    </Thead>
+  );
   const renderBody = () => {
     const BodyWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && React.Fragment) || Tbody;
 
