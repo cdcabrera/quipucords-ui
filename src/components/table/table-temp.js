@@ -69,9 +69,6 @@ const Table = ({
   };
 
   const onSelectTable = ({ type, isSelected, rowIndex } = {}) => {
-    const isCallback = typeof onSelect === 'function';
-    console.log('on select table', isCallback, type, isSelected, rowIndex);
-
     if (type === 'all') {
       setUpdatedHeaderAndRows(prevState => {
         const nextBodyRows = prevState.bodyRows?.map(row => ({
@@ -86,7 +83,6 @@ const Table = ({
           ...prevState,
           bodyRows: nextBodyRows,
           headerSelectProps: nextHeaderSelectProps
-          // isAllSelected: isSelected
         };
       });
     } else {
@@ -98,24 +94,17 @@ const Table = ({
         nextHeaderSelectProps.isSelected =
           nextBodyRows.filter(row => row.select.isSelected === true).length === nextBodyRows.length;
 
-        // const isAllSelected = nextBodyRows.filter(row => row.select.isSelected === true).length === nextBodyRows.length;
-
         return {
           ...prevState,
           bodyRows: nextBodyRows,
-          // isAllSelected
           headerSelectProps: nextHeaderSelectProps
         };
       });
     }
 
-    /*
-    const isAllSelected =
-      updatedHeaderAndRows.bodyRows.filter(row => row.select.isSelected === true).length ===
-      updatedHeaderAndRows.bodyRows.length;
-
-    setUpdatedIsAllSelected(isAllSelected);
-    */
+    if (typeof onSelect === 'function') {
+      // onSelect({ type, isSelected, rowIndex });
+    }
   };
 
   const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
@@ -149,24 +138,15 @@ const Table = ({
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(isSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
-    // setUpdatedHeaderSelectProps(parsedHeaderSelectProps);
-    // setUpdatedIsAllSelected(parsedIsAllSelected);
 
     setUpdatedHeaderAndRows({
       headerRow: parsedHeaderRow,
       bodyRows: parsedRows,
       headerSelectProps: parsedHeaderSelectProps
-      // headerOnSelect
-      // isAllSelected: parsedIsAllSelected
     });
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
   const renderHeader = () => (
-    // console.log('check >>>', updatedHeaderAndRows.isAllSelected);
-    // const isAllSelected =
-    //  updatedHeaderAndRows.bodyRows.filter(row => row.select.isSelected === true).length ===
-    //  updatedHeaderAndRows.bodyRows.length;
-
     <Thead>
       <Tr className={componentClassNames.tr}>
         {updatedIsExpandableRow && <Td className={componentClassNames.th} key="expand-th-cell" />}
@@ -174,7 +154,6 @@ const Table = ({
           <Th
             key="select-cell"
             className={`${componentClassNames.th} ${componentClassNames.tdSelect}`}
-            // select={{ onSelect: updatedHeaderSelectProps.onSelect, isSelected: updatedHeaderAndRows.isAllSelected }}
             select={updatedHeaderAndRows.headerSelectProps}
           />
         )}
@@ -186,6 +165,7 @@ const Table = ({
       </Tr>
     </Thead>
   );
+
   const renderBody = () => {
     const BodyWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && React.Fragment) || Tbody;
 
