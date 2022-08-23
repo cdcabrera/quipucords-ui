@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
@@ -66,55 +66,62 @@ const Table = ({
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
-  const onExpandTable = ({ type, rowIndex, cellIndex } = {}) => {
-    if (type === 'compound') {
-      setUpdatedHeaderAndRows(prevState => {
-        const nextBodyRows = [...prevState.bodyRows];
-        const isCompoundExpanded = !nextBodyRows?.[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+  const onExpandTable = useCallback(
+    ({ type, isExpanded, rowIndex, cellIndex } = {}) => {
+      if (type === 'compound') {
+        setUpdatedHeaderAndRows(prevState => {
+          const nextBodyRows = [...prevState.bodyRows];
+          // const isCompoundExpanded = !nextBodyRows?.[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
 
-        const nextBodyRowCells = nextBodyRows?.[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
-          const updatedCompoundExpand = cellProps?.compoundExpand;
+          const nextBodyRowCells = nextBodyRows?.[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+            const updatedCompoundExpand = cellProps?.compoundExpand;
 
-          if (updatedCompoundExpand) {
-            updatedCompoundExpand.isExpanded = false;
-          }
+            if (updatedCompoundExpand) {
+              updatedCompoundExpand.isExpanded = false;
+            }
 
-          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+            return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
+          });
+
+          nextBodyRowCells[cellIndex].props.compoundExpand.isExpanded = isExpanded; // isCompoundExpanded;
+          nextBodyRows[rowIndex].cells = nextBodyRowCells;
+
+          return {
+            ...prevState,
+            bodyRows: nextBodyRows
+          };
         });
+      } else {
+        setUpdatedHeaderAndRows(prevState => {
+          const nextBodyRows = [...prevState.bodyRows];
+          // const isRowExpanded = !nextBodyRows[rowIndex].expand.isExpanded;
+          // const isRowExpanded
 
-        nextBodyRowCells[cellIndex].props.compoundExpand.isExpanded = isCompoundExpanded;
-        nextBodyRows[rowIndex].cells = nextBodyRowCells;
+          nextBodyRows[rowIndex].expand.isExpanded = isExpanded; // isRowExpanded;
 
-        return {
-          ...prevState,
-          bodyRows: nextBodyRows
-        };
-      });
-    } else {
-      updatedHeaderAndRows(prevState => {
-        const nextBodyRows = [...prevState.bodyRows];
-        const isRowExpanded = !nextBodyRows[rowIndex].expand.isExpanded;
+          return {
+            ...prevState,
+            bodyRows: nextBodyRows
+          };
+        });
+      }
 
-        nextBodyRows[rowIndex].expand.isExpanded = isRowExpanded;
-
-        return {
-          ...prevState,
-          bodyRows: nextBodyRows
-        };
-      });
-    }
-
-    if (typeof onExpand === 'function') {
-      onExpand({
-        type,
-        rowIndex,
-        cellIndex: (type === 'row' && -1) || cellIndex,
-        isExpanded: !updatedHeaderAndRows.bodyRows[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded,
-        data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
-      });
-    }
-  };
-
+      if (typeof onExpand === 'function') {
+        onExpand({
+          type,
+          rowIndex,
+          cellIndex: (type === 'row' && -1) || cellIndex,
+          isExpanded,
+          // type === 'row'
+          //  ? !updatedHeaderAndRows.bodyRows[rowIndex].expand.isExpanded
+          //  : !updatedHeaderAndRows.bodyRows[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded,
+          data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
+        });
+      }
+    },
+    [onExpand, updatedHeaderAndRows]
+  );
+  //
   const onSelectTable = ({ type, isSelected, rowIndex } = {}) => {
     if (type === 'all') {
       setUpdatedHeaderAndRows(prevState => {

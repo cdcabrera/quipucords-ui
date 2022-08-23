@@ -117,11 +117,19 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
       rowObj.expand = {
         rowIndex: rowObj.rowIndex,
         isExpanded,
-        onToggle: () =>
-          onExpand({
+        onToggle: (_event, rowIndex, isToggleExpanded) => {
+          // console.log(a.currentTarget);
+          console.log('rowIndex', rowIndex);
+          console.log('isExpanded', isExpanded);
+          // console.log('someObj', someObj);
+          // console.log(this.props);
+          //
+          return onExpand({
+            isExpanded: isToggleExpanded,
             rowIndex: rowObj.rowIndex,
             type: 'row'
-          })
+          });
+        }
       };
     }
 
@@ -149,8 +157,9 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
 
           cellProps.compoundExpand = {
             isExpanded: updateIsExpanded,
-            onToggle: () =>
+            onToggle: (_event, rowIndex, isToggleExpanded) =>
               onExpand({
+                isExpanded: isToggleExpanded,
                 rowIndex: rowObj.rowIndex,
                 cellIndex,
                 type: 'compound'
