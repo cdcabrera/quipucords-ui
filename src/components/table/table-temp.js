@@ -19,11 +19,12 @@ import { tableHelpers } from './tableHelpers-temp';
 
 /**
  * FixMe: PF bug for select column. PF requires a Th used for select field in the primary Thead...
- * but only a partially working Td. Any attempt to update the Td isSelected prop is met with a
+ * and also allows a partially working Td. Any attempt to update the Td isSelected prop is met with a
  * non-functioning field, hair pulling, and the question "is my state working?"... it is, PF is
- * the problem, and this is a bug. PF should allow both Td and Th equally for the Thead select
+ * the problem, this is a bug. PF should allow both Td and Th equally for the Thead select
  * options. HTML markup allows the use of both td and th within thead and tbody, not every cell
- * in a thead requires the use of th.
+ * in a thead requires the use of th. This should be corrected, or at a minimum the documentation
+ * should be updated to reflect that a Th is absolutely required...
  */
 /**
  * A PF Composable table wrapper
@@ -143,17 +144,15 @@ const Table = ({
       });
     }
 
-    if (typeof onSelect === 'function') {
-      onSelect({
-        type,
-        rowIndex,
-        isSelected,
-        data:
-          (type === 'all' && _cloneDeep(updatedHeaderAndRows.bodyRows).map(({ data }) => data || {})) ||
-          _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data ||
-          {}
-      });
-    }
+    onSelect({
+      type,
+      rowIndex,
+      isSelected,
+      data:
+        (type === 'all' && _cloneDeep(updatedHeaderAndRows.bodyRows).map(({ data }) => data || {})) ||
+        _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data ||
+        {}
+    });
   };
 
   const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
@@ -179,13 +178,11 @@ const Table = ({
       };
     });
 
-    if (typeof onSort === 'function') {
-      onSort({
-        cellIndex: originalIndex,
-        direction,
-        data: _cloneDeep(updatedHeaderAndRows.headerRow[originalIndex]).data || {}
-      });
-    }
+    onSort({
+      cellIndex: originalIndex,
+      direction,
+      data: _cloneDeep(updatedHeaderAndRows.headerRow[originalIndex]).data || {}
+    });
   };
 
   useShallowCompareEffect(() => {
@@ -197,7 +194,7 @@ const Table = ({
       rows: parsedRows
     } = tableHelpers.tableRows({
       onExpand: onExpandTable,
-      onSelect: (typeof onSelect === 'function' && onSelectTable) || null,
+      onSelect: typeof onSelect === 'function' && onSelectTable,
       rows
     });
     const { headerRow: parsedHeaderRow, headerSelectProps: parsedHeaderSelectProps } = tableHelpers.tableHeader({
