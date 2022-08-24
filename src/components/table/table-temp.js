@@ -180,8 +180,6 @@ const Table = ({
     });
 
     if (typeof onSort === 'function') {
-      console.log('cell data', updatedHeaderAndRows.headerRow, originalIndex);
-
       onSort({
         cellIndex: originalIndex,
         direction,
@@ -191,28 +189,26 @@ const Table = ({
   };
 
   useShallowCompareEffect(() => {
-    const isSelectTable = typeof onSelect === 'function';
     const {
       isAllSelected: parsedIsAllSelected,
       isExpandableCell: parsedIsExpandableCell,
       isExpandableRow: parsedIsExpandableRow,
+      isSelectTable: parsedIsSelectTable,
       rows: parsedRows
     } = tableHelpers.tableRows({
-      isSelectTable,
       onExpand: onExpandTable,
-      onSelect: onSelectTable,
+      onSelect: (typeof onSelect === 'function' && onSelectTable) || null,
       rows
     });
     const { headerRow: parsedHeaderRow, headerSelectProps: parsedHeaderSelectProps } = tableHelpers.tableHeader({
       columnHeaders,
       isAllSelected: parsedIsAllSelected,
-      isSelectTable,
-      onSelect: onSelectTable,
-      onSort: onSortTable
+      onSelect: typeof onSelect === 'function' && onSelectTable,
+      onSort: typeof onSort === 'function' && onSortTable
     });
 
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
-    setUpdatedIsSelectTable(isSelectTable);
+    setUpdatedIsSelectTable(parsedIsSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
     setUpdatedHeaderAndRows({
       headerRow: parsedHeaderRow,

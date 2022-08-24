@@ -8,18 +8,12 @@ const parseContent = content =>
   content ||
   '';
 
-const tableHeader = ({
-  columnHeaders = [],
-  isAllSelected = false,
-  isSelectTable = false,
-  isRowExpand,
-  onSelect,
-  onSort
-} = {}) => {
+const tableHeader = ({ columnHeaders = [], isAllSelected = false, isRowExpand, onSelect, onSort } = {}) => {
   const updatedColumnHeaders = [];
   const updatedHeaderSelectProps = {};
+  const isSelectTable = typeof onSelect === 'function';
 
-  if (isSelectTable && typeof onSelect === 'function') {
+  if (isSelectTable) {
     updatedHeaderSelectProps.onSelect = (_event, isSelected) => onSelect({ isSelected, rowIndex: -1, type: 'all' });
     updatedHeaderSelectProps.isSelected = isAllSelected;
   }
@@ -28,8 +22,6 @@ const tableHeader = ({
     const key = `${window.btoa(columnHeader)}-${index}`;
 
     if (columnHeader?.content !== undefined) {
-      // console.log('work >>>>>', columnHeader);
-
       const {
         isSort,
         isSortActive,
@@ -40,9 +32,6 @@ const tableHeader = ({
         tooltip,
         ...headerCellData
       } = columnHeader;
-
-      // console.log('>>>>> 002 work', headerCellData);
-
       const tempColumnHeader = {
         key,
         content: parseContent(content),
@@ -94,8 +83,9 @@ const tableHeader = ({
   };
 };
 
-const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}) => {
+const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   const updatedRows = [];
+  const isSelectTable = typeof onSelect === 'function';
   let isExpandableRow = false;
   let isExpandableCell = false;
   let selectedRows = 0;
@@ -113,7 +103,7 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
     rowObj.rowIndex = updatedRows.length - 1;
     rowObj.key = `${window.btoa(rowObj)}-${rowObj.rowIndex}`;
 
-    if (isSelectTable && typeof onSelect === 'function') {
+    if (isSelectTable) {
       const updatedIsSelected = isSelected ?? false;
 
       if (updatedIsSelected === true) {
@@ -137,12 +127,6 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
         rowIndex: rowObj.rowIndex,
         isExpanded,
         onToggle: (_event, rowIndex, isRowToggleExpanded) =>
-          // console.log(a.currentTarget);
-          // console.log('rowIndex', rowIndex);
-          // console.log('isExpanded', isRowToggleExpanded);
-          // console.log('someObj', someObj);
-          // console.log(this.props);
-          //
           onExpand({
             isExpanded: isRowToggleExpanded,
             rowIndex: rowObj.rowIndex,
@@ -176,12 +160,6 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
           cellProps.compoundExpand = {
             isExpanded: updateIsExpanded,
             onToggle: (_event, rowIndex, isRowToggleExpanded, isCellToggleExpanded) =>
-              // console.log('dom element', _event.currentTarget.getAttribute('aria-expanded'));
-              // console.log('rowIndex', rowIndex);
-              // console.log('isToggleExpanded', isToggleExpanded);
-              // console.log('updateIsExpanded', updateIsExpanded);
-              // console.log('other', !other);
-
               onExpand({
                 isExpanded: !isCellToggleExpanded,
                 rowIndex: rowObj.rowIndex,
@@ -205,6 +183,7 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
     isAllSelected: selectedRows === rows.length,
     isExpandableRow,
     isExpandableCell,
+    isSelectTable,
     rows: updatedRows
   };
 };
