@@ -41,6 +41,12 @@ const Sources = ({
   useSelectorsResponse: useAliasSelectorsResponse,
   usePoll: useAliasPoll
 }) => {
+  const pollUpdate = useAliasPoll();
+  const dispatch = useAliasDispatch();
+  const onDelete = useAliasOnDelete();
+  const onEdit = useAliasOnEdit();
+  const onScan = useAliasOnScan();
+
   const [refreshUpdate, selectedSources, expandedSources, viewOptions] = useAliasSelectors([
     ({ sources }) => sources.update,
     ({ sources }) => sources.selected,
@@ -54,17 +60,12 @@ const Sources = ({
     pending,
     responses = {}
   } = useAliasSelectorsResponse({ id: 'view', selector: ({ sources }) => sources.view });
+
   const [{ date } = {}] = responses.list || [];
   const { results: sources = [] } = responseData.view || {};
   const updatedSelectedSources = Object.values(selectedSources).filter(val => val !== null);
-
-  const pollUpdate = useAliasPoll();
-  const dispatch = useAliasDispatch();
   const query = helpers.createViewQueryObject(viewOptions);
   const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || sources?.length > 0 || false;
-  const onDelete = useAliasOnDelete();
-  const onEdit = useAliasOnEdit();
-  const onScan = useAliasOnScan();
 
   useShallowCompareEffect(() => {
     getSources(query)(dispatch);
