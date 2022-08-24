@@ -4,6 +4,16 @@ import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 
+/**
+ * On Delete confirmation, and action.
+ *
+ * @param {object} options
+ * @param {Function} options.deleteSource
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useSelector
+ * @param {Function} options.useSelectorsResponse
+ * @returns {Function}
+ */
 const useOnDelete = ({
   deleteSource = reduxActions.sources.deleteSource,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
@@ -80,6 +90,13 @@ const useOnDelete = ({
   };
 };
 
+/**
+ * On edit a source
+ *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @returns {Function}
+ */
 const useOnEdit = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
@@ -91,6 +108,13 @@ const useOnEdit = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDi
   };
 };
 
+/**
+ * On scan a source
+ *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @returns {Function}
+ */
 const useOnScan = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
@@ -102,6 +126,14 @@ const useOnScan = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDi
   };
 };
 
+/**
+ * Poll sources data for pending results.
+ *
+ * @param {object} options
+ * @param {number} options.pollInterval
+ * @param {Function} options.useSelector
+ * @returns {Function}
+ */
 const usePoll = ({
   pollInterval = helpers.POLL_INTERVAL,
   useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
