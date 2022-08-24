@@ -28,11 +28,30 @@ const tableHeader = ({
     const key = `${window.btoa(columnHeader)}-${index}`;
 
     if (columnHeader?.content !== undefined) {
-      const { isSort, isSortActive, sortDirection = SortByDirection.asc, content, ...props } = columnHeader;
+      // console.log('work >>>>>', columnHeader);
+
+      const {
+        isSort,
+        isSortActive,
+        sortDirection = SortByDirection.asc,
+        content,
+        dataLabel,
+        info,
+        tooltip,
+        ...headerCellData
+      } = columnHeader;
+
+      // console.log('>>>>> 002 work', headerCellData);
+
       const tempColumnHeader = {
         key,
         content: parseContent(content),
-        props
+        props: {
+          dataLabel,
+          info,
+          tooltip
+        },
+        data: headerCellData
       };
 
       if (typeof onSort === 'function' && (isSort === true || isSortActive === true)) {
@@ -117,19 +136,18 @@ const tableRows = ({ isSelectTable = false, onExpand, onSelect, rows = [] } = {}
       rowObj.expand = {
         rowIndex: rowObj.rowIndex,
         isExpanded,
-        onToggle: (_event, rowIndex, isRowToggleExpanded) => {
+        onToggle: (_event, rowIndex, isRowToggleExpanded) =>
           // console.log(a.currentTarget);
-          console.log('rowIndex', rowIndex);
-          console.log('isExpanded', isRowToggleExpanded);
+          // console.log('rowIndex', rowIndex);
+          // console.log('isExpanded', isRowToggleExpanded);
           // console.log('someObj', someObj);
           // console.log(this.props);
           //
-          return onExpand({
+          onExpand({
             isExpanded: isRowToggleExpanded,
             rowIndex: rowObj.rowIndex,
             type: 'row'
-          });
-        }
+          })
       };
     }
 

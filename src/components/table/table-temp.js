@@ -115,7 +115,7 @@ const Table = ({
           // type === 'row'
           //  ? !updatedHeaderAndRows.bodyRows[rowIndex].expand.isExpanded
           //  : !updatedHeaderAndRows.bodyRows[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded,
-          data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
+          data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data || {}
         });
       }
     },
@@ -163,14 +163,44 @@ const Table = ({
         isSelected,
         data:
           (type === 'all' && _cloneDeep(updatedHeaderAndRows.bodyRows).map(({ data }) => data || {})) ||
-          _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data
+          _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data ||
+          {}
       });
     }
   };
 
   const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
-    const isCallback = typeof onSort === 'function';
-    console.log('sort table', isCallback, cellIndex, direction, originalIndex);
+    setUpdatedHeaderAndRows(prevState => {
+      const nextHeaderRow = prevState.headerRow.map((headerCell, index) => {
+        const updatedHeaderCell = headerCell;
+
+        if (updatedHeaderCell?.props?.sort) {
+          delete updatedHeaderCell.props.sort.sortBy.index;
+
+          if (index === originalIndex) {
+            updatedHeaderCell.props.sort.sortBy.index = cellIndex;
+            updatedHeaderCell.props.sort.sortBy.direction = direction;
+          }
+        }
+
+        return updatedHeaderCell;
+      });
+
+      return {
+        ...prevState,
+        headerRow: nextHeaderRow
+      };
+    });
+
+    if (typeof onSort === 'function') {
+      console.log('cell data', updatedHeaderAndRows.headerRow, originalIndex);
+
+      onSort({
+        cellIndex: originalIndex,
+        direction,
+        data: _cloneDeep(updatedHeaderAndRows.headerRow[originalIndex]).data || {}
+      });
+    }
   };
 
   useShallowCompareEffect(() => {
