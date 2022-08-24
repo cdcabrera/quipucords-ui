@@ -65,6 +65,16 @@ const Table = ({
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
+  /**
+   * Apply an onExpand handler.
+   *
+   * @param {object} params
+   * @param {string} params.type
+   * @param {boolean} params.isExpanded
+   * @param {number} params.rowIndex
+   * @param {number} params.cellIndex
+   * @param {*|object} params.data
+   */
   const onExpandTable = ({ type, isExpanded, rowIndex, cellIndex, data } = {}) => {
     if (type === 'compound') {
       setUpdatedHeaderAndRows(prevState => {
@@ -110,6 +120,15 @@ const Table = ({
     }
   };
 
+  /**
+   * Apply an onSelect handler.
+   *
+   * @param {object} params
+   * @param {string} params.type
+   * @param {boolean} params.isSelected
+   * @param {number} params.rowIndex
+   * @param {*|object} params.data
+   */
   const onSelectTable = ({ type, isSelected, rowIndex, data } = {}) => {
     if (type === 'all') {
       setUpdatedHeaderAndRows(prevState => {
@@ -152,6 +171,15 @@ const Table = ({
     });
   };
 
+  /**
+   * Apply an onSort handler.
+   *
+   * @param {object} params
+   * @param {number} params.cellIndex
+   * @param {string} params.direction
+   * @param {number} params.originalIndex
+   * @param {*|object} params.data
+   */
   const onSortTable = ({ cellIndex, direction, originalIndex, data } = {}) => {
     setUpdatedHeaderAndRows(prevState => {
       const nextHeaderRow = prevState.headerRow.map((headerCell, index) => {
@@ -212,6 +240,11 @@ const Table = ({
     });
   }, [columnHeaders, onExpand, onExpandTable, onSelect, onSelectTable, rows]);
 
+  /**
+   * Apply settings, return primary thead.
+   *
+   * @returns {React.ReactNode}
+   */
   const renderHeader = () => (
     <Thead>
       <Tr className={componentClassNames.tr}>
@@ -232,6 +265,11 @@ const Table = ({
     </Thead>
   );
 
+  /**
+   * Apply settings, return tbody(s).
+   *
+   * @returns {React.ReactNode}
+   */
   const renderBody = () => {
     const BodyWrapper = ((updatedIsExpandableCell || updatedIsExpandableRow) && React.Fragment) || Tbody;
 
@@ -316,6 +354,11 @@ const Table = ({
     );
   };
 
+  /**
+   * Return empty results display.
+   *
+   * @returns {React.ReactNode}
+   */
   const renderEmpty = () => children || <TableEmpty />;
 
   return (
