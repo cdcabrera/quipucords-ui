@@ -1,6 +1,12 @@
 import React from 'react';
 import { SortByDirection } from '@patternfly/react-table';
 
+/**
+ * Allow additional content to display in cells.
+ *
+ * @param {React.ReactNode|Function|object|*} content
+ * @returns {*|string}
+ */
 const parseContent = content =>
   (React.isValidElement(content) && content) ||
   (typeof content === 'function' && content()) ||
@@ -8,6 +14,18 @@ const parseContent = content =>
   content ||
   '';
 
+/**
+ * Parse table header settings, props.
+ *
+ * @param {object} params
+ * @param {Array} params.columnHeaders
+ * @param {boolean} params.isAllSelected
+ * @param {boolean} params.isRowExpand
+ * @param {Array} params.parsedRows
+ * @param {Function} params.onSelect
+ * @param {Function} params.onSort
+ * @returns {{headerRow: *[], headerSelectProps: {}}}
+ */
 const tableHeader = ({
   columnHeaders = [],
   isAllSelected = false,
@@ -92,6 +110,15 @@ const tableHeader = ({
   };
 };
 
+/**
+ * Parse table body settings, props.
+ *
+ * @param {object} params
+ * @param {Function} params.onExpand
+ * @param {Function} params.onSelect
+ * @param {Array} params.rows
+ * @returns {{isExpandableCell: boolean, isSelectTable: boolean, isExpandableRow: boolean, isAllSelected: boolean, rows: *[]}}
+ */
 const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
   const updatedRows = [];
   const isSelectTable = typeof onSelect === 'function';
