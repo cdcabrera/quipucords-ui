@@ -23,12 +23,12 @@ import {
 } from '@patternfly/react-tokens';
 
 /**
- * App icon variants
+ * Context icon variants
  *
  * @type {{running: string, canceled: string, paused: string, unreachable: string, success: string, created: string,
  *     pending: string, cancelled: string, completed: string, failed: string}}
  */
-const IconVariant = {
+const ContextIconVariant = {
   completed: 'success',
   success: 'success',
   failed: 'failed',
@@ -48,54 +48,40 @@ const IconVariant = {
   vcenter: 'vcenter'
 };
 
-// case 'vcenter':
-//       return { type: 'pf', name: 'vcenter' };
-//     case 'network':
-//       return { type: 'pf', name: 'network-range' };
-//     case 'satellite':
-//       return { type: 'pf', name: 'satellite' };
-//     default:
-//       return { type: 'pf', name: '' };
-
 /**
- * Return an icon
+ * Return an icon from context/symbol
  *
  * @param {object} props
  * @param {string} props.symbol
  * @param {object} props.props
  * @returns {React.ReactNode}
  */
-const Icon = ({ symbol, ...props }) => {
+const ContextIcon = ({ symbol, ...props }) => {
   switch (symbol) {
-    case IconVariant.failed:
+    case ContextIconVariant.failed:
       return <ErrorCircleOIcon {...{ ...{ color: red.value }, ...props }} />;
-    case IconVariant.idCard:
+    case ContextIconVariant.idCard:
       return <IdCardIcon {...{ ...{ color: gray.value }, ...props }} />;
-    case IconVariant.network:
+    case ContextIconVariant.network:
       return <PficonNetworkRangeIcon {...props} />;
-    case IconVariant.paused:
+    case ContextIconVariant.paused:
       return <ExclamationTriangleIcon {...{ ...{ color: yellow.value }, ...props }} />;
-    // return { type: 'pf', name: 'warning-triangle-o', classNames: [] };
-    case IconVariant.pencil:
+    case ContextIconVariant.pencil:
       return <PencilAltIcon {...props} />;
-    case IconVariant.pending:
+    case ContextIconVariant.pending:
       return <Spinner isSVG {...{ ...{ size: IconSize.md }, ...props }} />;
-    // return { type: 'fa', name: 'spinner', classNames: ['fa-spin'] };
-    case IconVariant.satellite:
+    case ContextIconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
-    case IconVariant.success:
+    case ContextIconVariant.success:
       return <CheckCircleIcon {...{ ...{ color: green.value }, ...props }} />;
-    case IconVariant.trash:
+    case ContextIconVariant.trash:
       return <TrashIcon {...props} />;
-    case IconVariant.unreachable:
+    case ContextIconVariant.unreachable:
       return <DisconnectedIcon {...{ ...{ color: red.value }, ...props }} />;
-    // return { type: 'pf', name: 'disconnected', classNames: ['is-error'] };
-    case IconVariant.vcenter:
+    case ContextIconVariant.vcenter:
       return <PficonVcenterIcon {...props} />;
-    case IconVariant.unknown:
+    case ContextIconVariant.unknown:
     default:
-      // console.error(`Unknown status: ${scanStatus}`);
-      // return { type: 'pf', name: 'unknown', classNames: [] };
       return <UnknownIcon {...props} />;
   }
 };
@@ -105,8 +91,8 @@ const Icon = ({ symbol, ...props }) => {
  *
  * @type {{symbol: string}}
  */
-Icon.propTypes = {
-  symbol: PropTypes.oneOf([...Object.values(IconVariant)])
+ContextIcon.propTypes = {
+  symbol: PropTypes.oneOf([...Object.values(ContextIconVariant)])
 };
 
 /**
@@ -114,8 +100,8 @@ Icon.propTypes = {
  *
  * @type {{symbol: null}}
  */
-Icon.defaultProps = {
+ContextIcon.defaultProps = {
   symbol: null
 };
 
-export { Icon as default, Icon, IconVariant };
+export { ContextIcon as default, ContextIcon, ContextIconVariant };

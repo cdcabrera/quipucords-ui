@@ -13,7 +13,7 @@ import {
   OverflowMenuItem
 } from '@patternfly/react-core';
 import { PencilAltIcon, TrashIcon, EllipsisVIcon } from '@patternfly/react-icons';
-import { Icon, IconVariant } from '../icon/icon';
+import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
 import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostList';
@@ -67,7 +67,7 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
     <Grid hasGutter={false}>
       <GridItem sm={2}>
         <Tooltip content={dictionary[sourceType]}>
-          <Icon symbol={IconVariant[sourceType]} />
+          <ContextIcon symbol={ContextIconVariant[sourceType]} />
         </Tooltip>
       </GridItem>
       <GridItem sm={10}>
@@ -97,7 +97,7 @@ const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
   return (
     <Grid hasGutter={false}>
       <GridItem sm={2}>
-        <Icon symbol={IconVariant[status]} />
+        <ContextIcon symbol={ContextIconVariant[status]} />
       </GridItem>
       <GridItem sm={10}>
         <div>{t('table.label', { context: ['status', status] })}</div>
@@ -116,7 +116,7 @@ const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
  * @param {Function} params.t
  * @returns {React.ReactNode}
  */
-const statusCell = ({ count, status = IconVariant.unknown, t = translate } = {}) => {
+const statusCell = ({ count, status = ContextIconVariant.unknown, t = translate } = {}) => {
   let updatedCount = count || 0;
 
   if (helpers.DEV_MODE) {
@@ -125,7 +125,10 @@ const statusCell = ({ count, status = IconVariant.unknown, t = translate } = {})
 
   return (
     <Tooltip content={t('table.label', { context: ['status', 'tooltip', status], count: updatedCount })}>
-      {t('table.label', { context: ['status', 'cell'], count: updatedCount }, [<Icon symbol={status} />, <strong />])}
+      {t('table.label', { context: ['status', 'cell'], count: updatedCount }, [
+        <ContextIcon symbol={status} />,
+        <strong />
+      ])}
     </Tooltip>
   );
 };
@@ -149,11 +152,11 @@ const statusContent = ({ connection, id, status } = {}) => (
     {({ host }) => (
       <Grid key={`hostsRow-${host?.credentialName}`}>
         <GridItem sm={host?.status === 'success' ? 6 : 12} md={4}>
-          <Icon symbol={IconVariant[host?.status]} /> {host?.name}
+          <ContextIcon symbol={ContextIconVariant[host?.status]} /> {host?.name}
         </GridItem>
         {host?.status === 'success' && (
           <GridItem sm={6} md={4}>
-            <Icon symbol={IconVariant.idCard} /> {host?.credentialName}
+            <ContextIcon symbol={ContextIconVariant.idCard} /> {host?.credentialName}
           </GridItem>
         )}
       </Grid>
@@ -181,7 +184,7 @@ const credentialsContent = ({ [apiTypes.API_RESPONSE_SOURCE_CREDENTIALS]: source
       {credentials?.map(credential => (
         <ListItem
           key={credential[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME]}
-          icon={<Icon symbol={IconVariant.idCard} />}
+          icon={<ContextIcon symbol={ContextIconVariant.idCard} />}
         >
           {credential[apiTypes.API_RESPONSE_SOURCE_CREDENTIALS_NAME]}
         </ListItem>
@@ -202,7 +205,7 @@ const credentialsCellContent = (item = {}) => {
   const count = credentials?.length;
 
   return {
-    content: statusCell({ count, status: IconVariant.idCard }),
+    content: statusCell({ count, status: ContextIconVariant.idCard }),
     expandedContent: credentials?.length && credentialsContent(item)
   };
 };
@@ -219,8 +222,8 @@ const failedHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_failed, 10);
 
   return {
-    content: statusCell({ count, status: IconVariant.failed }),
-    expandedContent: statusContent({ connection, id, status: IconVariant.failed })
+    content: statusCell({ count, status: ContextIconVariant.failed }),
+    expandedContent: statusContent({ connection, id, status: ContextIconVariant.failed })
   };
 };
 
@@ -236,8 +239,8 @@ const okHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_scanned, 10);
 
   return {
-    content: statusCell({ count, status: IconVariant.success }),
-    expandedContent: statusContent({ connection, id, status: IconVariant.success })
+    content: statusCell({ count, status: ContextIconVariant.success }),
+    expandedContent: statusContent({ connection, id, status: ContextIconVariant.success })
   };
 };
 
@@ -253,8 +256,8 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
   const count = Number.parseInt(connection?.source_systems_unreachable, 10);
 
   return {
-    content: statusCell({ count, status: IconVariant.unreachable }),
-    expandedContent: statusContent({ connection, id, status: IconVariant.unreachable })
+    content: statusCell({ count, status: ContextIconVariant.unreachable }),
+    expandedContent: statusContent({ connection, id, status: ContextIconVariant.unreachable })
   };
 };
 
