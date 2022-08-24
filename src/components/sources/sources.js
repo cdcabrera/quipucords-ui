@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from '@patternfly/react-core';
 import { IconSize } from '@patternfly/react-icons';
-import { useShallowCompareEffect } from 'react-use';
 import { Modal, ModalVariant } from '../modal/modal';
-import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-import helpers from '../../common/helpers';
+import { reduxTypes, storeHooks } from '../../redux';
 import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import SourcesEmptyState from './sourcesEmptyState';
@@ -13,63 +11,39 @@ import { SourceFilterFields, SourceSortFields } from './sourceConstants';
 import { translate } from '../i18n/i18n';
 import { Table } from '../table/table-temp';
 import { sourcesTableCells } from './sourcesTableCells';
-import { useOnDelete, useOnEdit, useOnScan, usePoll } from './sourcesContext';
+import { useGetSources, useOnDelete, useOnEdit, useOnScan } from './sourcesContext';
 
 /**
  * A sources view.
  *
  * @param {object} props
- * @param {Function} props.getSources
  * @param {Function} props.t
+ * @param {Function} props.useGetSources
  * @param {Function} props.useOnEdit
  * @param {Function} props.useOnDelete
  * @param {Function} props.useOnScan
  * @param {Function} props.useDispatch
  * @param {Function} props.useSelectors
- * @param {Function} props.useSelectorsResponse
- * @param {Function} props.usePoll
  * @returns {React.ReactNode}
  */
 const Sources = ({
-  getSources,
   t,
+  useGetSources: useAliasGetSources,
   useOnEdit: useAliasOnEdit,
   useOnDelete: useAliasOnDelete,
   useOnScan: useAliasOnScan,
   useDispatch: useAliasDispatch,
-  useSelectors: useAliasSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse,
-  usePoll: useAliasPoll
+  useSelectors: useAliasSelectors
 }) => {
-  const pollUpdate = useAliasPoll();
   const dispatch = useAliasDispatch();
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
   const onScan = useAliasOnScan();
-
-  const [refreshUpdate, selectedSources, expandedSources, viewOptions] = useAliasSelectors([
-    ({ sources }) => sources.update,
-    ({ sources }) => sources.selected,
-    ({ sources }) => sources.expanded,
+  const { pending, error, errorMessage, date, sources, selectedSources, expandedSources } = useAliasGetSources();
+  const [viewOptions] = useAliasSelectors([
     ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
   ]);
-  const {
-    data: responseData,
-    error,
-    message: errorMessage,
-    pending,
-    responses = {}
-  } = useAliasSelectorsResponse({ id: 'view', selector: ({ sources }) => sources.view });
-
-  const [{ date } = {}] = responses.list || [];
-  const { results: sources = [] } = responseData.view || {};
-  const updatedSelectedSources = Object.values(selectedSources).filter(val => val !== null);
-  const query = helpers.createViewQueryObject(viewOptions);
   const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || sources?.length > 0 || false;
-
-  useShallowCompareEffect(() => {
-    getSources(query)(dispatch);
-  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
 
   const onRefresh = () => {
     dispatch({
@@ -97,7 +71,7 @@ const Sources = ({
   const onScanSources = () => {
     dispatch({
       type: reduxTypes.scans.EDIT_SCAN_SHOW,
-      sources: updatedSelectedSources
+      sources: Object.values(selectedSources).filter(val => val !== null)
     });
   };
 
@@ -112,7 +86,7 @@ const Sources = ({
       <Button onClick={onShowAddSourceWizard}>Add</Button>{' '}
       <Button
         variant={ButtonVariant.secondary}
-        isDisabled={updatedSelectedSources.length === 0}
+        isDisabled={Object.values(selectedSources).filter(val => val !== null).length === 0}
         onClick={onScanSources}
       >
         Scan
@@ -221,37 +195,33 @@ const Sources = ({
 /**
  * Prop types
  *
- * @type {{useOnEdit: Function, t: Function, useOnScan: Function, useDispatch: Function, useOnDelete: Function,
- *     useSelectorsResponse: Function, getSources: Function, useSelectors: Function, usePoll: Function}}
+ * @type {{useOnEdit: Function, t: translate, useOnScan: Function, useDispatch: Function, useOnDelete: Function,
+ *     useGetSources: Function, useSelectors: Function}}
  */
 Sources.propTypes = {
-  getSources: PropTypes.func,
   t: PropTypes.func,
   useDispatch: PropTypes.func,
+  useGetSources: PropTypes.func,
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnScan: PropTypes.func,
-  usePoll: PropTypes.func,
-  useSelectors: PropTypes.func,
-  useSelectorsResponse: PropTypes.func
+  useSelectors: PropTypes.func
 };
 
 /**
  * Default props
  *
  * @type {{useOnEdit: Function, t: translate, useOnScan: Function, useDispatch: Function, useOnDelete: Function,
- *     useSelectorsResponse: Function, getSources: Function, useSelectors: Function, usePoll: Function}}
+ *     useGetSources: Function, useSelectors: Function}}
  */
 Sources.defaultProps = {
-  getSources: reduxActions.sources.getSources,
   t: translate,
   useDispatch: storeHooks.reactRedux.useDispatch,
+  useGetSources,
   useOnDelete,
   useOnEdit,
   useOnScan,
-  usePoll,
-  useSelectors: storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: storeHooks.reactRedux.useSelectorsResponse
+  useSelectors: storeHooks.reactRedux.useSelectors
 };
 
 const ConnectedSources = Sources;

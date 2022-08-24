@@ -163,11 +163,67 @@ const usePoll = ({
   return updatePoll;
 };
 
+/**
+ * Get sources
+ *
+ * @param {object} options
+ * @param {Function} options.getSources
+ * @param {Function} options.useDispatch
+ * @param {Function} options.usePoll
+ * @param {Function} options.useSelectors
+ * @param {Function} options.useSelectorsResponse
+ * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean, error: boolean, selectedSources: *}}
+ */
+const useGetSources = ({
+  getSources = reduxActions.sources.getSources,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  usePoll: useAliasPoll = usePoll,
+  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+} = {}) => {
+  const dispatch = useAliasDispatch();
+  const pollUpdate = useAliasPoll();
+  const [refreshUpdate, selectedSources, expandedSources, viewOptions] = useAliasSelectors([
+    ({ sources }) => sources.update,
+    ({ sources }) => sources.selected,
+    ({ sources }) => sources.expanded,
+    ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
+  ]);
+  const {
+    data: responseData,
+    error,
+    fulfilled,
+    message: errorMessage,
+    pending,
+    responses = {}
+  } = useAliasSelectorsResponse({ id: 'view', selector: ({ sources }) => sources.view });
+
+  const [{ date } = {}] = responses.list || [];
+  const { results: sources = [] } = responseData.view || {};
+  const query = helpers.createViewQueryObject(viewOptions);
+
+  useShallowCompareEffect(() => {
+    getSources(query)(dispatch);
+  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
+
+  return {
+    pending,
+    error,
+    errorMessage,
+    fulfilled,
+    date,
+    sources,
+    selectedSources,
+    expandedSources
+  };
+};
+
 const context = {
+  useGetSources,
   useOnDelete,
   useOnEdit,
   useOnScan,
   usePoll
 };
 
-export { context as default, context, useOnDelete, useOnEdit, useOnScan, usePoll };
+export { context as default, context, useGetSources, useOnDelete, useOnEdit, useOnScan, usePoll };
