@@ -8,13 +8,22 @@ const parseContent = content =>
   content ||
   '';
 
-const tableHeader = ({ columnHeaders = [], isAllSelected = false, isRowExpand, onSelect, onSort } = {}) => {
+const tableHeader = ({
+  columnHeaders = [],
+  isAllSelected = false,
+  isRowExpand,
+  parsedRows = [],
+  onSelect,
+  onSort
+} = {}) => {
   const updatedColumnHeaders = [];
   const updatedHeaderSelectProps = {};
   const isSelectTable = typeof onSelect === 'function';
 
   if (isSelectTable) {
-    updatedHeaderSelectProps.onSelect = (_event, isSelected) => onSelect({ isSelected, rowIndex: -1, type: 'all' });
+    const parsedRowData = parsedRows.map(({ data }) => data || {});
+    updatedHeaderSelectProps.onSelect = (_event, isSelected) =>
+      onSelect({ data: parsedRowData, isSelected, rowIndex: -1, type: 'all' });
     updatedHeaderSelectProps.isSelected = isAllSelected;
   }
 
@@ -114,7 +123,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
         cells,
         rowIndex: rowObj.rowIndex,
         onSelect: (_event, isRowSelected) =>
-          onSelect({ isSelected: isRowSelected, rowIndex: rowObj.rowIndex, type: 'row' }),
+          onSelect({ data: rowObj.data, isSelected: isRowSelected, rowIndex: rowObj.rowIndex, type: 'row' }),
         isSelected: updatedIsSelected,
         disable: isDisabled || false
       };

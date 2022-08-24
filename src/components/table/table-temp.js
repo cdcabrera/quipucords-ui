@@ -110,7 +110,7 @@ const Table = ({
     }
   };
 
-  const onSelectTable = ({ type, isSelected, rowIndex } = {}) => {
+  const onSelectTable = ({ type, isSelected, rowIndex, data } = {}) => {
     if (type === 'all') {
       setUpdatedHeaderAndRows(prevState => {
         const nextBodyRows = prevState.bodyRows?.map(row => ({
@@ -148,10 +148,7 @@ const Table = ({
       type,
       rowIndex,
       isSelected,
-      data:
-        (type === 'all' && _cloneDeep(updatedHeaderAndRows.bodyRows).map(({ data }) => data || {})) ||
-        _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data ||
-        {}
+      data: _cloneDeep(data)
     });
   };
 
@@ -201,7 +198,8 @@ const Table = ({
       columnHeaders,
       isAllSelected: parsedIsAllSelected,
       onSelect: typeof onSelect === 'function' && onSelectTable,
-      onSort: typeof onSort === 'function' && onSortTable
+      onSort: typeof onSort === 'function' && onSortTable,
+      parsedRows
     });
 
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
