@@ -152,7 +152,7 @@ const Table = ({
     });
   };
 
-  const onSortTable = ({ cellIndex, direction, originalIndex } = {}) => {
+  const onSortTable = ({ cellIndex, direction, originalIndex, data } = {}) => {
     setUpdatedHeaderAndRows(prevState => {
       const nextHeaderRow = prevState.headerRow.map((headerCell, index) => {
         const updatedHeaderCell = headerCell;
@@ -178,7 +178,7 @@ const Table = ({
     onSort({
       cellIndex: originalIndex,
       direction,
-      data: _cloneDeep(updatedHeaderAndRows.headerRow[originalIndex]).data || {}
+      data: _cloneDeep(data)
     });
   };
 

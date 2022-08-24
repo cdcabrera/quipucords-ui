@@ -67,7 +67,7 @@ const tableHeader = ({
           columnIndex: updatedColumnIndex,
           sortBy: {},
           onSort: (_event, _colIndex, direction) =>
-            onSort({ cellIndex: updatedColumnIndex, direction, originalIndex: index })
+            onSort({ cellIndex: updatedColumnIndex, data: headerCellData, direction, originalIndex: index })
         };
 
         if (isSortActive) {
