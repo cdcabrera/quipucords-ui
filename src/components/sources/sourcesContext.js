@@ -12,10 +12,7 @@ const useOnDelete = ({
 } = {}) => {
   const dispatch = useAliasDispatch();
   const sourceToDelete = useAliasSelector(({ sources }) => sources?.confirmDelete?.source, {});
-  const { error, fulfilled, message, responses } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
-
-  console.log('>>>>>>>>> DELETE RESPONSE', responses);
-
+  const { error, fulfilled, message } = useAliasSelectorsResponse(({ sources }) => sources?.deleted);
   const { [apiTypes.API_RESPONSE_SOURCE_ID]: sourceId, [apiTypes.API_RESPONSE_SOURCE_NAME]: sourceName } =
     sourceToDelete;
 
@@ -112,21 +109,16 @@ const usePoll = ({
   const [timer, setTimer] = useState();
   const [updatePoll, setUpdatePoll] = useState(0);
   const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
+  const shouldUpdate = updatedSources.find(
+    ({ connection }) =>
+      connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
+  );
 
   useUnmount(() => {
     window.clearTimeout(timer);
   });
 
   useShallowCompareEffect(() => {
-    const shouldUpdate = updatedSources.find(
-      ({ connection }) =>
-        connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
-    );
-
-    if (shouldUpdate || !updatedSources.length) {
-      window.clearTimeout(timer);
-    }
-
     if (shouldUpdate) {
       setTimer(
         window.setTimeout(() => {
@@ -134,50 +126,10 @@ const usePoll = ({
         }, pollInterval)
       );
     }
-  }, [updatedSources]);
+  }, [pollInterval, shouldUpdate]);
 
   return updatePoll;
 };
-
-/*
-const usePollTest = (
-  isUpdate,
-  {
-    pollInterval = helpers.POLL_INTERVAL
-    // useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
-  } = {}
-) => {
-  const [timer, setTimer] = useState();
-  const [updatePoll, setUpdatePoll] = useState(0);
-  // const updatedSources = useAliasSelector(({ sources }) => sources?.view?.data?.results, []);
-
-  useUnmount(() => {
-    window.clearTimeout(timer);
-  });
-
-  useShallowCompareEffect(() => {
-    // const shouldUpdate = updatedSources.find(
-    //  ({ connection }) =>
-    //    connection.status === 'created' || connection.status === 'pending' || connection.status === 'running'
-    // );
-
-    // if (shouldUpdate || !updatedSources.length) {
-    if (isUpdate) {
-      window.clearTimeout(timer);
-    }
-
-    if (isUpdate) {
-      setTimer(
-        window.setTimeout(() => {
-          setUpdatePoll(helpers.getCurrentDate().getTime());
-        }, pollInterval)
-      );
-    }
-  }, [isUpdate]);
-
-  return updatePoll;
-};
- */
 
 const context = {
   useOnDelete,
