@@ -382,6 +382,13 @@ const Table = ({
   );
 };
 
+/**
+ * Prop types
+ *
+ * @type {{componentClassNames: object, summary: string, onSort: Function, onExpand: Function, className: string, rows: Array,
+ *     isBorders: boolean, ariaLabel: string, onSelect: Function, columnHeaders: Array, children: React.ReactNode, isHeader: boolean,
+ *     variant: string}}
+ */
 Table.propTypes = {
   ariaLabel: PropTypes.string,
   children: PropTypes.node,
@@ -443,6 +450,14 @@ Table.propTypes = {
   variant: PropTypes.oneOf([...Object.values(TableVariant)])
 };
 
+/**
+ * Default props
+ *
+ * @type {{componentClassNames: {td: string, trExpanded: string, tdExpanded: string, th: string, trExpand: string,
+ *     trExpandedContent: string, tdExpandedContent: string, table: string, tr: string, tdExpand: string}, summary: null,
+ *     onSort: null, onExpand: null, className: string, rows: *[], isBorders: boolean, ariaLabel: null, onSelect: null,
+ *     columnHeaders: *[], children: null, isHeader: boolean, variant: TableVariant.compact}}
+ */
 Table.defaultProps = {
   ariaLabel: null,
   children: null,
