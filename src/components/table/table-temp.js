@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
@@ -14,7 +14,6 @@ import {
   Thead,
   Tr
 } from '@patternfly/react-table';
-// import _isEqual from 'lodash/isEqual';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers-temp';
 
@@ -26,7 +25,6 @@ import { tableHelpers } from './tableHelpers-temp';
  * options. HTML markup allows the use of both td and th within thead and tbody, not every cell
  * in a thead requires the use of th.
  */
-
 /**
  * A PF Composable table wrapper
  *
@@ -66,62 +64,51 @@ const Table = ({
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
-  const onExpandTable = useCallback(
-    ({ type, isExpanded, rowIndex, cellIndex } = {}) => {
-      if (type === 'compound') {
-        setUpdatedHeaderAndRows(prevState => {
-          const nextBodyRows = [...prevState.bodyRows];
-          // const isCompoundExpanded = !nextBodyRows?.[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded;
+  const onExpandTable = ({ type, isExpanded, rowIndex, cellIndex } = {}) => {
+    if (type === 'compound') {
+      setUpdatedHeaderAndRows(prevState => {
+        const nextBodyRows = [...prevState.bodyRows];
+        const nextBodyRowCells = nextBodyRows?.[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
+          const updatedCompoundExpand = cellProps?.compoundExpand;
 
-          const nextBodyRowCells = nextBodyRows?.[rowIndex].cells.map(({ props: cellProps, ...cell }) => {
-            const updatedCompoundExpand = cellProps?.compoundExpand;
+          if (updatedCompoundExpand) {
+            updatedCompoundExpand.isExpanded = false;
+          }
 
-            if (updatedCompoundExpand) {
-              updatedCompoundExpand.isExpanded = false;
-            }
-
-            return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
-          });
-
-          nextBodyRowCells[cellIndex].props.compoundExpand.isExpanded = isExpanded; // isCompoundExpanded;
-          nextBodyRows[rowIndex].cells = nextBodyRowCells;
-
-          return {
-            ...prevState,
-            bodyRows: nextBodyRows
-          };
+          return { ...cell, props: { ...cellProps, compoundExpand: updatedCompoundExpand } };
         });
-      } else {
-        setUpdatedHeaderAndRows(prevState => {
-          const nextBodyRows = [...prevState.bodyRows];
-          // const isRowExpanded = !nextBodyRows[rowIndex].expand.isExpanded;
-          // const isRowExpanded
 
-          nextBodyRows[rowIndex].expand.isExpanded = isExpanded; // isRowExpanded;
+        nextBodyRowCells[cellIndex].props.compoundExpand.isExpanded = isExpanded;
+        nextBodyRows[rowIndex].cells = nextBodyRowCells;
 
-          return {
-            ...prevState,
-            bodyRows: nextBodyRows
-          };
-        });
-      }
+        return {
+          ...prevState,
+          bodyRows: nextBodyRows
+        };
+      });
+    } else {
+      setUpdatedHeaderAndRows(prevState => {
+        const nextBodyRows = [...prevState.bodyRows];
+        nextBodyRows[rowIndex].expand.isExpanded = isExpanded;
 
-      if (typeof onExpand === 'function') {
-        onExpand({
-          type,
-          rowIndex,
-          cellIndex: (type === 'row' && -1) || cellIndex,
-          isExpanded,
-          // type === 'row'
-          //  ? !updatedHeaderAndRows.bodyRows[rowIndex].expand.isExpanded
-          //  : !updatedHeaderAndRows.bodyRows[rowIndex].cells[cellIndex].props.compoundExpand.isExpanded,
-          data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data || {}
-        });
-      }
-    },
-    [onExpand, updatedHeaderAndRows]
-  );
-  //
+        return {
+          ...prevState,
+          bodyRows: nextBodyRows
+        };
+      });
+    }
+
+    if (typeof onExpand === 'function') {
+      onExpand({
+        type,
+        rowIndex,
+        cellIndex: (type === 'row' && -1) || cellIndex,
+        isExpanded,
+        data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data || {}
+      });
+    }
+  };
+
   const onSelectTable = ({ type, isSelected, rowIndex } = {}) => {
     if (type === 'all') {
       setUpdatedHeaderAndRows(prevState => {
@@ -205,7 +192,6 @@ const Table = ({
 
   useShallowCompareEffect(() => {
     const isSelectTable = typeof onSelect === 'function';
-
     const {
       isAllSelected: parsedIsAllSelected,
       isExpandableCell: parsedIsExpandableCell,
@@ -217,7 +203,6 @@ const Table = ({
       onSelect: onSelectTable,
       rows
     });
-
     const { headerRow: parsedHeaderRow, headerSelectProps: parsedHeaderSelectProps } = tableHelpers.tableHeader({
       columnHeaders,
       isAllSelected: parsedIsAllSelected,
@@ -229,7 +214,6 @@ const Table = ({
     setUpdatedIsExpandableRow(parsedIsExpandableRow);
     setUpdatedIsSelectTable(isSelectTable);
     setUpdatedIsExpandableCell(parsedIsExpandableCell);
-
     setUpdatedHeaderAndRows({
       headerRow: parsedHeaderRow,
       bodyRows: parsedRows,
