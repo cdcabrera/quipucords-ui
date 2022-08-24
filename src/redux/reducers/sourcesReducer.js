@@ -35,6 +35,18 @@ const sourcesReducer = (state = initialState, action) => {
           initialState
         }
       );
+    case sourcesTypes.RESET_DELETE_SOURCE:
+      return reduxHelpers.setStateProp(
+        null,
+        {
+          confirmDelete: {},
+          deleted: {}
+        },
+        {
+          state,
+          initialState
+        }
+      );
     case sourcesTypes.SELECT_SOURCE:
       return reduxHelpers.setStateProp(
         'selected',
