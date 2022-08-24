@@ -11,10 +11,8 @@ import {
   OverflowMenuContent,
   OverflowMenuGroup,
   OverflowMenuItem
-  // OverflowMenuDropdownItem
 } from '@patternfly/react-core';
 import { PencilAltIcon, TrashIcon, EllipsisVIcon } from '@patternfly/react-icons';
-// import { global_breakpoint_lg as lgBreakpoint } from '@patternfly/react-tokens';
 import { Icon, IconVariant } from '../icon/icon';
 import { Tooltip } from '../tooltip/tooltip';
 import { dictionary } from '../../constants/dictionaryConstants';
@@ -23,8 +21,6 @@ import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
 import { DropdownSelect, SelectButtonVariant } from '../dropdownSelect/dropdownSelect';
-// import { Poll } from '../poll/poll';
-// import { reduxTypes, store } from '../../redux';
 
 /**
  * Source description and type icon
@@ -91,23 +87,14 @@ const description = ({ hosts, name, source_type: sourceType } = {}, { t = transl
  * @param {object} params.connection
  * @param {object} options
  * @param {Function} options.t
- * @param params.id
- * @param options.pollInterval
- * @param options.onRefresh
  * @returns {React.ReactNode|null}
  */
-const scanStatus = (
-  // { id, connection: scan = {} } = {},
-  { connection: scan = {} } = {},
-  // { t = translate, pollInterval = 10000, onRefresh = () => console.log('POLL WORKS >>>') } = {}
-  { t = translate } = {}
-) => {
+const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
   const { end_time: endTime, start_time: startTime, status } = scan;
   const isPending = status === 'created' || status === 'pending' || status === 'running';
   const scanTime = (isPending && startTime) || endTime;
 
   return (
-    // <Poll interval={pollInterval} itemId={`sourceListItem-${id}`} itemIdCheck={isPending} onPoll={onRefresh}>
     <Grid hasGutter={false}>
       <GridItem sm={2}>
         <Icon symbol={IconVariant[status]} />
@@ -117,7 +104,6 @@ const scanStatus = (
         {helpers.getTimeDisplayHowLongAgo(scanTime)}
       </GridItem>
     </Grid>
-    // </Poll>
   );
 };
 
@@ -273,6 +259,16 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
 };
 
 // FixMe: PF Overflow menu is attempting state updates on unmounted components
+/**
+ * Action cell content
+ *
+ * @param {object} params
+ * @param {object} params.item
+ * @param {Function} params.onScan
+ * @param {Function} params.onDelete
+ * @param {Function} params.onEdit
+ * @returns {React.ReactNode}
+ */
 const actionsCell = ({ item = {}, onScan = helpers.noop, onDelete = helpers.noop, onEdit = helpers.noop } = {}) => {
   const onSelect = ({ value }) => {
     switch (value) {
@@ -347,7 +343,6 @@ const sourcesTableCells = {
   scanStatus,
   statusCell,
   statusContent,
-  // typeIcon,
   unreachableHostsCellContent
 };
 
@@ -362,6 +357,5 @@ export {
   scanStatus,
   statusCell,
   statusContent,
-  // typeIcon,
   unreachableHostsCellContent
 };
