@@ -128,6 +128,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
         isExpanded,
         onToggle: (_event, rowIndex, isRowToggleExpanded) =>
           onExpand({
+            data: rowObj.data,
             isExpanded: isRowToggleExpanded,
             rowIndex: rowObj.rowIndex,
             type: 'row'
@@ -161,9 +162,10 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
             isExpanded: updateIsExpanded,
             onToggle: (_event, rowIndex, isRowToggleExpanded, isCellToggleExpanded) =>
               onExpand({
+                cellIndex,
+                data: rowObj.data,
                 isExpanded: !isCellToggleExpanded,
                 rowIndex: rowObj.rowIndex,
-                cellIndex,
                 type: 'compound'
               })
           };

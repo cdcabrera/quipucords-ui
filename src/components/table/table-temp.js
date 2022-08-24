@@ -65,7 +65,7 @@ const Table = ({
   const [updatedIsExpandableCell, setUpdatedIsExpandableCell] = useState(false);
   const [updatedIsSelectTable, setUpdatedIsSelectTable] = useState(false);
 
-  const onExpandTable = ({ type, isExpanded, rowIndex, cellIndex } = {}) => {
+  const onExpandTable = ({ type, isExpanded, rowIndex, cellIndex, data } = {}) => {
     if (type === 'compound') {
       setUpdatedHeaderAndRows(prevState => {
         const nextBodyRows = [...prevState.bodyRows];
@@ -105,7 +105,7 @@ const Table = ({
         rowIndex,
         cellIndex: (type === 'row' && -1) || cellIndex,
         isExpanded,
-        data: _cloneDeep(updatedHeaderAndRows.bodyRows[rowIndex]).data || {}
+        data: _cloneDeep(data)
       });
     }
   };
