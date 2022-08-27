@@ -1,239 +1,211 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _isEqual from 'lodash/isEqual';
-import _size from 'lodash/size';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStatePrimary,
-  EmptyStateVariant,
-  Title,
-  TitleSizes
-} from '@patternfly/react-core';
-import { ListView, Spinner } from 'patternfly-react';
-import { SearchIcon } from '@patternfly/react-icons';
+import { Alert, AlertVariant, EmptyState, Spinner } from '@patternfly/react-core';
+import { IconSize } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
-import { connect, reduxActions, reduxSelectors, reduxTypes, store } from '../../redux';
-import helpers from '../../common/helpers';
+import { reduxTypes, storeHooks } from '../../redux';
 import ViewToolbar from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
-import ScansEmptyState from './scansEmptyState';
-import ScanListItem from './scanListItem';
-import Tooltip from '../tooltip/tooltip';
+import { ScansEmptyState } from './scansEmptyState';
 import { ScanFilterFields, ScanSortFields } from './scanConstants';
-import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
+import { Table } from '../table/table';
+import { scansTableCells } from './scansTableCells';
+import { useGetScans, useOnExpand, useOnRefresh, useOnSelect } from './scansContext';
 
 const VIEW_ID = 'scans';
 
 /**
  * A scans view.
+ *
+ * @param {object} props
+ * @param {Function} props.t
+ * @param {Function} props.useGetSources
+ * @param {Function} props.useOnDelete
+ * @param {Function} props.useOnEdit
+ * @param {Function} props.useOnExpand
+ * @param {Function} props.useOnRefresh
+ * @param {Function} props.useOnScan
+ * @param {Function} props.useOnSelect
+ * @param {Function} props.useOnShowAddSourceWizard
+ * @param {Function} props.useDispatch
+ * @param {Function} props.useSelectors
+ * @param {string} props.viewId
+ * @param props.useGetScans
+ * @returns {React.ReactNode}
  */
-class Scans extends React.Component {
-  componentDidMount() {
-    const { getScans, viewOptions } = this.props;
+const Scans = ({
+  t,
+  useGetScans: useAliasGetScans,
+  // useOnDelete: useAliasOnDelete,
+  // useOnEdit: useAliasOnEdit,
+  useOnExpand: useAliasOnExpand,
+  useOnRefresh: useAliasOnRefresh,
+  // useOnScan: useAliasOnScan,
+  useOnSelect: useAliasOnSelect,
+  // useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
+  // useDispatch: useAliasDispatch,
+  useSelectors: useAliasSelectors,
+  viewId
+}) => {
+  // const dispatch = useAliasDispatch();
+  // const onDelete = useAliasOnDelete();
+  // const onEdit = useAliasOnEdit();
+  const onExpand = useAliasOnExpand();
+  const onRefresh = useAliasOnRefresh();
+  // const onScan = useAliasOnScan();
+  const onSelect = useAliasOnSelect();
+  // const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
+  // const { pending, error, errorMessage, date, data, selectedRows = {}, expandedRows = {} } = useAliasGetScans();
+  const { pending, error, errorMessage, date, data, selectedRows = {} } = useAliasGetScans();
+  const [viewOptions = {}] = useAliasSelectors([
+    ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
+  ]);
+  const isActive = viewOptions?.activeFilters?.length > 0 || data?.length > 0 || false;
 
-    getScans(helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect' }));
-  }
+  console.log('data', data);
 
-  componentDidUpdate(prevProps) {
-    const { getScans, update, viewOptions } = this.props;
-
-    const prevQuery = helpers.createViewQueryObject(prevProps.viewOptions, {
-      [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect'
-    });
-    const nextQuery = helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect' });
-
-    if (update || !_isEqual(prevQuery, nextQuery)) {
-      getScans(nextQuery);
-    }
-  }
-
-  onMergeScanResults = () => {
-    const { viewOptions } = this.props;
-
-    store.dispatch({
-      type: reduxTypes.scans.MERGE_SCAN_DIALOG_SHOW,
-      show: true,
-      scans: viewOptions.selectedItems
+  // ToDo: review onScanSources, renderToolbarActions being standalone with upcoming toolbar updates
+  /**
+   * Toolbar actions onScanSources
+   *
+   * @event onScanSources
+   */
+  /*
+  const onScanSources = () => {
+    dispatch({
+      type: reduxTypes.scans.EDIT_SCAN_SHOW,
+      sources: Object.values(selectedRows).filter(val => val !== null)
     });
   };
+  */
 
-  onRefresh = () => {
-    store.dispatch({
-      type: reduxTypes.scans.UPDATE_SCANS
-    });
-  };
+  /**
+   * Return toolbar actions.
+   *
+   * @returns {React.ReactNode}
+   */
+  /*
+  const renderToolbarActions = () => (
+    <React.Fragment>
+      <Button onClick={onShowAddSourceWizard}>{t('table.label', { context: 'add' })}</Button>{' '}
+      <Button
+        variant={ButtonVariant.secondary}
+        isDisabled={Object.values(selectedRows).filter(val => val !== null).length === 0}
+        onClick={onScanSources}
+      >
+        {t('table.label', { context: 'scan' })}
+      </Button>
+    </React.Fragment>
+  );
+   */
+  const renderToolbarActions = () => <React.Fragment>actions</React.Fragment>;
 
-  onClearFilters = () => {
-    store.dispatch({
-      type: reduxTypes.viewToolbar.CLEAR_FILTERS,
-      viewType: reduxTypes.view.SCANS_VIEW
-    });
-  };
-
-  renderScansActions() {
-    const { viewOptions } = this.props;
-
+  if (pending) {
     return (
-      <div className="form-group">
-        <Tooltip key="mergeButtonTip" content="Merge selected scan results into a single report">
-          <Button
-            id="merge-reports"
-            variant={ButtonVariant.primary}
-            isDisabled={viewOptions.selectedItems.length <= 1}
-            onClick={this.onMergeScanResults}
-          >
-            Merge reports
-          </Button>
-        </Tooltip>
-      </div>
+      <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
+        <Spinner isSVG size={IconSize.lg} />
+        <div className="text-center">{t('view.loading', { context: viewId })}</div>
+      </Modal>
     );
   }
 
-  renderPendingMessage() {
-    const { pending, t } = this.props;
-
-    if (pending) {
-      return (
-        <Modal variant={ModalVariant.medium} backdrop={false} isOpen disableFocusTrap>
-          <Spinner loading size="lg" className="blank-slate-pf-icon" />
-          <div className="text-center">{t('view.loading', { context: 'scans' })}</div>
-        </Modal>
-      );
-    }
-
-    return null;
-  }
-
-  renderScansList(scans) {
-    const { lastRefresh, t } = this.props;
-
-    if (scans.length) {
-      return (
-        <ListView className="quipicords-list-view">
-          {scans.map(scan => (
-            <ScanListItem scan={scan} key={scan[apiTypes.API_RESPONSE_SCAN_ID]} lastRefresh={lastRefresh} />
-          ))}
-        </ListView>
-      );
-    }
-
+  if (error) {
     return (
-      <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
-        <EmptyStateIcon icon={SearchIcon} />
-        <Title size={TitleSizes.lg} headingLevel="h1">
-          {t('view.empty-state', { context: ['filter', 'title'] })}
-        </Title>
-        <EmptyStateBody>{t('view.empty-state', { context: ['filter', 'description'] })}</EmptyStateBody>
-        <EmptyStatePrimary>
-          <Button variant={ButtonVariant.link} onClick={this.onClearFilters}>
-            {t('view.empty-state', { context: ['label', 'clear'] })}
-          </Button>
-        </EmptyStatePrimary>
+      <EmptyState className="quipucords-empty-state__alert">
+        <Alert variant={AlertVariant.danger} title={t('view.error', { context: viewId })}>
+          {t('view.error-message', { context: [viewId], message: errorMessage })}
+        </Alert>
       </EmptyState>
     );
   }
 
-  render() {
-    const { error, errorMessage, lastRefresh, pending, scans, t, viewOptions, viewId } = this.props;
-
-    if (pending || (pending && !scans.length)) {
-      return this.renderPendingMessage();
-    }
-
-    if (error) {
-      return (
-        <EmptyState className="quipucords-empty-state__alert">
-          <Alert variant={AlertVariant.danger} title={t('view.error', { context: 'scans' })}>
-            {t('view.error-message', { context: ['scans'], message: errorMessage })}
-          </Alert>
-        </EmptyState>
-      );
-    }
-
-    if (scans.length || _size(viewOptions.activeFilters)) {
-      return (
-        <div className="quipucords-view-container">
+  return (
+    <div className="quipucords-view-container">
+      {isActive && (
+        <React.Fragment>
           <ViewToolbar
-            viewType={reduxTypes.view.SCANS_VIEW}
+            viewType={reduxTypes.view.SOURCES_VIEW}
             filterFields={ScanFilterFields}
             sortFields={ScanSortFields}
-            onRefresh={this.onRefresh}
-            lastRefresh={lastRefresh}
-            actions={this.renderScansActions()}
-            itemsType="Scan"
-            itemsTypePlural="Scans"
-            selectedCount={viewOptions.selectedItems.length}
+            onRefresh={() => onRefresh()}
+            lastRefresh={new Date(date).getTime()}
+            actions={renderToolbarActions()}
+            itemsType="Source"
+            itemsTypePlural="Sources"
+            selectedCount={viewOptions.selectedItems?.length}
             {...viewOptions}
           />
-          <ViewPaginationRow viewType={reduxTypes.view.SCANS_VIEW} {...viewOptions} />
-          <div className="quipucords-list-container">{this.renderScansList(scans)}</div>
-          {this.renderPendingMessage()}
-        </div>
-      );
-    }
-
-    return <ScansEmptyState viewId={viewId} />;
-  }
-}
+          <ViewPaginationRow viewType={reduxTypes.view.SOURCES_VIEW} {...viewOptions} />
+        </React.Fragment>
+      )}
+      <div className="quipucords-list-container">
+        <Table
+          onExpand={onExpand}
+          onSelect={onSelect}
+          rows={data?.map(item => {
+            console.log('item >>>>', item);
+            return {
+              isSelected: (selectedRows?.[item.id] && true) || false,
+              source: item,
+              cells: [
+                {
+                  content: scansTableCells.description(item),
+                  dataLabel: t('table.header', { context: ['description'] })
+                }
+              ]
+            };
+          })}
+        >
+          <ScansEmptyState viewId={viewId} />
+        </Table>
+      </div>
+    </div>
+  );
+};
 
 /**
  * Prop types
  *
- * @type {{getScans: Function, viewId: string, t: Function, lastRefresh: number, scans: Array,
- *     pending: boolean, errorMessage: string, update: boolean, error: boolean, viewOptions: object}}
+ * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: Function, useOnRefresh: Function, useOnScan: Function,
+ *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function, useSelectors: Function,
+ *     useOnShowAddSourceWizard: Function}}
  */
 Scans.propTypes = {
-  error: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  getScans: PropTypes.func,
-  lastRefresh: PropTypes.number,
-  pending: PropTypes.bool,
-  scans: PropTypes.array,
   t: PropTypes.func,
-  update: PropTypes.bool,
-  viewOptions: PropTypes.object,
+  // useDispatch: PropTypes.func,
+  useGetScans: PropTypes.func,
+  // useOnDelete: PropTypes.func,
+  // useOnEdit: PropTypes.func,
+  useOnExpand: PropTypes.func,
+  useOnRefresh: PropTypes.func,
+  // useOnScan: PropTypes.func,
+  useOnSelect: PropTypes.func,
+  // useOnShowAddSourceWizard: PropTypes.func,
+  useSelectors: PropTypes.func,
   viewId: PropTypes.string
 };
 
 /**
  * Default props
  *
- * @type {{getScans: Function, viewId: string, t: translate, lastRefresh: number, scans: *[], pending: boolean,
- *     errorMessage: null, update: boolean, error: boolean, viewOptions: {}}}
+ * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: translate, useOnRefresh: Function, useOnScan: Function,
+ *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function, useSelectors: Function,
+ *     useOnShowAddSourceWizard: Function}}
  */
 Scans.defaultProps = {
-  error: false,
-  errorMessage: null,
-  getScans: helpers.noop,
-  lastRefresh: 0,
-  pending: false,
-  scans: [],
   t: translate,
-  update: false,
-  viewOptions: {},
+  // useDispatch: storeHooks.reactRedux.useDispatch,
+  useGetScans,
+  // useOnDelete,
+  // useOnEdit,
+  useOnExpand,
+  useOnRefresh,
+  // useOnScan,
+  useOnSelect,
+  // useOnShowAddSourceWizard,
+  useSelectors: storeHooks.reactRedux.useSelectors,
   viewId: VIEW_ID
 };
 
-const mapDispatchToProps = dispatch => ({
-  getScans: queryObj => dispatch(reduxActions.scans.getScans(queryObj))
-});
-
-const makeMapStateToProps = () => {
-  const scansView = reduxSelectors.scans.makeScansView();
-
-  return (state, props) => ({
-    ...scansView(state, props),
-    viewOptions: state.viewOptions[reduxTypes.view.SCANS_VIEW]
-  });
-};
-
-const ConnectedScans = connect(makeMapStateToProps, mapDispatchToProps)(Scans);
-
-export { ConnectedScans as default, ConnectedScans, Scans, VIEW_ID };
+export { Scans as default, Scans, VIEW_ID };

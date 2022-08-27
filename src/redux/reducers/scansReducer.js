@@ -1,5 +1,6 @@
 import { scansTypes, sourcesTypes } from '../constants';
-import { reduxHelpers } from '../common/reduxHelpers';
+import { reduxHelpers } from '../common';
+import { helpers } from '../../common';
 
 const initialState = {
   mergeDialog: {
@@ -17,6 +18,10 @@ const initialState = {
   pause: {},
   restart: {},
   start: {},
+
+  selected: {},
+  expanded: {},
+  update: 0,
   view: {}
 };
 
@@ -24,9 +29,9 @@ const scansReducer = (state = initialState, action) => {
   switch (action.type) {
     case scansTypes.UPDATE_SCANS:
       return reduxHelpers.setStateProp(
-        'view',
+        null,
         {
-          update: true
+          update: helpers.getCurrentDate().getTime()
         },
         {
           state,
@@ -57,6 +62,51 @@ const scansReducer = (state = initialState, action) => {
         {
           state,
           initialState
+        }
+      );
+
+    case scansTypes.SELECT_SCAN:
+      return reduxHelpers.setStateProp(
+        'selected',
+        {
+          [action.item?.id]: action.item
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case scansTypes.DESELECT_SCAN:
+      return reduxHelpers.setStateProp(
+        'selected',
+        {
+          [action.item?.id]: null
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case scansTypes.EXPANDED_SCAN:
+      return reduxHelpers.setStateProp(
+        'expanded',
+        {
+          [action.item?.id]: action.cellIndex
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case scansTypes.NOT_EXPANDED_SCAN:
+      return reduxHelpers.setStateProp(
+        'expanded',
+        {
+          [action.item?.id]: null
+        },
+        {
+          state,
+          reset: false
         }
       );
 

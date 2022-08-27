@@ -4,8 +4,8 @@ import {
   ButtonVariant,
   Grid,
   GridItem,
-  List,
-  ListItem,
+  // List,
+  // ListItem,
   OverflowMenu,
   OverflowMenuControl,
   OverflowMenuContent,
@@ -15,7 +15,7 @@ import {
 import { PencilAltIcon, TrashIcon, EllipsisVIcon } from '@patternfly/react-icons';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { Tooltip } from '../tooltip/tooltip';
-import { dictionary } from '../../constants/dictionaryConstants';
+// import { dictionary } from '../../constants/dictionaryConstants';
 import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostList';
 import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
@@ -302,9 +302,8 @@ const actionsCell = ({
   );
 };
 
-const sourcesTableCells = {
+const scansTableCells = {
   actionsCell,
-  credentialsCellContent,
   description,
   failedHostsCellContent,
   okHostsCellContent,
@@ -315,10 +314,9 @@ const sourcesTableCells = {
 };
 
 export {
-  sourcesTableCells as default,
-  sourcesTableCells,
+  scansTableCells as default,
+  scansTableCells,
   actionsCell,
-  credentialsCellContent,
   description,
   failedHostsCellContent,
   okHostsCellContent,
