@@ -27,14 +27,15 @@ import { DropdownSelect, SelectButtonVariant, SelectDirection, SelectPosition } 
  *
  * @param {object} params
  * @param {string} params.name
+ * @param params.id
  * @returns {React.ReactNode}
  */
-const description = ({ name } = {}) => (
+const description = ({ id, name } = {}) => (
   <Grid hasGutter={false}>
     <GridItem sm={2} />
     <GridItem sm={10}>
       <div>
-        <strong>{name}</strong>
+        <strong>{name || id}</strong>
       </div>
     </GridItem>
   </Grid>
@@ -47,10 +48,11 @@ const description = ({ name } = {}) => (
  * @param {object} params.most_recent
  * @param {object} options
  * @param {Function} options.t
+ * @param options.viewId
  * @returns {React.ReactNode|null}
  */
 // const scanStatus = ({ connection: scan = {} } = {}, { t = translate } = {}) => {
-const scanStatus = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = {}, { t = translate } = {}) => {
+const scanStatus = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = {}, { t = translate, viewId } = {}) => {
   const {
     // end_time: endTime,
     // start_time: startTime,
@@ -68,7 +70,7 @@ const scanStatus = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = {}
         <ContextIcon symbol={ContextIconVariant[status]} />
       </GridItem>
       <GridItem sm={10}>
-        <div>{t('table.label', { context: ['status', status] })}</div>
+        <div>{t('table.label', { context: ['status', status, viewId] })}</div>
         {helpers.getTimeDisplayHowLongAgo(scanTime)}
       </GridItem>
     </Grid>
@@ -112,9 +114,10 @@ const scanStatus = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = {}
  * @param {number} params.count
  * @param {string} params.status
  * @param {Function} params.t
+ * @param {string} params.viewId
  * @returns {React.ReactNode}
  */
-const statusCell = ({ count, status = ContextIconVariant.unknown, t = translate } = {}) => {
+const statusCell = ({ count, status = ContextIconVariant.unknown, t = translate, viewId } = {}) => {
   let updatedCount = count || 0;
 
   if (helpers.DEV_MODE) {
@@ -122,8 +125,8 @@ const statusCell = ({ count, status = ContextIconVariant.unknown, t = translate 
   }
 
   return (
-    <Tooltip content={t('table.label', { context: ['status', 'tooltip', status], count: updatedCount })}>
-      {t('table.label', { context: ['status', 'cell'], count: updatedCount }, [
+    <Tooltip content={t('table.label', { context: ['status', 'tooltip', status, viewId], count: updatedCount })}>
+      {t('table.label', { context: ['status', 'cell', viewId], count: updatedCount }, [
         <ContextIcon symbol={status} />,
         <strong />
       ])}
@@ -135,47 +138,54 @@ const statusCell = ({ count, status = ContextIconVariant.unknown, t = translate 
  * Generate a consistent display row for expandable content.
  *
  * @param {object} params
- * @param {object} params.connection
  * @param {string} params.id
  * @param {string} params.status
+ * @param {object} options
+ * @param {boolean} options.useConnectionResults
+ * @param {boolean} options.useInspectionResults
  * @returns {React.ReactNode}
  */
-const statusContent = ({ connection, id, status } = {}) => (
+const statusContent = ({ id, status } = {}, { useConnectionResults = false, useInspectionResults = false } = {}) => (
   <ScanHostList
     key={`status-content-${id}-${status}`}
-    id={connection?.id}
-    filter={{ [apiTypes.API_QUERY_SOURCE_TYPE]: id, [apiTypes.API_QUERY_STATUS]: status }}
-    useConnectionResults
+    id={id}
+    filter={{ [apiTypes.API_QUERY_STATUS]: status }}
+    useConnectionResults={useConnectionResults}
+    useInspectionResults={useInspectionResults}
   >
     {({ host }) => (
       <Grid key={`hostsRow-${host?.credentialName}`}>
-        <GridItem sm={host?.status === 'success' ? 6 : 12} md={4}>
+        <GridItem xs={6} sm={4} md={3}>
           <ContextIcon symbol={ContextIconVariant[host?.status]} /> {host?.name}
         </GridItem>
-        {host?.status === 'success' && (
-          <GridItem sm={6} md={4}>
-            <ContextIcon symbol={ContextIconVariant.idCard} /> {host?.credentialName}
-          </GridItem>
-        )}
+        <GridItem xs={6} sm={8} md={9}>
+          {host?.sourceName}
+        </GridItem>
       </Grid>
     )}
   </ScanHostList>
 );
-
 /**
  * Failed hosts cell and expandable content.
  *
  * @param {object} params
- * @param {object} params.connection
- * @param {string} params.id
+ * @param {object} options
+ * @param {string} options.viewId
  * @returns {{cell: React.ReactNode, content: React.ReactNode}}
  */
-const failedHostsCellContent = ({ connection, id } = {}) => {
-  const count = Number.parseInt(connection?.source_systems_failed, 10);
+const failedHostsCellContent = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent } = {}, { viewId } = {}) => {
+  const {
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_SYS_FAILED]: systemsScanned,
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID]: mostRecentId
+  } = mostRecent;
+  const count = Number.parseInt(systemsScanned, 10);
 
   return {
-    content: statusCell({ count, status: ContextIconVariant.failed }),
-    expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.failed })) || undefined
+    content: statusCell({ count, status: ContextIconVariant.failed, viewId }),
+    expandedContent:
+      (count &&
+        statusContent({ id: mostRecentId, status: ContextIconVariant.failed }, { useInspectionResults: true })) ||
+      undefined
   };
 };
 
@@ -183,16 +193,41 @@ const failedHostsCellContent = ({ connection, id } = {}) => {
  * Ok hosts cell and expandable content.
  *
  * @param {object} params
- * @param {object} params.connection
- * @param {string} params.id
+ * @param {object} options
+ * @param {string} options.viewId
  * @returns {{cell: React.ReactNode, content: React.ReactNode}}
  */
-const okHostsCellContent = ({ connection, id } = {}) => {
-  const count = Number.parseInt(connection?.source_systems_scanned, 10);
+const okHostsCellContent = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent } = {}, { viewId } = {}) => {
+  const {
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_SYS_SCANNED]: systemsScanned,
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID]: mostRecentId
+  } = mostRecent;
+  const count = Number.parseInt(systemsScanned, 10);
 
   return {
-    content: statusCell({ count, status: ContextIconVariant.success }),
-    expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.success })) || undefined
+    content: statusCell({ count, status: ContextIconVariant.success, viewId }),
+    expandedContent:
+      (count &&
+        statusContent({ id: mostRecentId, status: ContextIconVariant.success }, { useInspectionResults: true })) ||
+      undefined
+  };
+};
+
+const sourcesCellContent = ({ [apiTypes.API_RESPONSE_SCAN_SOURCES]: sources } = {}, { viewId } = {}) => {
+  const count = sources.length;
+
+  return {
+    content: statusCell({ count, status: 'sources', viewId })
+    // expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.unreachable })) || undefined
+  };
+};
+
+const scansCellContent = ({ [apiTypes.API_RESPONSE_SCAN_JOBS]: scanJobs } = {}, { viewId } = {}) => {
+  const count = scanJobs.length;
+
+  return {
+    content: statusCell({ count, status: 'scans', viewId })
+    // expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.unreachable })) || undefined
   };
 };
 
@@ -308,6 +343,8 @@ const scansTableCells = {
   failedHostsCellContent,
   okHostsCellContent,
   scanStatus,
+  scansCellContent,
+  sourcesCellContent,
   statusCell,
   statusContent,
   unreachableHostsCellContent
@@ -321,6 +358,8 @@ export {
   failedHostsCellContent,
   okHostsCellContent,
   scanStatus,
+  scansCellContent,
+  sourcesCellContent,
   statusCell,
   statusContent,
   unreachableHostsCellContent

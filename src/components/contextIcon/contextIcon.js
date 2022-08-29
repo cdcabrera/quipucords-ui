@@ -13,7 +13,9 @@ import {
   PficonVcenterIcon,
   TrashIcon,
   UnknownIcon,
-  IconSize
+  IconSize,
+  ClipboardCheckIcon,
+  CrosshairsIcon
 } from '@patternfly/react-icons';
 import {
   global_Color_dark_100 as gray,
@@ -42,6 +44,8 @@ const ContextIconVariant = {
   paused: 'paused',
   pencil: 'pencil',
   satellite: 'satellite',
+  scans: 'scans',
+  sources: 'sources',
   trash: 'trash',
   unknown: 'unknown',
   unreachable: 'unreachable',
@@ -72,6 +76,10 @@ const ContextIcon = ({ symbol, ...props }) => {
       return <Spinner isSVG {...{ ...{ size: IconSize.md }, ...props }} />;
     case ContextIconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
+    case ContextIconVariant.scans:
+      return <ClipboardCheckIcon {...props} />;
+    case ContextIconVariant.sources:
+      return <CrosshairsIcon {...props} />;
     case ContextIconVariant.success:
       return <CheckCircleIcon {...{ ...{ color: green.value }, ...props }} />;
     case ContextIconVariant.trash:

@@ -152,7 +152,7 @@ const Sources = ({
                 dataLabel: t('table.header', { context: ['description'] })
               },
               {
-                content: sourcesTableCells.scanStatus(item),
+                content: sourcesTableCells.scanStatus(item, { viewId }),
                 width: 20,
                 dataLabel: t('table.header', { context: ['scan'] })
               },
@@ -163,19 +163,19 @@ const Sources = ({
                 dataLabel: t('table.header', { context: ['credentials'] })
               },
               {
-                ...sourcesTableCells.okHostsCellContent(item),
+                ...sourcesTableCells.okHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 3,
                 width: 8,
                 dataLabel: t('table.header', { context: ['hosts', 'ok'] })
               },
               {
-                ...sourcesTableCells.failedHostsCellContent(item),
+                ...sourcesTableCells.failedHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 4,
                 width: 8,
                 dataLabel: t('table.header', { context: ['hosts', 'failed'] })
               },
               {
-                ...sourcesTableCells.unreachableHostsCellContent(item),
+                ...sourcesTableCells.unreachableHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 5,
                 width: 8,
                 dataLabel: t('table.header', { context: ['hosts', 'unreachable'] })

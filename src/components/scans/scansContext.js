@@ -17,11 +17,11 @@ import apiTypes from '../../constants/apiConstants';
 const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
-  return ({ isExpanded, cellIndex, data: sourceData }) => {
+  return ({ isExpanded, cellIndex, data }) => {
     dispatch({
       type: isExpanded ? reduxTypes.scans.EXPANDED_SCAN : reduxTypes.scans.NOT_EXPANDED_SCAN,
-      viewType: reduxTypes.view.SOURCES_VIEW,
-      source: sourceData.source,
+      viewType: reduxTypes.view.SCANS_VIEW,
+      item: data.item,
       cellIndex
     });
   };
@@ -54,11 +54,11 @@ const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.us
 const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
-  return ({ isSelected, data: sourceData }) => {
+  return ({ isSelected, data }) => {
     dispatch({
       type: isSelected ? reduxTypes.scans.SELECT_SCAN : reduxTypes.scans.DESELECT_SCAN,
-      viewType: reduxTypes.view.SOURCES_VIEW,
-      source: sourceData.source
+      viewType: reduxTypes.view.SCANS_VIEW,
+      item: data.item
     });
   };
 };
@@ -130,7 +130,6 @@ const useGetScans = ({
   const query = helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect' });
 
   useShallowCompareEffect(() => {
-    // helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect' })
     getScans(query)(dispatch);
   }, [dispatch, getScans, pollUpdate, query, refreshUpdate]);
 

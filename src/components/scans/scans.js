@@ -56,8 +56,7 @@ const Scans = ({
   // const onScan = useAliasOnScan();
   const onSelect = useAliasOnSelect();
   // const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
-  // const { pending, error, errorMessage, date, data, selectedRows = {}, expandedRows = {} } = useAliasGetScans();
-  const { pending, error, errorMessage, date, data, selectedRows = {} } = useAliasGetScans();
+  const { pending, error, errorMessage, date, data, selectedRows = {}, expandedRows = {} } = useAliasGetScans();
   const [viewOptions = {}] = useAliasSelectors([
     ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
   ]);
@@ -147,11 +146,40 @@ const Scans = ({
             console.log('item >>>>', item);
             return {
               isSelected: (selectedRows?.[item.id] && true) || false,
-              source: item,
+              item,
               cells: [
                 {
                   content: scansTableCells.description(item),
                   dataLabel: t('table.header', { context: ['description'] })
+                },
+                {
+                  content: scansTableCells.scanStatus(item, { viewId }),
+                  width: 20,
+                  dataLabel: t('table.header', { context: ['scan'] })
+                },
+                {
+                  ...scansTableCells.okHostsCellContent(item, { viewId }),
+                  isExpanded: expandedRows?.[item.id] === 2,
+                  width: 8,
+                  dataLabel: t('table.header', { context: ['hosts', 'ok'] })
+                },
+                {
+                  ...scansTableCells.failedHostsCellContent(item, { viewId }),
+                  isExpanded: expandedRows?.[item.id] === 3,
+                  width: 8,
+                  dataLabel: t('table.header', { context: ['hosts', 'failed'] })
+                },
+                {
+                  ...scansTableCells.sourcesCellContent(item, { viewId }),
+                  isExpanded: expandedRows?.[item.id] === 4,
+                  width: 8,
+                  dataLabel: t('table.header', { context: ['sources'] })
+                },
+                {
+                  ...scansTableCells.scansCellContent(item, { viewId }),
+                  isExpanded: expandedRows?.[item.id] === 5,
+                  width: 8,
+                  dataLabel: t('table.header', { context: ['scan-jobs'] })
                 }
               ]
             };
