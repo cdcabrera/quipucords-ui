@@ -4,6 +4,7 @@ import { Spinner } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
   DisconnectedIcon,
+  DownloadIcon,
   ErrorCircleOIcon,
   ExclamationTriangleIcon,
   IdCardIcon,
@@ -25,6 +26,18 @@ import {
 } from '@patternfly/react-tokens';
 
 /**
+ * Context icon colors, for consistency
+ *
+ * @type {{ red: object, gray: object, green: object, yellow: object }}
+ */
+const ContextIconColors = {
+  gray,
+  green,
+  yellow,
+  red
+};
+
+/**
  * Context icon variants
  *
  * @type {{running: string, canceled: string, paused: string, unreachable: string, success: string, created: string,
@@ -39,9 +52,10 @@ const ContextIconVariant = {
   created: 'pending',
   pending: 'pending',
   running: 'pending',
+  paused: 'paused',
+  download: 'download',
   idCard: 'idCard',
   network: 'network',
-  paused: 'paused',
   pencil: 'pencil',
   satellite: 'satellite',
   scans: 'scans',
@@ -62,6 +76,8 @@ const ContextIconVariant = {
  */
 const ContextIcon = ({ symbol, ...props }) => {
   switch (symbol) {
+    case ContextIconVariant.download:
+      return <DownloadIcon {...props} />;
     case ContextIconVariant.failed:
       return <ErrorCircleOIcon {...{ ...{ color: red.value }, ...props }} />;
     case ContextIconVariant.idCard:
@@ -112,4 +128,4 @@ ContextIcon.defaultProps = {
   symbol: null
 };
 
-export { ContextIcon as default, ContextIcon, ContextIconVariant };
+export { ContextIcon as default, ContextIcon, ContextIconColors, ContextIconVariant };

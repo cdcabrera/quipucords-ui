@@ -66,7 +66,7 @@ const Scans = ({
   console.log('data', data);
 
   // ToDo: review onMergeReports, renderToolbarActions being standalone with upcoming toolbar updates
-  // ToDo: review items being selected and the page polling. Randomized dev data gives the appearance of an issue.
+  // ToDo: review items being selected and the page polling. Randomized dev data gives the appearance of an issue. Also applies to sources selected items
   /**
    * Toolbar actions onScanSources
    *
