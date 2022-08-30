@@ -142,7 +142,7 @@ const Scans = ({
         <Table
           onExpand={onExpand}
           onSelect={onSelect}
-          rows={data?.map(item => {
+          rows={data?.map((item, index) => {
             console.log('item >>>>', item);
             return {
               isSelected: (selectedRows?.[item.id] && true) || false,
@@ -180,6 +180,19 @@ const Scans = ({
                   isExpanded: expandedRows?.[item.id] === 5,
                   width: 8,
                   dataLabel: t('table.header', { context: ['scan-jobs'] })
+                },
+                {
+                  content: scansTableCells.actionsCell({
+                    isFirst: index === 0,
+                    isLast: index === data.length - 1,
+                    item,
+                    onCancel: () => console.log('on cancel'),
+                    onDownload: () => console.log('on download'),
+                    onResume: () => console.log('on resume'),
+                    onPause: () => console.log('on pause'),
+                    onStart: () => console.log('on start')
+                  }),
+                  isActionCell: true
                 }
               ]
             };

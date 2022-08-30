@@ -12,8 +12,9 @@ import {
   OverflowMenuGroup,
   OverflowMenuItem
 } from '@patternfly/react-core';
-import { PencilAltIcon, TrashIcon, EllipsisVIcon } from '@patternfly/react-icons';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
+import { ContextIconAction, ContextIconActionVariant } from '../contextIcon/contextIconAction';
 import { Tooltip } from '../tooltip/tooltip';
 // import { dictionary } from '../../constants/dictionaryConstants';
 import { ConnectedScanHostList as ScanHostList } from '../scanHostList/scanHostList';
@@ -26,11 +27,9 @@ import { DropdownSelect, SelectButtonVariant, SelectDirection, SelectPosition } 
  * Source description and type icon
  *
  * @param {object} params
- * @param {string} params.name
- * @param params.id
  * @returns {React.ReactNode}
  */
-const description = ({ id, name } = {}) => (
+const description = ({ [apiTypes.API_RESPONSE_SCAN_ID]: id, [apiTypes.API_RESPONSE_SCAN_NAME]: name } = {}) => (
   <Grid hasGutter={false}>
     <GridItem sm={2} />
     <GridItem sm={10}>
@@ -260,29 +259,127 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
  * @param {Function} params.onDelete
  * @param {Function} params.onEdit
  * @param {Function} params.t
+ * @param params.onCancel
+ * @param params.onDownload
+ * @param params.onResume
+ * @param params.onPause
+ * @param params.onStart
  * @returns {React.ReactNode}
  */
 const actionsCell = ({
   isFirst = false,
   isLast = false,
   item = {},
-  onScan = helpers.noop,
-  onDelete = helpers.noop,
-  onEdit = helpers.noop,
+  // onScan = helpers.noop,
+  // onDelete = helpers.noop,
+  // onEdit = helpers.noop,
+  onCancel = helpers.noop,
+  onDownload = helpers.noop,
+  onResume = helpers.noop,
+  onPause = helpers.noop,
+  onStart = helpers.noop,
   t = translate
 } = {}) => {
+  const { [apiTypes.API_RESPONSE_SCAN_NAME]: name, [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = item;
+  const {
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_REPORT_ID]: mostRecentReportId,
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_STATUS]: mostRecentStatus
+  } = scan;
+  const isDownload = !!mostRecentReportId;
+
+  console.log('name', name);
+
+  /*
   const onSelect = ({ value }) => {
     switch (value) {
-      case 'edit':
-        return onEdit(item);
-      case 'delete':
-        return onDelete(item);
-      case 'scan':
+      case 'cancel':
+        return onCancel(item);
+      case 'resume':
+        return onResume(item);
+      case 'pause':
+        return onPause(item);
+      case 'download':
+        return onDownload(item);
       default:
-        return onScan(item);
+        return onStart(item);
+    }
+  };
+  */
+  const onSelect = ({ value }) => {
+    switch (value) {
+      case 'download':
+        return onDownload(item);
+      case 'created':
+      case 'running':
+        return onPause(item);
+      case 'paused':
+        return onResume(item);
+      case 'pending':
+        return onCancel(item);
+      case 'completed':
+      case 'failed':
+      case 'canceled':
+      case 'cancelled':
+      default:
+        return onStart(item);
     }
   };
 
+  const menuItem = context => (
+    <OverflowMenuItem key={`menuItem-${context}`}>
+      <Tooltip content={t('table.label', { context })}>
+        <Button
+          className="quipucords-view__row-button"
+          onClick={() => onSelect({ value: context })}
+          aria-label={t('table.label', { context })}
+          variant={ButtonVariant.plain}
+        >
+          <ContextIconAction symbol={ContextIconActionVariant[context]} />
+        </Button>
+      </Tooltip>
+    </OverflowMenuItem>
+  );
+
+  return (
+    <OverflowMenu breakpoint="lg">
+      <OverflowMenuContent>
+        <OverflowMenuGroup groupType="button">
+          {(mostRecentStatus === ('created' || 'running') && [
+            menuItem(mostRecentStatus),
+            menuItem(ContextIconActionVariant.pending)
+          ]) ||
+            menuItem(mostRecentStatus)}
+          {isDownload && (
+            <OverflowMenuItem key="tooltip-download">
+              <Tooltip content={t('table.label', { context: 'download' })}>
+                <Button
+                  className="quipucords-view__row-button"
+                  onClick={() => onDownload(item)}
+                  aria-label={t('table.label', { context: 'download' })}
+                  variant={ButtonVariant.plain}
+                >
+                  {t('table.label', { context: 'download' })}
+                </Button>
+              </Tooltip>
+            </OverflowMenuItem>
+          )}
+        </OverflowMenuGroup>
+      </OverflowMenuContent>
+      <OverflowMenuControl>
+        <DropdownSelect
+          onSelect={onSelect}
+          isDropdownButton
+          buttonVariant={SelectButtonVariant.plain}
+          direction={(isLast && !isFirst && SelectDirection.up) || undefined}
+          position={SelectPosition.right}
+          placeholder={<EllipsisVIcon />}
+          options={[]}
+        />
+      </OverflowMenuControl>
+    </OverflowMenu>
+  );
+
+  /*
   return (
     <OverflowMenu breakpoint="lg">
       <OverflowMenuContent>
@@ -335,6 +432,7 @@ const actionsCell = ({
       </OverflowMenuControl>
     </OverflowMenu>
   );
+   */
 };
 
 const scansTableCells = {
