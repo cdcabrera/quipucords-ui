@@ -161,13 +161,13 @@ const Scans = ({
                   ...scansTableCells.okHostsCellContent(item, { viewId }),
                   isExpanded: expandedRows?.[item.id] === 2,
                   width: 8,
-                  dataLabel: t('table.header', { context: ['hosts', 'ok'] })
+                  dataLabel: t('table.header', { context: ['success', viewId] })
                 },
                 {
                   ...scansTableCells.failedHostsCellContent(item, { viewId }),
                   isExpanded: expandedRows?.[item.id] === 3,
                   width: 8,
-                  dataLabel: t('table.header', { context: ['hosts', 'failed'] })
+                  dataLabel: t('table.header', { context: ['failed', viewId] })
                 },
                 {
                   ...scansTableCells.sourcesCellContent(item, { viewId }),

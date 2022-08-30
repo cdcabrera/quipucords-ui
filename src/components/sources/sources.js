@@ -166,19 +166,19 @@ const Sources = ({
                 ...sourcesTableCells.okHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 3,
                 width: 8,
-                dataLabel: t('table.header', { context: ['hosts', 'ok'] })
+                dataLabel: t('table.header', { context: ['success', viewId] })
               },
               {
                 ...sourcesTableCells.failedHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 4,
                 width: 8,
-                dataLabel: t('table.header', { context: ['hosts', 'failed'] })
+                dataLabel: t('table.header', { context: ['failed', viewId] })
               },
               {
                 ...sourcesTableCells.unreachableHostsCellContent(item, { viewId }),
                 isExpanded: expandedRows?.[item.id] === 5,
                 width: 8,
-                dataLabel: t('table.header', { context: ['hosts', 'unreachable'] })
+                dataLabel: t('table.header', { context: ['unreachable', viewId] })
               },
               {
                 content: sourcesTableCells.actionsCell({

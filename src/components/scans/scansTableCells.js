@@ -22,6 +22,8 @@ import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
 import { DropdownSelect, SelectButtonVariant, SelectDirection, SelectPosition } from '../dropdownSelect/dropdownSelect';
+import ScanSourceList from './scanSourceList';
+import ScanJobsList from './scanJobsList';
 
 /**
  * Source description and type icon
@@ -212,21 +214,32 @@ const okHostsCellContent = ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRece
   };
 };
 
-const sourcesCellContent = ({ [apiTypes.API_RESPONSE_SCAN_SOURCES]: sources } = {}, { viewId } = {}) => {
+const sourcesCellContent = (
+  { [apiTypes.API_RESPONSE_SCAN_ID]: id, [apiTypes.API_RESPONSE_SCAN_SOURCES]: sources } = {},
+  { viewId } = {}
+) => {
   const count = sources.length;
 
   return {
-    content: statusCell({ count, status: 'sources', viewId })
-    // expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.unreachable })) || undefined
+    content: statusCell({ count, status: 'sources', viewId }),
+    expandedContent: (count && <ScanSourceList key={`sources-${id}`} id={id} />) || undefined
   };
 };
 
-const scansCellContent = ({ [apiTypes.API_RESPONSE_SCAN_JOBS]: scanJobs } = {}, { viewId } = {}) => {
+const scansCellContent = (
+  {
+    [apiTypes.API_RESPONSE_SCAN_ID]: id,
+    [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent,
+    [apiTypes.API_RESPONSE_SCAN_JOBS]: scanJobs
+  } = {},
+  { viewId } = {}
+) => {
+  const { [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID]: mostRecentId } = mostRecent;
   const count = scanJobs.length;
 
   return {
-    content: statusCell({ count, status: 'scans', viewId })
-    // expandedContent: (count && statusContent({ connection, id, status: ContextIconVariant.unreachable })) || undefined
+    content: statusCell({ count, status: 'scans', viewId }),
+    expandedContent: (count && <ScanJobsList key={`jobs-${id}`} id={id} mostRecentId={mostRecentId} />) || undefined
   };
 };
 
