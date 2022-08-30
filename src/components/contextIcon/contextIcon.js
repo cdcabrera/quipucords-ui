@@ -116,11 +116,12 @@ const ContextIcon = ({ symbol, ...props }) => {
       const updatedSize = { style: { display: 'inline-block' } };
 
       if (props.size) {
+        updatedSize.size = undefined;
         updatedSize.style.height = svgSize(props.size);
         updatedSize.style.width = svgSize(props.size);
       }
 
-      return <Spinner isSVG {...{ ...props, size: undefined, ...updatedSize }} />;
+      return <Spinner isSVG {...{ ...props, ...updatedSize }} />;
     case ContextIconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
     case ContextIconVariant.scans:
