@@ -45,11 +45,11 @@ const Scans = ({
   // useOnScan: useAliasOnScan,
   useOnSelect: useAliasOnSelect,
   // useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
-  // useDispatch: useAliasDispatch,
+  useDispatch: useAliasDispatch,
   useSelectors: useAliasSelectors,
   viewId
 }) => {
-  // const dispatch = useAliasDispatch();
+  const dispatch = useAliasDispatch();
   // const onDelete = useAliasOnDelete();
   // const onEdit = useAliasOnEdit();
   const onExpand = useAliasOnExpand();
@@ -65,46 +65,32 @@ const Scans = ({
 
   console.log('data', data);
 
-  // ToDo: review onScanSources, renderToolbarActions being standalone with upcoming toolbar updates
+  // ToDo: review onMergeReports, renderToolbarActions being standalone with upcoming toolbar updates
+  // ToDo: review items being selected and the page polling. Randomized dev data gives the appearance of an issue.
   /**
    * Toolbar actions onScanSources
    *
    * @event onScanSources
    */
-  /*
-  const onScanSources = () => {
+  const onMergeReports = () => {
     dispatch({
-      type: reduxTypes.scans.EDIT_SCAN_SHOW,
-      sources: Object.values(selectedRows).filter(val => val !== null)
+      type: reduxTypes.scans.MERGE_SCAN_DIALOG_SHOW,
+      show: true,
+      scans: Object.values(selectedRows).filter(val => val !== null)
     });
   };
-  */
 
   /**
    * Return toolbar actions.
    *
    * @returns {React.ReactNode}
    */
-  /*
-  const renderToolbarActions = () => (
-    <React.Fragment>
-      <Button onClick={onShowAddSourceWizard}>{t('table.label', { context: 'add' })}</Button>{' '}
-      <Button
-        variant={ButtonVariant.secondary}
-        isDisabled={Object.values(selectedRows).filter(val => val !== null).length === 0}
-        onClick={onScanSources}
-      >
-        {t('table.label', { context: 'scan' })}
-      </Button>
-    </React.Fragment>
-  );
-   */
   const renderToolbarActions = () => (
     <Tooltip content={t('table.tooltip', { context: ['merge-reports'] })}>
       <Button
         variant={ButtonVariant.primary}
         isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
-        onClick={() => console.log('merge scans')}
+        onClick={onMergeReports}
       >
         {t('table.label', { context: ['merge-reports'] })}
       </Button>
@@ -226,7 +212,7 @@ const Scans = ({
  */
 Scans.propTypes = {
   t: PropTypes.func,
-  // useDispatch: PropTypes.func,
+  useDispatch: PropTypes.func,
   useGetScans: PropTypes.func,
   // useOnDelete: PropTypes.func,
   // useOnEdit: PropTypes.func,
@@ -248,7 +234,7 @@ Scans.propTypes = {
  */
 Scans.defaultProps = {
   t: translate,
-  // useDispatch: storeHooks.reactRedux.useDispatch,
+  useDispatch: storeHooks.reactRedux.useDispatch,
   useGetScans,
   // useOnDelete,
   // useOnEdit,
