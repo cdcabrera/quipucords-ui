@@ -67,6 +67,30 @@ const ContextIconVariant = {
 };
 
 /**
+ * Emulate pf icon sizing for custom SVGs
+ *
+ * @param {string} size
+ * @returns {string} em measurement
+ */
+const svgSize = size => {
+  if (!Number.isNaN(Number.parseFloat(size))) {
+    return size;
+  }
+
+  switch (size) {
+    case 'md':
+      return '1.5em';
+    case 'lg':
+      return '2em';
+    case 'xl':
+      return '3em';
+    case 'sm':
+    default:
+      return '1em';
+  }
+};
+
+/**
  * Return an icon from context/symbol
  *
  * @param {object} props
@@ -89,7 +113,14 @@ const ContextIcon = ({ symbol, ...props }) => {
     case ContextIconVariant.pencil:
       return <PencilAltIcon {...props} />;
     case ContextIconVariant.pending:
-      return <Spinner isSVG {...{ ...{ size: IconSize.md }, ...props }} />;
+      const updatedSize = { style: { display: 'inline-block' } };
+
+      if (props.size) {
+        updatedSize.style.height = svgSize(props.size);
+        updatedSize.style.width = svgSize(props.size);
+      }
+
+      return <Spinner isSVG {...{ ...props, size: undefined, ...updatedSize }} />;
     case ContextIconVariant.satellite:
       return <PficonSatelliteIcon {...props} />;
     case ContextIconVariant.scans:
@@ -116,7 +147,8 @@ const ContextIcon = ({ symbol, ...props }) => {
  * @type {{symbol: string}}
  */
 ContextIcon.propTypes = {
-  symbol: PropTypes.oneOf([...Object.values(ContextIconVariant)])
+  symbol: PropTypes.oneOf([...Object.values(ContextIconVariant)]),
+  size: PropTypes.oneOf([...Object.values(IconSize)])
 };
 
 /**
@@ -125,7 +157,8 @@ ContextIcon.propTypes = {
  * @type {{symbol: null}}
  */
 ContextIcon.defaultProps = {
-  symbol: null
+  symbol: null,
+  size: IconSize.sm
 };
 
 export { ContextIcon as default, ContextIcon, ContextIconColors, ContextIconVariant };

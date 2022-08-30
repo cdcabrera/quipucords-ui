@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, AlertVariant, EmptyState, EmptyStateVariant, Spinner } from '@patternfly/react-core';
 import { Grid } from 'patternfly-react';
+import { IconSize } from '@patternfly/react-icons';
 import { connect, reduxActions, reduxSelectors } from '../../redux';
 import { ContextIcon, ContextIconColors, ContextIconVariant } from '../contextIcon/contextIcon';
 import { helpers } from '../../common/helpers';
@@ -84,7 +85,8 @@ class ScanJobsList extends React.Component {
               mostRecentId !== item.id && (
                 <Grid.Row className="fadein" key={item.id}>
                   <Grid.Col xs={6} sm={3}>
-                    <ContextIcon symbol={ContextIconVariant[item.status]} /> {dictionary[item.status] || ''}
+                    <ContextIcon symbol={ContextIconVariant[item.status]} size={IconSize.sm} />{' '}
+                    {dictionary[item.status] || ''}
                   </Grid.Col>
                   <Grid.Col xs={6} sm={3}>
                     {helpers.getTimeDisplayHowLongAgo(
