@@ -130,8 +130,8 @@ const Scans = ({
             onRefresh={() => onRefresh()}
             lastRefresh={new Date(date).getTime()}
             actions={renderToolbarActions()}
-            itemsType="Source"
-            itemsTypePlural="Sources"
+            itemsType="Scan"
+            itemsTypePlural="Scans"
             selectedCount={viewOptions.selectedItems?.length}
             {...viewOptions}
           />
@@ -182,6 +182,7 @@ const Scans = ({
                   dataLabel: t('table.header', { context: ['scan-jobs'] })
                 },
                 {
+                  style: { textAlign: 'right' },
                   content: scansTableCells.actionsCell({
                     isFirst: index === 0,
                     isLast: index === data.length - 1,

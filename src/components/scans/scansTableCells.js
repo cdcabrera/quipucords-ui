@@ -327,11 +327,11 @@ const actionsCell = ({
 
   const menuItem = context => (
     <OverflowMenuItem key={`menuItem-${context}`}>
-      <Tooltip content={t('table.label', { context })}>
+      <Tooltip content={t('table.label', { context: ['action', 'scan', context] })}>
         <Button
           className="quipucords-view__row-button"
           onClick={() => onSelect({ value: context })}
-          aria-label={t('table.label', { context })}
+          aria-label={t('table.label', { context: ['action', 'scan', context] })}
           variant={ButtonVariant.plain}
         >
           <ContextIconAction symbol={ContextIconActionVariant[context]} />
@@ -350,17 +350,10 @@ const actionsCell = ({
           ]) ||
             menuItem(mostRecentStatus)}
           {isDownload && (
-            <OverflowMenuItem key="tooltip-download">
-              <Tooltip content={t('table.label', { context: 'download' })}>
-                <Button
-                  className="quipucords-view__row-button"
-                  onClick={() => onDownload(item)}
-                  aria-label={t('table.label', { context: 'download' })}
-                  variant={ButtonVariant.plain}
-                >
-                  {t('table.label', { context: 'download' })}
-                </Button>
-              </Tooltip>
+            <OverflowMenuItem key="button-download">
+              <Button onClick={() => onDownload(item)} variant={ButtonVariant.secondary}>
+                {t('table.label', { context: ['action', 'scan', 'download'] })}
+              </Button>
             </OverflowMenuItem>
           )}
         </OverflowMenuGroup>
