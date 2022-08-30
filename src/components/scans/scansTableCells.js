@@ -270,9 +270,6 @@ const actionsCell = ({
   isFirst = false,
   isLast = false,
   item = {},
-  // onScan = helpers.noop,
-  // onDelete = helpers.noop,
-  // onEdit = helpers.noop,
   onCancel = helpers.noop,
   onDownload = helpers.noop,
   onResume = helpers.noop,
@@ -280,31 +277,12 @@ const actionsCell = ({
   onStart = helpers.noop,
   t = translate
 } = {}) => {
-  const { [apiTypes.API_RESPONSE_SCAN_NAME]: name, [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = item;
+  const { [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: scan = {} } = item;
   const {
     [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_REPORT_ID]: mostRecentReportId,
     [apiTypes.API_RESPONSE_SCAN_MOST_RECENT_STATUS]: mostRecentStatus
   } = scan;
-  const isDownload = !!mostRecentReportId;
 
-  console.log('name', name);
-
-  /*
-  const onSelect = ({ value }) => {
-    switch (value) {
-      case 'cancel':
-        return onCancel(item);
-      case 'resume':
-        return onResume(item);
-      case 'pause':
-        return onPause(item);
-      case 'download':
-        return onDownload(item);
-      default:
-        return onStart(item);
-    }
-  };
-  */
   const onSelect = ({ value }) => {
     switch (value) {
       case 'download':
@@ -349,9 +327,9 @@ const actionsCell = ({
             menuItem(ContextIconActionVariant.pending)
           ]) ||
             menuItem(mostRecentStatus)}
-          {isDownload && (
+          {mostRecentReportId && (
             <OverflowMenuItem key="button-download">
-              <Button onClick={() => onDownload(item)} variant={ButtonVariant.secondary}>
+              <Button onClick={() => onSelect({ value: 'download' })} variant={ButtonVariant.secondary}>
                 {t('table.label', { context: ['action', 'scan', 'download'] })}
               </Button>
             </OverflowMenuItem>
@@ -371,61 +349,6 @@ const actionsCell = ({
       </OverflowMenuControl>
     </OverflowMenu>
   );
-
-  /*
-  return (
-    <OverflowMenu breakpoint="lg">
-      <OverflowMenuContent>
-        <OverflowMenuGroup groupType="button">
-          <OverflowMenuItem key="tooltip-edit">
-            <Tooltip content={t('table.label', { context: 'edit' })}>
-              <Button
-                className="quipucords-view__row-button"
-                onClick={() => onEdit(item)}
-                aria-label={t('table.label', { context: 'edit' })}
-                variant={ButtonVariant.plain}
-              >
-                <PencilAltIcon />
-              </Button>
-            </Tooltip>
-          </OverflowMenuItem>
-          <OverflowMenuItem key="tooltip-delete">
-            <Tooltip content={t('table.label', { context: 'delete' })}>
-              <Button
-                className="quipucords-view__row-button"
-                onClick={() => onDelete(item)}
-                aria-label={t('table.label', { context: 'delete' })}
-                variant={ButtonVariant.plain}
-              >
-                <TrashIcon />
-              </Button>
-            </Tooltip>
-          </OverflowMenuItem>
-          <OverflowMenuItem key="button-scan">
-            <Button variant={ButtonVariant.secondary} onClick={() => onScan(item)}>
-              {t('table.label', { context: 'scan' })}
-            </Button>
-          </OverflowMenuItem>
-        </OverflowMenuGroup>
-      </OverflowMenuContent>
-      <OverflowMenuControl>
-        <DropdownSelect
-          onSelect={onSelect}
-          isDropdownButton
-          buttonVariant={SelectButtonVariant.plain}
-          direction={(isLast && !isFirst && SelectDirection.up) || undefined}
-          position={SelectPosition.right}
-          placeholder={<EllipsisVIcon />}
-          options={[
-            { title: t('table.label', { context: 'edit' }), value: 'edit' },
-            { title: t('table.label', { context: 'delete' }), value: 'delete' },
-            { title: t('table.label', { context: 'Scan' }), value: 'scan' }
-          ]}
-        />
-      </OverflowMenuControl>
-    </OverflowMenu>
-  );
-   */
 };
 
 const scansTableCells = {
