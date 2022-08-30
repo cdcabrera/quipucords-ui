@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, AlertVariant, EmptyState, Spinner } from '@patternfly/react-core';
+import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from '@patternfly/react-core';
 import { IconSize } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { reduxTypes, storeHooks } from '../../redux';
@@ -12,6 +12,7 @@ import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { scansTableCells } from './scansTableCells';
 import { useGetScans, useOnExpand, useOnRefresh, useOnSelect } from './scansContext';
+import { Tooltip } from '../tooltip/tooltip';
 
 const VIEW_ID = 'scans';
 
@@ -98,7 +99,17 @@ const Scans = ({
     </React.Fragment>
   );
    */
-  const renderToolbarActions = () => <React.Fragment>actions</React.Fragment>;
+  const renderToolbarActions = () => (
+    <Tooltip content={t('table.tooltip', { context: ['merge-reports'] })}>
+      <Button
+        variant={ButtonVariant.primary}
+        isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
+        onClick={() => console.log('merge scans')}
+      >
+        {t('table.label', { context: ['merge-reports'] })}
+      </Button>
+    </Tooltip>
+  );
 
   if (pending) {
     return (

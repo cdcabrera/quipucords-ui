@@ -101,6 +101,7 @@
     "label_add": "Add",
     "label_delete": "Delete",
     "label_edit": "Edit",
+    "label_merge-reports": "Merge reports",
     "label_scan": "Scan",
     "label_status": "{{context}}",
     "label_status_scans": "Scan created",
@@ -145,7 +146,8 @@
     "label_status_tooltip_success_sources": "{{count}} Successful Authentication",
     "label_status_tooltip_success_sources_other": "{{count}} Successful Authentications",
     "label_status_tooltip_unreachable": "{{count}} Unreachable System",
-    "label_status_tooltip_unreachable_other": "{{count}} Unreachable Systems"
+    "label_status_tooltip_unreachable_other": "{{count}} Unreachable Systems",
+    "tooltip_merge-reports": "Merge selected scan results into a single report"
   },
   "toast-notifications": {
     "description_add-source_hidden": "Source {{name}} was created",
