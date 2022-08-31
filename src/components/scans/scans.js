@@ -11,7 +11,15 @@ import { ScanFilterFields, ScanSortFields } from './scanConstants';
 import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { scansTableCells } from './scansTableCells';
-import { useGetScans, useOnExpand, useOnRefresh, useOnSelect } from './scansContext';
+import {
+  useGetScans,
+  // useOnCancel,
+  useOnExpand,
+  useOnRefresh,
+  // useOnRestart,
+  useOnScanAction,
+  useOnSelect
+} from './scansContext';
 import { Tooltip } from '../tooltip/tooltip';
 
 const VIEW_ID = 'scans';
@@ -33,6 +41,8 @@ const VIEW_ID = 'scans';
  * @param {Function} props.useSelectors
  * @param {string} props.viewId
  * @param props.useGetScans
+ * @param props.useOnCancel
+ * @param props.useOnRestart
  * @returns {React.ReactNode}
  */
 const Scans = ({
@@ -40,9 +50,12 @@ const Scans = ({
   useGetScans: useAliasGetScans,
   // useOnDelete: useAliasOnDelete,
   // useOnEdit: useAliasOnEdit,
+  // useOnCancel: useAliasOnCancel,
   useOnExpand: useAliasOnExpand,
   useOnRefresh: useAliasOnRefresh,
+  // useOnRestart: useAliasOnRestart,
   // useOnScan: useAliasOnScan,
+  useOnScanAction: useAliasOnScanAction,
   useOnSelect: useAliasOnSelect,
   // useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useDispatch: useAliasDispatch,
@@ -50,11 +63,14 @@ const Scans = ({
   viewId
 }) => {
   const dispatch = useAliasDispatch();
+  // const onCancel = useAliasOnCancel();
   // const onDelete = useAliasOnDelete();
   // const onEdit = useAliasOnEdit();
   const onExpand = useAliasOnExpand();
   const onRefresh = useAliasOnRefresh();
+  // const onRestart = useAliasOnRestart();
   // const onScan = useAliasOnScan();
+  const { onCancel, onDownload, onPause, onRestart, onStart } = useAliasOnScanAction();
   const onSelect = useAliasOnSelect();
   // const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
   const { pending, error, errorMessage, date, data, selectedRows = {}, expandedRows = {} } = useAliasGetScans();
@@ -184,11 +200,11 @@ const Scans = ({
                     isFirst: index === 0,
                     isLast: index === data.length - 1,
                     item,
-                    onCancel: () => console.log('on cancel'),
-                    onDownload: () => console.log('on download'),
-                    onResume: () => console.log('on resume'),
-                    onPause: () => console.log('on pause'),
-                    onStart: () => console.log('on start')
+                    onCancel: () => onCancel(item),
+                    onDownload: () => onDownload(item),
+                    onRestart: () => onRestart(item),
+                    onPause: () => onPause(item),
+                    onStart: () => onStart(item)
                   }),
                   isActionCell: true
                 }
@@ -214,11 +230,14 @@ Scans.propTypes = {
   t: PropTypes.func,
   useDispatch: PropTypes.func,
   useGetScans: PropTypes.func,
+  // useOnCancel: PropTypes.func,
   // useOnDelete: PropTypes.func,
   // useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
   useOnRefresh: PropTypes.func,
+  // useOnRestart: PropTypes.func,
   // useOnScan: PropTypes.func,
+  useOnScanAction: PropTypes.func,
   useOnSelect: PropTypes.func,
   // useOnShowAddSourceWizard: PropTypes.func,
   useSelectors: PropTypes.func,
@@ -236,10 +255,13 @@ Scans.defaultProps = {
   t: translate,
   useDispatch: storeHooks.reactRedux.useDispatch,
   useGetScans,
+  // useOnCancel,
   // useOnDelete,
   // useOnEdit,
   useOnExpand,
   useOnRefresh,
+  // useOnRestart,
+  useOnScanAction,
   // useOnScan,
   useOnSelect,
   // useOnShowAddSourceWizard,

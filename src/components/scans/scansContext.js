@@ -1,4 +1,5 @@
-// import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { AlertVariant } from '@patternfly/react-core';
 import { useShallowCompareEffect } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
@@ -41,6 +42,111 @@ const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.us
     dispatch({
       type: reduxTypes.scans.UPDATE_SCANS
     });
+  };
+};
+
+const useOnScanAction = ({
+  cancelScan = reduxActions.scans.cancelScan,
+  getReportsDownload = reduxActions.reports.getReportsDownload,
+  pauseScan = reduxActions.scans.pauseScan,
+  restartScan = reduxActions.scans.restartScan,
+  startScan = reduxActions.scans.startScan,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+} = {}) => {
+  const [updatedScan, setUpdatedScan] = useState({});
+  const { id: scanId, name: scanName, context: scanContext } = updatedScan;
+  const dispatch = useAliasDispatch();
+  const { error, fulfilled, message, pending } = useAliasSelectorsResponse(({ scans }) => scans?.action?.[scanId]);
+
+  useEffect(() => {
+    if (scanId && !pending) {
+      const dispatchList = [];
+
+      if (fulfilled) {
+        dispatchList.push({
+          type: reduxTypes.toastNotifications.TOAST_ADD,
+          alertType: AlertVariant.success,
+          message: (
+            <React.Fragment>
+              Scan <strong>{scanName || scanId}</strong> {scanContext}
+            </React.Fragment>
+          )
+        });
+      }
+
+      if (error) {
+        dispatchList.push({
+          type: reduxTypes.toastNotifications.TOAST_ADD,
+          alertType: AlertVariant.danger,
+          header: 'Error',
+          message
+        });
+      }
+
+      if (dispatchList.length) {
+        dispatch([
+          ...dispatchList,
+          {
+            type: reduxTypes.scans.UPDATE_SCANS
+          }
+        ]);
+
+        setUpdatedScan({});
+      }
+    }
+  }, [dispatch, error, fulfilled, message, pending, scanContext, scanId, scanName]);
+
+  const onCancel = useCallback(
+    ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent, [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => {
+      const id = mostRecent[apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID];
+      cancelScan(id)(dispatch);
+      setUpdatedScan(() => ({ id, name, context: 'canceled' }));
+    },
+    [cancelScan, dispatch]
+  );
+
+  const onDownload = useCallback(
+    ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent, [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => {
+      const id = mostRecent[apiTypes.API_RESPONSE_SCAN_MOST_RECENT_REPORT_ID];
+      getReportsDownload(id)(dispatch);
+      setUpdatedScan(() => ({ id, name, context: 'download' }));
+    },
+    [getReportsDownload, dispatch]
+  );
+
+  const onPause = useCallback(
+    ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent, [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => {
+      const id = mostRecent[apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID];
+      pauseScan(id)(dispatch);
+      setUpdatedScan(() => ({ id, name, context: 'paused' }));
+    },
+    [pauseScan, dispatch]
+  );
+
+  const onRestart = useCallback(
+    ({ [apiTypes.API_RESPONSE_SCAN_MOST_RECENT]: mostRecent, [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => {
+      const id = mostRecent[apiTypes.API_RESPONSE_SCAN_MOST_RECENT_ID];
+      restartScan(id)(dispatch);
+      setUpdatedScan(() => ({ id, name, context: 'restart' }));
+    },
+    [restartScan, dispatch]
+  );
+
+  const onStart = useCallback(
+    ({ [apiTypes.API_RESPONSE_SCAN_ID]: id, [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => {
+      startScan(id)(dispatch);
+      setUpdatedScan(() => ({ id, name, context: 'play' }));
+    },
+    [startScan, dispatch]
+  );
+
+  return {
+    onCancel,
+    onDownload,
+    onPause,
+    onRestart,
+    onStart
   };
 };
 
@@ -149,8 +255,9 @@ const context = {
   useGetScans,
   useOnExpand,
   useOnRefresh,
+  useOnScanAction,
   useOnSelect,
   usePoll
 };
 
-export { context as default, context, useGetScans, useOnExpand, useOnRefresh, useOnSelect, usePoll };
+export { context as default, context, useGetScans, useOnExpand, useOnRefresh, useOnScanAction, useOnSelect, usePoll };

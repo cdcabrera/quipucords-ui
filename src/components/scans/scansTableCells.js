@@ -268,13 +268,10 @@ const unreachableHostsCellContent = ({ connection, id } = {}) => {
  * @param {boolean} params.isFirst
  * @param {boolean} params.isLast
  * @param {object} params.item
- * @param {Function} params.onScan
- * @param {Function} params.onDelete
- * @param {Function} params.onEdit
  * @param {Function} params.t
  * @param params.onCancel
  * @param params.onDownload
- * @param params.onResume
+ * @param params.onRestart
  * @param params.onPause
  * @param params.onStart
  * @returns {React.ReactNode}
@@ -285,7 +282,7 @@ const actionsCell = ({
   item = {},
   onCancel = helpers.noop,
   onDownload = helpers.noop,
-  onResume = helpers.noop,
+  onRestart = helpers.noop,
   onPause = helpers.noop,
   onStart = helpers.noop,
   t = translate
@@ -304,7 +301,7 @@ const actionsCell = ({
       case 'running':
         return onPause(item);
       case 'paused':
-        return onResume(item);
+        return onRestart(item);
       case 'pending':
         return onCancel(item);
       case 'completed':
