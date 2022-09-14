@@ -126,16 +126,17 @@ const Sources = ({
         {filtersOrSourcesActive && (
           <React.Fragment>
             <ViewToolbar
-              viewType={reduxTypes.view.SOURCES_VIEW}
+              viewId={viewId}
+              // viewType={reduxTypes.view.SOURCES_VIEW}
               filterFields={SourceFilterFields}
               sortFields={SourceSortFields}
               onRefresh={() => onRefresh()}
               lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Source"
-              itemsTypePlural="Sources"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
+              secondaryFields={renderToolbarActions()}
+              // itemsType="Source"
+              // itemsTypePlural="Sources"
+              // selectedCount={viewOptions.selectedItems?.length}
+              // {...viewOptions}
             />
             <ViewPaginationRow viewType={reduxTypes.view.SOURCES_VIEW} {...viewOptions} />
           </React.Fragment>

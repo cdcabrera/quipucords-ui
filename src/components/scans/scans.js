@@ -110,16 +110,17 @@ const Scans = ({
         {isActive && (
           <React.Fragment>
             <ViewToolbar
-              viewType={reduxTypes.view.SCANS_VIEW}
+              viewId={viewId}
+              // viewType={reduxTypes.view.SCANS_VIEW}
               filterFields={ScanFilterFields}
               sortFields={ScanSortFields}
               onRefresh={() => onRefresh()}
               lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Scan"
-              itemsTypePlural="Scans"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
+              secondaryFields={renderToolbarActions()}
+              // itemsType="Scan"
+              // itemsTypePlural="Scans"
+              // selectedCount={viewOptions.selectedItems?.length}
+              // {...viewOptions}
             />
             <ViewPaginationRow viewType={reduxTypes.view.SCANS_VIEW} {...viewOptions} />
           </React.Fragment>

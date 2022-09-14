@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { InputGroup } from '@patternfly/react-core';
 import _debounce from 'lodash/debounce';
 import { reduxTypes, storeHooks } from '../../redux';
-import { FormFieldTextInput } from '../formField/formFieldTextInput';
+import { TextInput } from '../form/textInput';
 import { translate } from '../i18n/i18n';
 
 /**
@@ -123,7 +123,7 @@ const ViewToolbarFieldFilter = ({
 
   return (
     <InputGroup>
-      <FormFieldTextInput
+      <TextInput
         aria-label={t('toolbar.label', { context: ['placeholder', 'filter', queryType] })}
         className="quipucords-input__search-name"
         iconVariant="search"

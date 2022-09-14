@@ -125,16 +125,17 @@ const Credentials = ({
         {isActive && (
           <React.Fragment>
             <ViewToolbar
-              viewType={reduxTypes.view.CREDENTIALS_VIEW}
+              viewId={viewId}
+              // viewType={reduxTypes.view.CREDENTIALS_VIEW}
               filterFields={CredentialFilterFields}
               sortFields={CredentialSortFields}
               onRefresh={() => onRefresh()}
               lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Credential"
-              itemsTypePlural="Credentials"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
+              secondaryFields={renderToolbarActions()}
+              // itemsType="Credential"
+              // itemsTypePlural="Credentials"
+              // selectedCount={viewOptions.selectedItems?.length}
+              // {...viewOptions}
             />
             <ViewPaginationRow viewType={reduxTypes.view.CREDENTIALS_VIEW} {...viewOptions} />
           </React.Fragment>
