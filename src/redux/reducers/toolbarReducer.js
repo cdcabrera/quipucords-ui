@@ -1,0 +1,45 @@
+import { reduxTypes } from '../constants';
+import { reduxHelpers } from '../common';
+
+const initialState = {
+  filters: {}
+};
+
+const toolbarReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case reduxTypes.toolbar.SET_ACTIVE_FILTERS:
+      return reduxHelpers.setStateProp(
+        'filters',
+        {
+          [action.viewId]: {
+            ...state.filters[action.viewId],
+            activeFilters: action.activeFilters
+          }
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    case reduxTypes.toolbar.SET_FILTER_TYPE:
+      return reduxHelpers.setStateProp(
+        'filters',
+        {
+          [action.viewId]: {
+            ...state.filters[action.viewId],
+            currentFilter: action.currentFilter
+          }
+        },
+        {
+          state,
+          reset: false
+        }
+      );
+    default:
+      return state;
+  }
+};
+
+toolbarReducer.initialState = initialState;
+
+export { toolbarReducer as default, initialState, toolbarReducer };

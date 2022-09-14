@@ -7,6 +7,7 @@ import { scansTypes } from './scansConstants';
 import { sourcesTypes } from './sourcesConstants';
 import { statusTypes } from './statusConstants';
 import { toastNotificationTypes } from './toasNotificationConstants';
+import { toolbarTypes } from './toolbarConstants';
 import { userTypes } from './userConstants';
 import { viewTypes } from './viewConstants';
 import { viewPaginationTypes } from './viewPaginationConstants';
@@ -22,6 +23,7 @@ const reduxTypes = {
   sources: sourcesTypes,
   status: statusTypes,
   toastNotifications: toastNotificationTypes,
+  toolbar: toolbarTypes,
   user: userTypes,
   view: viewTypes,
   viewPagination: viewPaginationTypes,
@@ -40,6 +42,7 @@ export {
   sourcesTypes,
   statusTypes,
   toastNotificationTypes,
+  toolbarTypes,
   userTypes,
   viewTypes,
   viewPaginationTypes,

@@ -1,3 +1,10 @@
+const API_QUERY_SORT_CREDENTIAL_TYPE = 'cred_type';
+const API_QUERY_SORT_NAME = 'name';
+
+const API_QUERY_CREDENTIALS_SEARCH_NAME = 'search_by_name';
+const API_QUERY_CREDENTIALS_CREDENTIAL_TYPE = 'cred_type';
+
+
 const API_RESPONSE_CREDENTIAL_CRED_TYPE = 'cred_type';
 const API_RESPONSE_CREDENTIAL_NAME = 'name';
 const API_RESPONSE_CREDENTIAL_ID = 'id';
