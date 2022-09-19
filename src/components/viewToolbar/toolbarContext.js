@@ -3,21 +3,21 @@ import { storeHooks } from '../../redux';
 /**
  * Return filter queries.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {Array} options
- * @param {object} opts
- * @param {Function} opts.useSelectors
+ * @alias {object} options
+ * @param {Function} options.useSelectors
  * @returns {object}
  */
 const useToolbarFieldQueries = (
-  viewType,
+  viewId,
   options,
   { useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors } = {}
 ) =>
   useAliasSelectors(
     options?.map(({ value }) => ({
       id: value,
-      selector: ({ viewOptions }) => viewOptions?.[viewType]?.filterQuery?.[value]
+      selector: ({ viewOptions }) => viewOptions?.[viewId]?.filterQuery?.[value]
     })),
     {}
   );
@@ -25,18 +25,18 @@ const useToolbarFieldQueries = (
 /**
  * Return filtered category options, current, and initial value.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {Array} categoryFields
  * @param {object} options
  * @param {Function} options.useSelector
  * @returns {object}
  */
 const useSelectCategoryOptions = (
-  viewType,
+  viewId,
   categoryFields,
   { useSelector: useAliasSelector = storeHooks.reactRedux.useSelector } = {}
 ) => {
-  const updatedCategory = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.currentCategory, null);
+  const updatedCategory = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.currentCategory, null);
   let initialCategory;
 
   const updatedCategoryFields = categoryFields.map(({ selected, ...option }) => {

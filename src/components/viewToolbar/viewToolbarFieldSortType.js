@@ -9,19 +9,19 @@ import { translate } from '../i18n/i18n';
 /**
  * On select category for sorting.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {object} options
  * @param {Function} options.useDispatch
  * @returns {Function}
  */
-const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
   return ({ value }) =>
     dispatch([
       {
         type: reduxTypes.viewToolbar.SET_SORT_TYPE,
-        viewType,
+        viewId,
         // sortType: value
         sortField: value
       }
@@ -36,7 +36,7 @@ const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reac
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
  * @param {Function} props.useSelector
- * @param {string} props.viewType
+ * @param {string} props.viewId
  * @returns {React.ReactNode}
  */
 const ViewToolbarFieldSortType = ({
@@ -44,16 +44,16 @@ const ViewToolbarFieldSortType = ({
   t,
   useOnSelect: useAliasOnSelect,
   useSelector: useAliasSelector,
-  viewType
+  viewId
 }) => {
-  const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.sortField);
-  const onSelect = useAliasOnSelect(viewType);
+  const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.sortField);
+  const onSelect = useAliasOnSelect(viewId);
 
   return (
     <React.Fragment>
       <DropdownSelect options={options} onSelect={onSelect} selectedOptions={selectedOption} />
       <Tooltip placement="right" content={t('toolbar.label', { context: ['option', 'sort', selectedOption] })}>
-        <ViewToolbarFieldSortButton viewType={viewType} />
+        <ViewToolbarFieldSortButton viewId={viewId} />
       </Tooltip>
     </React.Fragment>
   );
@@ -62,7 +62,7 @@ const ViewToolbarFieldSortType = ({
 /**
  * Prop types
  *
- * @type {{useSelector: Function, t: Function, useSelector: Function, options:Array, viewType: string}}
+ * @type {{useSelector: Function, t: Function, useSelector: Function, options:Array, viewId: string}}
  */
 ViewToolbarFieldSortType.propTypes = {
   options: PropTypes.arrayOf(
@@ -75,20 +75,20 @@ ViewToolbarFieldSortType.propTypes = {
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
   useSelector: PropTypes.func,
-  viewType: PropTypes.string
+  viewId: PropTypes.string
 };
 
 /**
  * Default props
  *
- * @type {{useOnSelect: Function, t: Function, useSelector: Function, options: *[], viewType: null}}
+ * @type {{useOnSelect: Function, t: Function, useSelector: Function, options: *[], viewId: null}}
  */
 ViewToolbarFieldSortType.defaultProps = {
   options: [],
   t: translate,
   useOnSelect,
   useSelector: storeHooks.reactRedux.useSelector,
-  viewType: null
+  viewId: null
 };
 
 export { ViewToolbarFieldSortType as default, ViewToolbarFieldSortType, useOnSelect };

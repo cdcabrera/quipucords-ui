@@ -1,9 +1,34 @@
-const API_QUERY_SORT_CREDENTIAL_TYPE = 'cred_type';
-const API_QUERY_SORT_NAME = 'name';
+/* eslint-disable */
+// scans
+const API_QUERY_SCANS_SORT_MOST_RECENT = 'most_recent_scanjob__start_time';
+const API_QUERY_SCANS_SORT_NAME = 'name';
+
+const API_QUERY_SCANS_SEARCH_NAME = 'search_by_name';
+const API_QUERY_SCANS_SOURCE_NAME = 'search_sources_by_name';
+
+// sources
+const API_QUERY_SOURCES_SORT_SOURCE_TYPE = 'source_type';
+const API_QUERY_SOURCES_SORT_NAME = 'name';
+const API_QUERY_SOURCES_SORT_MOST_RECENT = 'most_recent_connect_scan__start_time';
+
+const API_QUERY_SOURCES_SEARCH_NAME = 'search_by_name';
+const API_QUERY_SOURCES_SEARCH_CREDENTIAL_NAME = 'search_credentials_by_name';
+const API_QUERY_SOURCES_SOURCE_TYPE = 'source_type';
+
+// creds
+const API_QUERY_CREDENTIALS_SORT_CREDENTIAL_TYPE = 'cred_type';
+const API_QUERY_CREDENTIALS_SORT_NAME = 'name';
 
 const API_QUERY_CREDENTIALS_SEARCH_NAME = 'search_by_name';
 const API_QUERY_CREDENTIALS_CREDENTIAL_TYPE = 'cred_type';
 
+const API_QUERY_PAGE = 'page';
+const API_QUERY_PAGE_SIZE = 'page_size';
+const API_QUERY_ORDERING = 'ordering';
+
+const API_QUERY_SCAN_TYPE = 'scan_type';
+const API_QUERY_SOURCE_TYPE = 'source_type';
+const API_QUERY_STATUS = 'status';
 
 const API_RESPONSE_CREDENTIAL_CRED_TYPE = 'cred_type';
 const API_RESPONSE_CREDENTIAL_NAME = 'name';
@@ -121,13 +146,6 @@ const API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL = 'disable_ssl';
 const API_SUBMIT_SOURCE_OPTIONS_PARAMIKO = 'use_paramiko';
 const API_SUBMIT_SOURCE_PORT = 'port';
 const API_SUBMIT_SOURCE_SOURCE_TYPE = 'source_type';
-
-const API_QUERY_PAGE = 'page';
-const API_QUERY_PAGE_SIZE = 'page_size';
-const API_QUERY_ORDERING = 'ordering';
-const API_QUERY_SCAN_TYPE = 'scan_type';
-const API_QUERY_SOURCE_TYPE = 'source_type';
-const API_QUERY_STATUS = 'status';
 
 const apiTypes = {
   API_RESPONSE_CREDENTIAL_CRED_TYPE,

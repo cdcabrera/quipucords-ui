@@ -18,19 +18,19 @@ const fieldOptions = [
 /**
  * On select category for sorting.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {object} options
  * @param {Function} options.useDispatch
  * @returns {Function}
  */
-const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
   return ({ value = null }) => {
     dispatch([
       {
         type: reduxTypes.viewToolbar.SET_FILTER,
-        viewType,
+        viewId,
         param: 'cred_type',
         value
       }
@@ -68,7 +68,7 @@ const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reac
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
  * @param {Function} props.useSelector
- * @param {string} props.viewType
+ * @param {string} props.viewId
  * @returns {React.ReactNode}
  */
 const ViewToolbarFieldCredentialType = ({
@@ -77,10 +77,10 @@ const ViewToolbarFieldCredentialType = ({
   t,
   useOnSelect: useAliasOnSelect,
   useSelector: useAliasSelector,
-  viewType
+  viewId
 } = {}) => {
-  const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.filterQuery?.cred_type);
-  const onSelect = useAliasOnSelect(viewType);
+  const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.filterQuery?.cred_type);
+  const onSelect = useAliasOnSelect(viewId);
 
   return (
     <DropdownSelect
@@ -110,7 +110,7 @@ ViewToolbarFieldCredentialType.propTypes = {
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
   useSelector: PropTypes.func,
-  viewType: PropTypes.string
+  viewId: PropTypes.string
 };
 
 /**
@@ -125,7 +125,7 @@ ViewToolbarFieldCredentialType.defaultProps = {
   t: translate,
   useOnSelect,
   useSelector: storeHooks.reactRedux.useSelector,
-  viewType: null
+  viewId: null
 };
 
 export { ViewToolbarFieldCredentialType as default, ViewToolbarFieldCredentialType, fieldOptions, useOnSelect };

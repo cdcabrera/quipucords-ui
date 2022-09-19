@@ -10,19 +10,19 @@ import { useSelectCategoryOptions } from './toolbarContext';
 /**
  * On select update category.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {object} options
  * @param {Function} options.useDispatch
  * @returns {Function}
  */
-const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
   return ({ value = null } = {}) => {
     dispatch([
       {
         type: reduxTypes.viewToolbar.SET_FILTER_TYPE,
-        viewType,
+        viewId,
         // currentFilter: value
         currentCategory: value
       }
@@ -38,7 +38,7 @@ const useOnSelect = (viewType, { useDispatch: useAliasDispatch = storeHooks.reac
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
  * @param {Function} props.useSelectCategoryOptions
- * @param {string} props.viewType
+ * @param {string} props.viewId
  * @returns {React.ReactNode}
  */
 const ViewToolbarFieldSelectCategory = ({
@@ -47,14 +47,14 @@ const ViewToolbarFieldSelectCategory = ({
   useOnSelect: useAliasOnSelect,
   // useSelector: useAliasSelector,
   useSelectCategoryOptions: useAliasSelectCategoryOptions,
-  viewType
+  viewId
   // t,
   // useOnSelect: useAliasOnSelect,
   // useSelectCategoryOptions: useAliasSelectCategoryOptions
 }) => {
-  // const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.currentCategory, undefined);
-  const { categoryFields, initialCategory } = useAliasSelectCategoryOptions(viewType, options);
-  const onSelect = useAliasOnSelect(viewType);
+  // const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.currentCategory, undefined);
+  const { categoryFields, initialCategory } = useAliasSelectCategoryOptions(viewId, options);
+  const onSelect = useAliasOnSelect(viewId);
 
   useShallowCompareEffect(() => {
     if (initialCategory) {
@@ -90,7 +90,7 @@ ViewToolbarFieldSelectCategory.propTypes = {
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
   useSelectCategoryOptions: PropTypes.func,
-  viewType: PropTypes.string
+  viewId: PropTypes.string
 };
 
 /**
@@ -103,7 +103,7 @@ ViewToolbarFieldSelectCategory.defaultProps = {
   t: translate,
   useOnSelect,
   useSelectCategoryOptions,
-  viewType: null
+  viewId: null
 };
 
 export { ViewToolbarFieldSelectCategory as default, ViewToolbarFieldSelectCategory, useOnSelect };

@@ -34,13 +34,13 @@ const ViewToolbar = ({
   useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useToolbarFieldQueries: useAliasToolbarFieldQueries,
   t,
-  viewType
+  viewId
 }) => {
   const { currentCategory, categoryFields: updatedCategoryFields } = useAliasSelectCategoryOptions(
-    viewType,
+    viewId,
     categoryFields
   );
-  const toolbarFieldQueries = useAliasToolbarFieldQueries(viewType, categoryFields);
+  const toolbarFieldQueries = useAliasToolbarFieldQueries(viewId, categoryFields);
   const clearField = useAliasToolbarFieldClear();
   const clearAllFields = useAliasToolbarFieldClearAll();
 
@@ -86,7 +86,7 @@ const ViewToolbar = ({
           <ToolbarGroup variant="filter-group">
             {updatedCategoryFields.length > 1 && (
               <ToolbarItem>
-                <ViewToolbarFieldSelectCategory options={updatedCategoryFields} viewType={viewType} />
+                <ViewToolbarFieldSelectCategory options={updatedCategoryFields} viewId={viewId} />
               </ToolbarItem>
             )}
             {updatedCategoryFields.map(({ title, value, component: OptionComponent, options: filterOptions }) => {
@@ -101,7 +101,7 @@ const ViewToolbar = ({
                   showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
                   {...chipProps}
                 >
-                  <OptionComponent viewType={viewType} />
+                  <OptionComponent viewId={viewId} />
                 </ToolbarFilter>
               );
             })}
@@ -109,7 +109,7 @@ const ViewToolbar = ({
         </ToolbarToggleGroup>
         <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />
         <ToolbarItem key="sortFields" spacer={{ default: 'spacerSm' }}>
-          <ViewToolbarFieldSortType options={sortFields} viewType={viewType} />
+          <ViewToolbarFieldSortType options={sortFields} viewId={viewId} />
         </ToolbarItem>
         <ToolbarItem key="sortSeparator" variant={ToolbarItemVariant.separator} />
         <ToolbarItem key="lastRefresh">
@@ -161,7 +161,7 @@ ViewToolbar.propTypes = {
   useToolbarFieldClear: PropTypes.func,
   useToolbarFieldClearAll: PropTypes.func,
   useToolbarFieldQueries: PropTypes.func,
-  viewType: PropTypes.string
+  viewId: PropTypes.string
 };
 
 ViewToolbar.defaultProps = {
@@ -175,7 +175,7 @@ ViewToolbar.defaultProps = {
   useToolbarFieldClearAll,
   useToolbarFieldQueries,
   t: translate,
-  viewType: null
+  viewId: null
   /*
   viewType: null,
   totalCount: 0,

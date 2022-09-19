@@ -9,25 +9,21 @@ import { translate } from '../i18n/i18n';
 /**
  * On submit input, dispatch type.
  *
- * @param {string} viewType
- * @param {string} queryType
+ * @param {string} viewId
+ * @param {string} param
  * @param {object} options
  * @param {Function} options.useDispatch
  * @returns {Function}
  */
-const useOnSubmit = (
-  viewType,
-  queryType,
-  { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}
-) => {
+const useOnSubmit = (viewId, param, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
   return value =>
     dispatch([
       {
         type: reduxTypes.viewToolbar.SET_FILTER,
-        viewType,
-        param: queryType,
+        viewId,
+        param,
         value
       }
     ]);
@@ -36,7 +32,7 @@ const useOnSubmit = (
 /**
  * On clear input, dispatch type.
  *
- * @param {string} viewType
+ * @param {string} viewId
  * @param {string} queryType
  * @param {object} options
  * @param {Function} options.useDispatch
@@ -44,14 +40,14 @@ const useOnSubmit = (
  * @returns {Function}
  */
 const useOnClear = (
-  viewType,
+  viewId,
   queryType,
   {
     useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
     useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
   } = {}
 ) => {
-  const currentValue = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.filterQuery?.[queryType]);
+  const currentValue = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.filterQuery?.[queryType]);
   const dispatch = useAliasDispatch();
 
   return () => {
@@ -62,7 +58,7 @@ const useOnClear = (
     dispatch([
       {
         type: reduxTypes.viewToolbar.SET_FILTER,
-        viewType,
+        viewId,
         param: queryType,
         value: ''
       }
@@ -81,7 +77,7 @@ const useOnClear = (
  * @param {Function} props.useOnClear
  * @param {Function} props.useOnSubmit
  * @param {Function} props.useSelector
- * @param {string} props.viewType
+ * @param {string} props.viewId
  * @returns {React.ReactNode}
  */
 const ViewToolbarFieldFilter = ({
@@ -91,11 +87,11 @@ const ViewToolbarFieldFilter = ({
   useOnClear: useAliasOnClear,
   useOnSubmit: useAliasOnSubmit,
   useSelector: useAliasSelector,
-  viewType
+  viewId
 }) => {
-  const currentValue = useAliasSelector(({ viewOptions }) => viewOptions?.[viewType]?.filterQuery?.[queryType]);
-  const onSubmit = useAliasOnSubmit(viewType, queryType);
-  const onClear = useAliasOnClear(viewType, queryType);
+  const currentValue = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.filterQuery?.[queryType]);
+  const onSubmit = useAliasOnSubmit(viewId, queryType);
+  const onClear = useAliasOnClear(viewId, queryType);
 
   /**
    * Set up submit debounce event to allow for bypass.
@@ -141,7 +137,7 @@ const ViewToolbarFieldFilter = ({
 /**
  * Prop types
  *
- * @type {{useOnSubmit: Function, t: Function, useSelector: Function, debounceTimer: number, viewType: string,
+ * @type {{useOnSubmit: Function, t: Function, useSelector: Function, debounceTimer: number, viewId: string,
  *     useOnClear: Function, queryType: string}}
  */
 ViewToolbarFieldFilter.propTypes = {
@@ -151,13 +147,13 @@ ViewToolbarFieldFilter.propTypes = {
   useOnClear: PropTypes.func,
   useOnSubmit: PropTypes.func,
   useSelector: PropTypes.func,
-  viewType: PropTypes.string
+  viewId: PropTypes.string
 };
 
 /**
  * Default props
  *
- * @type {{useOnSubmit: Function, t: translate, useSelector: Function, debounceTimer: number, viewType: null,
+ * @type {{useOnSubmit: Function, t: translate, useSelector: Function, debounceTimer: number, viewId: null,
  *     useOnClear: Function, queryType: null}}
  */
 ViewToolbarFieldFilter.defaultProps = {
@@ -167,7 +163,7 @@ ViewToolbarFieldFilter.defaultProps = {
   useOnClear,
   useOnSubmit,
   useSelector: storeHooks.reactRedux.useSelector,
-  viewType: null
+  viewId: null
 };
 
 export { ViewToolbarFieldFilter as default, ViewToolbarFieldFilter };
