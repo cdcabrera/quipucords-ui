@@ -1,3 +1,78 @@
+// scans
+// const API_QUERY_SCANS_SORT_MOST_RECENT = 'most_recent_scanjob__start_time';
+// const API_QUERY_SCANS_SORT_NAME = 'name';
+
+// const API_QUERY_SCANS_SEARCH_NAME = 'search_by_name';
+// const API_QUERY_SCANS_SOURCE_NAME = 'search_sources_by_name';
+
+// sources
+// const API_QUERY_SOURCES_SORT_SOURCE_TYPE = 'source_type';
+// const API_QUERY_SOURCES_SORT_NAME = 'name';
+// const API_QUERY_SOURCES_SORT_MOST_RECENT = 'most_recent_connect_scan__start_time';
+
+// const API_QUERY_SOURCES_SEARCH_NAME = 'search_by_name';
+// const API_QUERY_SOURCES_SEARCH_CREDENTIAL_NAME = 'search_credentials_by_name';
+// const API_QUERY_SOURCES_SOURCE_TYPE = 'source_type';
+
+// creds
+// const API_QUERY_CREDENTIALS_SORT_CREDENTIAL_TYPE = 'cred_type';
+// const API_QUERY_CREDENTIALS_SORT_NAME = 'name';
+
+// const API_QUERY_CREDENTIALS_SEARCH_NAME = 'search_by_name';
+// const API_QUERY_CREDENTIALS_CREDENTIAL_TYPE = 'cred_type';
+
+/*
+const API_QUERY_SORT_TYPES = {
+  CREDENTIAL_TYPE: 'cred_type',
+  MOST_RECENT_CONNECT_SCAN_START_TIME: 'most_recent_connect_scan__start_time',
+  MOST_RECENT_SCANJOB_START_TIME: 'most_recent_scanjob__start_time',
+  NAME: 'name',
+  SOURCE_TYPE: 'source_type'
+};
+
+const API_QUERY_PAGING_TYPES = {
+  ORDERING: 'ordering',
+  PAGE: 'page',
+  PAGE_SIZE: 'page_size'
+};
+
+const API_QUERY_FILTER_TYPES = {
+  CREDENTIAL_TYPE: 'cred_type',
+  SEARCH_CREDENTIALS_NAME: 'search_credentials_by_name',
+  SEARCH_NAME: 'search_by_name',
+  SEARCH_SOURCES_NAME: 'search_sources_by_name',
+  SOURCE_TYPE: 'source_type'
+};
+*/
+const API_QUERY_TYPES = {
+  CREDENTIAL_TYPE: 'cred_type',
+  ORDERING: 'ordering',
+  ORDERING_ASC: 'asc',
+  ORDERING_DSC: 'dsc',
+  PAGE: 'page',
+  PAGE_SIZE: 'page_size',
+  SEARCH_CREDENTIALS_NAME: 'search_credentials_by_name',
+  SEARCH_NAME: 'search_by_name',
+  SEARCH_SOURCES_NAME: 'search_sources_by_name',
+  SOURCE_TYPE: 'source_type'
+};
+
+const API_QUERY_SORT_TYPES = {
+  CREDENTIAL_TYPE: 'cred_type',
+  MOST_RECENT_CONNECT_SCAN_START_TIME: 'most_recent_connect_scan__start_time',
+  MOST_RECENT_SCANJOB_START_TIME: 'most_recent_scanjob__start_time',
+  NAME: 'name',
+  SOURCE_TYPE: 'source_type'
+};
+
+const API_QUERY_PAGE = 'page';
+const API_QUERY_PAGE_SIZE = 'page_size';
+const API_QUERY_ORDERING = 'ordering';
+
+const API_QUERY_SCAN_TYPE = 'scan_type';
+const API_QUERY_SOURCE_TYPE = 'source_type';
+const API_QUERY_STATUS = 'status';
+
 const API_RESPONSE_CREDENTIAL_CRED_TYPE = 'cred_type';
 const API_RESPONSE_CREDENTIAL_NAME = 'name';
 const API_RESPONSE_CREDENTIAL_ID = 'id';
@@ -115,14 +190,17 @@ const API_SUBMIT_SOURCE_OPTIONS_PARAMIKO = 'use_paramiko';
 const API_SUBMIT_SOURCE_PORT = 'port';
 const API_SUBMIT_SOURCE_SOURCE_TYPE = 'source_type';
 
-const API_QUERY_PAGE = 'page';
-const API_QUERY_PAGE_SIZE = 'page_size';
-const API_QUERY_ORDERING = 'ordering';
-const API_QUERY_SCAN_TYPE = 'scan_type';
-const API_QUERY_SOURCE_TYPE = 'source_type';
-const API_QUERY_STATUS = 'status';
-
 const apiTypes = {
+  // API_QUERY_FILTER_TYPES,
+  // API_QUERY_PAGING_TYPES,
+  API_QUERY_TYPES,
+  API_QUERY_SORT_TYPES,
+  API_QUERY_PAGE,
+  API_QUERY_PAGE_SIZE,
+  API_QUERY_ORDERING,
+  API_QUERY_SCAN_TYPE,
+  API_QUERY_SOURCE_TYPE,
+  API_QUERY_STATUS,
   API_RESPONSE_CREDENTIAL_CRED_TYPE,
   API_RESPONSE_CREDENTIAL_NAME,
   API_RESPONSE_CREDENTIAL_ID,
@@ -224,18 +302,22 @@ const apiTypes = {
   API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL,
   API_SUBMIT_SOURCE_OPTIONS_PARAMIKO,
   API_SUBMIT_SOURCE_PORT,
-  API_SUBMIT_SOURCE_SOURCE_TYPE,
-  API_QUERY_PAGE,
-  API_QUERY_PAGE_SIZE,
-  API_QUERY_ORDERING,
-  API_QUERY_SCAN_TYPE,
-  API_QUERY_SOURCE_TYPE,
-  API_QUERY_STATUS
+  API_SUBMIT_SOURCE_SOURCE_TYPE
 };
 
 export {
   apiTypes as default,
   apiTypes,
+  // API_QUERY_FILTER_TYPES,
+  // API_QUERY_PAGING_TYPES,
+  API_QUERY_TYPES,
+  API_QUERY_SORT_TYPES,
+  API_QUERY_PAGE,
+  API_QUERY_PAGE_SIZE,
+  API_QUERY_ORDERING,
+  API_QUERY_SCAN_TYPE,
+  API_QUERY_SOURCE_TYPE,
+  API_QUERY_STATUS,
   API_RESPONSE_CREDENTIAL_CRED_TYPE,
   API_RESPONSE_CREDENTIAL_NAME,
   API_RESPONSE_CREDENTIAL_ID,
@@ -337,11 +419,5 @@ export {
   API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL,
   API_SUBMIT_SOURCE_OPTIONS_PARAMIKO,
   API_SUBMIT_SOURCE_PORT,
-  API_SUBMIT_SOURCE_SOURCE_TYPE,
-  API_QUERY_PAGE,
-  API_QUERY_PAGE_SIZE,
-  API_QUERY_ORDERING,
-  API_QUERY_SCAN_TYPE,
-  API_QUERY_SOURCE_TYPE,
-  API_QUERY_STATUS
+  API_SUBMIT_SOURCE_SOURCE_TYPE
 };

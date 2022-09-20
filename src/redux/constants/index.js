@@ -2,6 +2,7 @@ import { aboutModalTypes } from './aboutModalConstants';
 import { confirmationModalTypes } from './confirmationModalConstants';
 import { credentialsTypes } from './credentialsConstants';
 import { factsTypes } from './factsConstants';
+import { queryTypes } from './queryConstants';
 import { reportsTypes } from './reportsConstants';
 import { scansTypes } from './scansConstants';
 import { sourcesTypes } from './sourcesConstants';
@@ -17,6 +18,7 @@ const reduxTypes = {
   confirmationModal: confirmationModalTypes,
   credentials: credentialsTypes,
   facts: factsTypes,
+  query: queryTypes,
   reports: reportsTypes,
   scans: scansTypes,
   sources: sourcesTypes,
@@ -35,6 +37,7 @@ export {
   confirmationModalTypes,
   credentialsTypes,
   factsTypes,
+  queryTypes,
   reportsTypes,
   scansTypes,
   sourcesTypes,
