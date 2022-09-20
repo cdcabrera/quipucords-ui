@@ -9,7 +9,7 @@ import {
   SelectPosition
 } from '../addCredentialType/addCredentialType';
 import { reduxTypes, storeHooks } from '../../redux';
-import ViewToolbar from '../viewToolbar/viewToolbar';
+import ViewToolbar from '../viewToolbar/viewToolbar.deprecated';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import { CredentialsEmptyState } from './credentialsEmptyState';
 import { CredentialFilterFields, CredentialSortFields } from './credentialConstants';

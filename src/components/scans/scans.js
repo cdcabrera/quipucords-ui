@@ -4,7 +4,7 @@ import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from 
 import { IconSize } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { reduxTypes, storeHooks } from '../../redux';
-import ViewToolbar from '../viewToolbar/viewToolbar';
+import ViewToolbar from '../viewToolbar/viewToolbar.deprecated';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import { ScansEmptyState } from './scansEmptyState';
 import { ScanFilterFields, ScanSortFields } from './scanConstants';

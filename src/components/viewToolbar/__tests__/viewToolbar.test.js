@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import ViewToolbar from '../viewToolbar';
+import ViewToolbar from '../viewToolbar.deprecated';
 import { viewTypes } from '../../../redux/constants';
 
 describe('ViewPaginationRow Component', () => {
