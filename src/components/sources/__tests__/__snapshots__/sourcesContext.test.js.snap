@@ -103,7 +103,6 @@ Object {
   "useOnDelete": [Function],
   "useOnEdit": [Function],
   "useOnExpand": [Function],
-  "useOnRefresh": [Function],
   "useOnScan": [Function],
   "useOnSelect": [Function],
   "usePoll": [Function],

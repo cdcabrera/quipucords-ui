@@ -1,6 +1,5 @@
 import { context, useGetCredentials, useOnDelete, useOnEdit } from '../credentialsContext';
 import { apiTypes } from '../../../constants/apiConstants';
-import { reduxTypes } from '../../../redux';
 
 describe('CredentialsContext', () => {
   it('should return specific properties', () => {
@@ -66,8 +65,8 @@ describe('CredentialsContext', () => {
 
     const { result: mockStoreSuccessResponse } = shallowHook(() => useGetCredentials(), {
       state: {
-        viewOptions: {
-          [reduxTypes.view.SCANS_VIEW]: {}
+        view: {
+          update: {}
         },
         credentials: {
           expanded: {},

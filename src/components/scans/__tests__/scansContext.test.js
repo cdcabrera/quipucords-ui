@@ -1,6 +1,5 @@
 import { context, useGetScans, useOnScanAction, usePoll } from '../scansContext';
 import { apiTypes } from '../../../constants/apiConstants';
-import { reduxTypes } from '../../../redux';
 
 describe('ScansContext', () => {
   it('should return specific properties', () => {
@@ -76,8 +75,8 @@ describe('ScansContext', () => {
 
     const { result: mockStoreSuccessResponse } = shallowHook(() => useGetScans(), {
       state: {
-        viewOptions: {
-          [reduxTypes.view.SCANS_VIEW]: {}
+        view: {
+          update: {}
         },
         scans: {
           expanded: {},

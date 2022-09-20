@@ -112,7 +112,6 @@ Object {
   "useContextGetScans": [Function],
   "useGetScans": [Function],
   "useOnExpand": [Function],
-  "useOnRefresh": [Function],
   "useOnScanAction": [Function],
   "useOnSelect": [Function],
   "usePoll": [Function],

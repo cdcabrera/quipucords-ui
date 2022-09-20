@@ -3,6 +3,7 @@ import { AlertVariant } from '@patternfly/react-core';
 import { useShallowCompareEffect } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
+import { useView } from '../view/viewContext';
 import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
@@ -48,23 +49,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.scans.UPDATE_SCANS
-    });
-  };
-};
-
-/**
  * Report/scan actions cancel, pause, restart, start, and download.
  *
  * @param {object} options
@@ -76,6 +60,7 @@ const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.us
  * @param {Function} options.t
  * @param {Function} options.useDispatch
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{onRestart: Function, onDownload: Function, onStart: Function, onCancel: Function, onPause: Function}}
  */
 const useOnScanAction = ({
@@ -86,8 +71,10 @@ const useOnScanAction = ({
   startScan = reduxActions.scans.startScan,
   t = translate,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { viewId } = useAliasView();
   const [updatedScan, setUpdatedScan] = useState({});
   const { id: scanId, name: scanName, context: scanContext } = updatedScan;
   const dispatch = useAliasDispatch();
@@ -126,14 +113,15 @@ const useOnScanAction = ({
         dispatch([
           ...dispatchList,
           {
-            type: reduxTypes.scans.UPDATE_SCANS
+            type: reduxTypes.view.UPDATE_VIEW,
+            viewId
           }
         ]);
 
         setUpdatedScan({});
       }
     }
-  }, [dispatch, error, errorMessage, fulfilled, pending, scanContext, scanId, scanName, t]);
+  }, [dispatch, error, errorMessage, fulfilled, pending, scanContext, scanId, scanName, t, viewId]);
 
   /**
    * onCancel for scanning
@@ -268,6 +256,7 @@ const usePoll = ({
  * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
  *     expandedRows: *, error: boolean}}
  */
@@ -276,15 +265,16 @@ const useGetScans = ({
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
   usePoll: useAliasPoll = usePoll,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
-    ({ scans }) => scans?.update,
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
+    ({ view }) => view.update?.[viewId],
     ({ scans }) => scans?.selected,
-    ({ scans }) => scans?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.SCANS_VIEW]
+    ({ scans }) => scans?.expanded
   ]);
   const {
     data: responseData,
@@ -298,7 +288,6 @@ const useGetScans = ({
   const [{ date } = {}] = responses?.list || [];
   const { [apiTypes.API_RESPONSE_SCANS_COUNT]: totalResults, [apiTypes.API_RESPONSE_SCANS_RESULTS]: data = [] } =
     responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_TYPES.SCAN_TYPE]: 'inspect' });
 
   useShallowCompareEffect(() => {
     getScans(query)(dispatch);
@@ -322,11 +311,22 @@ const useGetScans = ({
  * Get scans in the context of the scans view.
  *
  * @param {object} options
+ * @param {object} options.query
  * @param {Function} options.useGetScans
+ * @param {string} options.viewId
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useContextGetScans = ({ useGetScans: useAliasGetScans = useGetScans } = {}) => {
-  const results = useAliasGetScans();
+const useContextGetScans = ({
+  query = INITIAL_QUERY,
+  useGetScans: useAliasGetScans = useGetScans,
+  viewId = VIEW_ID
+} = {}) => {
+  const results = useAliasGetScans({
+    useView: () => ({
+      viewId,
+      query
+    })
+  });
 
   return {
     ...results
@@ -339,7 +339,6 @@ const context = {
   useContextGetScans,
   useGetScans,
   useOnExpand,
-  useOnRefresh,
   useOnScanAction,
   useOnSelect,
   usePoll
@@ -353,7 +352,6 @@ export {
   useContextGetScans,
   useGetScans,
   useOnExpand,
-  useOnRefresh,
   useOnScanAction,
   useOnSelect,
   usePoll

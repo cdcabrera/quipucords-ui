@@ -4,6 +4,7 @@ import { AlertVariant, List, ListItem } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
+import { useView } from '../view/viewContext';
 import { useConfirmation } from '../../hooks/useConfirmation';
 import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
@@ -36,6 +37,7 @@ const INITIAL_QUERY = {
  * @param {Function} options.useConfirmation
  * @param {Function} options.useDispatch
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {(function(*): void)|*}
  */
 const useOnDelete = ({
@@ -43,8 +45,10 @@ const useOnDelete = ({
   t = translate,
   useConfirmation: useAliasConfirmation = useConfirmation,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { viewId } = useAliasView();
   const onConfirmation = useAliasConfirmation();
   const [sourcesToDelete, setSourcesToDelete] = useState([]);
   const dispatch = useAliasDispatch();
@@ -84,7 +88,8 @@ const useOnDelete = ({
           item: sourcesToDelete
         },
         {
-          type: reduxTypes.sources.UPDATE_SOURCES
+          type: reduxTypes.view.UPDATE_VIEW,
+          viewId
         }
       ]);
 
@@ -112,13 +117,14 @@ const useOnDelete = ({
           item: sourcesToDelete
         },
         {
-          type: reduxTypes.sources.UPDATE_SOURCES
+          type: reduxTypes.view.UPDATE_VIEW,
+          viewId
         }
       ]);
 
       setSourcesToDelete(() => []);
     }
-  }, [deletedError, deletedFulfilled, dispatch, errorMessage, sourcesToDelete, t]);
+  }, [deletedError, deletedFulfilled, dispatch, errorMessage, sourcesToDelete, t, viewId]);
 
   return sources => {
     const updatedSources = (Array.isArray(sources) && sources) || [sources];
@@ -200,23 +206,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.sources.UPDATE_SOURCES
-    });
-  };
-};
-
-/**
  * On scan a source
  *
  * @param {object} options
@@ -292,6 +281,7 @@ const usePoll = ({
  * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean,
  *     error: boolean, selectedSources: *}}
  */
@@ -300,15 +290,16 @@ const useGetSources = ({
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
   usePoll: useAliasPoll = usePoll,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
-    ({ sources }) => sources?.update,
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
+    ({ view }) => view.update?.[viewId],
     ({ sources }) => sources?.selected,
-    ({ sources }) => sources?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.SOURCES_VIEW]
+    ({ sources }) => sources?.expanded
   ]);
   const {
     data: responseData,
@@ -322,7 +313,6 @@ const useGetSources = ({
   const [{ date } = {}] = responses?.list || [];
   const { [apiTypes.API_RESPONSE_SOURCES_COUNT]: totalResults, [apiTypes.API_RESPONSE_SOURCES_RESULTS]: data = [] } =
     responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions);
 
   useShallowCompareEffect(() => {
     getSources(query)(dispatch);
@@ -346,11 +336,22 @@ const useGetSources = ({
  * Get sources in the context of the sources view.
  *
  * @param {object} options
+ * @param {object} options.query
  * @param {Function} options.useGetSources
+ * @param {string} options.viewId
  * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean, error: boolean, selectedSources: *}}
  */
-const useContextGetSources = ({ useGetSources: useAliasGetSources = useGetSources } = {}) => {
-  const results = useAliasGetSources();
+const useContextGetSources = ({
+  query = INITIAL_QUERY,
+  useGetSources: useAliasGetSources = useGetSources,
+  viewId = VIEW_ID
+} = {}) => {
+  const results = useAliasGetSources({
+    useView: () => ({
+      viewId,
+      query
+    })
+  });
 
   return {
     ...results
@@ -365,7 +366,6 @@ const context = {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect,
   usePoll
@@ -381,7 +381,6 @@ export {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect,
   usePoll
