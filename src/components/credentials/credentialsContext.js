@@ -3,10 +3,50 @@ import { useShallowCompareEffect } from 'react-use';
 import { AlertVariant, List, ListItem } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-import { apiTypes } from '../../constants/apiConstants';
-import { helpers } from '../../common';
+import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
+// import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
 import { useConfirmation } from '../../hooks/useConfirmation';
+import { context as viewContext } from '../view/viewContext';
+
+/**
+ * ToDo: centralize common view hooks
+ * We repeat hooks/functions across views. Review making a centralized configurable view component and
+ * applying a central set of contextual hooks.
+ */
+/**
+ * Charge initial view query
+ *
+ * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
+ */
+const credentialsQuery = {
+  [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
+  [API_QUERY_TYPES.PAGE]: 1,
+  [API_QUERY_TYPES.PAGE_SIZE]: 10
+};
+
+/**
+ * Context query for credentials.
+ *
+ * @param {object} options
+ * @param {object} options.queryCharge
+ * @param {Function} options.useSelector
+ * @param {string} options.viewId
+ * @returns {object}
+ */
+/*
+const useQuery = ({
+  queryCharge = credentialsQuery,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector,
+  viewId
+} = {}) => {
+  const query = useAliasSelector(({ view }) => view?.query?.[viewId], {});
+  return {
+    ...queryCharge,
+    ...query
+  };
+};
+ */
 
 /**
  * Credential action, onDelete.
@@ -227,23 +267,27 @@ const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
  * @param {object} options
  * @param {Function} options.getCredentials
  * @param {Function} options.useDispatch
+ * @param {Function} options.useQuery
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {string} options.viewId
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
  *     expandedRows: *, error: boolean}}
  */
 const useGetCredentials = ({
   getCredentials = reduxActions.credentials.getCredentials,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useQuery: useAliasQuery = viewContext.useQuery,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  viewId
 } = {}) => {
   const dispatch = useAliasDispatch();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
     ({ credentials }) => credentials?.update,
     ({ credentials }) => credentials?.selected,
-    ({ credentials }) => credentials?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.CREDENTIALS_VIEW]
+    ({ credentials }) => credentials?.expanded
+    // ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.CREDENTIALS_VIEW]
   ]);
   const {
     data: responseData,
@@ -253,10 +297,12 @@ const useGetCredentials = ({
     pending,
     responses = {}
   } = useAliasSelectorsResponse({ id: 'view', selector: ({ credentials }) => credentials?.view });
+  const query = useAliasQuery({ viewId });
+  console.log('>>>>>>>> newQuery', query);
 
   const [{ date } = {}] = responses?.list || [];
   const { [apiTypes.API_RESPONSE_CREDENTIALS_RESULTS]: data = [] } = responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions);
+  // const query = helpers.createViewQueryObject(viewOptions);
 
   useShallowCompareEffect(() => {
     getCredentials(null, query)(dispatch);
@@ -275,6 +321,7 @@ const useGetCredentials = ({
 };
 
 const context = {
+  credentialsQuery,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -286,6 +333,7 @@ const context = {
 export {
   context as default,
   context,
+  credentialsQuery,
   useGetCredentials,
   useOnDelete,
   useOnEdit,

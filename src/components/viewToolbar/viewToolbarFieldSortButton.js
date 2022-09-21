@@ -4,60 +4,65 @@ import { SortAmountDownAltIcon, SortAmountUpIcon } from '@patternfly/react-icons
 import PropTypes from 'prop-types';
 import { reduxTypes, storeHooks } from '../../redux';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { useQuery, useView } from '../view/viewContext';
 
 /**
  * On click sorting.
  *
  * @param {object} options
  * @param {Function} options.useDispatch
- * @param {string} options.viewId
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useOnClick = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch, viewId } = {}) => {
+const useOnClick = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useView: useAliasView = useView
+} = {}) => {
+  const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
-  return value =>
+  return value => {
     dispatch([
       {
-        type: reduxTypes.query.SET_QUERY_TYPES[(value && API_QUERY_TYPES.ORDERING_DSC) || API_QUERY_TYPES.ORDERING_ASC],
-        viewId
+        type: reduxTypes.query.SET_QUERY,
+        viewId,
+        filter: API_QUERY_TYPES.ORDERING,
+        value
       }
     ]);
+  };
 };
 
 /**
  * Toolbar sort button wrapper.
  *
  * @param {object} props
- * @param {boolean} props.isAscending
  * @param {Function} props.useOnClick
- * @param {Function} props.useSelector
- * @param {string} props.viewId
+ * @param {Function} props.useQuery
  * @param {object} props.props
  * @returns {React.ReactNode}
  */
 const ViewToolbarFieldSortButton = ({
-  isAscending,
+  // isAscending,
   useOnClick: useAliasOnClick,
-  useSelector: useAliasSelector,
-  viewId,
+  useQuery: useAliasQuery,
   ...props
 }) => {
-  const updatedOrdering = useAliasSelector(
-    ({ view }) => view?.query?.[viewId]?.[API_QUERY_TYPES.ORDERING],
-    isAscending
-  );
-  const updatedIsAscending = !/^-/.test(updatedOrdering);
-  const onClick = useAliasOnClick({ viewId });
+  const onClick = useAliasOnClick();
+  const { [API_QUERY_TYPES.ORDERING]: ordering } = useAliasQuery();
+
+  const isDescending = /^-/.test(ordering);
+  let updatedDirection = ordering.replace(/^-/, '');
+  updatedDirection = isDescending ? updatedDirection : `-${updatedDirection}`;
 
   return (
     <Button
-      onClick={() => onClick(!updatedIsAscending)}
+      onClick={() => onClick(updatedDirection)}
       variant={ButtonVariant.plain}
       data-test="toolbarSortButton"
       {...props}
     >
-      {(updatedIsAscending && <SortAmountDownAltIcon />) || <SortAmountUpIcon />}
+      {(isDescending && <SortAmountUpIcon />) || <SortAmountDownAltIcon />}
     </Button>
   );
 };
@@ -65,25 +70,23 @@ const ViewToolbarFieldSortButton = ({
 /**
  * Prop types
  *
- * @type {{useSelector: Function, viewId: string, useOnClick: Function, isAscending: boolean}}
+ * @type {{useQuery: Function, viewId: string, useOnClick: Function}}
  */
 ViewToolbarFieldSortButton.propTypes = {
-  isAscending: PropTypes.bool,
+  // isAscending: PropTypes.bool,
   useOnClick: PropTypes.func,
-  useSelector: PropTypes.func,
-  viewId: PropTypes.string
+  useQuery: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useSelector: Function, viewId: null, useOnClick: Function, isAscending: boolean}}
+ * @type {{useQuery: Function, useOnClick: Function}}
  */
 ViewToolbarFieldSortButton.defaultProps = {
-  isAscending: true,
+  // isAscending: true,
   useOnClick,
-  useSelector: storeHooks.reactRedux.useSelector,
-  viewId: null
+  useQuery
 };
 
 export { ViewToolbarFieldSortButton as default, ViewToolbarFieldSortButton, useOnClick };
