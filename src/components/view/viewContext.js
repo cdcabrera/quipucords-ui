@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { storeHooks } from '../../redux';
 import { helpers } from '../../common';
 
-const DEFAULT_CONTEXT = [{ initialQuery: {}, toolbarConfig: {} }, helpers.noop];
+const DEFAULT_CONTEXT = [{}, helpers.noop];
 
 const ViewContext = React.createContext(DEFAULT_CONTEXT);
 
@@ -42,7 +42,7 @@ const useQuery = ({
  * @returns {{toolbar}}
  */
 const useConfig = ({ useViewContext: useAliasViewContext = useViewContext } = {}) => {
-  const { toolbarConfig: toolbar } = useAliasViewContext();
+  const { toolbar } = useAliasViewContext();
 
   return {
     toolbar
@@ -79,7 +79,8 @@ const context = {
   DEFAULT_CONTEXT,
   useQuery,
   useConfig,
-  useView
+  useView,
+  useViewContext
 };
 
-export { context as default, context, ViewContext, DEFAULT_CONTEXT, useQuery, useConfig, useView };
+export { context as default, context, ViewContext, DEFAULT_CONTEXT, useQuery, useConfig, useView, useViewContext };

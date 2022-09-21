@@ -6,7 +6,7 @@ import { Tooltip } from '../tooltip/tooltip';
 import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
 import { translate } from '../i18n/i18n';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
-import { useQuery, useView } from '../view/viewContext';
+import { useView } from '../view/viewContext';
 
 /**
  * On select category for sorting.
@@ -38,22 +38,23 @@ const useOnSelect = ({
  * Toolbar sort button wrapper.
  *
  * @param {object} props
- * @param {Array} props.options
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
- * @param {Function} props.useQuery
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
-const ViewToolbarFieldSort = ({ options, t, useOnSelect: useAliasOnSelect, useQuery: useAliasQuery }) => {
-  const { [API_QUERY_TYPES.ORDERING]: selectedOption } = useAliasQuery();
+const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAliasView }) => {
   const onSelect = useAliasOnSelect();
+  const { query, config } = useAliasView();
+  const { [API_QUERY_TYPES.ORDERING]: selectedOption } = query;
+  const { sortFields } = config?.toolbar || {};
 
   return (
     <React.Fragment>
       <DropdownSelect
-        options={options}
+        options={sortFields}
         onSelect={onSelect}
-        selectedOptions={selectedOption}
+        selectedOptions={selectedOption.replace(/^-/, '')}
         data-test="toolbarSortType"
       />
       <Tooltip placement="right" content={t('toolbar.label', { context: ['option', 'sort', selectedOption] })}>
@@ -66,31 +67,23 @@ const ViewToolbarFieldSort = ({ options, t, useOnSelect: useAliasOnSelect, useQu
 /**
  * Prop types
  *
- * @type {{useQuery: Function, t: Function, useSelector: Function, options:Array}}
+ * @type {{useView: Function, t: Function, useSelector: Function}}
  */
 ViewToolbarFieldSort.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-      value: PropTypes.any,
-      selected: PropTypes.bool
-    })
-  ),
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
-  useQuery: PropTypes.func
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useOnSelect: Function, t: Function, useQuery: Function, options: *[]}}
+ * @type {{useOnSelect: Function, t: Function, useView: Function}}
  */
 ViewToolbarFieldSort.defaultProps = {
-  options: [],
   t: translate,
   useOnSelect,
-  useQuery
+  useView
 };
 
 export { ViewToolbarFieldSort as default, ViewToolbarFieldSort, useOnSelect };

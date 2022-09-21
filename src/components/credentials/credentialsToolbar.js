@@ -45,8 +45,8 @@ const CredentialsSortFields = [
 ];
 
 const CredentialsToolbar = {
-  CredentialsFilterFields,
-  CredentialsSortFields
+  filterFields: CredentialsFilterFields,
+  sortFields: CredentialsSortFields
 };
 
 export { CredentialsToolbar as default, CredentialsToolbar, CredentialsFilterFields, CredentialsSortFields };
