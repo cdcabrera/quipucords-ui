@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { storeHooks } from '../../redux';
+import { reduxTypes, storeHooks } from '../../redux';
 import { helpers } from '../../common';
 
 const DEFAULT_CONTEXT = [{}, helpers.noop];
@@ -26,7 +26,7 @@ const useQuery = ({
   useViewContext: useAliasViewContext = useViewContext
 } = {}) => {
   const { initialQuery, viewId } = useAliasViewContext();
-  const query = useAliasSelector(({ query: viewQuery }) => viewQuery.query?.[viewId], {});
+  const query = useAliasSelector(({ view }) => view.query?.[viewId], {});
 
   return {
     ...initialQuery,
@@ -74,13 +74,47 @@ const useView = ({
   };
 };
 
+/**
+ * On refresh view.
+ *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useViewContext
+ * @returns {Function}
+ */
+const useOnRefresh = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useViewContext: useAliasViewContext = useViewContext
+} = {}) => {
+  const { viewId } = useAliasViewContext();
+  const dispatch = useAliasDispatch();
+
+  return () => {
+    dispatch({
+      type: reduxTypes.view.UPDATE_VIEW,
+      viewId
+    });
+  };
+};
+
 const context = {
   ViewContext,
   DEFAULT_CONTEXT,
   useQuery,
   useConfig,
+  useOnRefresh,
   useView,
   useViewContext
 };
 
-export { context as default, context, ViewContext, DEFAULT_CONTEXT, useQuery, useConfig, useView, useViewContext };
+export {
+  context as default,
+  context,
+  ViewContext,
+  DEFAULT_CONTEXT,
+  useQuery,
+  useConfig,
+  useOnRefresh,
+  useView,
+  useViewContext
+};

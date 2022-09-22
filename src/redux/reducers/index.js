@@ -4,7 +4,7 @@ import addSourceWizardReducer from './addSourceWizardReducer';
 import confirmationModalReducer from './confirmationModalReducer';
 import credentialsReducer from './credentialsReducer';
 import factsReducer from './factsReducer';
-import queryReducer from './queryReducer';
+// import queryReducer from './queryReducer';
 import reportsReducer from './reportsReducer';
 import scansReducer from './scansReducer';
 import scansEditReducer from './scansEditReducer';
@@ -13,6 +13,7 @@ import statusReducer from './statusReducer';
 import toastNotificationsReducer from './toastNotificationsReducer';
 import userReducer from './userReducer';
 import viewOptionsReducer from './viewOptionsReducer';
+import viewReducer from './viewReducer';
 
 const reducers = {
   aboutModal: aboutModalReducer,
@@ -20,7 +21,7 @@ const reducers = {
   confirmationModal: confirmationModalReducer,
   credentials: credentialsReducer,
   facts: factsReducer,
-  query: queryReducer,
+  // query: queryReducer,
   reports: reportsReducer,
   scans: scansReducer,
   scansEdit: scansEditReducer,
@@ -28,7 +29,8 @@ const reducers = {
   status: statusReducer,
   toastNotifications: toastNotificationsReducer,
   user: userReducer,
-  viewOptions: viewOptionsReducer
+  viewOptions: viewOptionsReducer,
+  view: viewReducer
 };
 
 const reduxReducers = combineReducers(reducers);
@@ -41,7 +43,7 @@ export {
   confirmationModalReducer,
   credentialsReducer,
   factsReducer,
-  queryReducer,
+  // queryReducer,
   reportsReducer,
   scansReducer,
   scansEditReducer,
@@ -49,5 +51,6 @@ export {
   statusReducer,
   toastNotificationsReducer,
   userReducer,
-  viewOptionsReducer
+  viewOptionsReducer,
+  viewReducer
 };

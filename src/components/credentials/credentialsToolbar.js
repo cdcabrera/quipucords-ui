@@ -12,6 +12,7 @@ import { API_QUERY_SORT_TYPES, API_QUERY_TYPES } from '../../constants/apiConsta
 const CredentialsFilterFields = [
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_NAME] }),
+    value: API_QUERY_TYPES.SEARCH_NAME,
     component: function SearchName(props) {
       return <ViewToolbarTextInput filter={API_QUERY_TYPES.SEARCH_NAME} {...props} />;
     },
@@ -19,6 +20,7 @@ const CredentialsFilterFields = [
   },
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_TYPES.CREDENTIAL_TYPE] }),
+    value: API_QUERY_TYPES.CREDENTIAL_TYPE,
     component: function CredentialType(props) {
       return <ViewToolbarSelect filter={API_QUERY_TYPES.CREDENTIAL_TYPE} {...props} />;
     }

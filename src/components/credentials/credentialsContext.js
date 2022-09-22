@@ -6,7 +6,7 @@ import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { useConfirmation } from '../../hooks/useConfirmation';
-import { useQuery } from '../view/viewContext';
+import { useView } from '../view/viewContext';
 
 /**
  * Charge initial view query
@@ -197,23 +197,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.credentials.UPDATE_CREDENTIALS
-    });
-  };
-};
-
-/**
  * On select a row.
  *
  * @param {object} options
@@ -238,23 +221,23 @@ const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
  * @param {object} options
  * @param {Function} options.getCredentials
  * @param {Function} options.useDispatch
- * @param {Function} options.useQuery
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
  *     expandedRows: *, error: boolean}}
  */
 const useGetCredentials = ({
   getCredentials = reduxActions.credentials.getCredentials,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useQuery: useAliasQuery = useQuery,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
-  const query = useAliasQuery();
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
-    ({ credentials }) => credentials?.update,
+    ({ view }) => view.update?.[viewId],
     ({ credentials }) => credentials?.selected,
     ({ credentials }) => credentials?.expanded
   ]);
@@ -292,7 +275,6 @@ const context = {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 };
 
@@ -304,6 +286,5 @@ export {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 };

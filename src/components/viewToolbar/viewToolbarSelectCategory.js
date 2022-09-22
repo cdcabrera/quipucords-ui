@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useShallowCompareEffect } from 'react-use';
+// import { useShallowCompareEffect } from 'react-use';
 import { FilterIcon } from '@patternfly/react-icons';
 import { reduxTypes, storeHooks } from '../../redux';
 import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
 import { translate } from '../i18n/i18n';
-// import { useSelectCategoryOptions } from './viewToolbarContext';
+import { useView } from '../view/viewContext';
+// import filterFields from '../credentials/credentialsToolbar'
 
 /**
  * On select update category.
@@ -21,14 +22,62 @@ const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactR
   return ({ value = null } = {}) => {
     dispatch([
       {
-        type: reduxTypes.viewToolbar.SET_FILTER_TYPE,
+        type: reduxTypes.view.SET_FILTER,
         viewId,
-        // currentFilter: value
-        category: value
+        currentFilterCategory: value
       }
     ]);
   };
 };
+
+/**
+ * Return filtered category options, current, and initial value.
+ *
+ * @param {object} options
+ * @param {Array} options.categoryOptions
+ * @param {Function} options.useProduct
+ * @param {Function} options.useProductToolbarConfig
+ * @param {Function} options.useSelector
+ * @returns {object}
+ */
+/*
+const useSelectCategoryOptions = ({
+  // categoryOptions = toolbarFieldOptions,
+  // useProduct: useAliasProduct = useProduct,
+  useView: useAliasView = useView,
+  // useProductToolbarConfig: useAliasProductToolbarConfig = useProductToolbarConfig,
+  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
+} = {}) => {
+  const { viewId, config } = useAliasView();
+  const { toolbar: options } = config;
+
+  const { currentCategory } = useAliasSelector(({ view }) => view.filters?.[viewId], {});
+
+  /*
+  let initialCategory;
+
+  const updatedOptions = options.map(option => {
+    const { selected, value } = option;
+
+    if (currentCategory === undefined && selected) {
+      initialCategory = value;
+    }
+
+    return {
+      ...option,
+      selected: (currentCategory === undefined && selected) || currentCategory === value
+    };
+  });
+  * /
+
+  return {
+    currentCategory,
+    options
+    // initialCategory,
+    // options: updatedOptions
+  };
+};
+ */
 
 /**
  * Select available filter categories.
@@ -42,32 +91,42 @@ const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactR
  * @returns {React.ReactNode}
  */
 const ViewToolbarSelectCategory = ({
-  options,
+  // options,
   t,
   useOnSelect: useAliasOnSelect,
   // useSelector: useAliasSelector,
-  useSelectCategoryOptions: useAliasSelectCategoryOptions,
-  viewId
+  // useSelectCategoryOptions: useAliasSelectCategoryOptions,
+  useSelector: useAliasSelector,
+  useView: useAliasView
+  // viewId
   // t,
   // useOnSelect: useAliasOnSelect,
   // useSelectCategoryOptions: useAliasSelectCategoryOptions
 }) => {
   // const selectedOption = useAliasSelector(({ viewOptions }) => viewOptions?.[viewId]?.currentCategory, undefined);
-  const { categoryFields, initialCategory } = useAliasSelectCategoryOptions(viewId, options);
+  const { viewId, config } = useAliasView();
+  const options = config.toolbar.filterFields;
   const onSelect = useAliasOnSelect(viewId);
 
+  const selectedOption = useAliasSelector(({ view }) => view?.filters?.[viewId]?.currentFilterCategory);
+  // const { currentCategory } = useAliasSelector(({ view }) => view.filters?.[viewId], {});
+  // const { categoryFields, initialCategory } = useAliasSelectCategoryOptions(viewId, options);
+
+  /*
   useShallowCompareEffect(() => {
     if (initialCategory) {
       onSelect({ value: initialCategory });
     }
   }, [initialCategory, onSelect]);
+  */
 
   return (
     <DropdownSelect
       ariaLabel={t('toolbar.label', { context: ['placeholder', 'filter'] })}
       placeholder={t('toolbar.label', { context: ['placeholder', 'filter'] })}
-      options={categoryFields}
+      options={options}
       onSelect={onSelect}
+      selectedOptions={selectedOption}
       // selectedOptions={currentCategory}
       toggleIcon={<FilterIcon />}
     />
@@ -80,6 +139,7 @@ const ViewToolbarSelectCategory = ({
  * @type {{useOnSelect: Function, t: Function, useSelectCategoryOptions: Function}}
  */
 ViewToolbarSelectCategory.propTypes = {
+  /*
   options: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
@@ -87,10 +147,12 @@ ViewToolbarSelectCategory.propTypes = {
       selected: PropTypes.bool
     })
   ),
+   */
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
-  useSelectCategoryOptions: PropTypes.func,
-  viewId: PropTypes.string
+  useSelector: PropTypes.func,
+  // useSelectCategoryOptions: PropTypes.func,
+  useView: PropTypes.func
 };
 
 /**
@@ -99,12 +161,13 @@ ViewToolbarSelectCategory.propTypes = {
  * @type {{useOnSelect: Function, t: Function, useSelectCategoryOptions: Function}}
  */
 ViewToolbarSelectCategory.defaultProps = {
-  options: [],
+  // options: [],
   t: translate,
   useOnSelect,
-  useSelectCategoryOptions: Function.prototype,
+  useSelector: storeHooks.reactRedux.useSelector,
+  // useSelectCategoryOptions: Function.prototype,
   // useSelectCategoryOptions,
-  viewId: null
+  useView
 };
 
 export { ViewToolbarSelectCategory as default, ViewToolbarSelectCategory, useOnSelect };

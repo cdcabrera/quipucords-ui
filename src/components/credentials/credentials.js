@@ -23,7 +23,6 @@ import {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 } from './credentialsContext';
 import { CredentialsToolbar } from './credentialsToolbar';
@@ -45,7 +44,6 @@ const CONFIG = {
  * @param {Function} props.useOnDelete
  * @param {Function} props.useOnEdit
  * @param {Function} props.useOnExpand
- * @param {Function} props.useOnRefresh
  * @param {Function} props.useOnSelect
  * @param {Function} props.useSelectors
  * @param {Function} props.useOnShowAddSourceWizard
@@ -58,7 +56,6 @@ const Credentials = ({
   useOnDelete: useAliasOnDelete,
   useOnEdit: useAliasOnEdit,
   useOnExpand: useAliasOnExpand,
-  useOnRefresh: useAliasOnRefresh,
   useOnSelect: useAliasOnSelect,
   useSelectors: useAliasSelectors,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
@@ -66,7 +63,6 @@ const Credentials = ({
 }) => {
   const { viewId } = useAliasView();
   const onExpand = useAliasOnExpand();
-  const onRefresh = useAliasOnRefresh();
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
   const onSelect = useAliasOnSelect();
@@ -141,7 +137,6 @@ const Credentials = ({
               viewType={reduxTypes.view.CREDENTIALS_VIEW}
               filterFields={CredentialFilterFields}
               sortFields={CredentialSortFields}
-              onRefresh={() => onRefresh()}
               lastRefresh={new Date(date).getTime()}
               actions={renderToolbarActions()}
               itemsType="Credential"
@@ -149,7 +144,11 @@ const Credentials = ({
               selectedCount={viewOptions.selectedItems?.length}
               {...viewOptions}
             />
-            <ViewToolbarTest key="new-toolbar" viewId={viewId} secondaryFields={renderToolbarActions()} />
+            <ViewToolbarTest
+              key="new-toolbar"
+              lastRefresh={new Date(date).getTime()}
+              secondaryFields={renderToolbarActions()}
+            />
             <ViewPaginationRow viewType={reduxTypes.view.CREDENTIALS_VIEW} {...viewOptions} />
           </React.Fragment>
         )}
@@ -201,7 +200,7 @@ const Credentials = ({
 /**
  * Prop types
  *
- * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: Function, useOnRefresh: Function,
+ * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: Function,
  *     useOnDelete: Function, useOnExpand: Function, useSelectors: Function, useGetCredentials: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
@@ -211,7 +210,6 @@ Credentials.propTypes = {
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
-  useOnRefresh: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
   useSelectors: PropTypes.func,
@@ -221,7 +219,7 @@ Credentials.propTypes = {
 /**
  * Default props
  *
- * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: translate, useOnRefresh: Function,
+ * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: translate,
  *     useOnDelete: Function, useOnExpand: Function, useSelectors: Function, useGetCredentials: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
@@ -231,7 +229,6 @@ Credentials.defaultProps = {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect,
   useOnShowAddSourceWizard,
   useSelectors: storeHooks.reactRedux.useSelectors,
