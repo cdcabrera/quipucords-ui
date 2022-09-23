@@ -1,10 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { SortAmountDownAltIcon, SortAmountUpIcon } from '@patternfly/react-icons';
-import PropTypes from 'prop-types';
 import { reduxTypes, storeHooks } from '../../redux';
-import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { useQuery, useView } from '../view/viewContext';
+import { API_QUERY_TYPES } from '../../constants/apiConstants';
 
 /**
  * On click sorting.

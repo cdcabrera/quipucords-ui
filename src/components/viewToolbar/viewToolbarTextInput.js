@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { InputGroup } from '@patternfly/react-core';
 import _debounce from 'lodash/debounce';
 import { reduxTypes, storeHooks } from '../../redux';
-import { TextInput } from '../form/textInput';
-import { translate } from '../i18n/i18n';
-import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { useView } from '../view/viewContext';
+import { TextInput } from '../form/textInput';
+import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
 
 /**
  * Available text input filters

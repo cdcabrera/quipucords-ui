@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownSelect, SelectPosition } from '../dropdownSelect/dropdownSelect';
 import { reduxTypes, storeHooks } from '../../redux';
-import { translate } from '../i18n/i18n';
-import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { useView } from '../view/viewContext';
+import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
 
 /*
  * Credential, and source, field options
@@ -108,7 +108,7 @@ const ViewToolbarSelect = ({
 /**
  * Prop types
  *
- * @type {{filter: string, useOnSelect: Function, useView: string, t: Function, useSelector: Function, position: string,
+ * @type {{filter: string, useView: Function, useOnSelect: Function, t: Function, useSelector: Function, position: string,
  *     filterOptions: object}}
  */
 ViewToolbarSelect.propTypes = {
@@ -118,15 +118,6 @@ ViewToolbarSelect.propTypes = {
     [API_QUERY_TYPES.SOURCE_TYPE]: PropTypes.array
   }),
   position: PropTypes.oneOf([...Object.values(SelectPosition)]),
-  /*
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-      value: PropTypes.any,
-      selected: PropTypes.bool
-    })
-  ),
-  */
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
   useSelector: PropTypes.func,
@@ -136,7 +127,7 @@ ViewToolbarSelect.propTypes = {
 /**
  * Default props
  *
- * @type {{useOnSelect: Function, useView: null, t: translate, useSelector: Function, position: string,
+ * @type {{useView: Function, useOnSelect: Function, t: translate, useSelector: Function, position: string,
  *     filterOptions: {'[API_QUERY_TYPES.CREDENTIAL_TYPE]': Array, '[API_QUERY_TYPES.SOURCE_TYPE]': Array}}}
  */
 ViewToolbarSelect.defaultProps = {

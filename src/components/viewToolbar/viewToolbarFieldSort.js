@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { reduxTypes, storeHooks } from '../../redux';
+import { useView } from '../view/viewContext';
 import { ViewToolbarFieldSortButton } from './viewToolbarFieldSortButton';
 import { Tooltip } from '../tooltip/tooltip';
 import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
-import { translate } from '../i18n/i18n';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
-import { useView } from '../view/viewContext';
+import { translate } from '../i18n/i18n';
 
 /**
  * On select category for sorting.

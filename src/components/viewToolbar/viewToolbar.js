@@ -11,58 +11,34 @@ import {
   ToolbarToggleGroup
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
-import {
-  // useSelectCategoryOptions,
-  useToolbarFieldClear,
-  useToolbarFieldClearAll
-  // useToolbarFieldQueries
-} from './viewToolbarContext';
+import { storeHooks } from '../../redux';
+import { useToolbarFieldClear, useToolbarFieldClearAll } from './viewToolbarContext';
+import { useOnRefresh, useView } from '../view/viewContext';
 import { ViewToolbarSelectCategory } from './viewToolbarSelectCategory';
 import { ViewToolbarFieldSort } from './viewToolbarFieldSort';
 import { RefreshTimeButton } from '../refreshTimeButton/refreshTimeButton';
-// import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
-import { useOnRefresh, useView } from '../view/viewContext';
-import { storeHooks } from '../../redux';
 
 const ViewToolbar = ({
-  //
-  // onRefresh,
-  // categoryFields,
   lastRefresh,
-  sortFields,
   secondaryFields,
   t,
   useOnRefresh: useAliasOnRefresh,
   useSelector: useAliasSelector,
-  // useSelectCategoryOptions: useAliasSelectCategoryOptions,
   useToolbarFieldClear: useAliasToolbarFieldClear,
   useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
-  // useQuery: useAliasQuery,
-  // useToolbarFieldQueries: useAliasToolbarFieldQueries,
-  // t
 }) => {
   const { config, query, viewId } = useAliasView();
-  const categoryFields = config.toolbar.filterFields;
+  const updatedCategoryFields = config.toolbar.filterFields;
 
-  const onRefresh = useAliasOnRefresh();
   const currentCategory = useAliasSelector(({ view }) => view?.filters?.[viewId]?.currentFilterCategory);
-  /*
-  const { currentCategory, categoryFields: updatedCategoryFields } = useAliasSelectCategoryOptions(
-    viewId,
-    categoryFields
-  );
-  */
-  // console.log('useAliasSelectCategoryOptions', useAliasSelectCategoryOptions);
-  // const currentCategory = null;
-  const updatedCategoryFields = categoryFields;
-  // const toolbarFieldQueries = useAliasToolbarFieldQueries(viewId, categoryFields);
+  const onRefresh = useAliasOnRefresh();
   const clearField = useAliasToolbarFieldClear();
   const clearAllFields = useAliasToolbarFieldClearAll();
 
   /**
-   * Clear a specific value
+   * Clear a specific filter
    *
    * @event onClearFilter
    * @param {object} params
@@ -93,8 +69,7 @@ const ViewToolbar = ({
   return (
     <React.Fragment>
       <Toolbar
-        id="quipucords-toolbar"
-        // className="quipucords-toolbar pf-m-toggle-group-container"
+        className="quipucords-toolbar"
         collapseListedFiltersBreakpoint="sm"
         clearAllFilters={onClearAll}
         clearFiltersButtonText={t('toolbar.label', { context: 'clear-filters' })}
@@ -126,7 +101,7 @@ const ViewToolbar = ({
           </ToolbarToggleGroup>
           <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />
           <ToolbarItem key="sortFields" spacer={{ default: 'spacerSm' }}>
-            <ViewToolbarFieldSort options={sortFields} viewId={viewId} />
+            <ViewToolbarFieldSort />
           </ToolbarItem>
           <ToolbarItem key="sortSeparator" variant={ToolbarItemVariant.separator} />
           <ToolbarItem key="lastRefresh">
@@ -143,64 +118,25 @@ const ViewToolbar = ({
 };
 
 ViewToolbar.propTypes = {
-  /*
-  categoryFields: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-      value: PropTypes.any,
-      selected: PropTypes.bool,
-      component: PropTypes.oneOfType([PropTypes.node, PropTypes.func])
-    })
-  ),
-   */
   secondaryFields: PropTypes.node,
-  sortFields: PropTypes.array,
-  // onRefresh: PropTypes.func,
   lastRefresh: PropTypes.number,
   t: PropTypes.func,
   useOnRefresh: PropTypes.func,
   useSelector: PropTypes.func,
-  // useSelectCategoryOptions: PropTypes.func,
   useToolbarFieldClear: PropTypes.func,
   useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
-  // useToolbarFieldQueries: PropTypes.func,
-  // viewId: PropTypes.string
 };
 
 ViewToolbar.defaultProps = {
-  // categoryFields: [],
   secondaryFields: [],
-  sortFields: [],
-  // onRefresh: helpers.noop,
   lastRefresh: 0,
   t: translate,
   useSelector: storeHooks.reactRedux.useSelector,
   useOnRefresh,
-  // useSelectCategoryOptions,
   useToolbarFieldClear,
   useToolbarFieldClearAll,
-  // useToolbarFieldQueries,
   useView
-  // viewId: null
-  /*
-  viewType: null,
-  totalCount: 0,
-  selectedCount: 0,
-  filterFields: [],
-  sortFields: [],
-  onRefresh: helpers.noop,
-  lastRefresh: 0,
-  actions: null,
-  itemsType: '',
-  itemsTypePlural: '',
-  filterType: {},
-  filterValue: '',
-  activeFilters: [],
-  sortField: null,
-  sortType: {},
-  sortAscending: true
-   */
 };
 
 export { ViewToolbar as default, ViewToolbar };
