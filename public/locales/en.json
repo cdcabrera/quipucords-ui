@@ -203,6 +203,11 @@
     "title_warning": "Warning"
   },
   "toolbar": {
+    "label_chip": "{{context}}",
+    "label_chip_network": "Network",
+    "label_chip_satellite": "Satellite",
+    "label_chip_vcenter": "VCenter",
+    "label_clear-filters": "Reset filters",
     "label_option": "",
     "label_option_name": "Name",
     "label_option_cred_type": "Credential type",

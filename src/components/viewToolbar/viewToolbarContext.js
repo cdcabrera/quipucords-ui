@@ -1,4 +1,5 @@
-import { storeHooks } from '../../redux';
+import { reduxTypes, storeHooks } from '../../redux';
+import { useView } from '../view/viewContext';
 
 /**
  * Return filtered category options, current, and initial value.
@@ -9,6 +10,7 @@ import { storeHooks } from '../../redux';
  * @param {string} options.viewId
  * @returns {object}
  */
+/*
 const useSelectCategoryOptions = (
   categoryFields,
   { useSelector: useAliasSelector = storeHooks.reactRedux.useSelector, viewId } = {}
@@ -33,13 +35,31 @@ const useSelectCategoryOptions = (
     initialCategory
   };
 };
+ */
 
 /**
  * Clear a specific toolbar category.
  *
  * @returns {Function}
  */
-const useToolbarFieldClear = () => field => console.log('CLEAR FIELD >>>>', field);
+
+const useToolbarFieldClear = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useView: useAliasView = useView
+} = {}) => {
+  const { viewId } = useAliasView();
+  const dispatch = useAliasDispatch();
+
+  return filter =>
+    dispatch([
+      {
+        type: reduxTypes.query.SET_QUERY,
+        viewId,
+        filter,
+        value: undefined
+      }
+    ]);
+};
 
 /**
  * Clear all available toolbar categories.
@@ -49,10 +69,10 @@ const useToolbarFieldClear = () => field => console.log('CLEAR FIELD >>>>', fiel
 const useToolbarFieldClearAll = () => () => console.log('CLEAR FIELDS >>>>');
 
 const context = {
-  useSelectCategoryOptions,
+  // useSelectCategoryOptions,
   useToolbarFieldClear,
   useToolbarFieldClearAll
   // useToolbarFieldQueries
 };
 
-export { context as default, context, useSelectCategoryOptions, useToolbarFieldClear, useToolbarFieldClearAll };
+export { context as default, context, useToolbarFieldClear, useToolbarFieldClearAll };

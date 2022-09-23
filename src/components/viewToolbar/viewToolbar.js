@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { FilterIcon } from '@patternfly/react-icons';
 import {
-  useSelectCategoryOptions,
+  // useSelectCategoryOptions,
   useToolbarFieldClear,
   useToolbarFieldClearAll
   // useToolbarFieldQueries
@@ -35,7 +35,7 @@ const ViewToolbar = ({
   t,
   useOnRefresh: useAliasOnRefresh,
   useSelector: useAliasSelector,
-  useSelectCategoryOptions: useAliasSelectCategoryOptions,
+  // useSelectCategoryOptions: useAliasSelectCategoryOptions,
   useToolbarFieldClear: useAliasToolbarFieldClear,
   useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
@@ -43,7 +43,7 @@ const ViewToolbar = ({
   // useToolbarFieldQueries: useAliasToolbarFieldQueries,
   // t
 }) => {
-  const { config, viewId } = useAliasView();
+  const { config, query, viewId } = useAliasView();
   const categoryFields = config.toolbar.filterFields;
 
   const onRefresh = useAliasOnRefresh();
@@ -54,7 +54,7 @@ const ViewToolbar = ({
     categoryFields
   );
   */
-  console.log('useAliasSelectCategoryOptions', useAliasSelectCategoryOptions);
+  // console.log('useAliasSelectCategoryOptions', useAliasSelectCategoryOptions);
   // const currentCategory = null;
   const updatedCategoryFields = categoryFields;
   // const toolbarFieldQueries = useAliasToolbarFieldQueries(viewId, categoryFields);
@@ -86,61 +86,59 @@ const ViewToolbar = ({
    * @returns {Array}
    */
   const setSelectedOptions = value => {
-    console.log('>>>> set selected options', value);
-    // const query = toolbarFieldQueries?.[value];
-    // return (query && [t(['form-dialog.label', 'toolbar.label'], { context: ['option', query] })]) || [];
-    return [];
+    const categoryValue = query?.[value];
+    return (categoryValue && [t('toolbar.label', { context: ['chip', categoryValue] })]) || [];
   };
 
   return (
-    <Toolbar
-      id="quipucords-toolbar"
-      // className="quipucords-toolbar pf-m-toggle-group-container"
-      collapseListedFiltersBreakpoint="sm"
-      clearAllFilters={onClearAll}
-      clearFiltersButtonText={t('toolbar.label', { context: 'clear-filters' })}
-    >
-      <ToolbarContent>
-        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="md">
-          <ToolbarGroup variant="filter-group">
-            {updatedCategoryFields.length > 1 && (
-              <ToolbarItem>
-                <ViewToolbarSelectCategory />
-              </ToolbarItem>
-            )}
-            {updatedCategoryFields.map(({ title, value, component: OptionComponent, options: filterOptions }) => {
-              const chipProps = { categoryName: (typeof title === 'function' && title()) || title };
+    <React.Fragment>
+      <Toolbar
+        id="quipucords-toolbar"
+        // className="quipucords-toolbar pf-m-toggle-group-container"
+        collapseListedFiltersBreakpoint="sm"
+        clearAllFilters={onClearAll}
+        clearFiltersButtonText={t('toolbar.label', { context: 'clear-filters' })}
+      >
+        <ToolbarContent>
+          <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="md">
+            <ToolbarGroup variant="filter-group">
+              {updatedCategoryFields.length > 1 && (
+                <ToolbarItem>
+                  <ViewToolbarSelectCategory />
+                </ToolbarItem>
+              )}
+              {updatedCategoryFields.map(({ title, value, component: OptionComponent }) => {
+                const chipProps = { categoryName: (typeof title === 'function' && title()) || title };
+                chipProps.chips = setSelectedOptions(value);
+                chipProps.deleteChip = () => onClearFilter({ value });
 
-              chipProps.chips = setSelectedOptions(value);
-              chipProps.deleteChip = () => onClearFilter({ options: filterOptions, value });
-
-              return (
-                <ToolbarFilter
-                  key={value}
-                  showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
-                  {...chipProps}
-                >
-                  <OptionComponent viewId={viewId} />
-                </ToolbarFilter>
-              );
-            })}
-          </ToolbarGroup>
-        </ToolbarToggleGroup>
-        <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />
-        <ToolbarItem key="sortFields" spacer={{ default: 'spacerSm' }}>
-          <ViewToolbarFieldSort options={sortFields} viewId={viewId} />
-        </ToolbarItem>
-        <ToolbarItem key="sortSeparator" variant={ToolbarItemVariant.separator} />
-        <ToolbarItem key="lastRefresh">
-          <RefreshTimeButton onRefresh={onRefresh} lastRefresh={lastRefresh} />
-        </ToolbarItem>
-        <ToolbarItem key="secondaryFields" alignment={{ lg: 'alignRight', md: 'alignLeft' }}>
-          {secondaryFields}
-        </ToolbarItem>
-        <Divider />
-        <ToolbarItem alignment={{ lg: 'alignRight', md: 'alignLeft' }}>hey</ToolbarItem>
-      </ToolbarContent>
-    </Toolbar>
+                return (
+                  <ToolbarFilter
+                    key={value}
+                    showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
+                    {...chipProps}
+                  >
+                    <OptionComponent />
+                  </ToolbarFilter>
+                );
+              })}
+            </ToolbarGroup>
+          </ToolbarToggleGroup>
+          <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />
+          <ToolbarItem key="sortFields" spacer={{ default: 'spacerSm' }}>
+            <ViewToolbarFieldSort options={sortFields} viewId={viewId} />
+          </ToolbarItem>
+          <ToolbarItem key="sortSeparator" variant={ToolbarItemVariant.separator} />
+          <ToolbarItem key="lastRefresh">
+            <RefreshTimeButton onRefresh={onRefresh} lastRefresh={lastRefresh} />
+          </ToolbarItem>
+          <ToolbarItem key="secondaryFields" alignment={{ lg: 'alignRight', md: 'alignLeft' }}>
+            {secondaryFields}
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+      <Divider />
+    </React.Fragment>
   );
 };
 
@@ -162,7 +160,7 @@ ViewToolbar.propTypes = {
   t: PropTypes.func,
   useOnRefresh: PropTypes.func,
   useSelector: PropTypes.func,
-  useSelectCategoryOptions: PropTypes.func,
+  // useSelectCategoryOptions: PropTypes.func,
   useToolbarFieldClear: PropTypes.func,
   useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
@@ -179,7 +177,7 @@ ViewToolbar.defaultProps = {
   t: translate,
   useSelector: storeHooks.reactRedux.useSelector,
   useOnRefresh,
-  useSelectCategoryOptions,
+  // useSelectCategoryOptions,
   useToolbarFieldClear,
   useToolbarFieldClearAll,
   // useToolbarFieldQueries,
