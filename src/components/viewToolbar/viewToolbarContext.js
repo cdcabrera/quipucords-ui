@@ -40,6 +40,9 @@ const useSelectCategoryOptions = (
 /**
  * Clear a specific toolbar category.
  *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useView
  * @returns {Function}
  */
 
@@ -64,15 +67,38 @@ const useToolbarFieldClear = ({
 /**
  * Clear all available toolbar categories.
  *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useToolbarFieldClearAll = () => () => console.log('CLEAR FIELDS >>>>');
+const useToolbarFieldClearAll = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useView: useAliasView = useView
+} = {}) => {
+  const dispatch = useAliasDispatch();
+  const { viewId, config } = useAliasView();
+  const options = config.toolbar.filterFields;
+
+  return () => {
+    const resetFilters = [];
+
+    options.forEach(({ value: filter }) => {
+      resetFilters.push({
+        type: reduxTypes.query.SET_QUERY,
+        viewId,
+        filter,
+        value: undefined
+      });
+    });
+
+    dispatch(resetFilters);
+  };
+};
 
 const context = {
-  // useSelectCategoryOptions,
   useToolbarFieldClear,
   useToolbarFieldClearAll
-  // useToolbarFieldQueries
 };
 
 export { context as default, context, useToolbarFieldClear, useToolbarFieldClearAll };
