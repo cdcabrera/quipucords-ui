@@ -3,10 +3,28 @@ import { useShallowCompareEffect } from 'react-use';
 import { AlertVariant, List, ListItem } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-import { apiTypes } from '../../constants/apiConstants';
-import { helpers } from '../../common';
-import { translate } from '../i18n/i18n';
 import { useConfirmation } from '../../hooks/useConfirmation';
+import { useView } from '../view/viewContext';
+import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
+
+/**
+ * State context identifier
+ *
+ * @type {string}
+ */
+const VIEW_ID = 'credentials';
+
+/**
+ * Charge initial view query
+ *
+ * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
+ */
+const INITIAL_QUERY = {
+  [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
+  [API_QUERY_TYPES.PAGE]: 1,
+  [API_QUERY_TYPES.PAGE_SIZE]: 10
+};
 
 /**
  * Credential action, onDelete.
@@ -17,6 +35,7 @@ import { useConfirmation } from '../../hooks/useConfirmation';
  * @param {Function} options.useConfirmation
  * @param {Function} options.useDispatch
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {(function(*): void)|*}
  */
 const useOnDelete = ({
@@ -24,8 +43,10 @@ const useOnDelete = ({
   t = translate,
   useConfirmation: useAliasConfirmation = useConfirmation,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { viewId } = useAliasView();
   const onConfirmation = useAliasConfirmation();
   const [credentialsToDelete, setCredentialsToDelete] = useState([]);
   const dispatch = useAliasDispatch();
@@ -65,7 +86,8 @@ const useOnDelete = ({
           item: credentialsToDelete
         },
         {
-          type: reduxTypes.credentials.UPDATE_CREDENTIALS
+          type: reduxTypes.view.UPDATE_VIEW,
+          viewId
         }
       ]);
 
@@ -93,7 +115,8 @@ const useOnDelete = ({
           item: credentialsToDelete
         },
         {
-          type: reduxTypes.credentials.UPDATE_CREDENTIALS
+          type: reduxTypes.view.UPDATE_VIEW,
+          viewId
         }
       ]);
 
@@ -186,23 +209,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.credentials.UPDATE_CREDENTIALS
-    });
-  };
-};
-
-/**
  * On select a row.
  *
  * @param {object} options
@@ -229,6 +235,7 @@ const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
  * @param {Function} options.useDispatch
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
  *     expandedRows: *, error: boolean}}
  */
@@ -236,14 +243,15 @@ const useGetCredentials = ({
   getCredentials = reduxActions.credentials.getCredentials,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
-    ({ credentials }) => credentials?.update,
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
+    ({ view }) => view.update?.[viewId],
     ({ credentials }) => credentials?.selected,
-    ({ credentials }) => credentials?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.CREDENTIALS_VIEW]
+    ({ credentials }) => credentials?.expanded
   ]);
   const {
     data: responseData,
@@ -255,8 +263,10 @@ const useGetCredentials = ({
   } = useAliasSelectorsResponse({ id: 'view', selector: ({ credentials }) => credentials?.view });
 
   const [{ date } = {}] = responses?.list || [];
-  const { [apiTypes.API_RESPONSE_CREDENTIALS_RESULTS]: data = [] } = responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions);
+  const {
+    [apiTypes.API_RESPONSE_CREDENTIALS_COUNT]: totalResults,
+    [apiTypes.API_RESPONSE_CREDENTIALS_RESULTS]: data = []
+  } = responseData?.view || {};
 
   useShallowCompareEffect(() => {
     getCredentials(null, query)(dispatch);
@@ -269,27 +279,59 @@ const useGetCredentials = ({
     fulfilled,
     data,
     date,
+    hasData: fulfilled === true && totalResults > 0,
     selectedRows,
-    expandedRows
+    expandedRows,
+    totalResults
+  };
+};
+
+/**
+ * Get credentials in the context of the credentials view.
+ *
+ * @param {object} options
+ * @param {object} options.query
+ * @param {Function} options.useGetCredentials
+ * @param {string} options.viewId
+ * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
+ */
+const useContextGetCredentials = ({
+  query = INITIAL_QUERY,
+  useGetCredentials: useAliasGetCredentials = useGetCredentials,
+  viewId = VIEW_ID
+} = {}) => {
+  const results = useAliasGetCredentials({
+    useView: () => ({
+      viewId,
+      query
+    })
+  });
+
+  return {
+    ...results
   };
 };
 
 const context = {
+  VIEW_ID,
+  INITIAL_QUERY,
+  useContextGetCredentials,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 };
 
 export {
   context as default,
   context,
+  VIEW_ID,
+  INITIAL_QUERY,
+  useContextGetCredentials,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 };

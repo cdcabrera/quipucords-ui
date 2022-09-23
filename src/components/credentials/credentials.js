@@ -8,25 +8,30 @@ import {
   ButtonVariant as CredentialButtonVariant,
   SelectPosition
 } from '../addCredentialType/addCredentialType';
-import { reduxTypes, storeHooks } from '../../redux';
-import ViewToolbar from '../viewToolbar/viewToolbar.deprecated';
-import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
+import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
+import { useView } from '../view/viewContext';
+import { ViewToolbar } from '../viewToolbar/viewToolbar';
+import { ViewPaginationRow } from '../viewPaginationRow/viewPaginationRow';
 import { CredentialsEmptyState } from './credentialsEmptyState';
-import { CredentialFilterFields, CredentialSortFields } from './credentialConstants';
-import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { credentialsTableCells } from './credentialsTableCells';
 import {
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect
 } from './credentialsContext';
-import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
+import { CredentialsToolbar } from './credentialsToolbar';
+import { translate } from '../i18n/i18n';
 
-const VIEW_ID = 'credentials';
+const CONFIG = {
+  viewId: VIEW_ID,
+  initialQuery: INITIAL_QUERY,
+  toolbar: CredentialsToolbar
+};
 
 /**
  * A credentials view.
@@ -37,11 +42,9 @@ const VIEW_ID = 'credentials';
  * @param {Function} props.useOnDelete
  * @param {Function} props.useOnEdit
  * @param {Function} props.useOnExpand
- * @param {Function} props.useOnRefresh
  * @param {Function} props.useOnSelect
- * @param {Function} props.useSelectors
  * @param {Function} props.useOnShowAddSourceWizard
- * @param {string} props.viewId
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
 const Credentials = ({
@@ -50,23 +53,27 @@ const Credentials = ({
   useOnDelete: useAliasOnDelete,
   useOnEdit: useAliasOnEdit,
   useOnExpand: useAliasOnExpand,
-  useOnRefresh: useAliasOnRefresh,
   useOnSelect: useAliasOnSelect,
-  useSelectors: useAliasSelectors,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
-  viewId
+  useView: useAliasView
 }) => {
+  const { isFilteringActive, viewId } = useAliasView();
   const onExpand = useAliasOnExpand();
-  const onRefresh = useAliasOnRefresh();
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
   const onSelect = useAliasOnSelect();
   const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
-  const { pending, error, errorMessage, date, data, selectedRows = {}, expandedRows = {} } = useAliasGetCredentials();
-  const [viewOptions = {}] = useAliasSelectors([
-    ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.CREDENTIALS_VIEW]
-  ]);
-  const isActive = viewOptions?.activeFilters?.length > 0 || data?.length > 0 || false;
+  const {
+    pending,
+    error,
+    errorMessage,
+    date,
+    data,
+    selectedRows = {},
+    expandedRows = {},
+    totalResults
+  } = useAliasGetCredentials();
+  const isActive = isFilteringActive || data?.length > 0 || false;
 
   /**
    * Toolbar actions onDeleteCredentials
@@ -113,7 +120,10 @@ const Credentials = ({
     return (
       <EmptyState className="quipucords-empty-state__alert">
         <Alert variant={AlertVariant.danger} title={t('view.error', { context: viewId })}>
-          {t('view.error-message', { context: [viewId], message: errorMessage })}
+          {t('view.error-message', {
+            context: [viewId],
+            message: errorMessage
+          })}
         </Alert>
       </EmptyState>
     );
@@ -124,19 +134,8 @@ const Credentials = ({
       <div className="quipucords-view-container">
         {isActive && (
           <React.Fragment>
-            <ViewToolbar
-              viewType={reduxTypes.view.CREDENTIALS_VIEW}
-              filterFields={CredentialFilterFields}
-              sortFields={CredentialSortFields}
-              onRefresh={() => onRefresh()}
-              lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Credential"
-              itemsTypePlural="Credentials"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
-            />
-            <ViewPaginationRow viewType={reduxTypes.view.CREDENTIALS_VIEW} {...viewOptions} />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
+            <ViewPaginationRow totalResults={totalResults} />
           </React.Fragment>
         )}
         <div className="quipucords-list-container">
@@ -176,7 +175,7 @@ const Credentials = ({
               ]
             }))}
           >
-            <CredentialsEmptyState viewId={viewId} onAddSource={onShowAddSourceWizard} />
+            {!isActive && <CredentialsEmptyState viewId={viewId} onAddSource={onShowAddSourceWizard} />}
           </Table>
         </div>
       </div>
@@ -187,8 +186,8 @@ const Credentials = ({
 /**
  * Prop types
  *
- * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: Function, useOnRefresh: Function,
- *     useOnDelete: Function, useOnExpand: Function, useSelectors: Function, useGetCredentials: Function,
+ * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: Function,
+ *     useOnDelete: Function, useOnExpand: Function, useGetCredentials: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
 Credentials.propTypes = {
@@ -197,18 +196,16 @@ Credentials.propTypes = {
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
-  useOnRefresh: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
-  useSelectors: PropTypes.func,
-  viewId: PropTypes.string
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: translate, useOnRefresh: Function,
- *     useOnDelete: Function, useOnExpand: Function, useSelectors: Function, useGetCredentials: Function,
+ * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: translate,
+ *     useOnDelete: Function, useOnExpand: Function, useGetCredentials: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
 Credentials.defaultProps = {
@@ -217,11 +214,9 @@ Credentials.defaultProps = {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnSelect,
   useOnShowAddSourceWizard,
-  useSelectors: storeHooks.reactRedux.useSelectors,
-  viewId: VIEW_ID
+  useView
 };
 
-export { Credentials as default, Credentials, VIEW_ID };
+export { Credentials as default, Credentials, CONFIG };

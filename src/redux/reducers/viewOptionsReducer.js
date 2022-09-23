@@ -1,13 +1,6 @@
 import _get from 'lodash/get';
 import { reduxHelpers } from '../common';
-import {
-  viewTypes,
-  viewPaginationTypes,
-  viewToolbarTypes,
-  credentialsTypes,
-  scansTypes,
-  sourcesTypes
-} from '../constants';
+import { viewTypes, viewToolbarTypes, credentialsTypes, scansTypes, sourcesTypes } from '../constants';
 import { apiTypes } from '../../constants/apiConstants';
 
 const initialState = {};
@@ -134,14 +127,6 @@ const viewOptionsReducer = (state = initialState, action) => {
         sortAscending: !state[action.viewType].sortAscending,
         currentPage: 1
       };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.VIEW_PAGE:
-      updateState[action.viewType] = { ...state[action.viewType], currentPage: action.currentPage };
-      return { ...state, ...updateState };
-
-    case viewPaginationTypes.SET_PER_PAGE:
-      updateState[action.viewType] = { ...state[action.viewType], pageSize: action.pageSize, currentPage: 1 };
       return { ...state, ...updateState };
 
     case reduxHelpers.FULFILLED_ACTION(credentialsTypes.GET_CREDENTIALS):
