@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { reduxTypes, storeHooks } from '../../redux';
 import { useView } from '../view/viewContext';
 import { ViewToolbarFieldSortButton } from './viewToolbarFieldSortButton';
-import { Tooltip } from '../tooltip/tooltip';
 import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
@@ -52,14 +51,13 @@ const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAl
   return (
     <React.Fragment>
       <DropdownSelect
+        placeholder={t('toolbar.label', { context: ['option', 'sort'] })}
         options={sortFields}
         onSelect={onSelect}
         selectedOptions={selectedOption.replace(/^-/, '')}
         data-test="toolbarSortType"
       />
-      <Tooltip placement="right" content={t('toolbar.label', { context: ['option', 'sort', selectedOption] })}>
-        <ViewToolbarFieldSortButton />
-      </Tooltip>
+      <ViewToolbarFieldSortButton />
     </React.Fragment>
   );
 };

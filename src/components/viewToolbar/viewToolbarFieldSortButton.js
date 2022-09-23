@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, ButtonVariant } from '@patternfly/react-core';
 import { SortAmountDownAltIcon, SortAmountUpIcon } from '@patternfly/react-icons';
+import { Tooltip } from '../tooltip/tooltip';
 import { reduxTypes, storeHooks } from '../../redux';
 import { useQuery, useView } from '../view/viewContext';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
 
 /**
  * On click sorting.
@@ -37,6 +39,7 @@ const useOnClick = ({
  * Toolbar sort button wrapper.
  *
  * @param {object} props
+ * @param {Function} props.t
  * @param {Function} props.useOnClick
  * @param {Function} props.useQuery
  * @param {object} props.props
@@ -44,6 +47,7 @@ const useOnClick = ({
  */
 const ViewToolbarFieldSortButton = ({
   // isAscending,
+  t,
   useOnClick: useAliasOnClick,
   useQuery: useAliasQuery,
   ...props
@@ -52,18 +56,23 @@ const ViewToolbarFieldSortButton = ({
   const { [API_QUERY_TYPES.ORDERING]: ordering } = useAliasQuery();
 
   const isDescending = /^-/.test(ordering);
-  let updatedDirection = ordering.replace(/^-/, '');
-  updatedDirection = isDescending ? updatedDirection : `-${updatedDirection}`;
+  const updatedOrdering = ordering.replace(/^-/, '');
+  const updatedDirection = isDescending ? updatedOrdering : `-${updatedOrdering}`;
 
   return (
-    <Button
-      onClick={() => onClick(updatedDirection)}
-      variant={ButtonVariant.plain}
-      data-test="toolbarSortButton"
-      {...props}
+    <Tooltip
+      placement="right"
+      content={t('toolbar.label', { context: ['tooltip', 'sort', (isDescending && 'dsc') || 'asc', updatedOrdering] })}
     >
-      {(isDescending && <SortAmountUpIcon />) || <SortAmountDownAltIcon />}
-    </Button>
+      <Button
+        onClick={() => onClick(updatedDirection)}
+        variant={ButtonVariant.plain}
+        data-test="toolbarSortButton"
+        {...props}
+      >
+        {(isDescending && <SortAmountUpIcon />) || <SortAmountDownAltIcon />}
+      </Button>
+    </Tooltip>
   );
 };
 
@@ -74,6 +83,7 @@ const ViewToolbarFieldSortButton = ({
  */
 ViewToolbarFieldSortButton.propTypes = {
   // isAscending: PropTypes.bool,
+  t: PropTypes.func,
   useOnClick: PropTypes.func,
   useQuery: PropTypes.func
 };
@@ -85,6 +95,7 @@ ViewToolbarFieldSortButton.propTypes = {
  */
 ViewToolbarFieldSortButton.defaultProps = {
   // isAscending: true,
+  t: translate,
   useOnClick,
   useQuery
 };

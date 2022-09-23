@@ -212,8 +212,13 @@
     "label_option_name": "Name",
     "label_option_cred_type": "Credential type",
     "label_option_search_by_name": "Name",
+    "label_placeholder_filter": "Filter by",
     "label_placeholder_filter_cred_type": "Filter by credential type",
-    "label_placeholder_filter_search_by_name": "Filter by name"
+    "label_placeholder_filter_search_by_name": "Filter by name",
+    "label_placeholder_sort": "Sort by",
+    "label_tooltip_sort": "Sort order",
+    "label_tooltip_sort_asc": "Sort ascending",
+    "label_tooltip_sort_dsc": "Sort descending"
   },
   "view": {
     "empty-state_description_credentials": "Credentials contain authentication information needed to scan a source. A credential includes a username and a password or SSH key. {{name}} uses SSH to connect to servers on the network and uses credentials to access those servers.",
