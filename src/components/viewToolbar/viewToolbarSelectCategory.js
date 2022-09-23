@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { useShallowCompareEffect } from 'react-use';
+import { useShallowCompareEffect } from 'react-use';
 import { FilterIcon } from '@patternfly/react-icons';
 import { reduxTypes, storeHooks } from '../../redux';
 import { useView } from '../view/viewContext';
@@ -54,16 +54,14 @@ const ViewToolbarSelectCategory = ({
   const onSelect = useAliasOnSelect(viewId);
 
   const selectedOption = useAliasSelector(({ view }) => view?.filters?.[viewId]?.currentFilterCategory);
-  // const { currentCategory } = useAliasSelector(({ view }) => view.filters?.[viewId], {});
-  // const { categoryFields, initialCategory } = useAliasSelectCategoryOptions(viewId, options);
 
-  /*
   useShallowCompareEffect(() => {
-    if (initialCategory) {
-      onSelect({ value: initialCategory });
+    const initialCategory = options.find(({ selected }) => selected === true);
+
+    if (initialCategory?.value) {
+      onSelect({ value: initialCategory?.value });
     }
-  }, [initialCategory, onSelect]);
-  */
+  }, [options, onSelect]);
 
   return (
     <DropdownSelect
