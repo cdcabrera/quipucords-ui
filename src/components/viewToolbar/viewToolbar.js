@@ -30,7 +30,7 @@ const ViewToolbar = ({
   useView: useAliasView
 }) => {
   const { config, query, viewId } = useAliasView();
-  const updatedCategoryFields = config.toolbar.filterFields;
+  const updatedCategoryFields = config?.toolbar?.filterFields || [];
 
   const currentCategory = useAliasSelector(({ view }) => view?.filters?.[viewId]?.currentFilterCategory);
   const onRefresh = useAliasOnRefresh();

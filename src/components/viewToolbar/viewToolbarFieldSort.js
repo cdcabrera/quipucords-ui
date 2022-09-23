@@ -45,7 +45,7 @@ const useOnSelect = ({
 const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAliasView }) => {
   const onSelect = useAliasOnSelect();
   const { query, config } = useAliasView();
-  const { [API_QUERY_TYPES.ORDERING]: selectedOption } = query;
+  const selectedOption = query?.[API_QUERY_TYPES.ORDERING];
   const { sortFields } = config?.toolbar || {};
 
   return (
@@ -54,7 +54,7 @@ const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAl
         placeholder={t('toolbar.label', { context: ['option', 'sort'] })}
         options={sortFields}
         onSelect={onSelect}
-        selectedOptions={selectedOption.replace(/^-/, '')}
+        selectedOptions={selectedOption?.replace(/^-/, '')}
         data-test="toolbarSortType"
       />
       <ViewToolbarFieldSortButton />

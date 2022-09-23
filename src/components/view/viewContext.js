@@ -66,7 +66,7 @@ const useView = ({
   const { initialQuery, viewId } = useAliasViewContext();
   const config = useAliasConfig();
   const query = useAliasQuery();
-  const checkFilters = Object.entries(query).filter(([key, value]) => !(key in initialQuery) && value);
+  const checkFilters = Object.entries(query).filter(([key, value]) => initialQuery && !(key in initialQuery) && value);
 
   return {
     viewId,

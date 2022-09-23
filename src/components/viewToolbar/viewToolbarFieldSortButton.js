@@ -56,7 +56,7 @@ const ViewToolbarFieldSortButton = ({
   const { [API_QUERY_TYPES.ORDERING]: ordering } = useAliasQuery();
 
   const isDescending = /^-/.test(ordering);
-  const updatedOrdering = ordering.replace(/^-/, '');
+  const updatedOrdering = ordering?.replace(/^-/, '') || '';
   const updatedDirection = isDescending ? updatedOrdering : `-${updatedOrdering}`;
 
   return (

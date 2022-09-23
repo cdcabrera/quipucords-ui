@@ -50,7 +50,7 @@ const ViewToolbarSelectCategory = ({
   useView: useAliasView
 }) => {
   const { viewId, config } = useAliasView();
-  const options = config.toolbar.filterFields;
+  const options = config?.toolbar?.filterFields;
   const onSelect = useAliasOnSelect(viewId);
 
   const selectedOption = useAliasSelector(({ view }) => view?.filters?.[viewId]?.currentFilterCategory);
@@ -58,10 +58,10 @@ const ViewToolbarSelectCategory = ({
   useShallowCompareEffect(() => {
     const initialCategory = options.find(({ selected }) => selected === true);
 
-    if (initialCategory?.value) {
+    if (!selectedOption && initialCategory?.value) {
       onSelect({ value: initialCategory?.value });
     }
-  }, [options, onSelect]);
+  }, [options, onSelect, selectedOption]);
 
   return (
     <DropdownSelect

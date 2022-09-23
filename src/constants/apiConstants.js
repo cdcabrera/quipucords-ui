@@ -5,6 +5,7 @@ const API_QUERY_TYPES = {
   ORDERING_DSC: 'dsc',
   PAGE: 'page',
   PAGE_SIZE: 'page_size',
+  SCAN_TYPE: 'scan_type',
   SEARCH_CREDENTIALS_NAME: 'search_credentials_by_name',
   SEARCH_NAME: 'search_by_name',
   SEARCH_SOURCES_NAME: 'search_sources_by_name',
@@ -23,7 +24,6 @@ const API_QUERY_PAGE = 'page';
 const API_QUERY_PAGE_SIZE = 'page_size';
 const API_QUERY_ORDERING = 'ordering';
 
-const API_QUERY_SCAN_TYPE = 'scan_type';
 const API_QUERY_SOURCE_TYPE = 'source_type';
 const API_QUERY_STATUS = 'status';
 
@@ -145,14 +145,11 @@ const API_SUBMIT_SOURCE_PORT = 'port';
 const API_SUBMIT_SOURCE_SOURCE_TYPE = 'source_type';
 
 const apiTypes = {
-  // API_QUERY_FILTER_TYPES,
-  // API_QUERY_PAGING_TYPES,
   API_QUERY_TYPES,
   API_QUERY_SORT_TYPES,
   API_QUERY_PAGE,
   API_QUERY_PAGE_SIZE,
   API_QUERY_ORDERING,
-  API_QUERY_SCAN_TYPE,
   API_QUERY_SOURCE_TYPE,
   API_QUERY_STATUS,
   API_RESPONSE_CREDENTIAL_CRED_TYPE,
@@ -262,14 +259,11 @@ const apiTypes = {
 export {
   apiTypes as default,
   apiTypes,
-  // API_QUERY_FILTER_TYPES,
-  // API_QUERY_PAGING_TYPES,
   API_QUERY_TYPES,
   API_QUERY_SORT_TYPES,
   API_QUERY_PAGE,
   API_QUERY_PAGE_SIZE,
   API_QUERY_ORDERING,
-  API_QUERY_SCAN_TYPE,
   API_QUERY_SOURCE_TYPE,
   API_QUERY_STATUS,
   API_RESPONSE_CREDENTIAL_CRED_TYPE,

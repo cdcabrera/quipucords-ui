@@ -42,7 +42,7 @@ const useToolbarFieldClearAll = ({
 } = {}) => {
   const dispatch = useAliasDispatch();
   const { viewId, config } = useAliasView();
-  const options = config.toolbar.filterFields;
+  const options = config?.toolbar?.filterFields;
 
   return () => {
     const resetFilters = [];
