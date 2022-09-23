@@ -11,12 +11,16 @@ import { useView } from '../view/viewContext';
 /**
  * On select update category.
  *
- * @param {string} viewId
  * @param {object} options
  * @param {Function} options.useDispatch
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useOnSelect = (viewId, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useOnSelect = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useView: useAliasView = useView
+} = {}) => {
+  const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
   return ({ value = null } = {}) => {
@@ -83,11 +87,10 @@ const useSelectCategoryOptions = ({
  * Select available filter categories.
  *
  * @param {object} props
- * @param {Array} props.options
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
- * @param {Function} props.useSelectCategoryOptions
- * @param {string} props.viewId
+ * @param {Function} props.useSelector
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
 const ViewToolbarSelectCategory = ({

@@ -4,6 +4,7 @@ import { DropdownSelect, SelectPosition } from '../dropdownSelect/dropdownSelect
 import { reduxTypes, storeHooks } from '../../redux';
 import { translate } from '../i18n/i18n';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { useView } from '../view/viewContext';
 
 /*
  * Credential, and source, field options
@@ -42,10 +43,14 @@ const SelectFilterVariant = {
  * @param {string} filter
  * @param {object} options
  * @param {Function} options.useDispatch
- * @param {string} options.viewId
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useOnSelect = (filter, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch, viewId } = {}) => {
+const useOnSelect = (
+  filter,
+  { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch, useView: useAliasView = useView } = {}
+) => {
+  const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
   return ({ value = null }) => {
@@ -70,7 +75,7 @@ const useOnSelect = (filter, { useDispatch: useAliasDispatch = storeHooks.reactR
  * @param {Function} props.t
  * @param {Function} props.useOnSelect
  * @param {Function} props.useSelector
- * @param {string} props.viewId
+ * @param {string} props.useView
  * @returns {React.ReactNode}
  */
 const ViewToolbarSelect = ({
@@ -80,10 +85,11 @@ const ViewToolbarSelect = ({
   t,
   useOnSelect: useAliasOnSelect,
   useSelector: useAliasSelector,
-  viewId
+  useView: useAliasView
 } = {}) => {
+  const { viewId } = useAliasView();
   const selectedOption = useAliasSelector(({ view }) => view?.query?.[viewId]?.[filter]);
-  const onSelect = useAliasOnSelect({ viewId });
+  const onSelect = useAliasOnSelect(filter);
   const updatedOptions = filterOptions?.[filter] || [];
 
   return (
@@ -102,7 +108,7 @@ const ViewToolbarSelect = ({
 /**
  * Prop types
  *
- * @type {{filter: string, useOnSelect: Function, viewId: string, t: Function, useSelector: Function, position: string,
+ * @type {{filter: string, useOnSelect: Function, useView: string, t: Function, useSelector: Function, position: string,
  *     filterOptions: object}}
  */
 ViewToolbarSelect.propTypes = {
@@ -124,13 +130,13 @@ ViewToolbarSelect.propTypes = {
   t: PropTypes.func,
   useOnSelect: PropTypes.func,
   useSelector: PropTypes.func,
-  viewId: PropTypes.string
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useOnSelect: Function, viewId: null, t: translate, useSelector: Function, position: string,
+ * @type {{useOnSelect: Function, useView: null, t: translate, useSelector: Function, position: string,
  *     filterOptions: {'[API_QUERY_TYPES.CREDENTIAL_TYPE]': Array, '[API_QUERY_TYPES.SOURCE_TYPE]': Array}}}
  */
 ViewToolbarSelect.defaultProps = {
@@ -139,7 +145,7 @@ ViewToolbarSelect.defaultProps = {
   t: translate,
   useOnSelect,
   useSelector: storeHooks.reactRedux.useSelector,
-  viewId: null
+  useView
 };
 
 export { ViewToolbarSelect as default, ViewToolbarSelect, SelectFilterVariant, SelectFilterVariantOptions };

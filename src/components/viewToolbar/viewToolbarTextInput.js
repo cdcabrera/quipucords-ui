@@ -6,6 +6,7 @@ import { reduxTypes, storeHooks } from '../../redux';
 import { TextInput } from '../form/textInput';
 import { translate } from '../i18n/i18n';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { useView } from '../view/viewContext';
 
 /**
  * Available text input filters
@@ -25,10 +26,14 @@ const TextInputFilterVariants = {
  * @param {string} filter
  * @param {object} options
  * @param {Function} options.useDispatch
- * @param {string} options.viewId
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useOnSubmit = (filter, { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch, viewId } = {}) => {
+const useOnSubmit = (
+  filter,
+  { useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch, useView: useAliasView = useView } = {}
+) => {
+  const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
   return value =>
@@ -49,7 +54,7 @@ const useOnSubmit = (filter, { useDispatch: useAliasDispatch = storeHooks.reactR
  * @param {object} options
  * @param {Function} options.useDispatch
  * @param {Function} options.useSelector
- * @param {string} options.viewId
+ * @param {Function} options.useView
  * @returns {Function}
  */
 const useOnClear = (
@@ -57,9 +62,10 @@ const useOnClear = (
   {
     useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
     useSelector: useAliasSelector = storeHooks.reactRedux.useSelector,
-    viewId
+    useView: useAliasView = useView
   } = {}
 ) => {
+  const { viewId } = useAliasView();
   const currentValue = useAliasSelector(({ view }) => view?.query?.[viewId]?.[filter]);
   const dispatch = useAliasDispatch();
 
@@ -90,7 +96,7 @@ const useOnClear = (
  * @param {Function} props.useOnClear
  * @param {Function} props.useOnSubmit
  * @param {Function} props.useSelector
- * @param {string} props.viewId
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
 const ViewToolbarTextInput = ({
@@ -100,11 +106,12 @@ const ViewToolbarTextInput = ({
   useOnClear: useAliasOnClear,
   useOnSubmit: useAliasOnSubmit,
   useSelector: useAliasSelector,
-  viewId
+  useView: useAliasView
 }) => {
+  const { viewId } = useAliasView();
   const currentValue = useAliasSelector(({ view }) => view?.query?.[viewId]?.[filter]);
-  const onSubmit = useAliasOnSubmit(filter, { viewId });
-  const onClear = useAliasOnClear(filter, { viewId });
+  const onSubmit = useAliasOnSubmit(filter);
+  const onClear = useAliasOnClear(filter);
 
   /**
    * Set up submit debounce event to allow for bypass.
@@ -148,7 +155,7 @@ const ViewToolbarTextInput = ({
 /**
  * Prop types
  *
- * @type {{filter: string, useOnSubmit: Function, viewId: string, t: Function, useSelector: Function, debounceTimer: number,
+ * @type {{filter: string, useOnSubmit: Function, useView: Function, t: Function, useSelector: Function, debounceTimer: number,
  *     useOnClear: Function}}
  */
 ViewToolbarTextInput.propTypes = {
@@ -158,13 +165,13 @@ ViewToolbarTextInput.propTypes = {
   useOnClear: PropTypes.func,
   useOnSubmit: PropTypes.func,
   useSelector: PropTypes.func,
-  viewId: PropTypes.string
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useOnSubmit: Function, viewId: null, t: translate, useSelector: Function, debounceTimer: number,
+ * @type {{useOnSubmit: Function, useView: Function, t: translate, useSelector: Function, debounceTimer: number,
  *     useOnClear: Function}}
  */
 ViewToolbarTextInput.defaultProps = {
@@ -173,7 +180,7 @@ ViewToolbarTextInput.defaultProps = {
   useOnClear,
   useOnSubmit,
   useSelector: storeHooks.reactRedux.useSelector,
-  viewId: null
+  useView
 };
 
 export { ViewToolbarTextInput as default, ViewToolbarTextInput, TextInputFilterVariants };
