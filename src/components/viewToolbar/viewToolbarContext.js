@@ -20,7 +20,7 @@ const useToolbarFieldClear = ({
   return filter =>
     dispatch([
       {
-        type: reduxTypes.query.SET_QUERY,
+        type: reduxTypes.view.SET_QUERY,
         viewId,
         filter,
         value: undefined
@@ -49,7 +49,7 @@ const useToolbarFieldClearAll = ({
 
     options.forEach(({ value: filter }) => {
       resetFilters.push({
-        type: reduxTypes.query.SET_QUERY,
+        type: reduxTypes.view.SET_QUERY,
         viewId,
         filter,
         value: undefined

@@ -24,7 +24,7 @@ const useOnClick = ({
   return value => {
     dispatch([
       {
-        type: reduxTypes.query.SET_QUERY,
+        type: reduxTypes.view.SET_QUERY,
         viewId,
         filter: API_QUERY_TYPES.ORDERING,
         value

@@ -56,7 +56,7 @@ const useOnSelect = (
   return ({ value = null }) => {
     dispatch([
       {
-        type: reduxTypes.query.SET_QUERY,
+        type: reduxTypes.view.SET_QUERY,
         viewId,
         filter,
         value
