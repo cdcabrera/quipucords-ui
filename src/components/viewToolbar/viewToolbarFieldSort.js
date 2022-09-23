@@ -1,0 +1,89 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { reduxTypes, storeHooks } from '../../redux';
+import { useView } from '../view/viewContext';
+import { ViewToolbarFieldSortButton } from './viewToolbarFieldSortButton';
+import { Tooltip } from '../tooltip/tooltip';
+import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
+import { API_QUERY_TYPES } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
+
+/**
+ * On select category for sorting.
+ *
+ * @param {object} options
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useView
+ * @returns {Function}
+ */
+const useOnSelect = ({
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useView: useAliasView = useView
+} = {}) => {
+  const { viewId } = useAliasView();
+  const dispatch = useAliasDispatch();
+
+  return ({ value }) =>
+    dispatch([
+      {
+        type: reduxTypes.query.SET_QUERY,
+        viewId,
+        filter: API_QUERY_TYPES.ORDERING,
+        value
+      }
+    ]);
+};
+
+/**
+ * Toolbar sort button wrapper.
+ *
+ * @param {object} props
+ * @param {Function} props.t
+ * @param {Function} props.useOnSelect
+ * @param {Function} props.useView
+ * @returns {React.ReactNode}
+ */
+const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAliasView }) => {
+  const onSelect = useAliasOnSelect();
+  const { query, config } = useAliasView();
+  const { [API_QUERY_TYPES.ORDERING]: selectedOption } = query;
+  const { sortFields } = config?.toolbar || {};
+
+  return (
+    <React.Fragment>
+      <DropdownSelect
+        options={sortFields}
+        onSelect={onSelect}
+        selectedOptions={selectedOption.replace(/^-/, '')}
+        data-test="toolbarSortType"
+      />
+      <Tooltip placement="right" content={t('toolbar.label', { context: ['option', 'sort', selectedOption] })}>
+        <ViewToolbarFieldSortButton />
+      </Tooltip>
+    </React.Fragment>
+  );
+};
+
+/**
+ * Prop types
+ *
+ * @type {{useView: Function, t: Function, useSelector: Function}}
+ */
+ViewToolbarFieldSort.propTypes = {
+  t: PropTypes.func,
+  useOnSelect: PropTypes.func,
+  useView: PropTypes.func
+};
+
+/**
+ * Default props
+ *
+ * @type {{useOnSelect: Function, t: Function, useView: Function}}
+ */
+ViewToolbarFieldSort.defaultProps = {
+  t: translate,
+  useOnSelect,
+  useView
+};
+
+export { ViewToolbarFieldSort as default, ViewToolbarFieldSort, useOnSelect };

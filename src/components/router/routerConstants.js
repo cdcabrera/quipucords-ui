@@ -1,7 +1,8 @@
 import React from 'react';
+import { ViewContext } from '../view/viewContext';
 import { Scans } from '../scans/scans';
 import { Sources } from '../sources/sources';
-import { Credentials } from '../credentials/credentials';
+import { Credentials, CONFIG as CredentialsConfig } from '../credentials/credentials';
 
 /**
  * Return the application base directory.
@@ -33,7 +34,11 @@ const routes = [
     iconClass: 'fa fa-id-card',
     title: 'Credentials',
     path: '/credentials',
-    element: <Credentials />
+    element: (
+      <ViewContext.Provider value={{ ...CredentialsConfig }}>
+        <Credentials />
+      </ViewContext.Provider>
+    )
   }
 ];
 

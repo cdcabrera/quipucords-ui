@@ -202,6 +202,19 @@
     "title_error": "Error",
     "title_warning": "Warning"
   },
+  "toolbar": {
+    "label_chip": "{{context}}",
+    "label_chip_network": "Network",
+    "label_chip_satellite": "Satellite",
+    "label_chip_vcenter": "VCenter",
+    "label_clear-filters": "Reset filters",
+    "label_option": "",
+    "label_option_name": "Name",
+    "label_option_cred_type": "Credential type",
+    "label_option_search_by_name": "Name",
+    "label_placeholder_filter_cred_type": "Filter by credential type",
+    "label_placeholder_filter_search_by_name": "Filter by name"
+  },
   "view": {
     "empty-state_description_credentials": "Credentials contain authentication information needed to scan a source. A credential includes a username and a password or SSH key. {{name}} uses SSH to connect to servers on the network and uses credentials to access those servers.",
     "empty-state_description_scans": "Select a Source to scan from the Sources page.",
