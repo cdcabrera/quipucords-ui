@@ -9,12 +9,11 @@ import {
   SelectPosition
 } from '../addCredentialType/addCredentialType';
 import { reduxTypes, storeHooks } from '../../redux';
-import ViewToolbar from '../viewToolbar/viewToolbar.deprecated';
-import { ViewToolbar as ViewToolbarTest } from '../viewToolbar/viewToolbar';
+import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
+import { useView } from '../view/viewContext';
+import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import { CredentialsEmptyState } from './credentialsEmptyState';
-import { CredentialFilterFields, CredentialSortFields } from './credentialConstants';
-import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { credentialsTableCells } from './credentialsTableCells';
 import {
@@ -26,8 +25,7 @@ import {
   useOnSelect
 } from './credentialsContext';
 import { CredentialsToolbar } from './credentialsToolbar';
-import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
-import { useView } from '../view/viewContext';
+import { translate } from '../i18n/i18n';
 
 const CONFIG = {
   viewId: 'credentials',
@@ -132,23 +130,7 @@ const Credentials = ({
       <div className="quipucords-view-container">
         {isActive && (
           <React.Fragment>
-            <ViewToolbar
-              key="original-toolbar"
-              viewType={reduxTypes.view.CREDENTIALS_VIEW}
-              filterFields={CredentialFilterFields}
-              sortFields={CredentialSortFields}
-              lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Credential"
-              itemsTypePlural="Credentials"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
-            />
-            <ViewToolbarTest
-              key="new-toolbar"
-              lastRefresh={new Date(date).getTime()}
-              secondaryFields={renderToolbarActions()}
-            />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
             <ViewPaginationRow viewType={reduxTypes.view.CREDENTIALS_VIEW} {...viewOptions} />
           </React.Fragment>
         )}
