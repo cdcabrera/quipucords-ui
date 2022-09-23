@@ -4,7 +4,6 @@ import addSourceWizardReducer from './addSourceWizardReducer';
 import confirmationModalReducer from './confirmationModalReducer';
 import credentialsReducer from './credentialsReducer';
 import factsReducer from './factsReducer';
-// import queryReducer from './queryReducer';
 import reportsReducer from './reportsReducer';
 import scansReducer from './scansReducer';
 import scansEditReducer from './scansEditReducer';
@@ -21,7 +20,6 @@ const reducers = {
   confirmationModal: confirmationModalReducer,
   credentials: credentialsReducer,
   facts: factsReducer,
-  // query: queryReducer,
   reports: reportsReducer,
   scans: scansReducer,
   scansEdit: scansEditReducer,
@@ -43,7 +41,6 @@ export {
   confirmationModalReducer,
   credentialsReducer,
   factsReducer,
-  // queryReducer,
   reportsReducer,
   scansReducer,
   scansEditReducer,
