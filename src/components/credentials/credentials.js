@@ -59,7 +59,7 @@ const Credentials = ({
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useView: useAliasView
 }) => {
-  const { viewId } = useAliasView();
+  const { isFilteringActive, viewId } = useAliasView();
   const onExpand = useAliasOnExpand();
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
@@ -69,7 +69,7 @@ const Credentials = ({
   const [viewOptions = {}] = useAliasSelectors([
     ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.CREDENTIALS_VIEW]
   ]);
-  const isActive = viewOptions?.activeFilters?.length > 0 || data?.length > 0 || false;
+  const isActive = isFilteringActive || data?.length > 0 || false;
 
   /**
    * Toolbar actions onDeleteCredentials
