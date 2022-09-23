@@ -36,13 +36,11 @@ const CredentialsSortFields = [
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.NAME] }),
     value: API_QUERY_SORT_TYPES.NAME,
-    isNumeric: false,
     selected: true
   },
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.CREDENTIAL_TYPE] }),
-    value: API_QUERY_SORT_TYPES.CREDENTIAL_TYPE,
-    isNumeric: false
+    value: API_QUERY_SORT_TYPES.CREDENTIAL_TYPE
   }
 ];
 

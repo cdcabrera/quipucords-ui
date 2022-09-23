@@ -3,9 +3,23 @@ import { AlertVariant } from '@patternfly/react-core';
 import { useShallowCompareEffect } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
-import { apiTypes } from '../../constants/apiConstants';
+import { useView } from '../view/viewContext';
+import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
+
+/**
+ * Charge initial view query
+ *
+ * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.SCAN_TYPE]': string, '[API_QUERY_TYPES.PAGE]': number,
+ *    '[API_QUERY_TYPES.PAGE_SIZE]': number}}
+ */
+const initialQuery = {
+  [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
+  [API_QUERY_TYPES.PAGE]: 1,
+  [API_QUERY_TYPES.PAGE_SIZE]: 10,
+  [API_QUERY_TYPES.SCAN_TYPE]: 'inspect'
+};
 
 /**
  * On expand a row facet.
@@ -23,23 +37,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
       viewType: reduxTypes.view.SCANS_VIEW,
       item: data.item,
       cellIndex
-    });
-  };
-};
-
-/**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.scans.UPDATE_SCANS
     });
   };
 };
@@ -248,6 +245,7 @@ const usePoll = ({
  * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
  *     expandedRows: *, error: boolean}}
  */
@@ -256,15 +254,16 @@ const useGetScans = ({
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
   usePoll: useAliasPoll = usePoll,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
-    ({ scans }) => scans?.update,
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
+    ({ view }) => view.update?.[viewId],
     ({ scans }) => scans?.selected,
-    ({ scans }) => scans?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.SCANS_VIEW]
+    ({ scans }) => scans?.expanded
   ]);
   const {
     data: responseData,
@@ -277,7 +276,6 @@ const useGetScans = ({
 
   const [{ date } = {}] = responses?.list || [];
   const { [apiTypes.API_RESPONSE_SCANS_RESULTS]: data = [] } = responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions, { [apiTypes.API_QUERY_SCAN_TYPE]: 'inspect' });
 
   useShallowCompareEffect(() => {
     getScans(query)(dispatch);
@@ -296,12 +294,12 @@ const useGetScans = ({
 };
 
 const context = {
+  initialQuery,
   useGetScans,
   useOnExpand,
-  useOnRefresh,
   useOnScanAction,
   useOnSelect,
   usePoll
 };
 
-export { context as default, context, useGetScans, useOnExpand, useOnRefresh, useOnScanAction, useOnSelect, usePoll };
+export { context as default, context, initialQuery, useGetScans, useOnExpand, useOnScanAction, useOnSelect, usePoll };

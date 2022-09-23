@@ -17,7 +17,7 @@ import { CredentialsEmptyState } from './credentialsEmptyState';
 import { Table } from '../table/table';
 import { credentialsTableCells } from './credentialsTableCells';
 import {
-  credentialsQuery,
+  initialQuery,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -29,7 +29,7 @@ import { translate } from '../i18n/i18n';
 
 const CONFIG = {
   viewId: 'credentials',
-  initialQuery: credentialsQuery,
+  initialQuery,
   toolbar: CredentialsToolbar
 };
 

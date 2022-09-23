@@ -11,6 +11,7 @@ import { API_QUERY_SORT_TYPES, API_QUERY_TYPES } from '../../constants/apiConsta
 const ScansFilterFields = [
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_NAME] }),
+    value: API_QUERY_TYPES.SEARCH_NAME,
     component: function SearchName(props) {
       return <ViewToolbarTextInput filter={API_QUERY_TYPES.SEARCH_NAME} {...props} />;
     },
@@ -18,6 +19,7 @@ const ScansFilterFields = [
   },
   {
     title: () => translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_SOURCES_NAME] }),
+    value: API_QUERY_TYPES.SEARCH_SOURCES_NAME,
     component: function SearchSourcesName(props) {
       return <ViewToolbarTextInput filter={API_QUERY_TYPES.SEARCH_SOURCES_NAME} {...props} />;
     }
@@ -38,26 +40,13 @@ const ScansSortFields = [
   {
     title: () =>
       translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME] }),
-    isNumeric: true,
     value: API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME
   }
 ];
 
-/**
- * Charge initial view query
- *
- * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
- */
-const ScansQuery = {
-  [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
-  [API_QUERY_TYPES.PAGE]: 1,
-  [API_QUERY_TYPES.PAGE_SIZE]: 10
-};
-
 const ScansToolbar = {
-  ScansFilterFields,
-  ScansSortFields,
-  ScansQuery
+  filterFields: ScansFilterFields,
+  sortFields: ScansSortFields
 };
 
-export { ScansToolbar as default, ScansToolbar, ScansFilterFields, ScansSortFields, ScansQuery };
+export { ScansToolbar as default, ScansToolbar, ScansFilterFields, ScansSortFields };

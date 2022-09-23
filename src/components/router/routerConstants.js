@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewContext } from '../view/viewContext';
-import { Scans } from '../scans/scans';
+import { Scans, CONFIG as ScansConfig } from '../scans/scans';
 import { Sources } from '../sources/sources';
 import { Credentials, CONFIG as CredentialsConfig } from '../credentials/credentials';
 
@@ -28,7 +28,11 @@ const routes = [
     iconClass: 'pficon pficon-orders',
     title: 'Scans',
     path: '/scans',
-    element: <Scans />
+    element: (
+      <ViewContext.Provider value={{ ...ScansConfig }}>
+        <Scans />
+      </ViewContext.Provider>
+    )
   },
   {
     iconClass: 'fa fa-id-card',

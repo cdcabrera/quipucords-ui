@@ -3,17 +3,17 @@ import { useShallowCompareEffect } from 'react-use';
 import { AlertVariant, List, ListItem } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
-import { translate } from '../i18n/i18n';
 import { useConfirmation } from '../../hooks/useConfirmation';
 import { useView } from '../view/viewContext';
+import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
+import { translate } from '../i18n/i18n';
 
 /**
  * Charge initial view query
  *
  * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
  */
-const credentialsQuery = {
+const initialQuery = {
   [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10
@@ -270,7 +270,7 @@ const useGetCredentials = ({
 };
 
 const context = {
-  credentialsQuery,
+  initialQuery,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -281,7 +281,7 @@ const context = {
 export {
   context as default,
   context,
-  credentialsQuery,
+  initialQuery,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
