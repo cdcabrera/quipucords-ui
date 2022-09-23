@@ -1,6 +1,5 @@
 import { reduxHelpers } from '../common';
 import { reduxTypes } from '../constants';
-// import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 
 /**
@@ -21,20 +20,6 @@ const initialState = {
  */
 const viewReducer = (state = initialState, action) => {
   switch (action.type) {
-    case reduxTypes.view.SET_ACTIVE_FILTERS:
-      return reduxHelpers.setStateProp(
-        'filters',
-        {
-          [action.viewId]: {
-            ...state.filters[action.viewId],
-            activeFilters: action.activeFilters
-          }
-        },
-        {
-          state,
-          reset: false
-        }
-      );
     case reduxTypes.view.SET_FILTER:
       return reduxHelpers.setStateProp(
         'filters',

@@ -63,13 +63,15 @@ const useView = ({
   useQuery: useAliasQuery = useQuery,
   useViewContext: useAliasViewContext = useViewContext
 } = {}) => {
-  const { viewId } = useAliasViewContext();
+  const { initialQuery, viewId } = useAliasViewContext();
   const config = useAliasConfig();
   const query = useAliasQuery();
+  const checkFilters = Object.entries(query).filter(([key, value]) => !(key in initialQuery) && value);
 
   return {
     viewId,
     query,
+    isFilteringActive: checkFilters.length > 0,
     config
   };
 };
