@@ -4,25 +4,30 @@ import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from 
 import { IconSize } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { reduxTypes, storeHooks } from '../../redux';
-import ViewToolbar from '../viewToolbar/viewToolbar.deprecated';
+import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
+import { useView } from '../view/viewContext';
+import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import SourcesEmptyState from './sourcesEmptyState';
-import { SourceFilterFields, SourceSortFields } from './sourceConstants';
-import { translate } from '../i18n/i18n';
 import { Table } from '../table/table';
 import { sourcesTableCells } from './sourcesTableCells';
 import {
+  initialQuery,
   useGetSources,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect
 } from './sourcesContext';
-import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
+import { SourcesToolbar } from './sourcesToolbar';
+import { translate } from '../i18n/i18n';
 
-const VIEW_ID = 'sources';
+const CONFIG = {
+  viewId: 'sources',
+  initialQuery,
+  toolbar: SourcesToolbar
+};
 
 /**
  * A sources view.
@@ -33,13 +38,12 @@ const VIEW_ID = 'sources';
  * @param {Function} props.useOnDelete
  * @param {Function} props.useOnEdit
  * @param {Function} props.useOnExpand
- * @param {Function} props.useOnRefresh
  * @param {Function} props.useOnScan
  * @param {Function} props.useOnSelect
  * @param {Function} props.useOnShowAddSourceWizard
  * @param {Function} props.useDispatch
  * @param {Function} props.useSelectors
- * @param {string} props.viewId
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
 const Sources = ({
@@ -48,19 +52,18 @@ const Sources = ({
   useOnDelete: useAliasOnDelete,
   useOnEdit: useAliasOnEdit,
   useOnExpand: useAliasOnExpand,
-  useOnRefresh: useAliasOnRefresh,
   useOnScan: useAliasOnScan,
   useOnSelect: useAliasOnSelect,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useDispatch: useAliasDispatch,
   useSelectors: useAliasSelectors,
-  viewId
+  useView: useAliasView
 }) => {
+  const { isFilteringActive, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
   const onExpand = useAliasOnExpand();
-  const onRefresh = useAliasOnRefresh();
   const onScan = useAliasOnScan();
   const onSelect = useAliasOnSelect();
   const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
@@ -68,9 +71,8 @@ const Sources = ({
   const [viewOptions = {}] = useAliasSelectors([
     ({ viewOptions: stateViewOptions }) => stateViewOptions[reduxTypes.view.SOURCES_VIEW]
   ]);
-  const filtersOrSourcesActive = viewOptions?.activeFilters?.length > 0 || data?.length > 0 || false;
+  const isActive = isFilteringActive || data?.length > 0 || false;
 
-  // ToDo: review onScanSources, renderToolbarActions being standalone with upcoming toolbar updates
   /**
    * Toolbar actions onScanSources
    *
@@ -114,7 +116,10 @@ const Sources = ({
     return (
       <EmptyState className="quipucords-empty-state__alert">
         <Alert variant={AlertVariant.danger} title={t('view.error', { context: viewId })}>
-          {t('view.error-message', { context: [viewId], message: errorMessage })}
+          {t('view.error-message', {
+            context: [viewId],
+            message: errorMessage
+          })}
         </Alert>
       </EmptyState>
     );
@@ -123,20 +128,9 @@ const Sources = ({
   return (
     <div className="quipucords-content">
       <div className="quipucords-view-container">
-        {filtersOrSourcesActive && (
+        {isActive && (
           <React.Fragment>
-            <ViewToolbar
-              viewType={reduxTypes.view.SOURCES_VIEW}
-              filterFields={SourceFilterFields}
-              sortFields={SourceSortFields}
-              onRefresh={() => onRefresh()}
-              lastRefresh={new Date(date).getTime()}
-              actions={renderToolbarActions()}
-              itemsType="Source"
-              itemsTypePlural="Sources"
-              selectedCount={viewOptions.selectedItems?.length}
-              {...viewOptions}
-            />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
             <ViewPaginationRow viewType={reduxTypes.view.SOURCES_VIEW} {...viewOptions} />
           </React.Fragment>
         )}
@@ -206,7 +200,7 @@ const Sources = ({
 /**
  * Prop types
  *
- * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: Function, useOnRefresh: Function, useOnScan: Function,
+ * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: Function, useOnScan: Function,
  *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function, useSelectors: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
@@ -217,18 +211,17 @@ Sources.propTypes = {
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
-  useOnRefresh: PropTypes.func,
   useOnScan: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
   useSelectors: PropTypes.func,
-  viewId: PropTypes.string
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{useOnEdit: Function, useOnSelect: Function, viewId: string, t: translate, useOnRefresh: Function, useOnScan: Function,
+ * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: translate, useOnRefresh: Function, useOnScan: Function,
  *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function, useSelectors: Function,
  *     useOnShowAddSourceWizard: Function}}
  */
@@ -239,12 +232,11 @@ Sources.defaultProps = {
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect,
   useOnShowAddSourceWizard,
   useSelectors: storeHooks.reactRedux.useSelectors,
-  viewId: VIEW_ID
+  useView
 };
 
-export { Sources as default, Sources, VIEW_ID };
+export { Sources as default, Sources, CONFIG };

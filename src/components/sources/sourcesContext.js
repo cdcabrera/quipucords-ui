@@ -4,10 +4,22 @@ import { AlertVariant, List, ListItem } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
-import { apiTypes } from '../../constants/apiConstants';
+import { useView } from '../view/viewContext';
+import { useConfirmation } from '../../hooks/useConfirmation';
+import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
-import { useConfirmation } from '../../hooks/useConfirmation';
+
+/**
+ * Charge initial view query
+ *
+ * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
+ */
+const initialQuery = {
+  [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
+  [API_QUERY_TYPES.PAGE]: 1,
+  [API_QUERY_TYPES.PAGE_SIZE]: 10
+};
 
 /**
  * Sources action, onDelete.
@@ -182,23 +194,6 @@ const useOnExpand = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * On refresh view.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnRefresh = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return () => {
-    dispatch({
-      type: reduxTypes.sources.UPDATE_SOURCES
-    });
-  };
-};
-
-/**
  * On scan a source
  *
  * @param {object} options
@@ -282,15 +277,16 @@ const useGetSources = ({
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
   usePoll: useAliasPoll = usePoll,
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
+  useView: useAliasView = useView
 } = {}) => {
+  const { query, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows, viewOptions] = useAliasSelectors([
-    ({ sources }) => sources?.update,
+  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
+    ({ view }) => view.update?.[viewId],
     ({ sources }) => sources?.selected,
-    ({ sources }) => sources?.expanded,
-    ({ viewOptions: stateViewOptions }) => stateViewOptions?.[reduxTypes.view.SOURCES_VIEW]
+    ({ sources }) => sources?.expanded
   ]);
   const {
     data: responseData,
@@ -303,7 +299,6 @@ const useGetSources = ({
 
   const [{ date } = {}] = responses?.list || [];
   const { [apiTypes.API_RESPONSE_SOURCES_RESULTS]: data = [] } = responseData?.view || {};
-  const query = helpers.createViewQueryObject(viewOptions);
 
   useShallowCompareEffect(() => {
     getSources(query)(dispatch);
@@ -338,11 +333,11 @@ const useSourcesExist = ({ useGetSources: useAliasGetSources = useGetSources } =
 };
 
 const context = {
+  initialQuery,
   useGetSources,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect,
   usePoll,
@@ -352,11 +347,11 @@ const context = {
 export {
   context as default,
   context,
+  initialQuery,
   useGetSources,
   useOnDelete,
   useOnEdit,
   useOnExpand,
-  useOnRefresh,
   useOnScan,
   useOnSelect,
   usePoll,

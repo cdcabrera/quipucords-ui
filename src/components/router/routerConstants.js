@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewContext } from '../view/viewContext';
 import { Scans, CONFIG as ScansConfig } from '../scans/scans';
-import { Sources } from '../sources/sources';
+import { Sources, CONFIG as SourcesConfig } from '../sources/sources';
 import { Credentials, CONFIG as CredentialsConfig } from '../credentials/credentials';
 
 /**
@@ -22,7 +22,11 @@ const routes = [
     title: 'Sources',
     path: '/sources',
     redirect: true,
-    element: <Sources />
+    element: (
+      <ViewContext.Provider value={{ ...SourcesConfig }}>
+        <Sources />
+      </ViewContext.Provider>
+    )
   },
   {
     iconClass: 'pficon pficon-orders',
