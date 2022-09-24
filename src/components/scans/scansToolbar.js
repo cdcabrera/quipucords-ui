@@ -40,7 +40,8 @@ const ScansSortFields = [
   {
     title: () =>
       translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME] }),
-    value: API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME
+    value: `-${API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME}`,
+    isDefaultDescending: true
   }
 ];
 

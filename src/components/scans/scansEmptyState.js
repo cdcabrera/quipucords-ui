@@ -11,6 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { AddCircleOIcon } from '@patternfly/react-icons';
 import { useNavigate } from '../router/routerContext';
+import { useView } from '../view/viewContext';
 import { useSourcesExist } from '../sources/sourcesContext';
 import { helpers } from '../../common';
 import { reduxTypes, storeHooks } from '../../redux';
@@ -25,7 +26,7 @@ import { translate } from '../i18n/i18n';
  * @param {Function} props.useDispatch
  * @param {string} props.uiShortName
  * @param {Function} props.useSourcesExist
- * @param {string} props.viewId
+ * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
 const ScansEmptyState = ({
@@ -34,8 +35,9 @@ const ScansEmptyState = ({
   useNavigate: useAliasNavigate,
   uiShortName,
   useSourcesExist: useAliasSourcesExist,
-  viewId
+  useView: useAliasView
 }) => {
+  const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const navigate = useAliasNavigate();
   const { sourcesCount, hasSources } = useAliasSourcesExist();
@@ -71,7 +73,7 @@ const ScansEmptyState = ({
 /**
  * Prop types
  *
- * @type {{uiShortName: string, viewId: string, t: Function, useSourcesExist: Function, useDispatch: Function,
+ * @type {{uiShortName: string, useView: Function, t: Function, useSourcesExist: Function, useDispatch: Function,
  *     useNavigate: Function}}
  */
 ScansEmptyState.propTypes = {
@@ -80,13 +82,13 @@ ScansEmptyState.propTypes = {
   useNavigate: PropTypes.func,
   uiShortName: PropTypes.string,
   useSourcesExist: PropTypes.func,
-  viewId: PropTypes.string
+  useView: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{uiShortName: string, viewId: null, t: translate, useSourcesExist: Function, useDispatch: Function,
+ * @type {{uiShortName: string, useView: Function, t: translate, useSourcesExist: Function, useDispatch: Function,
  *     useNavigate: Function}}
  */
 ScansEmptyState.defaultProps = {
@@ -95,7 +97,7 @@ ScansEmptyState.defaultProps = {
   useNavigate,
   uiShortName: helpers.UI_SHORT_NAME,
   useSourcesExist,
-  viewId: null
+  useView
 };
 
 export { ScansEmptyState as default, ScansEmptyState };

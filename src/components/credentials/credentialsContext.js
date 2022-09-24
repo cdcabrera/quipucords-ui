@@ -9,11 +9,18 @@ import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants
 import { translate } from '../i18n/i18n';
 
 /**
+ * State context identifier
+ *
+ * @type {string}
+ */
+const VIEW_ID = 'credentials';
+
+/**
  * Charge initial view query
  *
  * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
  */
-const initialQuery = {
+const INITIAL_QUERY = {
   [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10
@@ -270,7 +277,8 @@ const useGetCredentials = ({
 };
 
 const context = {
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -281,7 +289,8 @@ const context = {
 export {
   context as default,
   context,
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetCredentials,
   useOnDelete,
   useOnEdit,

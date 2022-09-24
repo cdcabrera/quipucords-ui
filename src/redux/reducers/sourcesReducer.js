@@ -4,6 +4,7 @@ import { reduxHelpers } from '../common';
 
 const initialState = {
   deleted: {},
+  exist: {},
   selected: {},
   expanded: {},
   update: 0,
@@ -77,6 +78,7 @@ const sourcesReducer = (state = initialState, action) => {
       return reduxHelpers.generatedPromiseActionReducer(
         [
           { ref: 'deleted', type: [sourcesTypes.DELETE_SOURCE] },
+          { ref: 'exist', type: sourcesTypes.GET_SOURCES_EXIST },
           { ref: 'view', type: sourcesTypes.GET_SOURCES }
         ],
         state,

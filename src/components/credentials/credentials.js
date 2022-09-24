@@ -17,7 +17,8 @@ import { CredentialsEmptyState } from './credentialsEmptyState';
 import { Table } from '../table/table';
 import { credentialsTableCells } from './credentialsTableCells';
 import {
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -28,8 +29,8 @@ import { CredentialsToolbar } from './credentialsToolbar';
 import { translate } from '../i18n/i18n';
 
 const CONFIG = {
-  viewId: 'credentials',
-  initialQuery,
+  viewId: VIEW_ID,
+  initialQuery: INITIAL_QUERY,
   toolbar: CredentialsToolbar
 };
 
@@ -171,7 +172,7 @@ const Credentials = ({
               ]
             }))}
           >
-            <CredentialsEmptyState viewId={viewId} onAddSource={onShowAddSourceWizard} />
+            {!isActive && <CredentialsEmptyState viewId={viewId} onAddSource={onShowAddSourceWizard} />}
           </Table>
         </div>
       </div>

@@ -9,12 +9,19 @@ import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
 
 /**
+ * State context identifier
+ *
+ * @type {string}
+ */
+const VIEW_ID = 'scans';
+
+/**
  * Charge initial view query
  *
  * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.SCAN_TYPE]': string, '[API_QUERY_TYPES.PAGE]': number,
  *    '[API_QUERY_TYPES.PAGE_SIZE]': number}}
  */
-const initialQuery = {
+const INITIAL_QUERY = {
   [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10,
@@ -294,7 +301,8 @@ const useGetScans = ({
 };
 
 const context = {
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetScans,
   useOnExpand,
   useOnScanAction,
@@ -302,4 +310,14 @@ const context = {
   usePoll
 };
 
-export { context as default, context, initialQuery, useGetScans, useOnExpand, useOnScanAction, useOnSelect, usePoll };
+export {
+  context as default,
+  context,
+  VIEW_ID,
+  INITIAL_QUERY,
+  useGetScans,
+  useOnExpand,
+  useOnScanAction,
+  useOnSelect,
+  usePoll
+};

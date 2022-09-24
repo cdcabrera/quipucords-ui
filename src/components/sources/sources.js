@@ -12,7 +12,8 @@ import SourcesEmptyState from './sourcesEmptyState';
 import { Table } from '../table/table';
 import { sourcesTableCells } from './sourcesTableCells';
 import {
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetSources,
   useOnDelete,
   useOnEdit,
@@ -24,8 +25,8 @@ import { SourcesToolbar } from './sourcesToolbar';
 import { translate } from '../i18n/i18n';
 
 const CONFIG = {
-  viewId: 'sources',
-  initialQuery,
+  viewId: VIEW_ID,
+  initialQuery: INITIAL_QUERY,
   toolbar: SourcesToolbar
 };
 
@@ -189,7 +190,7 @@ const Sources = ({
               ]
             }))}
           >
-            <SourcesEmptyState onAddSource={onShowAddSourceWizard} viewId={viewId} />
+            {!isActive && <SourcesEmptyState onAddSource={onShowAddSourceWizard} viewId={viewId} />}
           </Table>
         </div>
       </div>

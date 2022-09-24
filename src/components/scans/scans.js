@@ -11,13 +11,13 @@ import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import { ScansEmptyState } from './scansEmptyState';
 import { Table } from '../table/table';
 import { scansTableCells } from './scansTableCells';
-import { initialQuery, useGetScans, useOnExpand, useOnScanAction, useOnSelect } from './scansContext';
+import { VIEW_ID, INITIAL_QUERY, useGetScans, useOnExpand, useOnScanAction, useOnSelect } from './scansContext';
 import { ScansToolbar } from './scansToolbar';
 import { translate } from '../i18n/i18n';
 
 const CONFIG = {
-  viewId: 'scans',
-  initialQuery,
+  viewId: VIEW_ID,
+  initialQuery: INITIAL_QUERY,
   toolbar: ScansToolbar
 };
 
@@ -177,7 +177,7 @@ const Scans = ({
               ]
             }))}
           >
-            <ScansEmptyState viewId={viewId} />
+            {!isActive && <ScansEmptyState />}
           </Table>
         </div>
       </div>

@@ -11,11 +11,18 @@ import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
 
 /**
+ * State context identifier
+ *
+ * @type {string}
+ */
+const VIEW_ID = 'sources';
+
+/**
  * Charge initial view query
  *
  * @type {{'[API_QUERY_TYPES.ORDERING]': string, '[API_QUERY_TYPES.PAGE]': number, '[API_QUERY_TYPES.PAGE_SIZE]': number}}
  */
-const initialQuery = {
+const INITIAL_QUERY = {
   [API_QUERY_TYPES.ORDERING]: API_QUERY_SORT_TYPES.NAME,
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10
@@ -269,6 +276,7 @@ const usePoll = ({
  * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
+ * @param {Function} options.useView
  * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean,
  *     error: boolean, selectedSources: *}}
  */
@@ -320,20 +328,57 @@ const useGetSources = ({
  * Confirm if sources exist
  *
  * @param {object} options
+ * @param {object} options.query
  * @param {Function} options.useGetSources
- * @returns {boolean}
+ * @param {string} options.viewId
+ * @returns {{sourcesCount: (*|number), hasSources: boolean}}
  */
-const useSourcesExist = ({ useGetSources: useAliasGetSources = useGetSources } = {}) => {
-  const { fulfilled, data } = useAliasGetSources();
+const useSourcesExist = ({
+  query = INITIAL_QUERY,
+  useGetSources: useAliasGetSources = useGetSources,
+  viewId = VIEW_ID
+} = {}) => {
+  const { fulfilled, data } = useAliasGetSources({
+    useView: () => ({
+      viewId,
+      query
+    })
+  });
 
   return {
     sourcesCount: data?.length ?? 0,
     hasSources: fulfilled === true && data?.length > 0
   };
 };
+/*
+const useSourcesExist = ({
+  query = INITIAL_QUERY,
+  getSources = reduxActions.sources.getSourcesExist,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+} = {}) => {
+  const dispatch = useAliasDispatch();
+  const { data: responseData, fulfilled } = useAliasSelectorsResponse({
+    id: 'exist',
+    selector: ({ sources }) => sources?.exist
+  });
+
+  const { [apiTypes.API_RESPONSE_SOURCES_RESULTS]: data = [] } = responseData?.exist || {};
+
+  useMount(() => {
+    getSources(query)(dispatch);
+  });
+
+  return {
+    sourcesCount: data?.length ?? 0,
+    hasSources: fulfilled === true && data?.length > 0
+  };
+};
+*/
 
 const context = {
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetSources,
   useOnDelete,
   useOnEdit,
@@ -347,7 +392,8 @@ const context = {
 export {
   context as default,
   context,
-  initialQuery,
+  VIEW_ID,
+  INITIAL_QUERY,
   useGetSources,
   useOnDelete,
   useOnEdit,
