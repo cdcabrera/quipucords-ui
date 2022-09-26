@@ -1,11 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, AlertVariant, Button, ButtonVariant, EmptyState, Spinner } from '@patternfly/react-core';
-import { IconSize } from '@patternfly/react-icons';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStatePrimary,
+  EmptyStateVariant,
+  Spinner,
+  Title,
+  TitleSizes
+} from '@patternfly/react-core';
+import { IconSize, SearchIcon } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { Tooltip } from '../tooltip/tooltip';
 import { reduxTypes, storeHooks } from '../../redux';
 import { useView } from '../view/viewContext';
+import { useToolbarFieldClearAll } from '../viewToolbar/viewToolbarContext';
 import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import ViewPaginationRow from '../viewPaginationRow/viewPaginationRow';
 import { ScansEmptyState } from './scansEmptyState';
@@ -45,6 +59,7 @@ const Scans = ({
   useDispatch: useAliasDispatch,
   useView: useAliasView
 }) => {
+  const onToolbarFieldClearAll = useToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const onExpand = useAliasOnExpand();
@@ -54,6 +69,7 @@ const Scans = ({
     pending,
     error,
     errorMessage,
+    fulfilled,
     date,
     data,
     selectedRows = {},
@@ -181,7 +197,21 @@ const Scans = ({
               ]
             }))}
           >
-            {!isActive && <ScansEmptyState />}
+            {fulfilled && isActive && (
+              <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
+                <EmptyStateIcon icon={SearchIcon} />
+                <Title size={TitleSizes.lg} headingLevel="h1">
+                  {t('view.empty-state', { context: ['filter', 'title'] })}
+                </Title>
+                <EmptyStateBody>{t('view.empty-state', { context: ['filter', 'description'] })}</EmptyStateBody>
+                <EmptyStatePrimary>
+                  <Button variant={ButtonVariant.link} onClick={onToolbarFieldClearAll}>
+                    {t('view.empty-state', { context: ['label', 'clear'] })}
+                  </Button>
+                </EmptyStatePrimary>
+              </EmptyState>
+            )}
+            {fulfilled && !isActive && <ScansEmptyState />}
           </Table>
         </div>
       </div>
