@@ -45,13 +45,7 @@ const useOnClick = ({
  * @param {object} props.props
  * @returns {React.ReactNode}
  */
-const ViewToolbarFieldSortButton = ({
-  // isAscending,
-  t,
-  useOnClick: useAliasOnClick,
-  useQuery: useAliasQuery,
-  ...props
-}) => {
+const ViewToolbarFieldSortButton = ({ t, useOnClick: useAliasOnClick, useQuery: useAliasQuery, ...props }) => {
   const onClick = useAliasOnClick();
   const { [API_QUERY_TYPES.ORDERING]: ordering } = useAliasQuery();
 
@@ -82,7 +76,6 @@ const ViewToolbarFieldSortButton = ({
  * @type {{useQuery: Function, viewId: string, useOnClick: Function}}
  */
 ViewToolbarFieldSortButton.propTypes = {
-  // isAscending: PropTypes.bool,
   t: PropTypes.func,
   useOnClick: PropTypes.func,
   useQuery: PropTypes.func
@@ -94,7 +87,6 @@ ViewToolbarFieldSortButton.propTypes = {
  * @type {{useQuery: Function, useOnClick: Function}}
  */
 ViewToolbarFieldSortButton.defaultProps = {
-  // isAscending: true,
   t: translate,
   useOnClick,
   useQuery

@@ -124,7 +124,7 @@ const useOnDelete = ({
 
       setSourcesToDelete(() => []);
     }
-  }, [deletedError, deletedFulfilled, dispatch, errorMessage, sourcesToDelete, t]);
+  }, [deletedError, deletedFulfilled, dispatch, errorMessage, sourcesToDelete, t, viewId]);
 
   return sources => {
     const updatedSources = (Array.isArray(sources) && sources) || [sources];
