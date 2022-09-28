@@ -1,7 +1,6 @@
 import React from 'react';
 import { DropdownSelect } from '../../dropdownSelect/dropdownSelect';
 import { ViewToolbarFieldSort, useOnSelect } from '../viewToolbarFieldSort';
-import { API_QUERY_TYPES } from '../../../constants/apiConstants';
 import { CONFIG as sourcesConfig } from '../../sources/sources';
 import { store } from '../../../redux/store';
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { ViewToolbarSelectCategory, useOnSelect } from '../viewToolbarSelectCategory';
-import { CONFIG as sourcesConfig } from '../../sources/sources';
+import { ViewToolbarFieldSortButton, useOnClick } from '../viewToolbarFieldSortButton';
+import { API_QUERY_TYPES } from '../../../constants/apiConstants';
 import { store } from '../../../redux/store';
 
-describe('ViewToolbarSelectCategory Component', () => {
+describe('ViewToolbarFieldSortButton Component', () => {
   let mockDispatch;
 
   beforeEach(() => {
@@ -15,33 +15,27 @@ describe('ViewToolbarSelectCategory Component', () => {
   });
 
   it('should render a basic component', async () => {
-    const props = {
-      useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
-    };
-    const component = await shallowHookComponent(<ViewToolbarSelectCategory {...props} />);
+    const props = {};
+    const component = await shallowHookComponent(<ViewToolbarFieldSortButton {...props} />);
 
     expect(component).toMatchSnapshot('basic');
   });
 
   it('should handle updating the view query through redux state with a component', async () => {
     const props = {
-      useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
+      useQuery: () => ({ [API_QUERY_TYPES.ORDERING]: '-hello world' })
     };
-
-    const component = await mountHookComponent(<ViewToolbarSelectCategory {...props} />);
-
+    const component = await mountHookComponent(<ViewToolbarFieldSortButton {...props} />);
     component.find('button').simulate('click');
-    component.update();
-    component.find('button.pf-c-select__menu-item').first().simulate('click');
 
     expect(mockDispatch.mock.calls).toMatchSnapshot('dispatch type, component');
   });
 
   it('should handle updating the view query through redux state with a hook', async () => {
     const options = {};
-    const { result: onSelect } = await shallowHook(() => useOnSelect(options));
+    const { result: onClick } = await shallowHook(() => useOnClick(options));
 
-    onSelect({ value: 'dolor sit' });
+    onClick({ value: 'dolor sit' });
     expect(mockDispatch.mock.calls).toMatchSnapshot('dispatch type, hook');
   });
 });

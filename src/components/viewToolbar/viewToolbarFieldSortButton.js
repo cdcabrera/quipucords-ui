@@ -23,7 +23,7 @@ const useOnClick = ({
   const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
-  return value => {
+  return ({ value }) => {
     dispatch([
       {
         type: reduxTypes.view.SET_QUERY,
@@ -51,6 +51,7 @@ const ViewToolbarFieldSortButton = ({ t, useOnClick: useAliasOnClick, useQuery: 
 
   const isDescending = /^-/.test(ordering);
   const updatedOrdering = ordering?.replace(/^-/, '') || '';
+  const isEmpty = updatedOrdering === '';
   const updatedDirection = isDescending ? updatedOrdering : `-${updatedOrdering}`;
 
   return (
@@ -59,7 +60,7 @@ const ViewToolbarFieldSortButton = ({ t, useOnClick: useAliasOnClick, useQuery: 
       content={t('toolbar.label', { context: ['tooltip', 'sort', (isDescending && 'dsc') || 'asc', updatedOrdering] })}
     >
       <Button
-        onClick={() => onClick(updatedDirection)}
+        onClick={() => !isEmpty && onClick({ value: updatedDirection })}
         variant={ButtonVariant.plain}
         data-test="toolbarSortButton"
         {...props}
