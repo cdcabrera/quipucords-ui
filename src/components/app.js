@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connectRouter, reduxActions } from '../redux';
-import { helpers } from '../common';
-import I18n from './i18n/i18n';
+import { useMount } from 'react-use';
+import { reduxActions, storeHooks } from '../redux';
+import { ViewContext } from './view/viewContext';
+import { I18n } from './i18n/i18n';
 import Authentication from './authentication/authentication';
 import PageLayout from './pageLayout/pageLayout';
 import { Router } from './router/router';
@@ -14,19 +15,19 @@ import CreateCredentialDialog from './createCredentialDialog/createCredentialDia
 import CreateScanDialog from './createScanDialog/createScanDialog';
 import MergeReportsDialog from './mergeReportsDialog/mergeReportsDialog';
 
-class App extends React.Component {
-  componentDidMount() {
-    const { getLocale } = this.props;
+const App = ({ getLocale, useDispatch: useAliasDispatch, useSelector: useAliasSelector }) => {
+  const [context, setContext] = useState({});
+  const dispatch = useAliasDispatch();
+  const locale = useAliasSelector(({ user }) => user?.session?.locale?.value);
 
-    getLocale();
-  }
+  useMount(() => {
+    dispatch(getLocale());
+  });
 
-  render() {
-    const { locale } = this.props;
-
-    return (
-      <I18n locale={(locale && locale.value) || null}>
-        <Authentication>
+  return (
+    <I18n locale={locale || null}>
+      <Authentication>
+        <ViewContext.Provider value={[context, setContext]}>
           <PageLayout>
             <Router />
             <ToastNotificationsList />
@@ -37,30 +38,22 @@ class App extends React.Component {
             <CreateScanDialog />
             <MergeReportsDialog />
           </PageLayout>
-        </Authentication>
-      </I18n>
-    );
-  }
-}
+        </ViewContext.Provider>
+      </Authentication>
+    </I18n>
+  );
+};
 
 App.propTypes = {
   getLocale: PropTypes.func,
-  locale: PropTypes.shape({
-    value: PropTypes.string
-  })
+  useDispatch: PropTypes.func,
+  useSelector: PropTypes.func
 };
 
 App.defaultProps = {
-  getLocale: helpers.noop,
-  locale: {}
+  getLocale: reduxActions.user.getLocale,
+  useDispatch: storeHooks.reactRedux.useDispatch,
+  useSelector: storeHooks.reactRedux.useSelector
 };
 
-const mapDispatchToProps = dispatch => ({
-  getLocale: () => dispatch(reduxActions.user.getLocale())
-});
-
-const mapStateToProps = state => ({ locale: state.user.session.locale });
-
-const ConnectedApp = connectRouter(mapStateToProps, mapDispatchToProps)(App);
-
-export { ConnectedApp as default, ConnectedApp, App };
+export { App as default, App };

@@ -82,21 +82,27 @@ const ViewToolbar = ({
                   <ViewToolbarSelectCategory />
                 </ToolbarItem>
               )}
-              {updatedCategoryFields.map(({ title, value, component: OptionComponent }) => {
-                const chipProps = { categoryName: (typeof title === 'function' && title()) || title };
-                chipProps.chips = setSelectedOptions(value);
-                chipProps.deleteChip = () => onClearFilter({ value });
+              {updatedCategoryFields
+                .map(({ title, value, component: OptionComponent }) => {
+                  const chipProps = { categoryName: (typeof title === 'function' && title()) || title };
+                  chipProps.chips = setSelectedOptions(value);
+                  chipProps.deleteChip = () => onClearFilter({ value });
 
-                return (
-                  <ToolbarFilter
-                    key={value}
-                    showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
-                    {...chipProps}
-                  >
-                    <OptionComponent />
-                  </ToolbarFilter>
-                );
-              })}
+                  if (!OptionComponent) {
+                    return null;
+                  }
+
+                  return (
+                    <ToolbarFilter
+                      key={value}
+                      showToolbarItem={currentCategory === value || updatedCategoryFields.length === 1}
+                      {...chipProps}
+                    >
+                      <OptionComponent />
+                    </ToolbarFilter>
+                  );
+                })
+                .filter(component => component !== null)}
             </ToolbarGroup>
           </ToolbarToggleGroup>
           <ToolbarItem key="groupSeparator" variant={ToolbarItemVariant.separator} />

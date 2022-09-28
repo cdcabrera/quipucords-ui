@@ -57,6 +57,7 @@ const CONFIG = {
  * @param {Function} props.useOnSelect
  * @param {Function} props.useOnShowAddSourceWizard
  * @param {Function} props.useDispatch
+ * @param {Function} props.useSetViewContext
  * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
@@ -70,8 +71,10 @@ const Sources = ({
   useOnSelect: useAliasOnSelect,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useDispatch: useAliasDispatch,
+  // useSetViewContext: useAliasSetViewContext,
   useView: useAliasView
 }) => {
+  // useAliasSetViewContext(CONFIG);
   const onToolbarFieldClearAll = useToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
@@ -93,6 +96,15 @@ const Sources = ({
     totalResults
   } = useAliasGetSources();
   const isActive = isFilteringActive || data?.length > 0 || false;
+
+  /*
+  useEffect(() => {
+    console.log('viewID', viewId);
+    if (!isContextSet) {
+      doit(CONFIG);
+    }
+  }, [isContextSet, doit]);
+  */
 
   /**
    * Toolbar actions onScanSources
@@ -237,7 +249,7 @@ const Sources = ({
  *
  * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: Function, useOnScan: Function,
  *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useOnShowAddSourceWizard: Function, useSetViewContext: Function}}
  */
 Sources.propTypes = {
   t: PropTypes.func,
@@ -249,6 +261,7 @@ Sources.propTypes = {
   useOnScan: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
+  // useSetViewContext: PropTypes.func,
   useView: PropTypes.func
 };
 
@@ -257,7 +270,7 @@ Sources.propTypes = {
  *
  * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: translate, useOnRefresh: Function,
  *     useOnScan: Function, useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useOnShowAddSourceWizard: Function, useSetViewContext: Function}}
  */
 Sources.defaultProps = {
   t: translate,
@@ -269,6 +282,7 @@ Sources.defaultProps = {
   useOnScan,
   useOnSelect,
   useOnShowAddSourceWizard,
+  // useSetViewContext,
   useView
 };
 

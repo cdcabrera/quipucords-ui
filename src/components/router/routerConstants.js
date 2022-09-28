@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewContext } from '../view/viewContext';
+import { useSetViewContext } from '../view/viewContext';
 import { Scans, CONFIG as ScansConfig } from '../scans/scans';
 import { Sources, CONFIG as SourcesConfig } from '../sources/sources';
 import { Credentials, CONFIG as CredentialsConfig } from '../credentials/credentials';
@@ -22,31 +22,29 @@ const routes = [
     title: 'Sources',
     path: '/sources',
     redirect: true,
-    element: (
-      <ViewContext.Provider value={{ ...SourcesConfig }}>
-        <Sources />
-      </ViewContext.Provider>
-    )
+    element: function SourcesView(props) {
+      useSetViewContext(SourcesConfig);
+      console.log('HEY >>> SOURCES >>>');
+      return <Sources {...props} />;
+    }
   },
   {
     iconClass: 'pficon pficon-orders',
     title: 'Scans',
     path: '/scans',
-    element: (
-      <ViewContext.Provider value={{ ...ScansConfig }}>
-        <Scans />
-      </ViewContext.Provider>
-    )
+    element: function ScansView(props) {
+      useSetViewContext(ScansConfig);
+      return <Scans {...props} />;
+    }
   },
   {
     iconClass: 'fa fa-id-card',
     title: 'Credentials',
     path: '/credentials',
-    element: (
-      <ViewContext.Provider value={{ ...CredentialsConfig }}>
-        <Credentials />
-      </ViewContext.Provider>
-    )
+    element: function CredentialsView(props) {
+      useSetViewContext(CredentialsConfig);
+      return <Credentials {...props} />;
+    }
   }
 ];
 

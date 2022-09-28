@@ -26,8 +26,8 @@ const Router = ({
     value={{ useLocation: useAliasLocation, useNavigate: useAliasNavigate, useParams: useAliasParams }}
   >
     <Routes basename={routesBaseName}>
-      {routesList.map(({ path, element }) => (
-        <Route key={path} element={element} path={path} />
+      {routesList.map(({ path, element: Element }) => (
+        <Route key={path} element={<Element />} path={path} />
       ))}
       {routesList.length && (
         <Route

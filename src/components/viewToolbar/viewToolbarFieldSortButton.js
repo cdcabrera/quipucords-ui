@@ -4,7 +4,7 @@ import { Button, ButtonVariant } from '@patternfly/react-core';
 import { SortAmountDownAltIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 import { Tooltip } from '../tooltip/tooltip';
 import { reduxTypes, storeHooks } from '../../redux';
-import { useQuery, useView } from '../view/viewContext';
+import { useView } from '../view/viewContext';
 import { API_QUERY_TYPES } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 
@@ -47,7 +47,8 @@ const useOnClick = ({
  */
 const ViewToolbarFieldSortButton = ({ t, useOnClick: useAliasOnClick, useQuery: useAliasQuery, ...props }) => {
   const onClick = useAliasOnClick();
-  const { [API_QUERY_TYPES.ORDERING]: ordering } = useAliasQuery();
+  const { query } = useAliasQuery();
+  const { [API_QUERY_TYPES.ORDERING]: ordering } = query;
 
   const isDescending = /^-/.test(ordering);
   const updatedOrdering = ordering?.replace(/^-/, '') || '';
@@ -89,7 +90,7 @@ ViewToolbarFieldSortButton.propTypes = {
 ViewToolbarFieldSortButton.defaultProps = {
   t: translate,
   useOnClick,
-  useQuery
+  useQuery: useView
 };
 
 export { ViewToolbarFieldSortButton as default, ViewToolbarFieldSortButton, useOnClick };

@@ -58,6 +58,7 @@ const CONFIG = {
  * @param {Function} props.useOnExpand
  * @param {Function} props.useOnSelect
  * @param {Function} props.useOnShowAddSourceWizard
+ * @param {Function} props.useSetViewContext
  * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
@@ -69,8 +70,10 @@ const Credentials = ({
   useOnExpand: useAliasOnExpand,
   useOnSelect: useAliasOnSelect,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
+  // useSetViewContext: useAliasSetViewContext,
   useView: useAliasView
 }) => {
+  // useAliasSetViewContext(CONFIG);
   const onToolbarFieldClearAll = useToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const onExpand = useAliasOnExpand();
@@ -218,7 +221,7 @@ const Credentials = ({
  *
  * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: Function,
  *     useOnDelete: Function, useOnExpand: Function, useGetCredentials: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useOnShowAddSourceWizard: Function, useSetViewContext: Function}}
  */
 Credentials.propTypes = {
   t: PropTypes.func,
@@ -228,6 +231,7 @@ Credentials.propTypes = {
   useOnExpand: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
+  // useSetViewContext: PropTypes.func,
   useView: PropTypes.func
 };
 
@@ -236,7 +240,7 @@ Credentials.propTypes = {
  *
  * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: translate,
  *     useOnDelete: Function, useOnExpand: Function, useGetCredentials: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useOnShowAddSourceWizard: Function, useSetViewContext: Function}}
  */
 Credentials.defaultProps = {
   t: translate,
@@ -246,6 +250,7 @@ Credentials.defaultProps = {
   useOnExpand,
   useOnSelect,
   useOnShowAddSourceWizard,
+  // useSetViewContext,
   useView
 };
 
