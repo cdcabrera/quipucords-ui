@@ -1,9 +1,10 @@
 import React from 'react';
-import { ViewToolbarSelect, SelectFilterVariant, SelectFilterVariantOptions, useOnSelect } from '../viewToolbarSelect';
+import { ViewToolbarSelectCategory, useOnSelect } from '../viewToolbarSelectCategory';
 import { API_QUERY_TYPES } from '../../../constants/apiConstants';
+import { CONFIG as sourcesConfig } from '../../sources/sources';
 import { store } from '../../../redux/store';
 
-describe('ViewToolbarSelect Component', () => {
+describe('ViewToolbarSelectCategory Component', () => {
   let mockDispatch;
 
   beforeEach(() => {
@@ -16,26 +17,19 @@ describe('ViewToolbarSelect Component', () => {
 
   it('should render a basic component', async () => {
     const props = {
-      filter: SelectFilterVariant[API_QUERY_TYPES.CREDENTIAL_TYPE]
+      useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
     };
-    const component = await shallowHookComponent(<ViewToolbarSelect {...props} />);
+    const component = await shallowHookComponent(<ViewToolbarSelectCategory {...props} />);
 
     expect(component).toMatchSnapshot('basic');
   });
 
-  it('should export select variants and related options', () => {
-    expect({
-      SelectFilterVariant,
-      SelectFilterVariantOptions
-    }).toMatchSnapshot('field variants, options');
-  });
-
   it('should handle updating the view query through redux state with a component', async () => {
     const props = {
-      filter: SelectFilterVariant[API_QUERY_TYPES.CREDENTIAL_TYPE]
+      useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
     };
 
-    const component = await mountHookComponent(<ViewToolbarSelect {...props} />);
+    const component = await mountHookComponent(<ViewToolbarSelectCategory {...props} />);
 
     component.find('button').simulate('click');
     component.update();

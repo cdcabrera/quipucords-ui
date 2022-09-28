@@ -1,5 +1,4 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import { TextInput } from '../../form/textInput';
 import { ViewToolbarTextInput, TextInputFilterVariants, useOnClear, useOnSubmit } from '../viewToolbarTextInput';
 import { API_QUERY_TYPES } from '../../../constants/apiConstants';
@@ -17,11 +16,11 @@ describe('ViewToolbarTextInput Component', () => {
     jest.clearAllMocks();
   });
 
-  it('should render a basic component', () => {
+  it('should render a basic component', async () => {
     const props = {
       filter: TextInputFilterVariants[API_QUERY_TYPES.SEARCH_CREDENTIALS_NAME]
     };
-    const component = shallow(<ViewToolbarTextInput {...props} />);
+    const component = await shallowHookComponent(<ViewToolbarTextInput {...props} />);
 
     expect(component).toMatchSnapshot('basic');
   });
