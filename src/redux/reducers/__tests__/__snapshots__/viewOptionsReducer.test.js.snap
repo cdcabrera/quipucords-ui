@@ -439,7 +439,7 @@ Object {
       "expandedItems": Array [],
       "filterType": null,
       "filterValue": "",
-      "pageSize": undefined,
+      "pageSize": 10,
       "selectedItems": Array [],
       "sortAscending": true,
       "sortField": "name",
@@ -585,7 +585,7 @@ Object {
     },
     "SOURCES_VIEW": Object {
       "activeFilters": Array [],
-      "currentPage": undefined,
+      "currentPage": 1,
       "expandedItems": Array [],
       "filterType": null,
       "filterValue": "",

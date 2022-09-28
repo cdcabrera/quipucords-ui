@@ -7,7 +7,7 @@ import {
   scansTypes,
   sourcesTypes
 } from '../../constants';
-import { reduxHelpers } from '../../common/reduxHelpers';
+import { reduxHelpers } from '../../common';
 
 describe('viewOptionsReducer', () => {
   it('should return the initial state', () => {
