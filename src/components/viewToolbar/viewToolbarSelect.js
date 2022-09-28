@@ -139,4 +139,10 @@ ViewToolbarSelect.defaultProps = {
   useView
 };
 
-export { ViewToolbarSelect as default, ViewToolbarSelect, SelectFilterVariant, SelectFilterVariantOptions };
+export {
+  ViewToolbarSelect as default,
+  ViewToolbarSelect,
+  SelectFilterVariant,
+  SelectFilterVariantOptions,
+  useOnSelect
+};
