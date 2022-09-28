@@ -1,9 +1,11 @@
 import React from 'react';
-import { ViewToolbarSelectCategory, useOnSelect } from '../viewToolbarSelectCategory';
+import { DropdownSelect } from '../../dropdownSelect/dropdownSelect';
+import { ViewToolbarFieldSort, useOnSelect } from '../viewToolbarFieldSort';
+import { API_QUERY_TYPES } from '../../../constants/apiConstants';
 import { CONFIG as sourcesConfig } from '../../sources/sources';
 import { store } from '../../../redux/store';
 
-describe('ViewToolbarSelectCategory Component', () => {
+describe('ViewToolbarFieldSort Component', () => {
   let mockDispatch;
 
   beforeEach(() => {
@@ -18,7 +20,7 @@ describe('ViewToolbarSelectCategory Component', () => {
     const props = {
       useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
     };
-    const component = await shallowHookComponent(<ViewToolbarSelectCategory {...props} />);
+    const component = await shallowHookComponent(<ViewToolbarFieldSort {...props} />);
 
     expect(component).toMatchSnapshot('basic');
   });
@@ -28,9 +30,8 @@ describe('ViewToolbarSelectCategory Component', () => {
       useView: () => ({ viewId: sourcesConfig.viewId, config: { toolbar: sourcesConfig.toolbar } })
     };
 
-    const component = await mountHookComponent(<ViewToolbarSelectCategory {...props} />);
-
-    component.find('button').simulate('click');
+    const component = await mountHookComponent(<ViewToolbarFieldSort {...props} />);
+    component.find(DropdownSelect).first().find('button').simulate('click');
     component.update();
     component.find('button.pf-c-select__menu-item').first().simulate('click');
 
