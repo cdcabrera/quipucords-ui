@@ -36,7 +36,7 @@ const useOnSubmit = (
   const { viewId } = useAliasView();
   const dispatch = useAliasDispatch();
 
-  return value =>
+  return ({ value }) =>
     dispatch([
       {
         type: reduxTypes.view.SET_QUERY,
@@ -127,12 +127,12 @@ const ViewToolbarTextInput = ({
   const onKeyUp = event => {
     switch (event.keyCode) {
       case 13:
-        onSubmit(event.value);
+        onSubmit(event);
         break;
       case 27:
         break;
       default:
-        debounced(event.value);
+        debounced(event);
         break;
     }
   };
@@ -183,4 +183,4 @@ ViewToolbarTextInput.defaultProps = {
   useView
 };
 
-export { ViewToolbarTextInput as default, ViewToolbarTextInput, TextInputFilterVariants };
+export { ViewToolbarTextInput as default, ViewToolbarTextInput, TextInputFilterVariants, useOnClear, useOnSubmit };
