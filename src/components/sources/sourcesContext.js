@@ -328,7 +328,7 @@ const useGetSources = ({
     hasData: fulfilled === true && totalResults > 0,
     selectedRows,
     expandedRows,
-    totalResults
+    totalResults: totalResults || 0
   };
 };
 
