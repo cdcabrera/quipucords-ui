@@ -58,6 +58,7 @@ const CONFIG = {
  * @param {Function} props.useOnExpand
  * @param {Function} props.useOnSelect
  * @param {Function} props.useOnShowAddSourceWizard
+ * @param {Function} props.useToolbarFieldClearAll
  * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
@@ -69,9 +70,10 @@ const Credentials = ({
   useOnExpand: useAliasOnExpand,
   useOnSelect: useAliasOnSelect,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
+  useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
 }) => {
-  const onToolbarFieldClearAll = useToolbarFieldClearAll();
+  const onToolbarFieldClearAll = useAliasToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const onExpand = useAliasOnExpand();
   const onDelete = useAliasOnDelete();
@@ -217,7 +219,8 @@ const Credentials = ({
  * Prop types
  *
  * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: Function, useOnDelete: Function,
- *     useOnExpand: Function, useGetCredentials: Function, useOnShowAddSourceWizard: Function}}
+ *     useOnExpand: Function, useToolbarFieldClearAll: Function, useGetCredentials: Function,
+ *     useOnShowAddSourceWizard: Function}}
  */
 Credentials.propTypes = {
   t: PropTypes.func,
@@ -227,6 +230,7 @@ Credentials.propTypes = {
   useOnExpand: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
+  useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
 };
 
@@ -234,7 +238,8 @@ Credentials.propTypes = {
  * Default props
  *
  * @type {{useOnEdit: Function, useView: Function, useOnSelect: Function, t: translate, useOnDelete: Function,
- *     useOnExpand: Function, useGetCredentials: Function, useOnShowAddSourceWizard: Function}}
+ *     useOnExpand: Function, useToolbarFieldClearAll: Function, useGetCredentials: Function,
+ *     useOnShowAddSourceWizard: Function}}
  */
 Credentials.defaultProps = {
   t: translate,
@@ -244,6 +249,7 @@ Credentials.defaultProps = {
   useOnExpand,
   useOnSelect,
   useOnShowAddSourceWizard,
+  useToolbarFieldClearAll,
   useView
 };
 

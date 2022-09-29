@@ -57,6 +57,7 @@ const CONFIG = {
  * @param {Function} props.useOnSelect
  * @param {Function} props.useOnShowAddSourceWizard
  * @param {Function} props.useDispatch
+ * @param {Function} props.useToolbarFieldClearAll
  * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
@@ -70,9 +71,10 @@ const Sources = ({
   useOnSelect: useAliasOnSelect,
   useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useDispatch: useAliasDispatch,
+  useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
 }) => {
-  const onToolbarFieldClearAll = useToolbarFieldClearAll();
+  const onToolbarFieldClearAll = useAliasToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const onDelete = useAliasOnDelete();
@@ -236,8 +238,8 @@ const Sources = ({
  * Prop types
  *
  * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: Function, useOnScan: Function,
- *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useDispatch: Function, useOnDelete: Function, useOnExpand: Function,
+ *     useToolbarFieldClearAll: Function, useGetSources: Function, useOnShowAddSourceWizard: Function}}
  */
 Sources.propTypes = {
   t: PropTypes.func,
@@ -249,6 +251,7 @@ Sources.propTypes = {
   useOnScan: PropTypes.func,
   useOnSelect: PropTypes.func,
   useOnShowAddSourceWizard: PropTypes.func,
+  useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
 };
 
@@ -256,8 +259,8 @@ Sources.propTypes = {
  * Default props
  *
  * @type {{useOnEdit: Function, useOnSelect: Function, useView: Function, t: translate, useOnRefresh: Function,
- *     useOnScan: Function, useDispatch: Function, useOnDelete: Function, useOnExpand: Function, useGetSources: Function,
- *     useOnShowAddSourceWizard: Function}}
+ *     useOnScan: Function, useDispatch: Function, useOnDelete: Function, useOnExpand: Function,
+ *     useToolbarFieldClearAll: Function, useGetSources: Function, useOnShowAddSourceWizard: Function}}
  */
 Sources.defaultProps = {
   t: translate,
@@ -269,6 +272,7 @@ Sources.defaultProps = {
   useOnScan,
   useOnSelect,
   useOnShowAddSourceWizard,
+  useToolbarFieldClearAll,
   useView
 };
 

@@ -45,6 +45,7 @@ const CONFIG = {
  * @param {Function} props.useOnScanAction
  * @param {Function} props.useOnSelect
  * @param {Function} props.useDispatch
+ * @param {Function} props.useToolbarFieldClearAll
  * @param {Function} props.useView
  * @returns {React.ReactNode}
  */
@@ -55,9 +56,10 @@ const Scans = ({
   useOnScanAction: useAliasOnScanAction,
   useOnSelect: useAliasOnSelect,
   useDispatch: useAliasDispatch,
+  useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
 }) => {
-  const onToolbarFieldClearAll = useToolbarFieldClearAll();
+  const onToolbarFieldClearAll = useAliasToolbarFieldClearAll();
   const { isFilteringActive, viewId } = useAliasView();
   const dispatch = useAliasDispatch();
   const onExpand = useAliasOnExpand();
@@ -221,7 +223,7 @@ const Scans = ({
  * Prop types
  *
  * @type {{useOnSelect: Function, useView: Function, t: Function, useOnScanAction: Function,
- *     useDispatch: Function, useGetScans: Function, useOnExpand: Function}}
+ *     useDispatch: Function, useGetScans: Function, useOnExpand: Function, useToolbarFieldClearAll: Function}}
  */
 Scans.propTypes = {
   t: PropTypes.func,
@@ -230,6 +232,7 @@ Scans.propTypes = {
   useOnExpand: PropTypes.func,
   useOnScanAction: PropTypes.func,
   useOnSelect: PropTypes.func,
+  useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
 };
 
@@ -237,7 +240,7 @@ Scans.propTypes = {
  * Default props
  *
  * @type {{useOnSelect: Function, useView: Function, t: translate, useOnScanAction: Function,
- *     useDispatch: Function, useGetScans: Function, useOnExpand: Function}}
+ *     useDispatch: Function, useGetScans: Function, useOnExpand: Function, useToolbarFieldClearAll: Function}}
  */
 Scans.defaultProps = {
   t: translate,
@@ -246,6 +249,7 @@ Scans.defaultProps = {
   useOnExpand,
   useOnScanAction,
   useOnSelect,
+  useToolbarFieldClearAll,
   useView
 };
 
