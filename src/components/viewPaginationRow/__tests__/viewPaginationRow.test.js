@@ -1,20 +1,15 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import ViewPaginationRow from '../viewPaginationRow';
-import { viewTypes } from '../../../redux/constants';
+import { ViewPaginationRow } from '../viewPaginationRow';
+import { API_QUERY_TYPES } from '../../../constants/apiConstants';
 
 describe('ViewPaginationRow Component', () => {
-  it('should render', () => {
+  it('should render a basic component', async () => {
     const props = {
-      viewType: viewTypes.SCANS_VIEW,
-      currentPage: 1,
-      pageSize: 10,
-      totalCount: 200,
-      totalPages: 20
+      totalResults: 200,
+      useView: () => ({ query: { [API_QUERY_TYPES.PAGE]: 1, [API_QUERY_TYPES.PAGE_SIZE]: 10 }, viewId: 'lorem ipsum' })
     };
 
-    const component = mount(<ViewPaginationRow {...props} />);
-
-    expect(component.render()).toMatchSnapshot();
+    const component = await shallowHookComponent(<ViewPaginationRow {...props} />);
+    expect(component.render()).toMatchSnapshot('basic');
   });
 });
