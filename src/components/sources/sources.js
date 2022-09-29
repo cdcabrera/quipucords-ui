@@ -14,21 +14,20 @@ import {
   Title,
   TitleSizes
 } from '@patternfly/react-core';
-import { IconSize, SearchIcon } from '@patternfly/react-icons';
+import { AddCircleOIcon, IconSize, SearchIcon } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { reduxTypes, storeHooks } from '../../redux';
-import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
 import { useView } from '../view/viewContext';
 import { useToolbarFieldClearAll } from '../viewToolbar/viewToolbarContext';
 import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import { ViewPaginationRow } from '../viewPaginationRow/viewPaginationRow';
-import { SourcesEmptyState } from './sourcesEmptyState';
 import { Table } from '../table/table';
 import { sourcesTableCells } from './sourcesTableCells';
 import {
   VIEW_ID,
   INITIAL_QUERY,
   useGetSources,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,
@@ -37,6 +36,7 @@ import {
 } from './sourcesContext';
 import { SourcesToolbar } from './sourcesToolbar';
 import { translate } from '../i18n/i18n';
+import { helpers } from '../../common';
 
 const CONFIG = {
   viewId: VIEW_ID,
@@ -55,21 +55,23 @@ const CONFIG = {
  * @param {Function} props.useOnExpand
  * @param {Function} props.useOnScan
  * @param {Function} props.useOnSelect
- * @param {Function} props.useOnShowAddSourceWizard
  * @param {Function} props.useDispatch
  * @param {Function} props.useToolbarFieldClearAll
  * @param {Function} props.useView
+ * @param props.uiShortName
+ * @param props.useOnAddSource
  * @returns {React.ReactNode}
  */
 const Sources = ({
   t,
+  uiShortName,
   useGetSources: useAliasGetSources,
+  useOnAddSource: useAliasOnAddSource,
   useOnDelete: useAliasOnDelete,
   useOnEdit: useAliasOnEdit,
   useOnExpand: useAliasOnExpand,
   useOnScan: useAliasOnScan,
   useOnSelect: useAliasOnSelect,
-  useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useDispatch: useAliasDispatch,
   useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
@@ -82,7 +84,7 @@ const Sources = ({
   const onExpand = useAliasOnExpand();
   const onScan = useAliasOnScan();
   const onSelect = useAliasOnSelect();
-  const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
+  const onAddSource = useAliasOnAddSource();
   const {
     pending,
     error,
@@ -115,7 +117,7 @@ const Sources = ({
    */
   const renderToolbarActions = () => (
     <React.Fragment>
-      <Button onClick={onShowAddSourceWizard}>{t('table.label', { context: 'add' })}</Button>{' '}
+      <Button onClick={onAddSource}>{t('table.label', { context: 'add' })}</Button>{' '}
       <Button
         variant={ButtonVariant.secondary}
         isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
@@ -226,7 +228,16 @@ const Sources = ({
                 </EmptyStatePrimary>
               </EmptyState>
             )}
-            {fulfilled && !isActive && <SourcesEmptyState onAddSource={onShowAddSourceWizard} viewId={viewId} />}
+            {fulfilled && !isActive && (
+              <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
+                <EmptyStateIcon icon={AddCircleOIcon} />
+                <Title headingLevel="h1">{t('view.empty-state', { context: ['title'], name: uiShortName })}</Title>
+                <EmptyStateBody>{t('view.empty-state', { context: ['description', viewId] })}</EmptyStateBody>
+                <EmptyStatePrimary>
+                  <Button onClick={onAddSource}>{t('view.empty-state', { context: ['label', viewId] })}</Button>
+                </EmptyStatePrimary>
+              </EmptyState>
+            )}
           </Table>
         </div>
       </div>
@@ -243,14 +254,15 @@ const Sources = ({
  */
 Sources.propTypes = {
   t: PropTypes.func,
+  uiShortName: PropTypes.string,
   useDispatch: PropTypes.func,
   useGetSources: PropTypes.func,
+  useOnAddSource: PropTypes.func,
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
   useOnScan: PropTypes.func,
   useOnSelect: PropTypes.func,
-  useOnShowAddSourceWizard: PropTypes.func,
   useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
 };
@@ -264,14 +276,15 @@ Sources.propTypes = {
  */
 Sources.defaultProps = {
   t: translate,
+  uiShortName: helpers.UI_SHORT_NAME,
   useDispatch: storeHooks.reactRedux.useDispatch,
   useGetSources,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,
   useOnScan,
   useOnSelect,
-  useOnShowAddSourceWizard,
   useToolbarFieldClearAll,
   useView
 };

@@ -9,30 +9,30 @@ import {
   EmptyStateBody,
   EmptyStateIcon,
   EmptyStatePrimary,
+  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Spinner,
   Title,
   TitleSizes
 } from '@patternfly/react-core';
-import { IconSize, SearchIcon } from '@patternfly/react-icons';
+import { AddCircleOIcon, IconSize, SearchIcon } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import {
   AddCredentialType,
   ButtonVariant as CredentialButtonVariant,
   SelectPosition
 } from '../addCredentialType/addCredentialType';
-import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
 import { useView } from '../view/viewContext';
 import { useToolbarFieldClearAll } from '../viewToolbar/viewToolbarContext';
 import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import { ViewPaginationRow } from '../viewPaginationRow/viewPaginationRow';
-import { CredentialsEmptyState } from './credentialsEmptyState';
 import { Table } from '../table/table';
 import { credentialsTableCells } from './credentialsTableCells';
 import {
   VIEW_ID,
   INITIAL_QUERY,
   useGetCredentials,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,
@@ -40,6 +40,7 @@ import {
 } from './credentialsContext';
 import { CredentialsToolbar } from './credentialsToolbar';
 import { translate } from '../i18n/i18n';
+import { helpers } from '../../common';
 
 const CONFIG = {
   viewId: VIEW_ID,
@@ -64,12 +65,13 @@ const CONFIG = {
  */
 const Credentials = ({
   t,
+  uiShortName,
   useGetCredentials: useAliasGetCredentials,
+  useOnAddSource: useAliasOnAddSource,
   useOnDelete: useAliasOnDelete,
   useOnEdit: useAliasOnEdit,
   useOnExpand: useAliasOnExpand,
   useOnSelect: useAliasOnSelect,
-  useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard,
   useToolbarFieldClearAll: useAliasToolbarFieldClearAll,
   useView: useAliasView
 }) => {
@@ -79,7 +81,7 @@ const Credentials = ({
   const onDelete = useAliasOnDelete();
   const onEdit = useAliasOnEdit();
   const onSelect = useAliasOnSelect();
-  const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
+  const onAddSource = useAliasOnAddSource();
   const {
     pending,
     error,
@@ -207,7 +209,23 @@ const Credentials = ({
                 </EmptyStatePrimary>
               </EmptyState>
             )}
-            {fulfilled && !isActive && <CredentialsEmptyState viewId={viewId} onAddSource={onShowAddSourceWizard} />}
+            {fulfilled && !isActive && (
+              <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
+                <EmptyStateIcon icon={AddCircleOIcon} />
+                <Title headingLevel="h1">{t('view.empty-state', { context: 'title', name: uiShortName })}</Title>
+                <EmptyStateBody>
+                  {t('view.empty-state', { context: ['description', viewId], name: uiShortName })}
+                </EmptyStateBody>
+                <EmptyStatePrimary>
+                  <AddCredentialType buttonVariant={CredentialButtonVariant.primary} />
+                </EmptyStatePrimary>
+                <EmptyStateSecondaryActions>
+                  <Button variant={ButtonVariant.link} onClick={onAddSource}>
+                    {t('view.empty-state', { context: ['label', 'sources'] })}
+                  </Button>
+                </EmptyStateSecondaryActions>
+              </EmptyState>
+            )}
           </Table>
         </div>
       </div>
@@ -224,12 +242,13 @@ const Credentials = ({
  */
 Credentials.propTypes = {
   t: PropTypes.func,
+  uiShortName: PropTypes.func,
   useGetCredentials: PropTypes.func,
+  useOnAddSource: PropTypes.func,
   useOnDelete: PropTypes.func,
   useOnEdit: PropTypes.func,
   useOnExpand: PropTypes.func,
   useOnSelect: PropTypes.func,
-  useOnShowAddSourceWizard: PropTypes.func,
   useToolbarFieldClearAll: PropTypes.func,
   useView: PropTypes.func
 };
@@ -243,12 +262,13 @@ Credentials.propTypes = {
  */
 Credentials.defaultProps = {
   t: translate,
+  uiShortName: helpers.UI_SHORT_NAME,
   useGetCredentials,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,
   useOnSelect,
-  useOnShowAddSourceWizard,
   useToolbarFieldClearAll,
   useView
 };

@@ -6,6 +6,7 @@ import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
 import { useView } from '../view/viewContext';
 import { useConfirmation } from '../../hooks/useConfirmation';
+import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
 import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
@@ -27,6 +28,9 @@ const INITIAL_QUERY = {
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10
 };
+
+const useOnAddSource = ({ useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard = useOnShowAddSourceWizard } = {}) =>
+  useAliasOnShowAddSourceWizard();
 
 /**
  * Sources action, onDelete.
@@ -354,6 +358,7 @@ const context = {
   VIEW_ID,
   INITIAL_QUERY,
   useGetSources,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,
@@ -369,6 +374,7 @@ export {
   VIEW_ID,
   INITIAL_QUERY,
   useGetSources,
+  useOnAddSource,
   useOnDelete,
   useOnEdit,
   useOnExpand,

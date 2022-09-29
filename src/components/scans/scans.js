@@ -14,7 +14,7 @@ import {
   Title,
   TitleSizes
 } from '@patternfly/react-core';
-import { IconSize, SearchIcon } from '@patternfly/react-icons';
+import { AddCircleOIcon, IconSize, SearchIcon } from '@patternfly/react-icons';
 import { Modal, ModalVariant } from '../modal/modal';
 import { Tooltip } from '../tooltip/tooltip';
 import { reduxTypes, storeHooks } from '../../redux';
@@ -22,12 +22,12 @@ import { useView } from '../view/viewContext';
 import { useToolbarFieldClearAll } from '../viewToolbar/viewToolbarContext';
 import { ViewToolbar } from '../viewToolbar/viewToolbar';
 import { ViewPaginationRow } from '../viewPaginationRow/viewPaginationRow';
-import { ScansEmptyState } from './scansEmptyState';
 import { Table } from '../table/table';
 import { scansTableCells } from './scansTableCells';
-import { VIEW_ID, INITIAL_QUERY, useGetScans, useOnExpand, useOnScanAction, useOnSelect } from './scansContext';
+import { VIEW_ID, INITIAL_QUERY, useGetScans, useOnAddSource, useOnExpand, useOnScanAction, useOnSelect } from './scansContext';
 import { ScansToolbar } from './scansToolbar';
 import { translate } from '../i18n/i18n';
+import { helpers } from '../../common';
 
 const CONFIG = {
   viewId: VIEW_ID,
@@ -47,11 +47,14 @@ const CONFIG = {
  * @param {Function} props.useDispatch
  * @param {Function} props.useToolbarFieldClearAll
  * @param {Function} props.useView
+ * @param props.uiShortName
  * @returns {React.ReactNode}
  */
 const Scans = ({
   t,
+  uiShortName,
   useGetScans: useAliasGetScans,
+  useOnAddSource: useAliasOnAddSource,
   useOnExpand: useAliasOnExpand,
   useOnScanAction: useAliasOnScanAction,
   useOnSelect: useAliasOnSelect,
@@ -65,6 +68,7 @@ const Scans = ({
   const onExpand = useAliasOnExpand();
   const { onCancel, onDownload, onPause, onRestart, onStart } = useAliasOnScanAction();
   const onSelect = useAliasOnSelect();
+  const onAddSource = useAliasOnAddSource();
   const {
     pending,
     error,
@@ -211,7 +215,22 @@ const Scans = ({
                 </EmptyStatePrimary>
               </EmptyState>
             )}
-            {fulfilled && !isActive && <ScansEmptyState />}
+            {fulfilled && !isActive && (
+              <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
+                <EmptyStateIcon icon={AddCircleOIcon} />
+                <Title headingLevel="h1">
+                  {t('view.empty-state', { context: ['title', viewId], count: totalResults, name: uiShortName })}
+                </Title>
+                <EmptyStateBody>
+                  {t('view.empty-state', { context: ['description', viewId], count: totalResults })}
+                </EmptyStateBody>
+                <EmptyStatePrimary>
+                  <Button onClick={onAddSource}>
+                    {t('view.empty-state', { context: ['label', 'source-navigate'], count: totalResults })}
+                  </Button>
+                </EmptyStatePrimary>
+              </EmptyState>
+            )}
           </Table>
         </div>
       </div>
@@ -227,8 +246,10 @@ const Scans = ({
  */
 Scans.propTypes = {
   t: PropTypes.func,
+  uiShortName: PropTypes.string,
   useDispatch: PropTypes.func,
   useGetScans: PropTypes.func,
+  useOnAddSource: PropTypes.func,
   useOnExpand: PropTypes.func,
   useOnScanAction: PropTypes.func,
   useOnSelect: PropTypes.func,
@@ -244,7 +265,9 @@ Scans.propTypes = {
  */
 Scans.defaultProps = {
   t: translate,
+  uiShortName: helpers.UI_SHORT_NAME,
   useDispatch: storeHooks.reactRedux.useDispatch,
+  useOnAddSource,
   useGetScans,
   useOnExpand,
   useOnScanAction,

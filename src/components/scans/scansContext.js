@@ -3,7 +3,10 @@ import { AlertVariant } from '@patternfly/react-core';
 import { useShallowCompareEffect } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
+import { useOnShowAddSourceWizard } from '../addSourceWizard/addSourceWizardContext';
 import { useView } from '../view/viewContext';
+import { useNavigate } from '../router/routerContext';
+import { useSources } from '../sources/sourcesContext';
 import { API_QUERY_SORT_TYPES, API_QUERY_TYPES, apiTypes } from '../../constants/apiConstants';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
@@ -26,6 +29,24 @@ const INITIAL_QUERY = {
   [API_QUERY_TYPES.PAGE]: 1,
   [API_QUERY_TYPES.PAGE_SIZE]: 10,
   [API_QUERY_TYPES.SCAN_TYPE]: 'inspect'
+};
+
+const useOnAddSource = ({
+  useNavigate: useAliasNavigate = useNavigate,
+  useOnShowAddSourceWizard: useAliasOnShowAddSourceWizard = useOnShowAddSourceWizard,
+  useSources: useAliasSources = useSources
+} = {}) => {
+  const { hasData } = useAliasSources();
+  const navigate = useAliasNavigate();
+  const onShowAddSourceWizard = useAliasOnShowAddSourceWizard();
+
+  return () => {
+    if (hasData) {
+      navigate('/sources');
+    } else {
+      onShowAddSourceWizard();
+    }
+  };
 };
 
 /**
@@ -329,6 +350,7 @@ const context = {
   VIEW_ID,
   INITIAL_QUERY,
   useGetScans,
+  useOnAddSource,
   useOnExpand,
   useOnScanAction,
   useOnSelect,
@@ -342,6 +364,7 @@ export {
   VIEW_ID,
   INITIAL_QUERY,
   useGetScans,
+  useOnAddSource,
   useOnExpand,
   useOnScanAction,
   useOnSelect,
