@@ -460,7 +460,7 @@ exports[`Sources Component should return an empty state when there are no source
 </EmptyState>
 `;
 
-exports[`Sources Component should return an empty state when there are no sources: empty state, no sources 1`] = `
+exports[`Sources Component should return an empty state when there are no sources: empty state, no data 1`] = `
 <div
   className="quipucords-content"
 >
