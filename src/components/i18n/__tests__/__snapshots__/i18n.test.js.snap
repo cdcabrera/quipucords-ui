@@ -53,15 +53,15 @@ Array [
     "keys": Array [
       Object {
         "key": "form-dialog.label",
-        "match": "translate('form-dialog.label', { context: ['option', 'network'] })",
+        "match": "translate('form-dialog.label', { context: ['option', 'network', 'credential'] })",
       },
       Object {
         "key": "form-dialog.label",
-        "match": "translate('form-dialog.label', { context: ['option', 'satellite'] })",
+        "match": "translate('form-dialog.label', { context: ['option', 'satellite', 'credential'] })",
       },
       Object {
         "key": "form-dialog.label",
-        "match": "translate('form-dialog.label', { context: ['option', 'vcenter'] })",
+        "match": "translate('form-dialog.label', { context: ['option', 'vcenter', 'credential'] })",
       },
       Object {
         "key": "form-dialog.label",
@@ -293,6 +293,18 @@ Array [
         "key": "table.header",
         "match": "t('table.header', { context: ['sources'] })",
       },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'title'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'description'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['label', 'clear'] })",
+      },
     ],
   },
   Object {
@@ -391,6 +403,27 @@ Array [
       Object {
         "key": "table.label",
         "match": "t('table.label', { context: 'delete' })",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/credentials/credentialsToolbar.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.CREDENTIAL_TYPE] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.CREDENTIAL_TYPE] })",
       },
     ],
   },
@@ -510,6 +543,18 @@ Array [
         "key": "table.header",
         "match": "t('table.header', { context: ['scan-jobs'] })",
       },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'title'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'description'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['label', 'clear'] })",
+      },
     ],
   },
   Object {
@@ -534,15 +579,15 @@ Array [
     "keys": Array [
       Object {
         "key": "view.empty-state",
-        "match": "t('view.empty-state', { context: ['title', viewId], count: sourcesCount, name: uiShortName })",
+        "match": "t('view.empty-state', { context: ['title', viewId], count: totalResults, name: uiShortName })",
       },
       Object {
         "key": "view.empty-state",
-        "match": "t('view.empty-state', { context: ['description', viewId], count: sourcesCount })",
+        "match": "t('view.empty-state', { context: ['description', viewId], count: totalResults })",
       },
       Object {
         "key": "view.empty-state",
-        "match": "t('view.empty-state', { context: ['label', 'source-navigate'], count: sourcesCount })",
+        "match": "t('view.empty-state', { context: ['label', 'source-navigate'], count: totalResults })",
       },
     ],
   },
@@ -601,6 +646,27 @@ Array [
     ],
   },
   Object {
+    "file": "./src/components/scans/scansToolbar.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_SOURCES_NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME] })",
+      },
+    ],
+  },
+  Object {
     "file": "./src/components/sources/sources.js",
     "keys": Array [
       Object {
@@ -646,6 +712,18 @@ Array [
       Object {
         "key": "table.header",
         "match": "t('table.header', { context: ['unreachable', viewId] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'title'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['filter', 'description'] })",
+      },
+      Object {
+        "key": "view.empty-state",
+        "match": "t('view.empty-state', { context: ['label', 'clear'] })",
       },
     ],
   },
@@ -757,6 +835,35 @@ Array [
     ],
   },
   Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SEARCH_CREDENTIALS_NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_TYPES.SOURCE_TYPE] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.NAME] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.SOURCE_TYPE] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "translate('toolbar.label', { context: ['option', API_QUERY_SORT_TYPES.MOST_RECENT_CONNECT_SCAN_START_TIME] })",
+      },
+    ],
+  },
+  Object {
     "file": "./src/components/table/tableEmpty.js",
     "keys": Array [
       Object {
@@ -766,6 +873,88 @@ Array [
       Object {
         "key": "table.empty-state_description",
         "match": "t('table.empty-state_description', 'Clear all filters and try again.')",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbar.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['chip', categoryValue] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: 'clear-filters' })",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarFieldSort.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['option', 'sort'] })",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarFieldSortButton.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['tooltip', 'sort', (isDescending && 'dsc')",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelect.js",
+    "keys": Array [
+      Object {
+        "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'network'] })",
+      },
+      Object {
+        "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'satellite'] })",
+      },
+      Object {
+        "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'vcenter'] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter', filter] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter', filter] })",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelectCategory.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter'] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter'] })",
+      },
+    ],
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarTextInput.js",
+    "keys": Array [
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter', filter] })",
+      },
+      Object {
+        "key": "toolbar.label",
+        "match": "t('toolbar.label', { context: ['placeholder', 'filter', filter] })",
       },
     ],
   },
@@ -839,6 +1028,18 @@ Array [
     "key": "table.header",
   },
   Object {
+    "file": "./src/components/credentials/credentials.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/credentials/credentials.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/credentials/credentials.js",
+    "key": "view.empty-state",
+  },
+  Object {
     "file": "./src/components/credentials/credentialsContext.js",
     "key": "form-dialog.confirmation",
   },
@@ -857,6 +1058,22 @@ Array [
   Object {
     "file": "./src/components/credentials/credentialsEmptyState.js",
     "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/credentials/credentialsToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/credentials/credentialsToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/credentials/credentialsToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/credentials/credentialsToolbar.js",
+    "key": "toolbar.label",
   },
   Object {
     "file": "./src/components/scanHostList/scanHostList.js",
@@ -911,6 +1128,18 @@ Array [
     "key": "table.header",
   },
   Object {
+    "file": "./src/components/scans/scans.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/scans/scans.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/scans/scans.js",
+    "key": "view.empty-state",
+  },
+  Object {
     "file": "./src/components/scans/scansEmptyState.js",
     "key": "view.empty-state",
   },
@@ -931,6 +1160,22 @@ Array [
     "key": "view.error-message",
   },
   Object {
+    "file": "./src/components/scans/scansToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/scans/scansToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/scans/scansToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/scans/scansToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
     "file": "./src/components/sources/sources.js",
     "key": "view.error",
   },
@@ -963,6 +1208,18 @@ Array [
     "key": "table.header",
   },
   Object {
+    "file": "./src/components/sources/sources.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/sources/sources.js",
+    "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/sources/sources.js",
+    "key": "view.empty-state",
+  },
+  Object {
     "file": "./src/components/sources/sourcesContext.js",
     "key": "form-dialog.confirmation",
   },
@@ -981,6 +1238,30 @@ Array [
   Object {
     "file": "./src/components/sources/sourcesEmptyState.js",
     "key": "view.empty-state",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/sources/sourcesToolbar.js",
+    "key": "toolbar.label",
   },
   Object {
     "file": "./src/components/table/tableEmpty.js",
@@ -989,6 +1270,46 @@ Array [
   Object {
     "file": "./src/components/table/tableEmpty.js",
     "key": "table.empty-state_description",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbar.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarFieldSort.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarFieldSortButton.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelect.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelect.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelectCategory.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarSelectCategory.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarTextInput.js",
+    "key": "toolbar.label",
+  },
+  Object {
+    "file": "./src/components/viewToolbar/viewToolbarTextInput.js",
+    "key": "toolbar.label",
   },
 ]
 `;
