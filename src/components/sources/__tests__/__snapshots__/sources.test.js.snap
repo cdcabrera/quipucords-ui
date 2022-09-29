@@ -48,8 +48,9 @@ exports[`Sources Component should handle multiple display states, pending, error
     />
     <ViewPaginationRow
       totalResults={0}
-      useDispatch={[Function]}
-      useView={[Function]}
+      useOnPerPageSelect={[Function]}
+      useOnSetPage={[Function]}
+      useQuery={[Function]}
     />
     <div
       className="quipucords-list-container"
