@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ViewPaginationRow Component should handle updating the page query through redux state with a hook: dispatch set page, hook 1`] = `
+Array [
+  Array [
+    Object {
+      "filter": "page",
+      "type": "SET_QUERY",
+      "value": 3,
+      "viewId": "lorem ipsum",
+    },
+  ],
+]
+`;
+
+exports[`ViewPaginationRow Component should handle updating the per-page query through redux state with a hook: dispatch per-page, hook 1`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "type": "RESET_PAGE",
+        "viewId": "lorem ipsum",
+      },
+      Object {
+        "filter": "page_size",
+        "type": "SET_QUERY",
+        "value": 25,
+        "viewId": "lorem ipsum",
+      },
+    ],
+  ],
+]
+`;
+
 exports[`ViewPaginationRow Component should render a basic component: basic 1`] = `
 <div
   class="pf-c-pagination pf-m-bottom quipucords-view__pagination"
