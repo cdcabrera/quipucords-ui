@@ -39,6 +39,10 @@ const useOnSubmit = (
   return ({ value }) =>
     dispatch([
       {
+        type: reduxTypes.view.RESET_PAGE,
+        viewId
+      },
+      {
         type: reduxTypes.view.SET_QUERY,
         viewId,
         filter,
@@ -75,6 +79,10 @@ const useOnClear = (
     }
 
     dispatch([
+      {
+        type: reduxTypes.view.RESET_PAGE,
+        viewId
+      },
       {
         type: reduxTypes.view.SET_QUERY,
         viewId,

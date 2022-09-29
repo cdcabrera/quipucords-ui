@@ -56,6 +56,10 @@ const useOnSelect = (
   return ({ value = null }) => {
     dispatch([
       {
+        type: reduxTypes.view.RESET_PAGE,
+        viewId
+      },
+      {
         type: reduxTypes.view.SET_QUERY,
         viewId,
         filter,

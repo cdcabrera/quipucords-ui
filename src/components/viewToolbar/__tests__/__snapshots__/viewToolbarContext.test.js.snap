@@ -5,6 +5,10 @@ Array [
   Array [
     Array [
       Object {
+        "type": "RESET_PAGE",
+        "viewId": "lorem",
+      },
+      Object {
         "filter": "lorem",
         "type": "SET_QUERY",
         "value": undefined,
@@ -19,6 +23,10 @@ exports[`ToolbarContext should apply a hook for clearing all related toolbar sel
 Array [
   Array [
     Array [
+      Object {
+        "type": "RESET_PAGE",
+        "viewId": "lorem",
+      },
       Object {
         "filter": "search_by_name",
         "type": "SET_QUERY",

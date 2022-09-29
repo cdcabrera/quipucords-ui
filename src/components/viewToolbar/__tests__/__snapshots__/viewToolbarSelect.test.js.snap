@@ -44,6 +44,10 @@ Array [
   Array [
     Array [
       Object {
+        "type": "RESET_PAGE",
+        "viewId": undefined,
+      },
+      Object {
         "filter": "cred_type",
         "type": "SET_QUERY",
         "value": "network",
@@ -58,6 +62,10 @@ exports[`ViewToolbarSelect Component should handle updating the view query throu
 Array [
   Array [
     Array [
+      Object {
+        "type": "RESET_PAGE",
+        "viewId": undefined,
+      },
       Object {
         "filter": "lorem filter",
         "type": "SET_QUERY",

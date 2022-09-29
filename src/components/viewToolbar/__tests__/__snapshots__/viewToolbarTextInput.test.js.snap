@@ -15,6 +15,10 @@ Array [
   Array [
     Array [
       Object {
+        "type": "RESET_PAGE",
+        "viewId": undefined,
+      },
+      Object {
         "filter": "lorem filter",
         "type": "SET_QUERY",
         "value": "",
@@ -30,6 +34,10 @@ Array [
   Array [
     Array [
       Object {
+        "type": "RESET_PAGE",
+        "viewId": undefined,
+      },
+      Object {
         "filter": "search_credentials_by_name",
         "type": "SET_QUERY",
         "value": "dolor sit",
@@ -44,6 +52,10 @@ exports[`ViewToolbarTextInput Component should handle updating the view query th
 Array [
   Array [
     Array [
+      Object {
+        "type": "RESET_PAGE",
+        "viewId": undefined,
+      },
       Object {
         "filter": "lorem filter",
         "type": "SET_QUERY",
