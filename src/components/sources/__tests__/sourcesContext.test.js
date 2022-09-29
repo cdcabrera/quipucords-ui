@@ -1,6 +1,5 @@
 import { context, useGetSources, useOnDelete, usePoll } from '../sourcesContext';
 import { apiTypes } from '../../../constants/apiConstants';
-import { reduxTypes } from '../../../redux';
 
 describe('SourcesContext', () => {
   it('should return specific properties', () => {
@@ -72,8 +71,8 @@ describe('SourcesContext', () => {
 
     const { result: mockStoreSuccessResponse } = shallowHook(() => useGetSources(), {
       state: {
-        viewOptions: {
-          [reduxTypes.view.SOURCES_VIEW]: {}
+        view: {
+          update: {}
         },
         sources: {
           expanded: {},

@@ -11,7 +11,6 @@ import sourcesReducer from './sourcesReducer';
 import statusReducer from './statusReducer';
 import toastNotificationsReducer from './toastNotificationsReducer';
 import userReducer from './userReducer';
-import viewOptionsReducer from './viewOptionsReducer';
 import viewReducer from './viewReducer';
 
 const reducers = {
@@ -27,7 +26,6 @@ const reducers = {
   status: statusReducer,
   toastNotifications: toastNotificationsReducer,
   user: userReducer,
-  viewOptions: viewOptionsReducer,
   view: viewReducer
 };
 
@@ -48,6 +46,5 @@ export {
   statusReducer,
   toastNotificationsReducer,
   userReducer,
-  viewOptionsReducer,
   viewReducer
 };
