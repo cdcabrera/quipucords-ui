@@ -407,6 +407,7 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
             useOnScan={[Function]}
             useOnSelect={[Function]}
             useOnShowAddSourceWizard={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>,
@@ -463,6 +464,7 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
             useOnExpand={[Function]}
             useOnScanAction={[Function]}
             useOnSelect={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>,
@@ -517,6 +519,7 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
             useOnExpand={[Function]}
             useOnSelect={[Function]}
             useOnShowAddSourceWizard={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>,

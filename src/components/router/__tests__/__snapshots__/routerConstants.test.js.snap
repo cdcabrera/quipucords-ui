@@ -63,6 +63,7 @@ Array [
         useOnScan={[Function]}
         useOnSelect={[Function]}
         useOnShowAddSourceWizard={[Function]}
+        useToolbarFieldClearAll={[Function]}
         useView={[Function]}
       />
     </Context.Provider>,
@@ -119,6 +120,7 @@ Array [
         useOnExpand={[Function]}
         useOnScanAction={[Function]}
         useOnSelect={[Function]}
+        useToolbarFieldClearAll={[Function]}
         useView={[Function]}
       />
     </Context.Provider>,
@@ -173,6 +175,7 @@ Array [
         useOnExpand={[Function]}
         useOnSelect={[Function]}
         useOnShowAddSourceWizard={[Function]}
+        useToolbarFieldClearAll={[Function]}
         useView={[Function]}
       />
     </Context.Provider>,

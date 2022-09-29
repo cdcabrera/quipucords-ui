@@ -73,6 +73,7 @@ exports[`Router Component should shallow render a basic component 1`] = `
             useOnScan={[Function]}
             useOnSelect={[Function]}
             useOnShowAddSourceWizard={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>
@@ -129,6 +130,7 @@ exports[`Router Component should shallow render a basic component 1`] = `
             useOnExpand={[Function]}
             useOnScanAction={[Function]}
             useOnSelect={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>
@@ -184,6 +186,7 @@ exports[`Router Component should shallow render a basic component 1`] = `
             useOnExpand={[Function]}
             useOnSelect={[Function]}
             useOnShowAddSourceWizard={[Function]}
+            useToolbarFieldClearAll={[Function]}
             useView={[Function]}
           />
         </Context.Provider>
