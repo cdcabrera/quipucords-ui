@@ -1,4 +1,4 @@
-import { context, useGetSources, useOnDelete, usePoll } from '../sourcesContext';
+import { context, useGetSources, useOnDelete, usePoll, useSources } from '../sourcesContext';
 import { apiTypes } from '../../../constants/apiConstants';
 
 describe('SourcesContext', () => {
@@ -52,20 +52,62 @@ describe('SourcesContext', () => {
 
   it('should apply a hook for retrieving data from multiple selectors', () => {
     const { result: errorResponse } = shallowHook(() =>
-      useGetSources({
+      useSources({
         useSelectorsResponse: () => ({ error: true, message: 'Lorem ipsum' })
       })
     );
 
     const { result: pendingResponse } = shallowHook(() =>
-      useGetSources({
+      useSources({
         useSelectorsResponse: () => ({ pending: true })
       })
     );
 
     const { result: fulfilledResponse } = shallowHook(() =>
-      useGetSources({
+      useSources({
         useSelectorsResponse: () => ({ fulfilled: true, data: { view: { results: ['dolor', 'sit'] } } })
+      })
+    );
+
+    const { result: mockStoreSuccessResponse } = shallowHook(() => useSources(), {
+      state: {
+        view: {
+          update: {}
+        },
+        sources: {
+          expanded: {},
+          selected: {},
+          view: {
+            fulfilled: true,
+            data: {
+              results: ['lorem', 'ipsum']
+            }
+          }
+        }
+      }
+    });
+
+    expect({ errorResponse, fulfilledResponse, pendingResponse, mockStoreSuccessResponse }).toMatchSnapshot(
+      'selector responses'
+    );
+  });
+
+  it('should apply a hook for returning a get response', () => {
+    const { result: errorResponse } = shallowHook(() =>
+      useGetSources({
+        useSources: () => ({ error: true, message: 'Lorem ipsum' })
+      })
+    );
+
+    const { result: pendingResponse } = shallowHook(() =>
+      useGetSources({
+        useSources: () => ({ pending: true })
+      })
+    );
+
+    const { result: fulfilledResponse } = shallowHook(() =>
+      useGetSources({
+        useSources: () => ({ fulfilled: true, data: { view: { results: ['dolor', 'sit'] } } })
       })
     );
 
@@ -88,7 +130,7 @@ describe('SourcesContext', () => {
     });
 
     expect({ errorResponse, fulfilledResponse, pendingResponse, mockStoreSuccessResponse }).toMatchSnapshot(
-      'responses'
+      'get responses'
     );
   });
 });

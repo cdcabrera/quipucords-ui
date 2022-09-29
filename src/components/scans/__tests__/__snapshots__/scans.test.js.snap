@@ -346,9 +346,9 @@ exports[`Scans Component should render a basic component: basic 1`] = `
         <ScansEmptyState
           t={[Function]}
           uiShortName="Quipucords"
-          useContextGetSources={[Function]}
           useDispatch={[Function]}
           useNavigate={[Function]}
+          useSources={[Function]}
           useView={[Function]}
         />
       </Table>
@@ -428,9 +428,9 @@ exports[`Scans Component should return an empty state when there are no scans: e
         <ScansEmptyState
           t={[Function]}
           uiShortName="Quipucords"
-          useContextGetSources={[Function]}
           useDispatch={[Function]}
           useNavigate={[Function]}
+          useSources={[Function]}
           useView={[Function]}
         />
       </Table>
