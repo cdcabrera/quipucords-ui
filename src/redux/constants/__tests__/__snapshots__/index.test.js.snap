@@ -118,19 +118,6 @@ Object {
       "SOURCES_VIEW": "SOURCES_VIEW",
       "UPDATE_VIEW": "UPDATE_VIEW",
     },
-    "viewPagination": Object {
-      "SET_PER_PAGE": "SET_PER_PAGE",
-      "VIEW_PAGE": "VIEW_PAGE",
-    },
-    "viewToolbar": Object {
-      "ADD_FILTER": "ADD_FILTER",
-      "CLEAR_FILTERS": "CLEAR_FILTERS",
-      "REMOVE_FILTER": "REMOVE_FILTER",
-      "SET_FILTER_TYPE": "SET_FILTER_TYPE",
-      "SET_FILTER_VALUE": "SET_FILTER_VALUE",
-      "SET_SORT_TYPE": "SET_SORT_TYPE",
-      "TOGGLE_SORT_ASCENDING": "TOGGLE_SORT_ASCENDING",
-    },
   },
   "factsTypes": Object {
     "ADD_FACTS": "ADD_FACTS",
@@ -229,19 +216,6 @@ Object {
       "SOURCES_VIEW": "SOURCES_VIEW",
       "UPDATE_VIEW": "UPDATE_VIEW",
     },
-    "viewPagination": Object {
-      "SET_PER_PAGE": "SET_PER_PAGE",
-      "VIEW_PAGE": "VIEW_PAGE",
-    },
-    "viewToolbar": Object {
-      "ADD_FILTER": "ADD_FILTER",
-      "CLEAR_FILTERS": "CLEAR_FILTERS",
-      "REMOVE_FILTER": "REMOVE_FILTER",
-      "SET_FILTER_TYPE": "SET_FILTER_TYPE",
-      "SET_FILTER_VALUE": "SET_FILTER_VALUE",
-      "SET_SORT_TYPE": "SET_SORT_TYPE",
-      "TOGGLE_SORT_ASCENDING": "TOGGLE_SORT_ASCENDING",
-    },
   },
   "reportsTypes": Object {
     "GET_MERGE_REPORT": "GET_MERGE_REPORT",
@@ -301,19 +275,6 @@ Object {
     "USER_INFO": "USER_INFO",
     "USER_LOCALE": "USER_LOCALE",
     "USER_LOGOUT": "USER_LOGOUT",
-  },
-  "viewPaginationTypes": Object {
-    "SET_PER_PAGE": "SET_PER_PAGE",
-    "VIEW_PAGE": "VIEW_PAGE",
-  },
-  "viewToolbarTypes": Object {
-    "ADD_FILTER": "ADD_FILTER",
-    "CLEAR_FILTERS": "CLEAR_FILTERS",
-    "REMOVE_FILTER": "REMOVE_FILTER",
-    "SET_FILTER_TYPE": "SET_FILTER_TYPE",
-    "SET_FILTER_VALUE": "SET_FILTER_VALUE",
-    "SET_SORT_TYPE": "SET_SORT_TYPE",
-    "TOGGLE_SORT_ASCENDING": "TOGGLE_SORT_ASCENDING",
   },
   "viewTypes": Object {
     "CREDENTIALS_VIEW": "CREDENTIALS_VIEW",
@@ -421,19 +382,6 @@ Object {
     "SET_QUERY": "SET_QUERY",
     "SOURCES_VIEW": "SOURCES_VIEW",
     "UPDATE_VIEW": "UPDATE_VIEW",
-  },
-  "viewPagination": Object {
-    "SET_PER_PAGE": "SET_PER_PAGE",
-    "VIEW_PAGE": "VIEW_PAGE",
-  },
-  "viewToolbar": Object {
-    "ADD_FILTER": "ADD_FILTER",
-    "CLEAR_FILTERS": "CLEAR_FILTERS",
-    "REMOVE_FILTER": "REMOVE_FILTER",
-    "SET_FILTER_TYPE": "SET_FILTER_TYPE",
-    "SET_FILTER_VALUE": "SET_FILTER_VALUE",
-    "SET_SORT_TYPE": "SET_SORT_TYPE",
-    "TOGGLE_SORT_ASCENDING": "TOGGLE_SORT_ASCENDING",
   },
 }
 `;
