@@ -53,7 +53,7 @@ describe('ViewContext', () => {
     expect(result).toMatchSnapshot('combined');
   });
 
-  it('should apply a hook for dispatching view updates', async () => {
+  it('should apply a hook for dispatching view updates', () => {
     const mockDispatch = jest.fn();
     const onRefresh = useOnRefresh({
       useViewContext: () => ({
