@@ -273,31 +273,19 @@ const usePoll = ({
 };
 
 /**
- * Get sources
+ * Use sources' response
  *
  * @param {object} options
- * @param {Function} options.getSources
- * @param {Function} options.useDispatch
- * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
- * @param {Function} options.useView
- * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean,
- *     error: boolean, selectedSources: *}}
+ * @returns {{date: *, totalResults: (*|number), data: *[], pending: boolean, hasData: boolean, errorMessage: null,
+ *     fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useGetSources = ({
-  getSources = reduxActions.sources.getSources,
-  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  usePoll: useAliasPoll = usePoll,
+const useSources = ({
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
-  useView: useAliasView = useView
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
 } = {}) => {
-  const { query, viewId } = useAliasView();
-  const dispatch = useAliasDispatch();
-  const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
-    ({ view }) => view.update?.[viewId],
+  const [selectedRows, expandedRows] = useAliasSelectors([
     ({ sources }) => sources?.selected,
     ({ sources }) => sources?.expanded
   ]);
@@ -314,10 +302,6 @@ const useGetSources = ({
   const { [apiTypes.API_RESPONSE_SOURCES_COUNT]: totalResults, [apiTypes.API_RESPONSE_SOURCES_RESULTS]: data = [] } =
     responseData?.view || {};
 
-  useShallowCompareEffect(() => {
-    getSources(query)(dispatch);
-  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
-
   return {
     pending,
     error,
@@ -333,42 +317,50 @@ const useGetSources = ({
 };
 
 /**
- * Get sources in the context of the sources view.
+ * Get sources
  *
  * @param {object} options
- * @param {object} options.query
- * @param {Function} options.useGetSources
- * @param {string} options.viewId
- * @returns {{date: *, sources: *[], expandedSources: *, pending: boolean, errorMessage: null, fulfilled: boolean, error: boolean, selectedSources: *}}
+ * @param {Function} options.getSources
+ * @param {Function} options.useDispatch
+ * @param {Function} options.usePoll
+ * @param {Function} options.useSelectors
+ * @param {Function} options.useView
+ * @param {Function} options.useSources
+ * @returns {{date: *, totalResults: (*|number), data: *[], pending: boolean, hasData: boolean, errorMessage: null,
+ *     fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useContextGetSources = ({
-  query = INITIAL_QUERY,
-  useGetSources: useAliasGetSources = useGetSources,
-  viewId = VIEW_ID
+const useGetSources = ({
+  getSources = reduxActions.sources.getSources,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  usePoll: useAliasPoll = usePoll,
+  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useSources: useAliasSources = useSources,
+  useView: useAliasView = useView
 } = {}) => {
-  const results = useAliasGetSources({
-    useView: () => ({
-      viewId,
-      query
-    })
-  });
+  const { query, viewId } = useAliasView();
+  const dispatch = useAliasDispatch();
+  const pollUpdate = useAliasPoll();
+  const [refreshUpdate] = useAliasSelectors([({ view }) => view.update?.[viewId]]);
+  const response = useAliasSources();
 
-  return {
-    ...results
-  };
+  useShallowCompareEffect(() => {
+    getSources(query)(dispatch);
+  }, [dispatch, getSources, pollUpdate, query, refreshUpdate]);
+
+  return response;
 };
 
 const context = {
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetSources,
   useGetSources,
   useOnDelete,
   useOnEdit,
   useOnExpand,
   useOnScan,
   useOnSelect,
-  usePoll
+  usePoll,
+  useSources
 };
 
 export {
@@ -376,12 +368,12 @@ export {
   context,
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetSources,
   useGetSources,
   useOnDelete,
   useOnEdit,
   useOnExpand,
   useOnScan,
   useOnSelect,
-  usePoll
+  usePoll,
+  useSources
 };

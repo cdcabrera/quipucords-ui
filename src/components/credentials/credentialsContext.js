@@ -228,28 +228,19 @@ const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.use
 };
 
 /**
- * Get credentials
+ * Use credentials' response
  *
  * @param {object} options
- * @param {Function} options.getCredentials
- * @param {Function} options.useDispatch
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
- * @param {Function} options.useView
- * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
- *     expandedRows: *, error: boolean}}
+ * @returns {{date: *, totalResults: (*|number), data: *[], pending: boolean, hasData: boolean, errorMessage: null,
+ *     fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useGetCredentials = ({
-  getCredentials = reduxActions.credentials.getCredentials,
-  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+const useCredentials = ({
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
-  useView: useAliasView = useView
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
 } = {}) => {
-  const { query, viewId } = useAliasView();
-  const dispatch = useAliasDispatch();
-  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
-    ({ view }) => view.update?.[viewId],
+  const [selectedRows, expandedRows] = useAliasSelectors([
     ({ credentials }) => credentials?.selected,
     ({ credentials }) => credentials?.expanded
   ]);
@@ -268,10 +259,6 @@ const useGetCredentials = ({
     [apiTypes.API_RESPONSE_CREDENTIALS_RESULTS]: data = []
   } = responseData?.view || {};
 
-  useShallowCompareEffect(() => {
-    getCredentials(null, query)(dispatch);
-  }, [dispatch, getCredentials, query, refreshUpdate]);
-
   return {
     pending,
     error,
@@ -287,35 +274,40 @@ const useGetCredentials = ({
 };
 
 /**
- * Get credentials in the context of the credentials view.
+ * Get credentials
  *
  * @param {object} options
- * @param {object} options.query
- * @param {Function} options.useGetCredentials
- * @param {string} options.viewId
- * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
+ * @param {Function} options.getCredentials
+ * @param {Function} options.useCredentials
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useSelectors
+ * @param {Function} options.useView
+ * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
+ *     expandedRows: *, error: boolean}}
  */
-const useContextGetCredentials = ({
-  query = INITIAL_QUERY,
-  useGetCredentials: useAliasGetCredentials = useGetCredentials,
-  viewId = VIEW_ID
+const useGetCredentials = ({
+  getCredentials = reduxActions.credentials.getCredentials,
+  useCredentials: useAliasCredentials = useCredentials,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useView: useAliasView = useView
 } = {}) => {
-  const results = useAliasGetCredentials({
-    useView: () => ({
-      viewId,
-      query
-    })
-  });
+  const { query, viewId } = useAliasView();
+  const dispatch = useAliasDispatch();
+  const [refreshUpdate] = useAliasSelectors([({ view }) => view.update?.[viewId]]);
+  const response = useAliasCredentials();
 
-  return {
-    ...results
-  };
+  useShallowCompareEffect(() => {
+    getCredentials(null, query)(dispatch);
+  }, [dispatch, getCredentials, query, refreshUpdate]);
+
+  return response;
 };
 
 const context = {
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetCredentials,
+  useCredentials,
   useGetCredentials,
   useOnDelete,
   useOnEdit,
@@ -328,7 +320,7 @@ export {
   context,
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetCredentials,
+  useCredentials,
   useGetCredentials,
   useOnDelete,
   useOnEdit,

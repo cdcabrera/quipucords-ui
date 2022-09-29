@@ -248,31 +248,19 @@ const usePoll = ({
 };
 
 /**
- * Get scans
+ * Use scans' response
  *
  * @param {object} options
- * @param {Function} options.getScans
- * @param {Function} options.useDispatch
- * @param {Function} options.usePoll
  * @param {Function} options.useSelectors
  * @param {Function} options.useSelectorsResponse
- * @param {Function} options.useView
- * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *,
- *     expandedRows: *, error: boolean}}
+ * @returns {{date: *, totalResults: (*|number), data: *[], pending: boolean, hasData: boolean, errorMessage: null,
+ *     fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useGetScans = ({
-  getScans = reduxActions.scans.getScans,
-  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  usePoll: useAliasPoll = usePoll,
+const useScans = ({
   useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
-  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse,
-  useView: useAliasView = useView
+  useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
 } = {}) => {
-  const { query, viewId } = useAliasView();
-  const dispatch = useAliasDispatch();
-  const pollUpdate = useAliasPoll();
-  const [refreshUpdate, selectedRows, expandedRows] = useAliasSelectors([
-    ({ view }) => view.update?.[viewId],
+  const [selectedRows, expandedRows] = useAliasSelectors([
     ({ scans }) => scans?.selected,
     ({ scans }) => scans?.expanded
   ]);
@@ -289,10 +277,6 @@ const useGetScans = ({
   const { [apiTypes.API_RESPONSE_SCANS_COUNT]: totalResults, [apiTypes.API_RESPONSE_SCANS_RESULTS]: data = [] } =
     responseData?.view || {};
 
-  useShallowCompareEffect(() => {
-    getScans(query)(dispatch);
-  }, [dispatch, getScans, pollUpdate, query, refreshUpdate]);
-
   return {
     pending,
     error,
@@ -308,40 +292,48 @@ const useGetScans = ({
 };
 
 /**
- * Get scans in the context of the scans view.
+ * Get scans
  *
  * @param {object} options
- * @param {object} options.query
- * @param {Function} options.useGetScans
- * @param {string} options.viewId
- * @returns {{date: *, data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
+ * @param {Function} options.getScans
+ * @param {Function} options.useDispatch
+ * @param {Function} options.usePoll
+ * @param {Function} options.useScans
+ * @param {Function} options.useSelectors
+ * @param {Function} options.useView
+ * @returns {{date: *, totalResults: (*|number), data: *[], pending: boolean, hasData: boolean, errorMessage: null,
+ *     fulfilled: boolean, selectedRows: *, expandedRows: *, error: boolean}}
  */
-const useContextGetScans = ({
-  query = INITIAL_QUERY,
-  useGetScans: useAliasGetScans = useGetScans,
-  viewId = VIEW_ID
+const useGetScans = ({
+  getScans = reduxActions.scans.getScans,
+  useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+  usePoll: useAliasPoll = usePoll,
+  useScans: useAliasScans = useScans,
+  useSelectors: useAliasSelectors = storeHooks.reactRedux.useSelectors,
+  useView: useAliasView = useView
 } = {}) => {
-  const results = useAliasGetScans({
-    useView: () => ({
-      viewId,
-      query
-    })
-  });
+  const { query, viewId } = useAliasView();
+  const dispatch = useAliasDispatch();
+  const pollUpdate = useAliasPoll();
+  const [refreshUpdate] = useAliasSelectors([({ view }) => view.update?.[viewId]]);
+  const response = useAliasScans();
 
-  return {
-    ...results
-  };
+  useShallowCompareEffect(() => {
+    getScans(query)(dispatch);
+  }, [dispatch, getScans, pollUpdate, query, refreshUpdate]);
+
+  return response;
 };
 
 const context = {
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetScans,
   useGetScans,
   useOnExpand,
   useOnScanAction,
   useOnSelect,
-  usePoll
+  usePoll,
+  useScans
 };
 
 export {
@@ -349,10 +341,10 @@ export {
   context,
   VIEW_ID,
   INITIAL_QUERY,
-  useContextGetScans,
   useGetScans,
   useOnExpand,
   useOnScanAction,
   useOnSelect,
-  usePoll
+  usePoll,
+  useScans
 };
