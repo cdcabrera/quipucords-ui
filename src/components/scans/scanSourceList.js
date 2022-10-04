@@ -1,17 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Alert,
-  AlertVariant,
-  EmptyState,
-  EmptyStateVariant,
-  List,
-  ListItem,
-  ListVariant,
-  Spinner
-} from '@patternfly/react-core';
+import { Alert, AlertVariant, EmptyState, EmptyStateVariant, Spinner } from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { useGetScanJob } from './scansContext';
+import { Table, TableVariant } from '../table/table';
 import { translate } from '../i18n/i18n';
 
 /**
@@ -24,7 +16,7 @@ import { translate } from '../i18n/i18n';
  * @returns {React.ReactNode}
  */
 const ScanSourceList = ({ id, t, useGetScanJob: useAliasGetScanJob }) => {
-  const { error, errorMessage, pending, data } = useAliasGetScanJob(id);
+  const { error, errorMessage, pending, data: scanJobsList } = useAliasGetScanJob(id);
 
   if (pending) {
     return (
@@ -45,24 +37,32 @@ const ScanSourceList = ({ id, t, useGetScanJob: useAliasGetScanJob }) => {
   }
 
   return (
-    <List isPlain>
-      {data?.map(({ id: sourceId, taskStatusMessage, taskStatus, taskType, name, sourceType }) => (
-        <ListItem key={sourceId}>
-          <List isPlain variant={ListVariant.inline}>
-            <ListItem key={name}>
-              <ContextIcon symbol={ContextIconVariant[sourceType]} /> {name}
-            </ListItem>
-            <ListItem key={`desc-${name}`}>
-              {t('table.label', {
-                context: ['scan-job', taskType, (taskStatusMessage && 'message') || (taskStatus && 'status')],
-                status: taskStatus,
-                message: taskStatusMessage
-              })}
-            </ListItem>
-          </List>
-        </ListItem>
-      ))}
-    </List>
+    <Table
+      className="quipucords-table__scan-jobs"
+      variant={TableVariant.compact}
+      isBorders={false}
+      rows={scanJobsList?.map(({ taskStatusMessage, taskStatus, taskType, name, sourceType }) => ({
+        cells: [
+          {
+            width: 20,
+            content: (
+              <React.Fragment>
+                <ContextIcon symbol={ContextIconVariant[sourceType]} /> {name}
+              </React.Fragment>
+            ),
+            dataLabel: t('table.label', { context: ['source'] })
+          },
+          {
+            content: t('table.label', {
+              context: ['scan-job', taskType, (taskStatusMessage && 'message') || (taskStatus && 'status')],
+              status: taskStatus,
+              message: taskStatusMessage
+            }),
+            dataLabel: t('table.label', { context: ['status', 'scan'] })
+          }
+        ]
+      }))}
+    />
   );
 };
 
