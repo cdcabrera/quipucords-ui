@@ -19,7 +19,7 @@ import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common';
 import { DropdownSelect, SelectButtonVariant, SelectDirection, SelectPosition } from '../dropdownSelect/dropdownSelect';
-import ScanSourceList from './scanSourceList';
+import { ScanSourceList } from './scanSourceList';
 import ScanJobsList from './scanJobsList';
 
 /**
@@ -206,7 +206,8 @@ const sourcesCellContent = (
 
   return {
     content: statusCell({ count, status: 'sources', viewId }),
-    expandedContent: (count && <ScanSourceList key={`sources-${id}`} id={id} />) || undefined
+    expandedContent: (count && <ScanSourceList key={`sources-${id}`} id={id} />) || undefined,
+    noPadding: true
   };
 };
 
