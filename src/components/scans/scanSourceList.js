@@ -1,16 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useMount } from 'react-use';
 import { Alert, AlertVariant, EmptyState, EmptyStateVariant, List, ListItem, Spinner } from '@patternfly/react-core';
 import { connect, reduxActions, reduxSelectors } from '../../redux';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
-import { helpers } from '../../common/helpers';
+import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
 
 /**
  * Return a scan jobs listing for "sources".
+ *
+ * @param {object} props
+ * @param {Function} props.getScanJob
+ * @param {string} props.id
+ * @param {boolean} props.error
+ * @param {string} props.errorMessage
+ * @param {boolean} props.pending
+ * @param {Array} props.scanJobList
+ * @param {Function} props.t
+ * @returns {React.ReactNode}
  */
-class ScanSourceList extends React.Component {
-  static setSourceStatus(source) {
+const ScanSourceList = ({ getScanJob, id, error, errorMessage, pending, scanJobList, t }) => {
+  useMount(() => {
+    getScanJob(id);
+  });
+
+  const setSourceStatus = source => {
     if (!source.connectTaskStatus && !source.inspectTaskStatus) {
       return null;
     }
@@ -20,51 +35,41 @@ class ScanSourceList extends React.Component {
     }
 
     return `Inspection Scan: ${source.inspectTaskStatusMessage || 'checking status...'}`;
-  }
+  };
 
-  componentDidMount() {
-    const { getScanJob, id } = this.props;
-
-    getScanJob(id);
-  }
-
-  render() {
-    const { error, errorMessage, pending, scanJobList, t } = this.props;
-
-    if (pending) {
-      return (
-        <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
-          <Spinner isSVG size="sm" /> {t('view.loading')}
-        </EmptyState>
-      );
-    }
-
-    if (error) {
-      return (
-        <EmptyState className="quipucords-empty-state__alert">
-          <Alert isInline isPlain variant={AlertVariant.danger} title={t('view.error', { context: 'scan-jobs' })}>
-            {t('view.error-message', { context: ['scan-jobs'], message: errorMessage })}
-          </Alert>
-        </EmptyState>
-      );
-    }
-
+  if (pending) {
     return (
-      <List isPlain>
-        {scanJobList?.map(item => (
-          <ListItem key={item.id}>
-            <List isPlain>
-              <ListItem key={item.name}>
-                <ContextIcon symbol={ContextIconVariant[item.sourceType]} /> {item.name}
-              </ListItem>
-              <ListItem key={`desc-${item.name}`}>{ScanSourceList.setSourceStatus(item)}</ListItem>
-            </List>
-          </ListItem>
-        ))}
-      </List>
+      <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.large}>
+        <Spinner isSVG size="sm" /> {t('view.loading')}
+      </EmptyState>
     );
   }
-}
+
+  if (error) {
+    return (
+      <EmptyState className="quipucords-empty-state__alert">
+        <Alert isInline isPlain variant={AlertVariant.danger} title={t('view.error', { context: 'scan-jobs' })}>
+          {t('view.error-message', { context: ['scan-jobs'], message: errorMessage })}
+        </Alert>
+      </EmptyState>
+    );
+  }
+
+  return (
+    <List isPlain>
+      {scanJobList?.map(item => (
+        <ListItem key={item.id}>
+          <List isPlain>
+            <ListItem key={item.name}>
+              <ContextIcon symbol={ContextIconVariant[item.sourceType]} /> {item.name}
+            </ListItem>
+            <ListItem key={`desc-${item.name}`}>{setSourceStatus(item)}</ListItem>
+          </List>
+        </ListItem>
+      ))}
+    </List>
+  );
+};
 
 /**
  * Prop types
