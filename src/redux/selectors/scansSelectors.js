@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import _find from 'lodash/find';
 import _get from 'lodash/get';
 import { helpers } from '../../common';
 import { apiTypes } from '../../constants/apiConstants';
@@ -132,99 +131,6 @@ const scanHostsListSelector = createSelector(
 const makeScanHostsListSelector = () => scanHostsListSelector;
 
 /**
- * Map a job object to consumable prop names and sorted by source
- *
- * @param {object} state
- * @param {object} props
- * @returns {*}
- */
-const scanJobDetail = (state, props) => state.scans.job[props.id];
-
-const scanJobDetailBySourceSelector = createSelector([scanJobDetail], scanJob => {
-  const { data, ...props } = scanJob || {};
-  let newScanJobList = [];
-
-  const sortSources = scan => {
-    const sources = [..._get(scan, apiTypes.API_RESPONSE_JOB_SOURCES, [])];
-
-    sources.sort((item1, item2) => {
-      let cmp = item1[apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE].localeCompare(
-        item2[apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE]
-      );
-
-      if (cmp === 0) {
-        cmp = item1[apiTypes.API_RESPONSE_JOB_SOURCES_NAME].localeCompare(
-          item2[apiTypes.API_RESPONSE_JOB_SOURCES_NAME]
-        );
-      }
-
-      return cmp;
-    });
-
-    return sources;
-  };
-
-  if (data) {
-    const sources = sortSources(data);
-
-    newScanJobList = sources.map(source => {
-      const updatedSource = {};
-
-      helpers.setPropIfDefined(updatedSource, ['id'], source[apiTypes.API_RESPONSE_JOB_SOURCES_ID]);
-      helpers.setPropIfDefined(updatedSource, ['name'], source[apiTypes.API_RESPONSE_JOB_SOURCES_NAME]);
-      helpers.setPropIfDefined(updatedSource, ['sourceType'], source[apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE]);
-
-      const connectTask = _find(scanJob[apiTypes.API_RESPONSE_JOB_TASKS], {
-        [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: source[apiTypes.API_RESPONSE_JOB_SOURCES_ID],
-        [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: 'connect'
-      });
-
-      if (connectTask) {
-        helpers.setPropIfDefined(
-          updatedSource,
-          ['connectTaskStatus'],
-          connectTask[apiTypes.API_RESPONSE_JOB_TASKS_STATUS]
-        );
-
-        helpers.setPropIfDefined(
-          updatedSource,
-          ['connectTaskStatusMessage'],
-          connectTask[apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]
-        );
-      }
-
-      const inspectTask = _find(scanJob[apiTypes.API_RESPONSE_JOB_TASKS], {
-        [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: source[apiTypes.API_RESPONSE_JOB_SOURCES_ID],
-        [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: 'inspect'
-      });
-
-      if (inspectTask) {
-        helpers.setPropIfDefined(
-          updatedSource,
-          ['inspectTaskStatus'],
-          inspectTask[apiTypes.API_RESPONSE_JOB_TASKS_STATUS]
-        );
-
-        helpers.setPropIfDefined(
-          updatedSource,
-          ['inspectTaskStatusMessage'],
-          inspectTask[apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]
-        );
-      }
-
-      return updatedSource;
-    });
-  }
-
-  return {
-    ...props,
-    scanJobList: newScanJobList
-  };
-});
-
-const makeScanJobDetailBySourceSelector = () => scanJobDetailBySourceSelector;
-
-/**
  * Map a jobs object to consumable prop names
  *
  * @type {{}}
@@ -292,8 +198,6 @@ const makeScanJobsListSelector = () => scanJobsListSelector;
 const scansSelectors = {
   scanHostsList: scanHostsListSelector,
   makeScanHostsList: makeScanHostsListSelector,
-  scanJobDetailBySource: scanJobDetailBySourceSelector,
-  makeScanJobDetailBySource: makeScanJobDetailBySourceSelector,
   scanJobsList: scanJobsListSelector,
   makeScanJobsList: makeScanJobsListSelector
 };
@@ -303,8 +207,6 @@ export {
   scansSelectors,
   scanHostsListSelector,
   makeScanHostsListSelector,
-  scanJobDetailBySourceSelector,
-  makeScanJobDetailBySourceSelector,
   scanJobsListSelector,
   makeScanJobsListSelector
 };

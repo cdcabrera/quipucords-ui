@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { AlertVariant } from '@patternfly/react-core';
-import { useShallowCompareEffect } from 'react-use';
+import { useMount, useShallowCompareEffect } from 'react-use';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
 import { useTimeout } from '../../hooks';
 import { useView } from '../view/viewContext';
@@ -325,10 +325,151 @@ const useGetScans = ({
   return response;
 };
 
+const useGetScanJob = (
+  id,
+  {
+    getScanJob = reduxActions.scans.getScanJob,
+    useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
+    useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
+  } = {}
+) => {
+  const dispatch = useAliasDispatch();
+  const {
+    data: responseData,
+    error,
+    fulfilled,
+    message: errorMessage,
+    pending
+  } = useAliasSelectorsResponse({ id: 'job', selector: ({ scans }) => scans.job[id] });
+
+  useMount(() => {
+    getScanJob(id)(dispatch);
+  });
+
+  const { [apiTypes.API_RESPONSE_JOB_SOURCES]: sources = [], [apiTypes.API_RESPONSE_JOB_TASKS]: tasks = {} } =
+    responseData?.job || {};
+
+  const updatedData = sources
+    .sort((item1, item2) => {
+      let cmp = item1[apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE].localeCompare(
+        item2[apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE]
+      );
+
+      if (cmp === 0) {
+        cmp = item1[apiTypes.API_RESPONSE_JOB_SOURCES_NAME].localeCompare(
+          item2[apiTypes.API_RESPONSE_JOB_SOURCES_NAME]
+        );
+      }
+
+      return cmp;
+    })
+    .map(
+      ({
+        [apiTypes.API_RESPONSE_JOB_SOURCES_ID]: sourceId,
+        [apiTypes.API_RESPONSE_JOB_SOURCES_NAME]: sourceName,
+        [apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE]: sourceType
+      }) => {
+        /*
+        const {
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: connectTaskStatus,
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: connectTaskStatusMessage
+        } =
+          tasks.find(
+            ({
+              [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
+              [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
+            }) => taskId === sourceId && taskType === 'connect'
+          ) || {};
+
+        const {
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: inspectTaskStatus,
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: inspectTaskStatusMessage
+        } =
+          tasks.find(
+            ({
+              [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
+              [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
+            }) => taskId === sourceId && taskType === 'inspect'
+          ) || {};
+
+        return {
+          id: sourceId,
+          name: sourceName,
+          sourceType,
+          connectTaskStatus,
+          connectTaskStatusMessage,
+          inspectTaskStatus,
+          inspectTaskStatusMessage
+        };
+         */
+
+        const {
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: connectTaskStatus,
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: connectTaskStatusMessage,
+          [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: connectTaskType
+        } = tasks.find(
+          ({
+            [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
+            [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
+          }) => taskId === sourceId && taskType === 'connect'
+        ) || {};
+
+        const {
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: inspectTaskStatus,
+          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: inspectTaskStatusMessage,
+          [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: inspectTaskType
+        } = tasks.find(
+          ({
+            [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
+            [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
+          }) => taskId === sourceId && taskType === 'inspect'
+        ) || {};
+
+        let taskType;
+        let taskStatus;
+        let taskMessage;
+
+        if (inspectTaskStatus) {
+          taskType = inspectTaskType;
+          taskStatus = inspectTaskStatus;
+          taskMessage = inspectTaskStatusMessage;
+        } else if (connectTaskStatus) {
+          taskType = connectTaskType;
+          taskStatus = connectTaskStatus;
+          taskMessage = connectTaskStatusMessage;
+        }
+
+        return {
+          id: sourceId,
+          name: sourceName,
+          sourceType,
+          taskType,
+          taskStatus,
+          taskMessage
+          // connectTaskStatus,
+          // connectTaskStatusMessage,
+          // inspectTaskStatus,
+          // inspectTaskStatusMessage
+        };
+      }
+    );
+
+  console.log('>>>>>>>>>>>>>', updatedData);
+
+  return {
+    data: updatedData,
+    error,
+    errorMessage,
+    fulfilled,
+    pending
+  };
+};
+
 const context = {
   VIEW_ID,
   INITIAL_QUERY,
   useGetScans,
+  useGetScanJob,
   useOnExpand,
   useOnScanAction,
   useOnSelect,
@@ -342,6 +483,7 @@ export {
   VIEW_ID,
   INITIAL_QUERY,
   useGetScans,
+  useGetScanJob,
   useOnExpand,
   useOnScanAction,
   useOnSelect,

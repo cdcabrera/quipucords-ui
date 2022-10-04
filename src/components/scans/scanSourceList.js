@@ -1,41 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useMount } from 'react-use';
-import { Alert, AlertVariant, EmptyState, EmptyStateVariant, List, ListItem, Spinner } from '@patternfly/react-core';
-import { connect, reduxActions, reduxSelectors } from '../../redux';
+import {
+  Alert,
+  AlertVariant,
+  EmptyState,
+  EmptyStateVariant,
+  List,
+  ListItem,
+  ListVariant,
+  Spinner
+} from '@patternfly/react-core';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
-import { helpers } from '../../common';
+import { useGetScanJob } from './scansContext';
 import { translate } from '../i18n/i18n';
 
 /**
  * Return a scan jobs listing for "sources".
  *
  * @param {object} props
- * @param {Function} props.getScanJob
  * @param {string} props.id
- * @param {boolean} props.error
- * @param {string} props.errorMessage
- * @param {boolean} props.pending
- * @param {Array} props.scanJobList
  * @param {Function} props.t
+ * @param {Function} props.useGetScanJob
  * @returns {React.ReactNode}
  */
-const ScanSourceList = ({ getScanJob, id, error, errorMessage, pending, scanJobList, t }) => {
-  useMount(() => {
-    getScanJob(id);
-  });
-
-  const setSourceStatus = source => {
-    if (!source.connectTaskStatus && !source.inspectTaskStatus) {
-      return null;
-    }
-
-    if (source.connectTaskStatus !== 'completed' || !source.inspectTaskStatus) {
-      return `Connection Scan: ${source.connectTaskStatusMessage || 'checking status...'}`;
-    }
-
-    return `Inspection Scan: ${source.inspectTaskStatusMessage || 'checking status...'}`;
-  };
+const ScanSourceList = ({ id, t, useGetScanJob: useAliasGetScanJob }) => {
+  const { error, errorMessage, pending, data } = useAliasGetScanJob(id);
 
   if (pending) {
     return (
@@ -57,16 +46,25 @@ const ScanSourceList = ({ getScanJob, id, error, errorMessage, pending, scanJobL
 
   return (
     <List isPlain>
-      {scanJobList?.map(item => (
-        <ListItem key={item.id}>
-          <List isPlain>
-            <ListItem key={item.name}>
-              <ContextIcon symbol={ContextIconVariant[item.sourceType]} /> {item.name}
-            </ListItem>
-            <ListItem key={`desc-${item.name}`}>{setSourceStatus(item)}</ListItem>
-          </List>
-        </ListItem>
-      ))}
+      {data?.map(({ id: sourceId, taskStatusMessage, taskStatus, taskType, name, sourceType }) => {
+        console.log('>>>>>>>>>>>>>', taskType, sourceType);
+        return (
+          <ListItem key={sourceId}>
+            <List isPlain variant={ListVariant.inline}>
+              <ListItem key={name}>
+                <ContextIcon symbol={ContextIconVariant[sourceType]} /> {name}
+              </ListItem>
+              <ListItem key={`desc-${name}`}>
+                {t('table.label', {
+                  context: ['scan-job', taskType, taskStatusMessage && 'message' || taskStatus && 'status'],
+                  status: taskStatus,
+                  message: taskStatusMessage
+                })}
+              </ListItem>
+            </List>
+          </ListItem>
+        );
+      })}
     </List>
   );
 };
@@ -74,56 +72,22 @@ const ScanSourceList = ({ getScanJob, id, error, errorMessage, pending, scanJobL
 /**
  * Prop types
  *
- * @type {{t: Function, pending: boolean, errorMessage: string, getScanJob: Function, id: string|number,
- *     error: boolean, scanJobList: Array}}
+ * @type {{t: Function, id: string|number, useGetScanJob: Function}}
  */
 ScanSourceList.propTypes = {
-  error: PropTypes.bool,
-  errorMessage: PropTypes.string,
-  getScanJob: PropTypes.func,
-  pending: PropTypes.bool,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  scanJobList: PropTypes.arrayOf(
-    PropTypes.shape({
-      connectTaskStatus: PropTypes.string,
-      connectTaskStatusMessage: PropTypes.string,
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      inspectTaskStatus: PropTypes.string,
-      inspectTaskStatusMessage: PropTypes.string,
-      name: PropTypes.string,
-      sourceType: PropTypes.string
-    })
-  ),
-  t: PropTypes.func
+  t: PropTypes.func,
+  useGetScanJob: PropTypes.func
 };
 
 /**
  * Default props
  *
- * @type {{t: translate, pending: boolean, errorMessage: null, getScanJob: Function, error: boolean,
- *     scanJobList: *[]}}
+ * @type {{t: translate, useGetScanJob: Function}}
  */
 ScanSourceList.defaultProps = {
-  error: false,
-  errorMessage: null,
-  getScanJob: helpers.noop,
-  pending: false,
-  scanJobList: [],
-  t: translate
+  t: translate,
+  useGetScanJob
 };
 
-const mapDispatchToProps = dispatch => ({
-  getScanJob: id => dispatch(reduxActions.scans.getScanJob(id))
-});
-
-const makeMapStateToProps = () => {
-  const getScanJobDetail = reduxSelectors.scans.makeScanJobDetailBySource();
-
-  return (state, props) => ({
-    ...getScanJobDetail(state, props)
-  });
-};
-
-const ConnectedScanSourceList = connect(makeMapStateToProps, mapDispatchToProps)(ScanSourceList);
-
-export { ConnectedScanSourceList as default, ConnectedScanSourceList, ScanSourceList };
+export { ScanSourceList as default, ScanSourceList };
