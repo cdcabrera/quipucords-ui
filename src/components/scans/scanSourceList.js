@@ -46,25 +46,22 @@ const ScanSourceList = ({ id, t, useGetScanJob: useAliasGetScanJob }) => {
 
   return (
     <List isPlain>
-      {data?.map(({ id: sourceId, taskStatusMessage, taskStatus, taskType, name, sourceType }) => {
-        console.log('>>>>>>>>>>>>>', taskType, sourceType);
-        return (
-          <ListItem key={sourceId}>
-            <List isPlain variant={ListVariant.inline}>
-              <ListItem key={name}>
-                <ContextIcon symbol={ContextIconVariant[sourceType]} /> {name}
-              </ListItem>
-              <ListItem key={`desc-${name}`}>
-                {t('table.label', {
-                  context: ['scan-job', taskType, taskStatusMessage && 'message' || taskStatus && 'status'],
-                  status: taskStatus,
-                  message: taskStatusMessage
-                })}
-              </ListItem>
-            </List>
-          </ListItem>
-        );
-      })}
+      {data?.map(({ id: sourceId, taskStatusMessage, taskStatus, taskType, name, sourceType }) => (
+        <ListItem key={sourceId}>
+          <List isPlain variant={ListVariant.inline}>
+            <ListItem key={name}>
+              <ContextIcon symbol={ContextIconVariant[sourceType]} /> {name}
+            </ListItem>
+            <ListItem key={`desc-${name}`}>
+              {t('table.label', {
+                context: ['scan-job', taskType, (taskStatusMessage && 'message') || (taskStatus && 'status')],
+                status: taskStatus,
+                message: taskStatusMessage
+              })}
+            </ListItem>
+          </List>
+        </ListItem>
+      ))}
     </List>
   );
 };

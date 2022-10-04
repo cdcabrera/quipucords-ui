@@ -325,6 +325,16 @@ const useGetScans = ({
   return response;
 };
 
+/**
+ * Return a scan job
+ *
+ * @param {string} id
+ * @param {object} options
+ * @param {Function} options.getScanJob
+ * @param {Function} options.useDispatch
+ * @param {Function} options.useSelectorsResponse
+ * @returns {{data: *[], pending: boolean, errorMessage: null, fulfilled: boolean, error: boolean}}
+ */
 const useGetScanJob = (
   id,
   {
@@ -369,40 +379,6 @@ const useGetScanJob = (
         [apiTypes.API_RESPONSE_JOB_SOURCES_NAME]: sourceName,
         [apiTypes.API_RESPONSE_JOB_SOURCES_SOURCE_TYPE]: sourceType
       }) => {
-        /*
-        const {
-          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: connectTaskStatus,
-          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: connectTaskStatusMessage
-        } =
-          tasks.find(
-            ({
-              [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
-              [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
-            }) => taskId === sourceId && taskType === 'connect'
-          ) || {};
-
-        const {
-          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: inspectTaskStatus,
-          [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: inspectTaskStatusMessage
-        } =
-          tasks.find(
-            ({
-              [apiTypes.API_RESPONSE_JOB_TASKS_SOURCE]: taskId,
-              [apiTypes.API_RESPONSE_JOB_TASKS_SCAN_TYPE]: taskType
-            }) => taskId === sourceId && taskType === 'inspect'
-          ) || {};
-
-        return {
-          id: sourceId,
-          name: sourceName,
-          sourceType,
-          connectTaskStatus,
-          connectTaskStatusMessage,
-          inspectTaskStatus,
-          inspectTaskStatusMessage
-        };
-         */
-
         const {
           [apiTypes.API_RESPONSE_JOB_TASKS_STATUS]: connectTaskStatus,
           [apiTypes.API_RESPONSE_JOB_TASKS_STATUS_MESSAGE]: connectTaskStatusMessage,
@@ -446,15 +422,9 @@ const useGetScanJob = (
           taskType,
           taskStatus,
           taskMessage
-          // connectTaskStatus,
-          // connectTaskStatusMessage,
-          // inspectTaskStatus,
-          // inspectTaskStatusMessage
         };
       }
     );
-
-  console.log('>>>>>>>>>>>>>', updatedData);
 
   return {
     data: updatedData,
