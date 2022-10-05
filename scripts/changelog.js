@@ -1,6 +1,7 @@
-const { existsSync, readFileSync } = require('fs');
+const { existsSync, readFileSync, writeFileSync } = require('fs');
 const { execSync } = require('child_process');
 const commitTypes = require('conventional-commit-types');
+const semverClean = require('semver/functions/clean');
 
 /**
  * Get last release commit hash
@@ -121,7 +122,7 @@ const semverBump = (parsedCommits = {}) => {
   return {
     // bump: Object.entries(bumps).filter(([key]) => key <= weight),
     // ceil: Math.ceil(weight),
-    bump: (weight >= 100 && 'MAJOR') || (weight >= 10 && 'MINOR') || 'PATCH',
+    bump: (weight >= 100 && 'major') || (weight >= 10 && 'minor') || 'patch',
     weight
   };
 };
@@ -131,13 +132,45 @@ const getSemVerCommits = (parsedCommits = parseCommits()) => ({
   parsedCommits
 });
 
-const updateFiles = (
-  { recommendedSemVer, parsedCommits } = getSemVerCommits(),
-  { updatePackage = true, updateChangelog = true, packagePath = './package.json' } = {}
-) => {
-  if (updatePackage && existsSync(packagePath)) {
-    currentFileOutput = JSON.parse(readFileSync(fileOutput, 'utf-8'));
+const updateChangelog = (parsedCommits, packageVersion, { filePath = './CHANGELOG.md' } = {}) => {
+  // const systemTimestamp = new Date().toLocaleDateString('ko-KR').replace(/\./g, '').replace(/\s/g, '-');
+  const systemTimestamp = new Date().toLocaleDateString('fr-CA');
+  let header = `# Changelog\nAll notable changes to this project will be documented in this file.`;
+  let body = '';
+
+  if (existsSync(filePath)) {
+    const [tempHeader, ...tempBody] = readFileSync(filePath, 'utf-8').split('##');
+    header = tempHeader;
+    body = `##${tempBody.join('##')}`;
   }
+
+  const displayCommits = Object.values(parsedCommits).reduce(
+    (str, { title, commits }) => `${str}\n### ${title}\n${commits.join('\n')}\n`,
+    ''
+  );
+  const updatedBody = `## ${packageVersion} (${systemTimestamp})\n${displayCommits}`;
+
+  writeFileSync(filePath, `${header}\n${updatedBody}\n${body}`);
 };
 
-console.log('commitsGroupingObj', updateFiles());
+const updatePackageVersion = version => {
+  // https://docs.npmjs.com/cli/v8/commands/npm-version#git-tag-version
+  let stdout = '';
+
+  try {
+    stdout = execSync(`npm version ${version} --git-tag-version=false -m "testing"`);
+  } catch (e) {
+    console.log(`Skipping package.json version... ${e.message}`);
+  }
+
+  return stdout.toString();
+};
+
+const updateFiles = ({ recommendedSemVer, parsedCommits } = getSemVerCommits()) => {
+  let updatedVersion = updatePackageVersion(recommendedSemVer.bump);
+  updatedVersion = semverClean(updatedVersion);
+
+  updateChangelog(parsedCommits, updatedVersion);
+};
+
+updateFiles();
