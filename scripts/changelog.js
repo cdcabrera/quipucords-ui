@@ -158,9 +158,21 @@ const updatePackageVersion = version => {
   let stdout = '';
 
   try {
-    stdout = execSync(`npm version ${version} --git-tag-version=false -m "testing"`);
+    stdout = execSync(`npm version ${version} --git-tag-version=false`);
   } catch (e) {
     console.log(`Skipping package.json version... ${e.message}`);
+  }
+
+  return stdout.toString();
+};
+
+const commitChanges = version => {
+  let stdout = '';
+
+  try {
+    stdout = execSync(`git add ./package.json ./CHANGELOG.md && git commit ./package.json ./CHANGELOG.md -m "chore(release): ${version}"`);
+  } catch (e) {
+    console.log(`Skipping release commit... ${e.message}`);
   }
 
   return stdout.toString();
@@ -171,6 +183,7 @@ const updateFiles = ({ recommendedSemVer, parsedCommits } = getSemVerCommits()) 
   updatedVersion = semverClean(updatedVersion);
 
   updateChangelog(parsedCommits, updatedVersion);
+  commitChanges(updatedVersion);
 };
 
 updateFiles();
