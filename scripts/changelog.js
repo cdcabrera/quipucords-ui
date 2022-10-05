@@ -149,7 +149,7 @@ const updateChangelog = (parsedCommits, packageVersion, { filePath = './CHANGELO
       const updatedATitle = aTitle.toLowerCase();
       const updatedBTitle = bTitle.toLowerCase();
 
-      return (updatedATitle < updatedBTitle && -1) || (updatedATitle > updatedBTitle && 1) || 0;
+      return (updatedATitle < updatedBTitle && 1) || (updatedATitle > updatedBTitle && -1) || 0;
     })
     .reduce((str, { title, commits }) => `${str}\n### ${title}\n${commits.join('\n')}\n`, '');
   const updatedBody = `## ${packageVersion} (${systemTimestamp})\n${displayCommits}`;
