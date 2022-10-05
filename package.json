@@ -96,7 +96,7 @@
     "build:template-scss": "sass --no-source-map --load-path ./src --load-path ./node_modules ./src/styles/template.scss ./src/styles/.css/index.css",
     "build:template-css-font": "node ./scripts/templateCssPaths.js",
     "build:template-css": "run-s build:template-scss build:template-css-font",
-    "release": "standard-version",
+    "release": "node ./scripts/changelog.js",
     "start": "run-p -l api:dev start:js",
     "start:specs": "open http://localhost:5050/docs/api; run-s api:specs",
     "start:js": "react-scripts start",
@@ -154,8 +154,10 @@
     "sass": "^1.53.0"
   },
   "devDependencies": {
-    "enzyme": "^3.11.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
+    "conventional-commit-types": "^3.0.0",
+    "conventional-recommended-bump": "^6.1.0",
+    "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.2",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.5.0",
