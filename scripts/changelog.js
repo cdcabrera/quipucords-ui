@@ -144,10 +144,14 @@ const updateChangelog = (parsedCommits, packageVersion, { filePath = './CHANGELO
     body = `##${tempBody.join('##')}`;
   }
 
-  const displayCommits = Object.values(parsedCommits).reduce(
-    (str, { title, commits }) => `${str}\n### ${title}\n${commits.join('\n')}\n`,
-    ''
-  );
+  const displayCommits = Object.values(parsedCommits)
+    .sort(({ title: aTitle }, { title: bTitle }) => {
+      const updatedATitle = aTitle.toLowerCase();
+      const updatedBTitle = bTitle.toLowerCase();
+
+      return (updatedATitle < updatedBTitle && -1) || (updatedATitle > updatedBTitle && 1) || 0;
+    })
+    .reduce((str, { title, commits }) => `${str}\n### ${title}\n${commits.join('\n')}\n`, '');
   const updatedBody = `## ${packageVersion} (${systemTimestamp})\n${displayCommits}`;
 
   writeFileSync(filePath, `${header}\n${updatedBody}\n${body}`);
@@ -170,7 +174,9 @@ const commitChanges = version => {
   let stdout = '';
 
   try {
-    stdout = execSync(`git add ./package.json ./CHANGELOG.md && git commit ./package.json ./CHANGELOG.md -m "chore(release): ${version}"`);
+    stdout = execSync(
+      `git add ./package.json ./CHANGELOG.md && git commit ./package.json ./CHANGELOG.md -m "chore(release): ${version}"`
+    );
   } catch (e) {
     console.log(`Skipping release commit... ${e.message}`);
   }
