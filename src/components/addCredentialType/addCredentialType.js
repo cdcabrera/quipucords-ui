@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownSelect, ButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
-import { reduxTypes, storeHooks } from '../../redux';
+import { useOnUpdateCredential } from '../createCredentialDialog/createCredentialDialogContext';
 import { translate } from '../i18n/i18n';
 
 /**
@@ -11,6 +11,10 @@ import { translate } from '../i18n/i18n';
  */
 const fieldOptions = [
   { title: () => translate('form-dialog.label', { context: ['option', 'network', 'credential'] }), value: 'network' },
+  {
+    title: () => translate('form-dialog.label', { context: ['option', 'openshift', 'credential'] }),
+    value: 'openshift'
+  },
   {
     title: () => translate('form-dialog.label', { context: ['option', 'satellite', 'credential'] }),
     value: 'satellite'
@@ -22,20 +26,12 @@ const fieldOptions = [
  * On select create credential
  *
  * @param {object} options
- * @param {Function} options.useDispatch
+ * @param {Function} options.useOnUpdateCredential
  * @returns {Function}
  */
-const useOnSelect = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return ({ value = null }) => {
-    dispatch([
-      {
-        type: reduxTypes.credentials.CREATE_CREDENTIAL_SHOW,
-        credentialType: value
-      }
-    ]);
-  };
+const useOnSelect = ({ useOnUpdateCredential: useAliasOnUpdateCredential = useOnUpdateCredential } = {}) => {
+  const { onAdd } = useAliasOnUpdateCredential();
+  return ({ value = null }) => onAdd(value);
 };
 
 /**
