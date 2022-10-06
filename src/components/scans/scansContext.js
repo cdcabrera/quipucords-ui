@@ -76,7 +76,7 @@ const useOnScanAction = ({
 } = {}) => {
   const { viewId } = useAliasView();
   const [updatedScan, setUpdatedScan] = useState({});
-  const { id: scanId, name: scanName, context: scanContext } = updatedScan;
+  const { id: scanId, name: scanName, context: scanContext } = updatedScan || {};
   const dispatch = useAliasDispatch();
   const { data, error, fulfilled, pending } = useAliasSelectorsResponse(({ scans }) => scans?.action?.[scanId]);
   const { errorMessage } = data?.[0] || {};
