@@ -51,6 +51,10 @@ const authenticationTypeOptions = [
 /**
  * Create or edit a credential.
  *
+ * @fires onSetAuthType
+ * @fires onCancel
+ * @fires onSubmit
+ * @fires onValidateForm
  * @param {object} props
  * @param {Array} props.authenticationOptions
  * @param {Array} props.becomeMethodOptions
@@ -69,7 +73,6 @@ const CreateCredentialDialog = ({
   useOnUpdateCredential: useAliasOnUpdateCredential
 }) => {
   const [authType, setAuthType] = useState();
-  // const [becomeMethod, setBecomeMethod] = useState();
   const { show, edit, credential = {}, credentialType, pending } = useAliasCredential();
   const { onHide } = useAliasOnUpdateCredential();
   const submitCredential = useAliasOnSubmitCredential();
@@ -91,6 +94,7 @@ const CreateCredentialDialog = ({
   /**
    * Reset form fields on auth type selection.
    *
+   * @event onSetAuthType
    * @param {object} event
    * @param {*} event.value
    * @param {Function} handleOnEventCustom
@@ -118,15 +122,34 @@ const CreateCredentialDialog = ({
     setAuthType(value);
   };
 
-  // const onSetBecomeMethod = ({ value }) => setBecomeMethod(value);
-
+  /**
+   * Hide the dialog
+   *
+   * @event onCancel
+   * @returns {*}
+   */
   const onCancel = () => onHide();
 
+  /**
+   * Submit form state to add or update a credential.
+   *
+   * @event onSubmit
+   * @param {object} formState
+   * @param {object} formState.values
+   */
   const onSubmit = ({ values = {} } = {}) => {
     const { id, ...data } = values;
     submitCredential(id, data);
   };
 
+  /**
+   * Form validator, return an error object against field names using form state.
+   *
+   * @event onValidateForm
+   * @param {object} formState
+   * @param {object} formState.values
+   * @returns {{ssh_keyfile: boolean, password: boolean, name: boolean, auth_token: boolean, username: boolean}}
+   */
   const onValidateForm = ({ values = {} } = {}) => ({
     name: formHelpers.isEmpty(values.name),
     auth_token: authType === 'token' && formHelpers.isEmpty(values.auth_token),
@@ -141,6 +164,17 @@ const CreateCredentialDialog = ({
     return null;
   }
 
+  /**
+   * Pass form state and render field(s) common to all credential types.
+   *
+   * @param {object} formState
+   * @param {object} formState.errors
+   * @param {object} formState.touched
+   * @param {object} formState.values
+   * @param {Function} formState.handleOnEvent
+   * @param {Function} formState.handleOnEventCustom
+   * @returns {React.ReactNode}
+   */
   const renderCommonFields = ({ errors, touched, values, handleOnEvent, handleOnEventCustom }) => (
     <React.Fragment>
       <FormGroup
@@ -181,9 +215,17 @@ const CreateCredentialDialog = ({
     </React.Fragment>
   );
 
-  const renderAuthFields = ({ handleOnEvent, values, touched, errors } = {}) => {
-    // const check = values.cred_type || authType || (values.ssh_keyfile && 'sshKey');
-    // console.log(check);
+  /**
+   * Pass form state and render authentication field(s) against authentication type.
+   *
+   * @param {object} formState
+   * @param {object} formState.errors
+   * @param {object} formState.touched
+   * @param {object} formState.values
+   * @param {Function} formState.handleOnEvent
+   * @returns {React.ReactNode}
+   */
+  const renderAuthFields = ({ errors, touched, values, handleOnEvent } = {}) => {
     switch (authType) {
       case 'sshKey':
         return (
@@ -258,7 +300,15 @@ const CreateCredentialDialog = ({
     }
   };
 
-  const renderNetworkFields = ({ handleOnEvent, values } = {}) => {
+  /**
+   * Pass form state and render network credential field(s).
+   *
+   * @param {object} formState
+   * @param {object} formState.values
+   * @param {Function} formState.handleOnEvent
+   * @returns {React.ReactNode}
+   */
+  const renderNetworkFields = ({ values, handleOnEvent } = {}) => {
     if (values.cred_type !== 'network') {
       return null;
     }
