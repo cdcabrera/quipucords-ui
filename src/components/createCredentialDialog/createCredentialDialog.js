@@ -17,6 +17,7 @@ import { FormGroup } from '../form/formGroup';
 import { TextInput } from '../form/textInput';
 import { FormState } from '../formState/formState';
 import { formHelpers } from '../form/formHelpers';
+import { apiTypes } from '../../constants/apiConstants';
 import { translate } from '../i18n/i18n';
 
 /**
@@ -102,19 +103,19 @@ const CreateCredentialDialog = ({
   const onSetAuthType = ({ value }, handleOnEventCustom) => {
     handleOnEventCustom([
       {
-        name: 'auth_token',
+        name: apiTypes.API_QUERY_TYPES.AUTH_TOKEN,
         value: undefined
       },
       {
-        name: 'password',
+        name: apiTypes.API_QUERY_TYPES.PASSWORD,
         value: undefined
       },
       {
-        name: 'ssh_keyfile',
+        name: apiTypes.API_QUERY_TYPES.SSH_KEYFILE,
         value: undefined
       },
       {
-        name: 'sshpassphrase',
+        name: apiTypes.API_QUERY_TYPES.SSH_PASSPHRASE,
         value: undefined
       }
     ]);
@@ -139,7 +140,13 @@ const CreateCredentialDialog = ({
    */
   const onSubmit = ({ values = {} } = {}) => {
     const { id, ...data } = values;
-    submitCredential(id, data);
+    const updatedData = {};
+    Object.entries(data)
+      .filter(([, value]) => value !== undefined)
+      .forEach(([key, value]) => {
+        updatedData[key] = value;
+      });
+    submitCredential(id, updatedData);
   };
 
   /**
@@ -151,13 +158,16 @@ const CreateCredentialDialog = ({
    * @returns {{ssh_keyfile: boolean, password: boolean, name: boolean, auth_token: boolean, username: boolean}}
    */
   const onValidateForm = ({ values = {} } = {}) => ({
-    name: formHelpers.isEmpty(values.name),
-    auth_token: authType === 'token' && formHelpers.isEmpty(values.auth_token),
-    ssh_keyfile:
-      (authType === 'sshKey' && formHelpers.isEmpty(values.ssh_keyfile)) ||
-      (authType === 'sshKey' && !formHelpers.isFilePath(values.ssh_keyfile)),
-    password: authType === 'usernamePassword' && formHelpers.isEmpty(values.password),
-    username: authType === 'usernamePassword' && formHelpers.isEmpty(values.username)
+    [apiTypes.API_QUERY_TYPES.NAME]: formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.NAME]),
+    [apiTypes.API_QUERY_TYPES.AUTH_TOKEN]:
+      authType === 'token' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]),
+    [apiTypes.API_QUERY_TYPES.SSH_KEYFILE]:
+      (authType === 'sshKey' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.SSH_KEYFILE])) ||
+      (authType === 'sshKey' && !formHelpers.isFilePath(values[apiTypes.API_QUERY_TYPES.SSH_KEYFILE])),
+    [apiTypes.API_QUERY_TYPES.PASSWORD]:
+      authType === 'usernamePassword' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.PASSWORD]),
+    [apiTypes.API_QUERY_TYPES.USERNAME]:
+      authType === 'usernamePassword' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.USERNAME])
   });
 
   if (!credentialType) {
@@ -179,20 +189,24 @@ const CreateCredentialDialog = ({
     <React.Fragment>
       <FormGroup
         label={t('form-dialog.label', { context: ['name', 'create-credential'] })}
-        error={touched.name && errors.name}
+        error={touched[apiTypes.API_QUERY_TYPES.NAME] && errors[apiTypes.API_QUERY_TYPES.NAME]}
         errorMessage="You must enter a credential name"
       >
         <TextInput
-          name="name"
+          name={apiTypes.API_QUERY_TYPES.NAME}
           value={values.name}
           placeholder="Enter a name for the credential"
           onChange={handleOnEvent}
           onClear={handleOnEvent}
           maxLength={64}
-          validated={touched.name && errors.name ? ValidatedOptions.error : ValidatedOptions.default}
+          validated={
+            touched[apiTypes.API_QUERY_TYPES.NAME] && errors[apiTypes.API_QUERY_TYPES.NAME]
+              ? ValidatedOptions.error
+              : ValidatedOptions.default
+          }
         />
       </FormGroup>
-      {values.cred_type === 'network' && (
+      {values[apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE] === 'network' && (
         <FormGroup label="Authentication Type">
           <DropdownSelect
             isInline={false}
@@ -202,14 +216,22 @@ const CreateCredentialDialog = ({
           />
         </FormGroup>
       )}
-      <FormGroup label="Username" error={touched.username && errors.username} errorMessage="You must enter a username">
+      <FormGroup
+        label="Username"
+        error={touched[apiTypes.API_QUERY_TYPES.USERNAME] && errors[apiTypes.API_QUERY_TYPES.USERNAME]}
+        errorMessage="You must enter a username"
+      >
         <TextInput
-          name="username"
-          value={values.username}
+          name={apiTypes.API_QUERY_TYPES.USERNAME}
+          value={values[apiTypes.API_QUERY_TYPES.USERNAME]}
           placeholder="Enter Username"
           onChange={handleOnEvent}
           onClear={handleOnEvent}
-          validated={touched.username && errors.username ? ValidatedOptions.error : ValidatedOptions.default}
+          validated={
+            touched[apiTypes.API_QUERY_TYPES.USERNAME] && errors[apiTypes.API_QUERY_TYPES.USERNAME]
+              ? ValidatedOptions.error
+              : ValidatedOptions.default
+          }
         />
       </FormGroup>
     </React.Fragment>
@@ -233,25 +255,27 @@ const CreateCredentialDialog = ({
             <FormGroup
               key="ssh_keyfile"
               label="SSH Key File"
-              error={touched.ssh_keyfile && errors.ssh_keyfile}
+              error={touched[apiTypes.API_QUERY_TYPES.SSH_KEYFILE] && errors[apiTypes.API_QUERY_TYPES.SSH_KEYFILE]}
               errorMessage="Please enter the full path to the SSH Key File"
             >
               <TextInput
-                name="ssh_keyfile"
-                value={values.ssh_keyfile}
+                name={apiTypes.API_QUERY_TYPES.SSH_KEYFILE}
+                value={values[apiTypes.API_QUERY_TYPES.SSH_KEYFILE]}
                 placeholder="Enter a SSH key file path"
                 onChange={handleOnEvent}
                 onClear={handleOnEvent}
                 validated={
-                  touched.ssh_keyfile && errors.ssh_keyfile ? ValidatedOptions.error : ValidatedOptions.default
+                  touched[apiTypes.API_QUERY_TYPES.SSH_KEYFILE] && errors[apiTypes.API_QUERY_TYPES.SSH_KEYFILE]
+                    ? ValidatedOptions.error
+                    : ValidatedOptions.default
                 }
               />
             </FormGroup>
             <FormGroup key="sshpassphrase" label="Passphrase">
               <TextInput
-                name="sshpassphrase"
+                name={apiTypes.API_QUERY_TYPES.SSH_PASSPHRASE}
                 type="password"
-                value={values.sshpassphrase}
+                value={values[apiTypes.API_QUERY_TYPES.SSH_PASSPHRASE]}
                 placeholder="optional"
                 onChange={handleOnEvent}
                 onClear={handleOnEvent}
@@ -264,16 +288,20 @@ const CreateCredentialDialog = ({
           <FormGroup
             key="auth_token"
             label="Token"
-            error={touched.auth_token && errors.auth_token}
+            error={touched[apiTypes.API_QUERY_TYPES.AUTH_TOKEN] && errors[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]}
             errorMessage="You must enter a token"
           >
             <TextInput
-              name="auth_token"
-              value={values.auth_token}
+              name={apiTypes.API_QUERY_TYPES.AUTH_TOKEN}
+              value={values[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]}
               placeholder="Enter token"
               onChange={handleOnEvent}
               onClear={handleOnEvent}
-              validated={touched.auth_token && errors.auth_token ? ValidatedOptions.error : ValidatedOptions.default}
+              validated={
+                touched[apiTypes.API_QUERY_TYPES.AUTH_TOKEN] && errors[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
             />
           </FormGroup>
         );
@@ -283,17 +311,21 @@ const CreateCredentialDialog = ({
           <FormGroup
             key="password"
             label="Password"
-            error={touched.password && errors.password}
+            error={touched[apiTypes.API_QUERY_TYPES.PASSWORD] && errors[apiTypes.API_QUERY_TYPES.PASSWORD]}
             errorMessage="You must enter a password"
           >
             <TextInput
-              name="password"
+              name={apiTypes.API_QUERY_TYPES.PASSWORD}
               type="password"
-              value={values.password}
+              value={values[apiTypes.API_QUERY_TYPES.PASSWORD]}
               placeholder="Enter password"
               onChange={handleOnEvent}
               onClear={handleOnEvent}
-              validated={touched.password && errors.password ? ValidatedOptions.error : ValidatedOptions.default}
+              validated={
+                touched[apiTypes.API_QUERY_TYPES.PASSWORD] && errors[apiTypes.API_QUERY_TYPES.PASSWORD]
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
             />
           </FormGroup>
         );
@@ -309,7 +341,7 @@ const CreateCredentialDialog = ({
    * @returns {React.ReactNode}
    */
   const renderNetworkFields = ({ values, handleOnEvent } = {}) => {
-    if (values.cred_type !== 'network') {
+    if (values[apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE] !== 'network') {
       return null;
     }
 
@@ -317,19 +349,19 @@ const CreateCredentialDialog = ({
       <React.Fragment>
         <FormGroup key="become_method" label="Become Method">
           <DropdownSelect
-            name="become_method"
+            name={apiTypes.API_QUERY_TYPES.BECOME_METHOD}
             isInline={false}
             onSelect={handleOnEvent}
             options={becomeMethodOptions}
-            selectedOptions={values.become_method}
+            selectedOptions={values[apiTypes.API_QUERY_TYPES.BECOME_METHOD]}
             direction={SelectDirection.up}
           />
         </FormGroup>
         <FormGroup key="become_user" label="Become User">
           <TextInput
-            name="become_user"
+            name={apiTypes.API_QUERY_TYPES.BECOME_USER}
             type="text"
-            value={values.become_user}
+            value={values[apiTypes.API_QUERY_TYPES.BECOME_USER]}
             placeholder="optional"
             onChange={handleOnEvent}
             onClear={handleOnEvent}
@@ -337,9 +369,9 @@ const CreateCredentialDialog = ({
         </FormGroup>
         <FormGroup key="become_password" label="Become Password">
           <TextInput
-            name="become_password"
+            name={apiTypes.API_QUERY_TYPES.BECOME_PASSWORD}
             type="password"
-            value={values.become_password}
+            value={values[apiTypes.API_QUERY_TYPES.BECOME_PASSWORD]}
             placeholder="optional"
             onChange={handleOnEvent}
             onClear={handleOnEvent}
@@ -349,23 +381,27 @@ const CreateCredentialDialog = ({
     );
   };
 
+  /*
   const {
-    auth_token,
-    become_method,
-    become_password,
-    become_user,
-    cred_type = credentialType,
-    id,
-    name = '',
-    password,
-    ssh_keyfile,
-    sshpassphrase,
-    username = null
+    [apiTypes.API_RESPONSE_CREDENTIAL_ID]: id,
+    [apiTypes.API_QUERY_TYPES.AUTH_TOKEN]: authToken,
+    [apiTypes.API_QUERY_TYPES.BECOME_METHOD]: becomeMethod,
+    [apiTypes.API_QUERY_TYPES.BECOME_PASSWORD]: becomePassword,
+    [apiTypes.API_QUERY_TYPES.BECOME_USER]: becomeUser,
+    [apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE]: credType = credentialType,
+    [apiTypes.API_QUERY_TYPES.NAME]: name = '',
+    [apiTypes.API_QUERY_TYPES.PASSWORD]: password,
+    [apiTypes.API_QUERY_TYPES.SSH_KEYFILE]: sshKeyfile,
+    [apiTypes.API_QUERY_TYPES.SSH_PASSPHRASE]: sshPassphrase,
+    [apiTypes.API_QUERY_TYPES.USERNAME]: username = null
   } = credential;
+  */
 
   return (
     <FormState
       setValues={{
+        ...credential
+        /*
         auth_token,
         become_method,
         become_password,
@@ -377,6 +413,7 @@ const CreateCredentialDialog = ({
         ssh_keyfile,
         sshpassphrase,
         username
+        */
       }}
       validateOnMount={false}
       validate={onValidateForm}
@@ -409,7 +446,11 @@ const CreateCredentialDialog = ({
             {!pending && (
               <React.Fragment>
                 <FormGroup label="Source Type">
-                  <TextInput type="text" isReadOnly value={t('form-dialog.label', { context: values.cred_type })} />
+                  <TextInput
+                    type="text"
+                    isReadOnly
+                    value={t('form-dialog.label', { context: values[apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE] })}
+                  />
                 </FormGroup>
                 {renderCommonFields({ values, ...options })}
                 {renderAuthFields({ values, ...options })}

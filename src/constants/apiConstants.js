@@ -9,7 +9,18 @@ const API_QUERY_TYPES = {
   SEARCH_CREDENTIALS_NAME: 'search_credentials_by_name',
   SEARCH_NAME: 'search_by_name',
   SEARCH_SOURCES_NAME: 'search_sources_by_name',
-  SOURCE_TYPE: 'source_type'
+  SOURCE_TYPE: 'source_type',
+
+  AUTH_TOKEN: 'auth_token',
+  BECOME_METHOD: 'become_method',
+  BECOME_PASSWORD: 'become_password',
+  BECOME_USER: 'become_user',
+  ID: 'id',
+  NAME: 'name',
+  PASSWORD: 'password',
+  SSH_KEYFILE: 'ssh_keyfile',
+  SSH_PASSPHRASE: 'sshpassphrase',
+  USERNAME: 'username'
 };
 
 const API_QUERY_SORT_TYPES = {
