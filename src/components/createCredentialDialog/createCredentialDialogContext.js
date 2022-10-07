@@ -1,71 +1,81 @@
-// import { useShallowCompareEffect } from 'react-use';
-// import { AlertVariant } from '@patternfly/react-core';
 import { reduxActions, reduxTypes, storeHooks } from '../../redux';
-// import { apiTypes } from '../../constants/apiConstants';
-// import { translate } from '../i18n/i18n';
 
-const useCredential = ({
-  // addCredential = reduxActions.credentials.addCredential,
-  // updateCredential = reduxActions.credentials.updateCredential,
-  // t = translate,
-  // useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch,
-  useSelector: useAliasSelector = storeHooks.reactRedux.useSelector
-} = {}) => {
-  const response = useAliasSelector(({ credentials }) => credentials?.dialog, {});
-  console.log('SELECTOR >>>>>>', response);
-  return response;
-};
+/**
+ * Return credential dialog response
+ *
+ * @param {object} options
+ * @param {Function} options.useSelector
+ * @returns {*}
+ */
+const useCredential = ({ useSelector: useAliasSelector = storeHooks.reactRedux.useSelector } = {}) =>
+  useAliasSelector(({ credentials }) => credentials?.dialog, {});
 
 /**
  * Return an updated source. Display relative toast messaging after wizard closes.
  *
  * @param {object} options
- * @param {Function} options.t
+ * @param {Function} options.addCredential
+ * @param {Function} options.updateCredential
  * @param {Function} options.useDispatch
- * @param {Function} options.useSelectorsResponse
- * @param id
- * @param id.addCredential
- * @param id.updateCredential
- * @param id.t
- * @param id.useDispatch
- * @param id.useSelectorsResponse
- * @param options.addCredential
- * @param options.updateCredential
- * @returns {{}}
+ * @returns {(function(*, *): void)|*}
  */
 const useOnSubmitCredential = ({
   addCredential = reduxActions.credentials.addCredential,
   updateCredential = reduxActions.credentials.updateCredential,
-  // t = translate,
   useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch
-  // useSelectorsResponse: useAliasSelectorsResponse = storeHooks.reactRedux.useSelectorsResponse
 } = {}) => {
   const dispatch = useAliasDispatch();
-  // const response = useAliasSelectorsResponse(({ credentials }) => credentials?.dialog, {});
-  // console.log('ADD UPDATE CRED >>>>>>', response);
 
   return (id, data) => {
     if (id) {
-      console.log('UPDATE CRED', id, data);
       updateCredential(id, data)(dispatch);
     } else {
-      console.log('ADD CRED', data);
       addCredential(data)(dispatch);
     }
   };
 };
 
 /**
- * An onAddCredential callback for adding a credential.
+ * Functions for handling state updates for credentials.
  *
  * @param {object} options
  * @param {Function} options.useDispatch
- * @returns {Function}
+ * @returns {{onEdit: Function, onHide: Function, onAdd: Function}}
  */
-const useOnAddCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
+const useOnUpdateCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
-  return credentialType => {
+  /**
+   * On edit show the credential in dialog
+   *
+   * @event onEdit
+   * @param {object|*} credential
+   */
+  const onEdit = credential => {
+    dispatch({
+      type: reduxTypes.credentials.EDIT_CREDENTIAL_SHOW,
+      credential
+    });
+  };
+
+  /**
+   * Hide the credential dialog
+   *
+   * @event onHide
+   */
+  const onHide = () => {
+    dispatch({
+      type: reduxTypes.credentials.UPDATE_CREDENTIAL_HIDE
+    });
+  };
+
+  /**
+   * on add show the credential dialog
+   *
+   * @event onAdd
+   * @param {string|*} credentialType
+   */
+  const onAdd = credentialType => {
     dispatch([
       {
         type: reduxTypes.credentials.CREATE_CREDENTIAL_SHOW,
@@ -73,31 +83,18 @@ const useOnAddCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRe
       }
     ]);
   };
-};
 
-/**
- * An onEditCredential callback for editing a credential.
- *
- * @param {object} options
- * @param {Function} options.useDispatch
- * @returns {Function}
- */
-const useOnEditCredential = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
-  const dispatch = useAliasDispatch();
-
-  return credential => {
-    dispatch({
-      type: reduxTypes.credentials.EDIT_CREDENTIAL_SHOW,
-      credential
-    });
+  return {
+    onEdit,
+    onHide,
+    onAdd
   };
 };
 
 const context = {
   useCredential,
   useOnSubmitCredential,
-  useOnAddCredential,
-  useOnEditCredential
+  useOnUpdateCredential
 };
 
-export { context as default, context, useCredential, useOnSubmitCredential, useOnAddCredential, useOnEditCredential };
+export { context as default, context, useCredential, useOnSubmitCredential, useOnUpdateCredential };

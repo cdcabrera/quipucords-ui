@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownSelect, ButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
-import { useOnAddCredential } from '../createCredentialDialog/createCredentialDialogContext';
+import { useOnUpdateCredential } from '../createCredentialDialog/createCredentialDialogContext';
 import { translate } from '../i18n/i18n';
 
 /**
@@ -26,12 +26,12 @@ const fieldOptions = [
  * On select create credential
  *
  * @param {object} options
- * @param {Function} options.useOnAddCredential
+ * @param {Function} options.useOnUpdateCredential
  * @returns {Function}
  */
-const useOnSelect = ({ useOnAddCredential: useAliasOnAddCredential = useOnAddCredential } = {}) => {
-  const onAddCredential = useAliasOnAddCredential();
-  return ({ value = null }) => onAddCredential(value);
+const useOnSelect = ({ useOnUpdateCredential: useAliasOnUpdateCredential = useOnUpdateCredential } = {}) => {
+  const { onAdd } = useAliasOnUpdateCredential();
+  return ({ value = null }) => onAdd(value);
 };
 
 /**
