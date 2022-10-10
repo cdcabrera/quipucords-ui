@@ -92,6 +92,10 @@ const CreateCredentialDialog = ({
     }
   }, [credentialType]);
 
+  if (!credentialType) {
+    return null;
+  }
+
   /**
    * Reset form fields on auth type selection.
    *
@@ -139,14 +143,16 @@ const CreateCredentialDialog = ({
    * @param {object} formState.values
    */
   const onSubmit = ({ values = {} } = {}) => {
-    const { id, ...data } = values;
-    const updatedData = {};
-    Object.entries(data)
+    // const { id, ...data } = values;
+    const updatedValues = {};
+    Object.entries(values)
       .filter(([, value]) => value !== undefined)
       .forEach(([key, value]) => {
-        updatedData[key] = value;
+        updatedValues[key] = value;
       });
-    submitCredential(id, updatedData);
+
+    submitCredential(updatedValues);
+    //  submitCredential(id, updatedData);
   };
 
   /**
@@ -169,10 +175,6 @@ const CreateCredentialDialog = ({
     [apiTypes.API_QUERY_TYPES.USERNAME]:
       authType === 'usernamePassword' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.USERNAME])
   });
-
-  if (!credentialType) {
-    return null;
-  }
 
   /**
    * Pass form state and render field(s) common to all credential types.
@@ -381,40 +383,9 @@ const CreateCredentialDialog = ({
     );
   };
 
-  /*
-  const {
-    [apiTypes.API_RESPONSE_CREDENTIAL_ID]: id,
-    [apiTypes.API_QUERY_TYPES.AUTH_TOKEN]: authToken,
-    [apiTypes.API_QUERY_TYPES.BECOME_METHOD]: becomeMethod,
-    [apiTypes.API_QUERY_TYPES.BECOME_PASSWORD]: becomePassword,
-    [apiTypes.API_QUERY_TYPES.BECOME_USER]: becomeUser,
-    [apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE]: credType = credentialType,
-    [apiTypes.API_QUERY_TYPES.NAME]: name = '',
-    [apiTypes.API_QUERY_TYPES.PASSWORD]: password,
-    [apiTypes.API_QUERY_TYPES.SSH_KEYFILE]: sshKeyfile,
-    [apiTypes.API_QUERY_TYPES.SSH_PASSPHRASE]: sshPassphrase,
-    [apiTypes.API_QUERY_TYPES.USERNAME]: username = null
-  } = credential;
-  */
-
   return (
     <FormState
-      setValues={{
-        ...credential
-        /*
-        auth_token,
-        become_method,
-        become_password,
-        become_user,
-        cred_type,
-        id,
-        name,
-        password,
-        ssh_keyfile,
-        sshpassphrase,
-        username
-        */
-      }}
+      setValues={{ ...credential, [apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE]: credentialType }}
       validateOnMount={false}
       validate={onValidateForm}
       onSubmit={onSubmit}

@@ -52,9 +52,10 @@ const useGetAddSource = ({
 const useOnShowAddSourceWizard = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
-  return () => {
+  return viewId => {
     dispatch({
-      type: reduxTypes.sources.CREATE_SOURCE_SHOW
+      type: reduxTypes.sources.CREATE_SOURCE_SHOW,
+      viewId
     });
   };
 };

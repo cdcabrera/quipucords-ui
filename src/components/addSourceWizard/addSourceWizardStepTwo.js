@@ -87,11 +87,12 @@ class AddSourceWizardStepTwo extends React.Component {
 
   // ToDo: future, exported hook from addCredentialType can be leveraged here
   onAddCredential = () => {
-    const { type } = this.props;
+    const { type, viewId } = this.props;
 
     store.dispatch({
       type: reduxTypes.credentials.CREATE_CREDENTIAL_SHOW,
-      credentialType: type
+      credentialType: type,
+      viewId
     });
   };
 
@@ -555,7 +556,8 @@ AddSourceWizardStepTwo.propTypes = {
     port: PropTypes.string
   }),
   t: PropTypes.func,
-  type: PropTypes.string
+  type: PropTypes.string,
+  viewId: PropTypes.string
 };
 
 /**
@@ -583,7 +585,8 @@ AddSourceWizardStepTwo.defaultProps = {
   port: '',
   stepTwoErrorMessages: {},
   t: translate,
-  type: null
+  type: null,
+  viewId: null
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -597,6 +600,9 @@ const makeMapStateToProps = () => {
   return (state, props) => ({
     add: state.addSourceWizard.add,
     edit: state.addSourceWizard.edit,
+    viewId:
+      (state.addSourceWizard.edit && state.addSourceWizard.viewId) ||
+      (state.addSourceWizard.add && state.addSourceWizard.viewId),
     stepTwoErrorMessages: state.addSourceWizard.stepTwoErrorMessages,
     ...mapSource(state, props),
     availableCredentials: mapCredentials(state, props)

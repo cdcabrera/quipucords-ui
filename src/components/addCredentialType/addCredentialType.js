@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownSelect, ButtonVariant, SelectPosition } from '../dropdownSelect/dropdownSelect';
+import { useView } from '../view/viewContext';
 import { useOnUpdateCredential } from '../createCredentialDialog/createCredentialDialogContext';
 import { translate } from '../i18n/i18n';
 
@@ -27,11 +28,16 @@ const fieldOptions = [
  *
  * @param {object} options
  * @param {Function} options.useOnUpdateCredential
+ * @param {Function} options.useView
  * @returns {Function}
  */
-const useOnSelect = ({ useOnUpdateCredential: useAliasOnUpdateCredential = useOnUpdateCredential } = {}) => {
+const useOnSelect = ({
+  useOnUpdateCredential: useAliasOnUpdateCredential = useOnUpdateCredential,
+  useView: useAliasView = useView
+} = {}) => {
+  const { viewId } = useAliasView();
   const { onAdd } = useAliasOnUpdateCredential();
-  return ({ value = null }) => onAdd(value);
+  return ({ value = null }) => onAdd(value, viewId);
 };
 
 /**
