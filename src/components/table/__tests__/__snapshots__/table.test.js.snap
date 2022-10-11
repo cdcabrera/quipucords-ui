@@ -149,7 +149,7 @@ Array [
 exports[`Table Component should allow sortable content: sortable content 1`] = `
 <Th
   className="quipucords-table__th"
-  key="W29iamVjdCBPYmplY3Rd-0"
+  key="eyJjb250ZW50IjoibG9yZW0gaXBzdW0iLCJpc1NvcnQiOnRydWV9-0"
   sort={
     Object {
       "columnIndex": 0,
@@ -239,7 +239,7 @@ exports[`Table Component should allow sortable content: sortable content 1`] = `
 exports[`Table Component should allow sortable content: sorted column, asc 1`] = `
 <Th
   className="quipucords-table__th"
-  key="W29iamVjdCBPYmplY3Rd-0"
+  key="eyJjb250ZW50IjoibG9yZW0gaXBzdW0iLCJpc1NvcnQiOnRydWV9-0"
   sort={
     Object {
       "columnIndex": 0,
@@ -331,7 +331,7 @@ exports[`Table Component should allow sortable content: sorted column, asc 1`] =
 exports[`Table Component should allow sortable content: sorted column, desc 1`] = `
 <Th
   className="quipucords-table__th"
-  key="W29iamVjdCBPYmplY3Rd-0"
+  key="eyJjb250ZW50IjoibG9yZW0gaXBzdW0iLCJpc1NvcnQiOnRydWV9-0"
   sort={
     Object {
       "columnIndex": 0,
@@ -495,7 +495,7 @@ exports[`Table Component should allow variations in table layout: borders and ta
           >
             <Tr
               className="quipucords-table__tr"
-              key="W29iamVjdCBPYmplY3Rd-0-row"
+              key="eyJjZWxscyI6W10sImRhdGEiOnt9LCJyb3dJbmRleCI6MH0=-0-row"
             >
               <TrBase
                 className="quipucords-table__tr"
@@ -510,7 +510,7 @@ exports[`Table Component should allow variations in table layout: borders and ta
                 >
                   <Td
                     className="undefined quipucords-table__td "
-                    key="ZG9sb3I=-0-0"
+                    key="ImRvbG9yIg==-0-0"
                   >
                     <TdBase
                       className="undefined quipucords-table__td "
@@ -528,7 +528,7 @@ exports[`Table Component should allow variations in table layout: borders and ta
             </Tr>
             <Tr
               className="quipucords-table__tr"
-              key="W29iamVjdCBPYmplY3Rd-1-row"
+              key="eyJjZWxscyI6W10sImRhdGEiOnt9LCJyb3dJbmRleCI6MX0=-1-row"
             >
               <TrBase
                 className="quipucords-table__tr"
@@ -543,7 +543,7 @@ exports[`Table Component should allow variations in table layout: borders and ta
                 >
                   <Td
                     className="undefined quipucords-table__td "
-                    key="c2l0-1-0"
+                    key="InNpdCI=-1-0"
                   >
                     <TdBase
                       className="undefined quipucords-table__td "
@@ -655,7 +655,7 @@ exports[`Table Component should allow variations in table layout: generated rows
                 >
                   <Th
                     className="quipucords-table__th"
-                    key="bG9yZW0gaXBzdW0=-0"
+                    key="ImxvcmVtIGlwc3VtIg==-0"
                   >
                     <ThBase
                       className="quipucords-table__th"
@@ -686,7 +686,7 @@ exports[`Table Component should allow variations in table layout: generated rows
           >
             <Tr
               className="quipucords-table__tr"
-              key="W29iamVjdCBPYmplY3Rd-0-row"
+              key="eyJjZWxscyI6W10sImRhdGEiOnt9LCJyb3dJbmRleCI6MH0=-0-row"
             >
               <TrBase
                 className="quipucords-table__tr"
@@ -701,7 +701,7 @@ exports[`Table Component should allow variations in table layout: generated rows
                 >
                   <Td
                     className="undefined quipucords-table__td "
-                    key="ZG9sb3I=-0-0"
+                    key="ImRvbG9yIg==-0-0"
                   >
                     <TdBase
                       className="undefined quipucords-table__td "
@@ -719,7 +719,7 @@ exports[`Table Component should allow variations in table layout: generated rows
             </Tr>
             <Tr
               className="quipucords-table__tr"
-              key="W29iamVjdCBPYmplY3Rd-1-row"
+              key="eyJjZWxscyI6W10sImRhdGEiOnt9LCJyb3dJbmRleCI6MX0=-1-row"
             >
               <TrBase
                 className="quipucords-table__tr"
@@ -734,7 +734,7 @@ exports[`Table Component should allow variations in table layout: generated rows
                 >
                   <Td
                     className="undefined quipucords-table__td "
-                    key="c2l0-1-0"
+                    key="InNpdCI=-1-0"
                   >
                     <TdBase
                       className="undefined quipucords-table__td "

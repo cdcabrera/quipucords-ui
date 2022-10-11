@@ -46,7 +46,7 @@ const tableHeader = ({
   }
 
   columnHeaders.forEach((columnHeader, index) => {
-    const key = `${window.btoa(columnHeader)}-${index}`;
+    const key = `${window.btoa(JSON.stringify(columnHeader))}-${index}`;
 
     if (columnHeader?.content !== undefined) {
       const {
@@ -137,7 +137,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
     };
     updatedRows.push(rowObj);
     rowObj.rowIndex = updatedRows.length - 1;
-    rowObj.key = `${window.btoa(rowObj)}-${rowObj.rowIndex}`;
+    rowObj.key = `${window.btoa(JSON.stringify(rowObj))}-${rowObj.rowIndex}`;
 
     if (isSelectTable) {
       const updatedIsSelected = isSelected ?? false;
@@ -173,7 +173,7 @@ const tableRows = ({ onExpand, onSelect, rows = [] } = {}) => {
     }
 
     cells?.forEach((cell, cellIndex) => {
-      const cellKey = `${window.btoa(cell)}-${rowObj.rowIndex}-${cellIndex}`;
+      const cellKey = `${window.btoa(JSON.stringify(cell))}-${rowObj.rowIndex}-${cellIndex}`;
       if (cell?.content !== undefined) {
         const { className, content, dataLabel, isActionCell, noPadding, width, style, ...remainingProps } = cell;
         const cellProps = { className: className || '', dataLabel, isActionCell, noPadding, style: style || {} };
