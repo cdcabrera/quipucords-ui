@@ -38,6 +38,10 @@ const authenticationTypeOptions = [
     value: 'sshKey'
   },
   {
+    title: () => translate('form-dialog.label', { context: ['option', 'token'] }),
+    value: 'token'
+  },
+  {
     title: () => translate('form-dialog.label', { context: ['option', 'usernamePassword'] }),
     value: 'usernamePassword',
     selected: true
@@ -76,6 +80,9 @@ const CreateCredentialDialog = ({
 
   useEffect(() => {
     switch (credentialType) {
+      case 'openshift':
+        setAuthType('token');
+        break;
       case 'network':
       case 'satellite':
       case 'vcenter':
@@ -99,6 +106,10 @@ const CreateCredentialDialog = ({
    */
   const onSetAuthType = ({ value }, handleOnEventCustom) => {
     handleOnEventCustom([
+      {
+        name: apiTypes.API_QUERY_TYPES.AUTH_TOKEN,
+        value: undefined
+      },
       {
         name: apiTypes.API_QUERY_TYPES.PASSWORD,
         value: undefined
@@ -150,10 +161,12 @@ const CreateCredentialDialog = ({
    * @event onValidateForm
    * @param {object} formState
    * @param {object} formState.values
-   * @returns {{ssh_keyfile: boolean, password: boolean, name: boolean, username: boolean}}
+   * @returns {{ssh_keyfile: boolean, password: boolean, name: boolean, auth_token: boolean, username: boolean}}
    */
   const onValidateForm = ({ values = {} } = {}) => ({
     [apiTypes.API_QUERY_TYPES.NAME]: formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.NAME]),
+    [apiTypes.API_QUERY_TYPES.AUTH_TOKEN]:
+      authType === 'token' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]),
     [apiTypes.API_QUERY_TYPES.SSH_KEYFILE]:
       (authType === 'sshKey' && formHelpers.isEmpty(values[apiTypes.API_QUERY_TYPES.SSH_KEYFILE])) ||
       (authType === 'sshKey' && !formHelpers.isFilePath(values[apiTypes.API_QUERY_TYPES.SSH_KEYFILE])),
@@ -271,6 +284,28 @@ const CreateCredentialDialog = ({
               />
             </FormGroup>
           </React.Fragment>
+        );
+      case 'token':
+        return (
+          <FormGroup
+            key="auth_token"
+            label="Token"
+            error={touched[apiTypes.API_QUERY_TYPES.AUTH_TOKEN] && errors[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]}
+            errorMessage="You must enter a token"
+          >
+            <TextInput
+              name={apiTypes.API_QUERY_TYPES.AUTH_TOKEN}
+              value={values[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]}
+              placeholder="Enter token"
+              onChange={handleOnEvent}
+              onClear={handleOnEvent}
+              validated={
+                touched[apiTypes.API_QUERY_TYPES.AUTH_TOKEN] && errors[apiTypes.API_QUERY_TYPES.AUTH_TOKEN]
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
+            />
+          </FormGroup>
         );
       case 'usernamePassword':
       default:
