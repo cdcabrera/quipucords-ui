@@ -149,10 +149,11 @@ const useOnDelete = ({
 const useOnEdit = ({ useDispatch: useAliasDispatch = storeHooks.reactRedux.useDispatch } = {}) => {
   const dispatch = useAliasDispatch();
 
-  return source => {
+  return (source, viewId) => {
     dispatch({
       type: reduxTypes.sources.EDIT_SOURCE_SHOW,
-      source
+      source,
+      viewId
     });
   };
 };

@@ -26,7 +26,8 @@ const addSourceWizardReducer = (state = initialState, action) => {
         null,
         {
           add: true,
-          show: true
+          show: true,
+          viewId: action.viewId
         },
         {
           state,
@@ -40,7 +41,8 @@ const addSourceWizardReducer = (state = initialState, action) => {
         {
           edit: true,
           editSource: action.source,
-          show: true
+          show: true,
+          viewId: action.viewId
         },
         {
           state,

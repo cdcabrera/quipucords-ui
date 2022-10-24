@@ -115,7 +115,7 @@ const Sources = ({
    */
   const renderToolbarActions = () => (
     <React.Fragment>
-      <Button onClick={onShowAddSourceWizard}>{t('table.label', { context: 'add' })}</Button>{' '}
+      <Button onClick={() => onShowAddSourceWizard(viewId)}>{t('table.label', { context: 'add' })}</Button>{' '}
       <Button
         variant={ButtonVariant.secondary}
         isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
@@ -204,7 +204,7 @@ const Sources = ({
                     isLast: index === data.length - 1,
                     item,
                     onDelete: () => onDelete(item),
-                    onEdit: () => onEdit(item),
+                    onEdit: () => onEdit(item, viewId),
                     onScan: () => onScan(item)
                   }),
                   isActionCell: true
