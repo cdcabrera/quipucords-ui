@@ -57,6 +57,10 @@ Array [
       },
       Object {
         "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'openshift', 'credential'] })",
+      },
+      Object {
+        "key": "form-dialog.label",
         "match": "translate('form-dialog.label', { context: ['option', 'satellite', 'credential'] })",
       },
       Object {
@@ -162,6 +166,10 @@ Array [
       Object {
         "key": "form-dialog.label",
         "match": "t('form-dialog.label', { context: 'network-range' })",
+      },
+      Object {
+        "key": "form-dialog.label",
+        "match": "t('form-dialog.label', { context: 'openshift' })",
       },
       Object {
         "key": "form-dialog.label",
@@ -339,6 +347,10 @@ Array [
       Object {
         "key": "form-dialog.label",
         "match": "translate('form-dialog.label', { context: ['option', 'sshKey'] })",
+      },
+      Object {
+        "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'token'] })",
       },
       Object {
         "key": "form-dialog.label",
@@ -1253,6 +1265,10 @@ Array [
       Object {
         "key": "form-dialog.label",
         "match": "translate('form-dialog.label', { context: ['option', 'network'] })",
+      },
+      Object {
+        "key": "form-dialog.label",
+        "match": "translate('form-dialog.label', { context: ['option', 'openshift'] })",
       },
       Object {
         "key": "form-dialog.label",
