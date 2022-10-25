@@ -17,7 +17,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x]
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node.js ${{ matrix.node-version }}
