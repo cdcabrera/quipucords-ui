@@ -36,13 +36,4 @@ describe('ScansService', () => {
     expect(scansService.cancelScan).toBeDefined();
     expect(scansService.restartScan).toBeDefined();
   });
-
-  it('should return promises for every method', done => {
-    const promises = Object.keys(scansService).map(value => scansService[value]());
-
-    Promise.all(promises).then(success => {
-      expect(success.length).toEqual(Object.keys(scansService).length);
-      done();
-    });
-  });
 });
