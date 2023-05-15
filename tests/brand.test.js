@@ -38,11 +38,9 @@ describe('Application branding', () => {
     // expect(uiNameWithinDocs).toBeGreaterThanOrEqual(1);
 
     const uiNameWithinTemplates = execSync(`grep -rl "${uiName}" ./dist/templates`).toString();
-    const uiNameWithinGui = execSync(`grep -rl "${uiName}" ./dist/client/static/js`).toString();
-    const uiShortNameWithinGui = execSync(`grep -rl "${uiShortName}" ./dist/client/static/js`).toString();
-    const uiSentenceStartNameWithinGui = execSync(
-      `grep -rl "${uiSentenceStartName}" ./dist/client/static/js`
-    ).toString();
+    const uiNameWithinGui = execSync(`grep -rl "${uiName}" ./dist/client`).toString();
+    const uiShortNameWithinGui = execSync(`grep -rl "${uiShortName}" ./dist/client`).toString();
+    const uiSentenceStartNameWithinGui = execSync(`grep -rl "${uiSentenceStartName}" ./dist/client`).toString();
 
     expect(trimSortDistList(uiNameWithinTemplates)).toMatchSnapshot('ui name within templates');
     expect(trimSortDistList(uiNameWithinGui)).toMatchSnapshot('ui name within GUI');

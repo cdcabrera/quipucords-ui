@@ -1,15 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Application branding should have a specific branding file output: ui name within GUI 1`] = `
-Array [
+[
   "",
-  "./dist/client/static/js/2*chunk.js",
-  "./dist/client/static/js/main*chunk.js",
+  "./dist/client/app*js",
+  "./dist/client/assets/images/title.svg",
+  "./dist/client/docs/install.html",
+  "./dist/client/docs/use.html",
+  "./dist/client/images/e78a57c31c986962302a.svg",
 ]
 `;
 
 exports[`Application branding should have a specific branding file output: ui name within templates 1`] = `
-Array [
+[
   "",
   "./dist/templates/client/index.html",
   "./dist/templates/registration/logged_out.html",
@@ -18,17 +21,20 @@ Array [
 `;
 
 exports[`Application branding should have a specific branding file output: ui sentence name within GUI 1`] = `
-Array [
+[
   "",
-  "./dist/client/static/js/2*chunk.js",
-  "./dist/client/static/js/main*chunk.js",
+  "./dist/client/app*js",
+  "./dist/client/docs/use.html",
 ]
 `;
 
 exports[`Application branding should have a specific branding file output: ui short name within GUI 1`] = `
-Array [
+[
   "",
-  "./dist/client/static/js/2*chunk.js",
-  "./dist/client/static/js/main*chunk.js",
+  "./dist/client/app*js",
+  "./dist/client/assets/images/title.svg",
+  "./dist/client/docs/install.html",
+  "./dist/client/docs/use.html",
+  "./dist/client/images/e78a57c31c986962302a.svg",
 ]
 `;
