@@ -13,7 +13,7 @@
     "url": "https://github.com/quipucords/quipucords-ui/issues"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "browserslist": {
     "production": [
@@ -107,7 +107,7 @@
     "@babel/core": "7.21.4",
     "@babel/eslint-parser": "^7.21.3",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
-    "changelog-light": "^0.3.0",
+    "changelog-light": "^0.4.1",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
     "dotenv-webpack": "^8.0.1",
