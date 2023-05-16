@@ -1,7 +1,6 @@
 const path = require('path');
 const dotenv = require('dotenv');
 const { expand: dotenvExpand } = require('dotenv-expand');
-const Dotenv = require('dotenv-webpack');
 
 /**
  * Setup a webpack dotenv plugin config.
@@ -19,7 +18,15 @@ const setupWebpackDotenvFile = filePath => {
     settings.path = filePath;
   }
 
-  return new Dotenv(settings);
+  try {
+    // eslint-disable-next-line global-require
+    const DotEnv = require('dotenv-webpack');
+    return new DotEnv(settings);
+  } catch (e) {
+    console.warning(`Failed loading dotenv-webpack package: ${e.message}`);
+  }
+
+  return undefined;
 };
 
 /**
