@@ -342,51 +342,51 @@ exports[`PageLayout Component should render a non-connected component branded: n
 
 exports[`PageLayout Component should render a non-connected component unauthorized: non-connected unauthorized 1`] = `
 <PageLayout
-  history={Object {}}
+  history={{}}
   isFullPage={false}
-  location={Object {}}
+  location={{}}
   logoutUser={[Function]}
   menu={
-    Array [
-      Object {
+    [
+      {
         "element": <Context.Provider
           value={
-            Object {
-              "initialQuery": Object {
+            {
+              "initialQuery": {
                 "ordering": "name",
                 "page": 1,
                 "page_size": 10,
               },
-              "toolbar": Object {
-                "filterFields": Array [
-                  Object {
+              "toolbar": {
+                "filterFields": [
+                  {
                     "component": [Function],
                     "selected": true,
                     "title": [Function],
                     "value": "search_by_name",
                   },
-                  Object {
+                  {
                     "component": [Function],
                     "title": [Function],
                     "value": "search_credentials_by_name",
                   },
-                  Object {
+                  {
                     "component": [Function],
                     "title": [Function],
                     "value": "source_type",
                   },
                 ],
-                "sortFields": Array [
-                  Object {
+                "sortFields": [
+                  {
                     "selected": true,
                     "title": [Function],
                     "value": "name",
                   },
-                  Object {
+                  {
                     "title": [Function],
                     "value": "source_type",
                   },
-                  Object {
+                  {
                     "isDefaultDescending": true,
                     "title": [Function],
                     "value": "most_recent_connect_scan__start_time",
@@ -416,37 +416,37 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
         "redirect": true,
         "title": "Sources",
       },
-      Object {
+      {
         "element": <Context.Provider
           value={
-            Object {
-              "initialQuery": Object {
+            {
+              "initialQuery": {
                 "ordering": "name",
                 "page": 1,
                 "page_size": 10,
                 "scan_type": "inspect",
               },
-              "toolbar": Object {
-                "filterFields": Array [
-                  Object {
+              "toolbar": {
+                "filterFields": [
+                  {
                     "component": [Function],
                     "selected": true,
                     "title": [Function],
                     "value": "search_by_name",
                   },
-                  Object {
+                  {
                     "component": [Function],
                     "title": [Function],
                     "value": "search_sources_by_name",
                   },
                 ],
-                "sortFields": Array [
-                  Object {
+                "sortFields": [
+                  {
                     "selected": true,
                     "title": [Function],
                     "value": "name",
                   },
-                  Object {
+                  {
                     "isDefaultDescending": true,
                     "title": [Function],
                     "value": "most_recent_connect_scan__start_time",
@@ -472,36 +472,36 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
         "path": "/scans",
         "title": "Scans",
       },
-      Object {
+      {
         "element": <Context.Provider
           value={
-            Object {
-              "initialQuery": Object {
+            {
+              "initialQuery": {
                 "ordering": "name",
                 "page": 1,
                 "page_size": 10,
               },
-              "toolbar": Object {
-                "filterFields": Array [
-                  Object {
+              "toolbar": {
+                "filterFields": [
+                  {
                     "component": [Function],
                     "selected": true,
                     "title": [Function],
                     "value": "search_by_name",
                   },
-                  Object {
+                  {
                     "component": [Function],
                     "title": [Function],
                     "value": "cred_type",
                   },
                 ],
-                "sortFields": Array [
-                  Object {
+                "sortFields": [
+                  {
                     "selected": true,
                     "title": [Function],
                     "value": "name",
                   },
-                  Object {
+                  {
                     "title": [Function],
                     "value": "cred_type",
                   },
@@ -530,7 +530,7 @@ exports[`PageLayout Component should render a non-connected component unauthoriz
     ]
   }
   session={
-    Object {
+    {
       "authorized": false,
       "username": "lorem",
     }

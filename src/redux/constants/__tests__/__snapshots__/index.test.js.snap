@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ReduxTypes should have specific type properties: all redux types 1`] = `
-Object {
-  "aboutModalTypes": Object {
+{
+  "aboutModalTypes": {
     "ABOUT_MODAL_HIDE": "ABOUT_MODAL_HIDE",
     "ABOUT_MODAL_SHOW": "ABOUT_MODAL_SHOW",
   },
-  "confirmationModalTypes": Object {
+  "confirmationModalTypes": {
     "CONFIRMATION_MODAL_HIDE": "CONFIRMATION_MODAL_HIDE",
     "CONFIRMATION_MODAL_SHOW": "CONFIRMATION_MODAL_SHOW",
   },
-  "credentialsTypes": Object {
+  "credentialsTypes": {
     "ADD_CREDENTIAL": "ADD_CREDENTIAL",
     "CREATE_CREDENTIAL_SHOW": "CREATE_CREDENTIAL_SHOW",
     "DELETE_CREDENTIAL": "DELETE_CREDENTIAL",
@@ -25,16 +25,16 @@ Object {
     "UPDATE_CREDENTIALS": "UPDATE_CREDENTIALS",
     "UPDATE_CREDENTIAL_HIDE": "UPDATE_CREDENTIAL_HIDE",
   },
-  "default": Object {
-    "aboutModal": Object {
+  "default": {
+    "aboutModal": {
       "ABOUT_MODAL_HIDE": "ABOUT_MODAL_HIDE",
       "ABOUT_MODAL_SHOW": "ABOUT_MODAL_SHOW",
     },
-    "confirmationModal": Object {
+    "confirmationModal": {
       "CONFIRMATION_MODAL_HIDE": "CONFIRMATION_MODAL_HIDE",
       "CONFIRMATION_MODAL_SHOW": "CONFIRMATION_MODAL_SHOW",
     },
-    "credentials": Object {
+    "credentials": {
       "ADD_CREDENTIAL": "ADD_CREDENTIAL",
       "CREATE_CREDENTIAL_SHOW": "CREATE_CREDENTIAL_SHOW",
       "DELETE_CREDENTIAL": "DELETE_CREDENTIAL",
@@ -49,14 +49,14 @@ Object {
       "UPDATE_CREDENTIALS": "UPDATE_CREDENTIALS",
       "UPDATE_CREDENTIAL_HIDE": "UPDATE_CREDENTIAL_HIDE",
     },
-    "facts": Object {
+    "facts": {
       "ADD_FACTS": "ADD_FACTS",
     },
-    "reports": Object {
+    "reports": {
       "GET_MERGE_REPORT": "GET_MERGE_REPORT",
       "GET_REPORTS_DOWNLOAD": "GET_REPORTS_DOWNLOAD",
     },
-    "scans": Object {
+    "scans": {
       "ADD_SCAN": "ADD_SCAN",
       "ADD_START_SCAN": "ADD_START_SCAN",
       "CANCEL_SCAN": "CANCEL_SCAN",
@@ -78,7 +78,7 @@ Object {
       "START_SCAN": "START_SCAN",
       "UPDATE_SCANS": "UPDATE_SCANS",
     },
-    "sources": Object {
+    "sources": {
       "ADD_SOURCE": "ADD_SOURCE",
       "CREATE_SOURCE_SHOW": "CREATE_SOURCE_SHOW",
       "DELETE_SOURCE": "DELETE_SOURCE",
@@ -97,22 +97,22 @@ Object {
       "VALID_SOURCE_WIZARD_STEPONE": "VALID_SOURCE_WIZARD_STEPONE",
       "VALID_SOURCE_WIZARD_STEPTWO": "VALID_SOURCE_WIZARD_STEPTWO",
     },
-    "status": Object {
+    "status": {
       "STATUS_INFO": "STATUS_INFO",
     },
-    "toastNotifications": Object {
+    "toastNotifications": {
       "TOAST_ADD": "TOAST_ADD",
       "TOAST_PAUSE": "TOAST_PAUSE",
       "TOAST_REMOVE": "TOAST_REMOVE",
       "TOAST_RESUME": "TOAST_RESUME",
     },
-    "user": Object {
+    "user": {
       "USER_AUTH": "USER_AUTH",
       "USER_INFO": "USER_INFO",
       "USER_LOCALE": "USER_LOCALE",
       "USER_LOGOUT": "USER_LOGOUT",
     },
-    "view": Object {
+    "view": {
       "CREDENTIALS_VIEW": "CREDENTIALS_VIEW",
       "RESET_PAGE": "RESET_PAGE",
       "SCANS_VIEW": "SCANS_VIEW",
@@ -122,19 +122,19 @@ Object {
       "UPDATE_VIEW": "UPDATE_VIEW",
     },
   },
-  "factsTypes": Object {
+  "factsTypes": {
     "ADD_FACTS": "ADD_FACTS",
   },
-  "reduxTypes": Object {
-    "aboutModal": Object {
+  "reduxTypes": {
+    "aboutModal": {
       "ABOUT_MODAL_HIDE": "ABOUT_MODAL_HIDE",
       "ABOUT_MODAL_SHOW": "ABOUT_MODAL_SHOW",
     },
-    "confirmationModal": Object {
+    "confirmationModal": {
       "CONFIRMATION_MODAL_HIDE": "CONFIRMATION_MODAL_HIDE",
       "CONFIRMATION_MODAL_SHOW": "CONFIRMATION_MODAL_SHOW",
     },
-    "credentials": Object {
+    "credentials": {
       "ADD_CREDENTIAL": "ADD_CREDENTIAL",
       "CREATE_CREDENTIAL_SHOW": "CREATE_CREDENTIAL_SHOW",
       "DELETE_CREDENTIAL": "DELETE_CREDENTIAL",
@@ -149,14 +149,14 @@ Object {
       "UPDATE_CREDENTIALS": "UPDATE_CREDENTIALS",
       "UPDATE_CREDENTIAL_HIDE": "UPDATE_CREDENTIAL_HIDE",
     },
-    "facts": Object {
+    "facts": {
       "ADD_FACTS": "ADD_FACTS",
     },
-    "reports": Object {
+    "reports": {
       "GET_MERGE_REPORT": "GET_MERGE_REPORT",
       "GET_REPORTS_DOWNLOAD": "GET_REPORTS_DOWNLOAD",
     },
-    "scans": Object {
+    "scans": {
       "ADD_SCAN": "ADD_SCAN",
       "ADD_START_SCAN": "ADD_START_SCAN",
       "CANCEL_SCAN": "CANCEL_SCAN",
@@ -178,7 +178,7 @@ Object {
       "START_SCAN": "START_SCAN",
       "UPDATE_SCANS": "UPDATE_SCANS",
     },
-    "sources": Object {
+    "sources": {
       "ADD_SOURCE": "ADD_SOURCE",
       "CREATE_SOURCE_SHOW": "CREATE_SOURCE_SHOW",
       "DELETE_SOURCE": "DELETE_SOURCE",
@@ -197,22 +197,22 @@ Object {
       "VALID_SOURCE_WIZARD_STEPONE": "VALID_SOURCE_WIZARD_STEPONE",
       "VALID_SOURCE_WIZARD_STEPTWO": "VALID_SOURCE_WIZARD_STEPTWO",
     },
-    "status": Object {
+    "status": {
       "STATUS_INFO": "STATUS_INFO",
     },
-    "toastNotifications": Object {
+    "toastNotifications": {
       "TOAST_ADD": "TOAST_ADD",
       "TOAST_PAUSE": "TOAST_PAUSE",
       "TOAST_REMOVE": "TOAST_REMOVE",
       "TOAST_RESUME": "TOAST_RESUME",
     },
-    "user": Object {
+    "user": {
       "USER_AUTH": "USER_AUTH",
       "USER_INFO": "USER_INFO",
       "USER_LOCALE": "USER_LOCALE",
       "USER_LOGOUT": "USER_LOGOUT",
     },
-    "view": Object {
+    "view": {
       "CREDENTIALS_VIEW": "CREDENTIALS_VIEW",
       "RESET_PAGE": "RESET_PAGE",
       "SCANS_VIEW": "SCANS_VIEW",
@@ -222,11 +222,11 @@ Object {
       "UPDATE_VIEW": "UPDATE_VIEW",
     },
   },
-  "reportsTypes": Object {
+  "reportsTypes": {
     "GET_MERGE_REPORT": "GET_MERGE_REPORT",
     "GET_REPORTS_DOWNLOAD": "GET_REPORTS_DOWNLOAD",
   },
-  "scansTypes": Object {
+  "scansTypes": {
     "ADD_SCAN": "ADD_SCAN",
     "ADD_START_SCAN": "ADD_START_SCAN",
     "CANCEL_SCAN": "CANCEL_SCAN",
@@ -248,7 +248,7 @@ Object {
     "START_SCAN": "START_SCAN",
     "UPDATE_SCANS": "UPDATE_SCANS",
   },
-  "sourcesTypes": Object {
+  "sourcesTypes": {
     "ADD_SOURCE": "ADD_SOURCE",
     "CREATE_SOURCE_SHOW": "CREATE_SOURCE_SHOW",
     "DELETE_SOURCE": "DELETE_SOURCE",
@@ -267,22 +267,22 @@ Object {
     "VALID_SOURCE_WIZARD_STEPONE": "VALID_SOURCE_WIZARD_STEPONE",
     "VALID_SOURCE_WIZARD_STEPTWO": "VALID_SOURCE_WIZARD_STEPTWO",
   },
-  "statusTypes": Object {
+  "statusTypes": {
     "STATUS_INFO": "STATUS_INFO",
   },
-  "toastNotificationTypes": Object {
+  "toastNotificationTypes": {
     "TOAST_ADD": "TOAST_ADD",
     "TOAST_PAUSE": "TOAST_PAUSE",
     "TOAST_REMOVE": "TOAST_REMOVE",
     "TOAST_RESUME": "TOAST_RESUME",
   },
-  "userTypes": Object {
+  "userTypes": {
     "USER_AUTH": "USER_AUTH",
     "USER_INFO": "USER_INFO",
     "USER_LOCALE": "USER_LOCALE",
     "USER_LOGOUT": "USER_LOGOUT",
   },
-  "viewTypes": Object {
+  "viewTypes": {
     "CREDENTIALS_VIEW": "CREDENTIALS_VIEW",
     "RESET_PAGE": "RESET_PAGE",
     "SCANS_VIEW": "SCANS_VIEW",
@@ -295,16 +295,16 @@ Object {
 `;
 
 exports[`ReduxTypes should have specific type properties: specific types 1`] = `
-Object {
-  "aboutModal": Object {
+{
+  "aboutModal": {
     "ABOUT_MODAL_HIDE": "ABOUT_MODAL_HIDE",
     "ABOUT_MODAL_SHOW": "ABOUT_MODAL_SHOW",
   },
-  "confirmationModal": Object {
+  "confirmationModal": {
     "CONFIRMATION_MODAL_HIDE": "CONFIRMATION_MODAL_HIDE",
     "CONFIRMATION_MODAL_SHOW": "CONFIRMATION_MODAL_SHOW",
   },
-  "credentials": Object {
+  "credentials": {
     "ADD_CREDENTIAL": "ADD_CREDENTIAL",
     "CREATE_CREDENTIAL_SHOW": "CREATE_CREDENTIAL_SHOW",
     "DELETE_CREDENTIAL": "DELETE_CREDENTIAL",
@@ -319,14 +319,14 @@ Object {
     "UPDATE_CREDENTIALS": "UPDATE_CREDENTIALS",
     "UPDATE_CREDENTIAL_HIDE": "UPDATE_CREDENTIAL_HIDE",
   },
-  "facts": Object {
+  "facts": {
     "ADD_FACTS": "ADD_FACTS",
   },
-  "reports": Object {
+  "reports": {
     "GET_MERGE_REPORT": "GET_MERGE_REPORT",
     "GET_REPORTS_DOWNLOAD": "GET_REPORTS_DOWNLOAD",
   },
-  "scans": Object {
+  "scans": {
     "ADD_SCAN": "ADD_SCAN",
     "ADD_START_SCAN": "ADD_START_SCAN",
     "CANCEL_SCAN": "CANCEL_SCAN",
@@ -348,7 +348,7 @@ Object {
     "START_SCAN": "START_SCAN",
     "UPDATE_SCANS": "UPDATE_SCANS",
   },
-  "sources": Object {
+  "sources": {
     "ADD_SOURCE": "ADD_SOURCE",
     "CREATE_SOURCE_SHOW": "CREATE_SOURCE_SHOW",
     "DELETE_SOURCE": "DELETE_SOURCE",
@@ -367,22 +367,22 @@ Object {
     "VALID_SOURCE_WIZARD_STEPONE": "VALID_SOURCE_WIZARD_STEPONE",
     "VALID_SOURCE_WIZARD_STEPTWO": "VALID_SOURCE_WIZARD_STEPTWO",
   },
-  "status": Object {
+  "status": {
     "STATUS_INFO": "STATUS_INFO",
   },
-  "toastNotifications": Object {
+  "toastNotifications": {
     "TOAST_ADD": "TOAST_ADD",
     "TOAST_PAUSE": "TOAST_PAUSE",
     "TOAST_REMOVE": "TOAST_REMOVE",
     "TOAST_RESUME": "TOAST_RESUME",
   },
-  "user": Object {
+  "user": {
     "USER_AUTH": "USER_AUTH",
     "USER_INFO": "USER_INFO",
     "USER_LOCALE": "USER_LOCALE",
     "USER_LOGOUT": "USER_LOGOUT",
   },
-  "view": Object {
+  "view": {
     "CREDENTIALS_VIEW": "CREDENTIALS_VIEW",
     "RESET_PAGE": "RESET_PAGE",
     "SCANS_VIEW": "SCANS_VIEW",
