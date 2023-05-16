@@ -116,10 +116,6 @@ const useOnDelete = ({
         },
         [<strong />]
       ),
-      body:
-        (updatedScans.length > 1 &&
-          updatedScans.map(({ [apiTypes.API_RESPONSE_SCAN_NAME]: name }) => name).join(', ')) ||
-        undefined,
       confirmButtonText: t('form-dialog.label', {
         context: ['delete']
       }),

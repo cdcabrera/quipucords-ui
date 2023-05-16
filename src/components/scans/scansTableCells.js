@@ -347,6 +347,22 @@ const actionsCell = ({
     }
   }
 
+  menuItems.push({
+    dropdownMenuItem: { title: t('table.label', { context: 'delete' }) },
+    overflowMenuItem: (
+      <Tooltip content={t('table.label', { context: 'delete' })}>
+        <Button
+          className="quipucords-view__row-button"
+          onClick={() => onDelete(item)}
+          aria-label={t('table.label', { context: 'delete' })}
+          variant={ButtonVariant.plain}
+        >
+          <TrashIcon />
+        </Button>
+      </Tooltip>
+    )
+  });
+
   if (mostRecentReportId) {
     menuItems.push({
       dropdownMenuItem: { title: t('table.label', { context: ['action', 'scan', 'download'] }), value: 'download' },
@@ -365,18 +381,6 @@ const actionsCell = ({
       <OverflowMenuContent>
         <OverflowMenuGroup groupType="button">
           {menuItems.map(({ overflowMenuItem }) => overflowMenuItem)}
-          <OverflowMenuItem key="tooltip-delete">
-            <Tooltip content={t('table.label', { context: 'delete' })}>
-              <Button
-                className="quipucords-view__row-button"
-                onClick={() => onDelete(item)}
-                aria-label={t('table.label', { context: 'delete' })}
-                variant={ButtonVariant.plain}
-              >
-                <TrashIcon />
-              </Button>
-            </Tooltip>
-          </OverflowMenuItem>
         </OverflowMenuGroup>
       </OverflowMenuContent>
       <OverflowMenuControl>
