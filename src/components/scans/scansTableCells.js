@@ -348,7 +348,7 @@ const actionsCell = ({
   }
 
   menuItems.push({
-    dropdownMenuItem: { title: t('table.label', { context: 'delete' }) },
+    dropdownMenuItem: { title: t('table.label', { context: 'delete' }), value: 'delete' },
     overflowMenuItem: (
       <Tooltip content={t('table.label', { context: 'delete' })}>
         <Button
