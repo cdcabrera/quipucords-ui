@@ -62,7 +62,7 @@
     "test:docs": "htmlhint ./public/docs; eslint --ext=json ./public/locales",
     "test:integration": "jest ./tests",
     "test:integration-dev": "jest --roots=./tests --watch",
-    "test:lint": "eslint --ext=json --ext=js --ext=jsx ./src ./public/locales",
+    "test:lint": "eslint --ext=json --ext=js --ext=jsx ./src",
     "test:local": "jest --roots=./src --watch"
   },
   "dependencies": {
@@ -94,7 +94,6 @@
     "react-redux": "^8.0.2",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
     "react-use": "^17.4.0",
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
@@ -106,11 +105,11 @@
   "devDependencies": {
     "@babel/core": "7.21.4",
     "@babel/eslint-parser": "^7.21.3",
+    "@babel/preset-react": "^7.18.6",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "changelog-light": "^0.4.1",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",
-    "dotenv-webpack": "^8.0.1",
     "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.2",
     "eslint": "8.38.0",
