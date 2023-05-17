@@ -87,6 +87,7 @@ const setupDotenvFilesForEnv = ({
   setupDotenvFile(path.resolve(relativePath, '.env'));
 
   if (setBuildDefaults) {
+    // Core Build
     const DEV_MODE = process.env[`${dotenvNamePrefix}_DEV_MODE`] || undefined;
     const DIST_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_DIST_DIR`] || 'dist');
     const HOST = process.env[`${dotenvNamePrefix}_HOST`] || 'localhost';
@@ -95,6 +96,24 @@ const setupDotenvFilesForEnv = ({
     const PUBLIC_PATH = process.env[`${dotenvNamePrefix}_PUBLIC_PATH`] || '/';
     const SRC_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_SRC_DIR`] || 'src');
     const STATIC_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_STATIC_DIR`] || 'public');
+
+    // Build Extras - SVG background images
+    const BG_IMAGES_DIR =
+      process.env[`${dotenvNamePrefix}_BG_IMAGES_DIR`] ||
+      process.env.BG_IMAGES_DIR ||
+      path.resolve(relativePath, 'bgimages');
+
+    // Build Extras - favicon
+    const FAVICON =
+      process.env[`${dotenvNamePrefix}_FAVICON`] || process.env.FAVICON || path.resolve(STATIC_DIR, 'favicon.ico');
+
+    // Build Extras - Display name, HTML title
+    const UI_NAME = process.env[`${dotenvNamePrefix}_UI_NAME`] || process.env.UI_NAME || undefined;
+
+    /**
+     * Note: Consider adding dotenv parameters to your dotenv file instead of adding additional
+     * build dotenv parameters here.
+     */
 
     if (!process.env.NODE_ENV) {
       process.env.NODE_ENV = env;
@@ -110,6 +129,9 @@ const setupDotenvFilesForEnv = ({
     process.env[`_${dotenvNamePrefix}_PORT`] = PORT;
     process.env[`_${dotenvNamePrefix}_OUTPUT_ONLY`] = OUTPUT_ONLY;
     process.env[`_${dotenvNamePrefix}_DEV_MODE`] = DEV_MODE;
+    process.env[`_${dotenvNamePrefix}_BG_IMAGES_DIR`] = BG_IMAGES_DIR;
+    process.env[`_${dotenvNamePrefix}_FAVICON`] = FAVICON;
+    process.env[`_${dotenvNamePrefix}_UI_NAME`] = UI_NAME;
   }
 
   return process.env;
