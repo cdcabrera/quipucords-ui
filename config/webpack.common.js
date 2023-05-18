@@ -1,9 +1,10 @@
 const path = require('path');
-// const webpack = require('webpack');
+const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./build.dotenv');
 
 const {
@@ -60,62 +61,43 @@ module.exports = env => ({
         ]
       },
       {
-        test: /\.(svg|ttf|eot|woff|woff2)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              // Limit at 50k. larger files emitted into separate files
-              limit: 5000,
-              outputPath: 'fonts',
-              name: '[name].[ext]'
-            }
-          }
-        ]
+        test: /\.(ttf|eot|woff|woff2)$/,
+        type: 'asset/inline'
       },
       {
-        test: /\.svg$/,
-        // only process SVG modules with this loader if they live under a 'bgimages' directory
-        // this is primarily useful when applying a CSS background using an SVG
-        include: input => input.indexOf('background-filter') > -1,
-        use: {
-          loader: 'svg-url-loader',
-          options: {
-            limit: 10000
-          }
-        }
-      },
-      {
-        test: /\.svg$/,
-        // only process SVG modules with this loader when they don't live under a 'bgimages',
-        // 'fonts', or 'pficon' directory, those are handled with other loaders
-        include: input =>
-          input.indexOf('fonts') === -1 && input.indexOf('background-filter') === -1 && input.indexOf('pficon') === -1,
-        use: {
-          loader: 'raw-loader',
-          options: {}
+        test: /\.svg$/i,
+        type: 'asset/inline',
+        generator: {
+          dataUrl: content => svgToMiniDataURI(content.toString())
         }
       },
       {
         test: /\.(jpg|jpeg|png|gif)$/i,
-        include: [SRC_DIR],
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 5000,
-              outputPath: 'images',
-              name: '[name].[ext]'
-            }
-          }
-        ]
+        type: 'asset/inline'
       }
     ]
   },
   plugins: [
-    // new webpack.ProgressPlugin(),
     ...setupWebpackDotenvFilesForEnv({
       directory: RELATIVE_DIRNAME
+    }),
+    new CopyPlugin({
+      patterns: (() => {
+        try {
+          return (
+            fs
+              .readdirSync(STATIC_DIR)
+              ?.filter(fileDir => !/^(\.|index)/.test(fileDir))
+              ?.map(fileDir => ({
+                from: path.join(STATIC_DIR, fileDir),
+                to: path.join(DIST_DIR, fileDir)
+              })) || []
+          );
+        } catch (e) {
+          console.error(`webpack copy plugin error: ${e.message}`);
+          return [];
+        }
+      })()
     }),
     new HtmlWebpackPlugin({
       template: path.join(STATIC_DIR, 'index.html'),
@@ -131,45 +113,6 @@ module.exports = env => ({
     new MiniCssExtractPlugin({
       chunkFilename: '[name].css',
       filename: '[id].css'
-    }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.join(SRC_DIR, 'images'),
-          to: path.join(DIST_DIR, 'images'),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'locales'),
-          to: path.join(DIST_DIR, 'locales'),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'images'),
-          to: path.join(DIST_DIR, 'images'),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'favicon.ico'),
-          to: path.join(DIST_DIR),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'favicon.png'),
-          to: path.join(DIST_DIR),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'manifest.json'),
-          to: path.join(DIST_DIR),
-          noErrorOnMissing: true
-        },
-        {
-          from: path.join(STATIC_DIR, 'robots.txt'),
-          to: path.join(DIST_DIR),
-          noErrorOnMissing: true
-        }
-      ]
     })
   ],
   resolve: {
