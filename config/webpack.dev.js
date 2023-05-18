@@ -6,6 +6,7 @@ const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./bui
 const {
   _BUILD_DIST_DIR: DIST_DIR,
   _BUILD_HOST: HOST,
+  _BUILD_OPEN_PATH: OPEN_PATH,
   _BUILD_RELATIVE_DIRNAME: RELATIVE_DIRNAME,
   _BUILD_PORT: PORT,
   _BUILD_SRC: SRC_DIR
@@ -36,7 +37,7 @@ module.exports = merge(
       compress: true,
       historyApiFallback: true,
       hot: true,
-      open: true,
+      open: [OPEN_PATH],
       devMiddleware: {
         stats: 'errors-only',
         writeToDisk: true

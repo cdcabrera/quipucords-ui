@@ -88,14 +88,24 @@ const setupDotenvFilesForEnv = ({
 
   if (setBuildDefaults) {
     // Core Build
-    const DEV_MODE = process.env[`${dotenvNamePrefix}_DEV_MODE`] || undefined;
-    const DIST_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_DIST_DIR`] || 'dist');
-    const HOST = process.env[`${dotenvNamePrefix}_HOST`] || 'localhost';
+    const DEV_MODE = process.env[`${dotenvNamePrefix}_DEV_MODE`] || process.env.DEV_MODE || undefined;
+    const DIST_DIR = path.resolve(
+      relativePath,
+      process.env[`${dotenvNamePrefix}_DIST_DIR`] || process.env.DIST_DIR || 'dist'
+    );
+    const HOST = process.env[`${dotenvNamePrefix}_HOST`] || process.env.HOST || 'localhost';
     const OUTPUT_ONLY = process.env[`_${dotenvNamePrefix}_OUTPUT_ONLY`] === 'true';
-    const PORT = process.env[`${dotenvNamePrefix}_PORT`] || '3000';
-    const PUBLIC_PATH = process.env[`${dotenvNamePrefix}_PUBLIC_PATH`] || '/';
-    const SRC_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_SRC_DIR`] || 'src');
-    const STATIC_DIR = path.resolve(relativePath, process.env[`${dotenvNamePrefix}_STATIC_DIR`] || 'public');
+    const OPEN_PATH = process.env[`${dotenvNamePrefix}_OPEN_PATH`] || process.env.OPEN_PATH || '/';
+    const PORT = process.env[`${dotenvNamePrefix}_PORT`] || process.env.PORT || '3000';
+    const PUBLIC_PATH = process.env[`${dotenvNamePrefix}_PUBLIC_PATH`] || process.env.PUBLIC_PATH || '/';
+    const SRC_DIR = path.resolve(
+      relativePath,
+      process.env[`${dotenvNamePrefix}_SRC_DIR`] || process.env.SRC_DIR || 'src'
+    );
+    const STATIC_DIR = path.resolve(
+      relativePath,
+      process.env[`${dotenvNamePrefix}_STATIC_DIR`] || process.env.STATIC_DIR || 'public'
+    );
 
     // Build Extras - SVG background images
     const BG_IMAGES_DIR =
@@ -122,6 +132,7 @@ const setupDotenvFilesForEnv = ({
     process.env[`_${dotenvNamePrefix}_ENV`] = process.env.NODE_ENV;
     process.env[`_${dotenvNamePrefix}_STATIC_DIR`] = STATIC_DIR;
     process.env[`_${dotenvNamePrefix}_RELATIVE_DIRNAME`] = relativePath;
+    process.env[`_${dotenvNamePrefix}_OPEN_PATH`] = OPEN_PATH;
     process.env[`_${dotenvNamePrefix}_PUBLIC_PATH`] = PUBLIC_PATH;
     process.env[`_${dotenvNamePrefix}_SRC_DIR`] = SRC_DIR;
     process.env[`_${dotenvNamePrefix}_DIST_DIR`] = DIST_DIR;
