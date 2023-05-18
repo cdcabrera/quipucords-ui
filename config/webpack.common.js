@@ -1,4 +1,5 @@
 const path = require('path');
+// const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
@@ -32,7 +33,8 @@ module.exports = env => ({
   output: {
     filename: '[name].bundle.js',
     path: DIST_DIR,
-    publicPath: PUBLIC_PATH
+    publicPath: PUBLIC_PATH,
+    clean: true
   },
   module: {
     rules: [
@@ -71,6 +73,7 @@ module.exports = env => ({
     ]
   },
   plugins: [
+    // new webpack.ProgressPlugin(),
     ...setupWebpackDotenvFilesForEnv({
       directory: RELATIVE_DIRNAME
     }),

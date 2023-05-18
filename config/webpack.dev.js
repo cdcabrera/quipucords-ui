@@ -1,5 +1,6 @@
-const path = require('path');
+// const path = require('path');
 const { merge } = require('webpack-merge');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./build.dotenv');
 
 const {
@@ -12,12 +13,16 @@ const {
 
 const webpackCommon = require('./webpack.common');
 
-module.exports = merge(
+const devWebpack = merge(
   {
     plugins: [
       ...setupWebpackDotenvFilesForEnv({
         directory: RELATIVE_DIRNAME,
         env: 'development'
+      }),
+      new ESLintPlugin({
+        context: SRC_DIR,
+        failOnError: false
       })
     ]
   },
@@ -33,15 +38,24 @@ module.exports = merge(
       hot: true,
       open: true,
       devMiddleware: {
-        stats: 'errors-only'
+        stats: 'errors-only',
+        writeToDisk: true
       },
       client: {
-        overlay: false
+        overlay: false,
+        progress: false
       },
       static: {
         directory: DIST_DIR
+      },
+      watchFiles: {
+        paths: ['src/**/*', 'public/**/*']
       }
     },
     module: {}
   }
 );
+
+console.log(devWebpack);
+
+module.exports = devWebpack;
