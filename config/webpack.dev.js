@@ -13,7 +13,7 @@ const {
 
 const webpackCommon = require('./webpack.common');
 
-const devWebpack = merge(
+module.exports = merge(
   {
     plugins: [
       ...setupWebpackDotenvFilesForEnv({
@@ -55,7 +55,3 @@ const devWebpack = merge(
     module: {}
   }
 );
-
-console.log(devWebpack);
-
-module.exports = devWebpack;
