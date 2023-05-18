@@ -60,11 +60,51 @@ module.exports = env => ({
         ]
       },
       {
-        test: /\.(woff(2)?|ttf|jpg|png|eot|gif|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(svg|ttf|eot|woff|woff2)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
+              // Limit at 50k. larger files emitted into separate files
+              limit: 5000,
+              outputPath: 'fonts',
+              name: '[name].[ext]'
+            }
+          }
+        ]
+      },
+      {
+        test: /\.svg$/,
+        // only process SVG modules with this loader if they live under a 'bgimages' directory
+        // this is primarily useful when applying a CSS background using an SVG
+        include: input => input.indexOf('background-filter') > -1,
+        use: {
+          loader: 'svg-url-loader',
+          options: {
+            limit: 10000
+          }
+        }
+      },
+      {
+        test: /\.svg$/,
+        // only process SVG modules with this loader when they don't live under a 'bgimages',
+        // 'fonts', or 'pficon' directory, those are handled with other loaders
+        include: input =>
+          input.indexOf('fonts') === -1 && input.indexOf('background-filter') === -1 && input.indexOf('pficon') === -1,
+        use: {
+          loader: 'raw-loader',
+          options: {}
+        }
+      },
+      {
+        test: /\.(jpg|jpeg|png|gif)$/i,
+        include: [SRC_DIR],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 5000,
+              outputPath: 'images',
               name: '[name].[ext]'
             }
           }
