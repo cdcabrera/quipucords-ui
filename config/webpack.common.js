@@ -40,7 +40,7 @@ module.exports = env => ({
   module: {
     rules: [
       {
-        test: /\.(tsx|ts|jsx|js)?$/,
+        test: /\.(jsx|js)?$/,
         include: [SRC_DIR],
         use: [
           {
@@ -49,31 +49,83 @@ module.exports = env => ({
         ]
       },
       {
-        test: /\.s?[ac]ss$/,
+        test: /\.(svg|ttf|eot|woff|woff2)$/,
+        // only process modules with this loader
+        // if they live under a 'fonts' or 'pficon' directory
+        include: [
+          SRC_DIR,
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/patternfly/dist/fonts'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/react-core/dist/styles/assets/fonts'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/react-core/dist/styles/assets/pficon'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/patternfly/assets/fonts'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/patternfly/assets/pficon')
+        ],
+        use: {
+          loader: 'file-loader',
+          options: {
+            // Limit at 50k. larger files emited into separate files
+            limit: 5000,
+            outputPath: 'fonts',
+            name: '[name].[ext]'
+          }
+        }
+      },
+      {
+        test: /\.svg$/,
+        include: input => input.indexOf('background-filter.svg') > 1,
         use: [
-          MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'sass-loader'
+            loader: 'url-loader',
+            options: {
+              limit: 5000,
+              outputPath: 'images',
+              name: '[name].[ext]'
+            }
           }
         ]
       },
       {
-        test: /\.(ttf|eot|woff|woff2)$/,
-        type: 'asset/inline'
-      },
-      {
-        test: /\.svg$/i,
-        type: 'asset/inline',
-        generator: {
-          dataUrl: content => svgToMiniDataURI(content.toString())
+        test: /\.svg$/,
+        // only process SVG modules with this loader when they don't live under a 'bgimages',
+        // 'fonts', or 'pficon' directory, those are handled with other loaders
+        include: input =>
+          input.indexOf('fonts') === -1 && input.indexOf('background-filter') === -1 && input.indexOf('pficon') === -1,
+        use: {
+          loader: 'raw-loader',
+          options: {}
         }
       },
       {
         test: /\.(jpg|jpeg|png|gif)$/i,
-        type: 'asset/inline'
+        include: [
+          SRC_DIR,
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/patternfly'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/patternfly/assets/images'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/react-styles/css/assets/images'),
+          path.resolve(RELATIVE_DIRNAME, 'node_modules/@patternfly/react-core/dist/styles/assets/images'),
+          path.resolve(
+            RELATIVE_DIRNAME,
+            'node_modules/@patternfly/react-core/node_modules/@patternfly/react-styles/css/assets/images'
+          ),
+          path.resolve(
+            RELATIVE_DIRNAME,
+            'node_modules/@patternfly/react-table/node_modules/@patternfly/react-styles/css/assets/images'
+          ),
+          path.resolve(
+            RELATIVE_DIRNAME,
+            'node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css/assets/images'
+          )
+        ],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 5000,
+              outputPath: 'images',
+              name: '[name].[ext]'
+            }
+          }
+        ]
       }
     ]
   },
@@ -109,11 +161,13 @@ module.exports = env => ({
         pattern: /%([A-Z_]+)%/g,
         replacement: (match, $1) => process.env?.[$1] || match
       }
-    ]),
-    new MiniCssExtractPlugin({
+    ])
+    /*
+     new MiniCssExtractPlugin({
       chunkFilename: '[name].css',
       filename: '[id].css'
     })
+     */
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.jsx'],

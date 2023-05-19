@@ -2,6 +2,7 @@
 const { merge } = require('webpack-merge');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./build.dotenv');
+const { stylePaths } = require('./stylePaths');
 
 const {
   _BUILD_DIST_DIR: DIST_DIR,
@@ -13,6 +14,7 @@ const {
 } = setupDotenvFilesForEnv({ env: 'development' });
 
 const webpackCommon = require('./webpack.common');
+// const path = require('path');
 
 module.exports = merge(
   {
@@ -53,6 +55,14 @@ module.exports = merge(
         paths: ['src/**/*', 'public/**/*']
       }
     },
-    module: {}
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          include: [...stylePaths],
+          use: ['style-loader', 'css-loader', 'sass-loader']
+        }
+      ]
+    }
   }
 );
