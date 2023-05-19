@@ -1,24 +1,25 @@
 // Variables
-$font-path: '~patternfly/dist/fonts/';
-$img-path: '~patternfly/dist/img/';
-$icon-font-path: '~patternfly/dist/fonts/';
+// $font-path: '~patternfly/dist/fonts/';
+// $img-path: '~patternfly/dist/img/';
+// $icon-font-path: '~patternfly/dist/fonts/';
 
-@import '~patternfly/dist/css/rcue.css';
-@import '~patternfly/dist/css/rcue-additions.css';
+// @import '~patternfly/dist/css/rcue.css';
+// @import '~patternfly/dist/css/rcue-additions.css';
 @import '~@patternfly/react-core/dist/styles/base.css';
 
 // Include patternfly variables before bootstrap variables
-@import '~patternfly/dist/sass/patternfly/variables';
-@import '~@patternfly/patternfly/sass-utilities/all';
+// @import '~patternfly/dist/sass/patternfly/variables';
+// @import '~@patternfly/patternfly/sass-utilities/all';
 
 // Bootstrap Core variables and mixins
-@import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
-@import '~bootstrap-sass/assets/stylesheets/bootstrap/mixins';
+// @import '~bootstrap-sass/assets/stylesheets/bootstrap/variables';
+// @import '~bootstrap-sass/assets/stylesheets/bootstrap/mixins';
 
 // Patternfly Core variables and mixins
-@import '~patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
-@import '~patternfly/dist/sass/patternfly/mixins';
+// @import '~patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
+// @import '~patternfly/dist/sass/patternfly/mixins';
 
+/*
 @import 'app/vars';
 @import 'app/overrides';
 @import 'app/common';
@@ -38,3 +39,9 @@ $icon-font-path: '~patternfly/dist/fonts/';
 @import 'app/wizard';
 @import 'app/emptyState';
 @import 'app/patternflyOverrides';
+*/
+
+// @import '~@patternfly/patternfly/patternfly.scss';
+// @import '~@patternfly/patternfly/patternfly-addons.scss';
+// @import '~@patternfly/patternfly/utilities/Accessibility/accessibility.scss';
+// @import '~@patternfly/patternfly/utilities/Spacing/spacing.scss';

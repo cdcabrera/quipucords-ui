@@ -5,7 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './components/app';
 import { baseName } from './components/router/router';
 import { store } from './redux/store';
-import './styles/index.scss';
+import '@patternfly/react-core/dist/styles/base.css';
+// import './styles/index.scss';
+// import './test.scss';
 
 ReactDOM.render(
   <Provider store={store}>

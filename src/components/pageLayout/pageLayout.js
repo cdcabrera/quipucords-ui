@@ -1,23 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Masthead, MenuItem, VerticalNav } from 'patternfly-react';
+import {
+  Masthead,
+  // MenuItem,
+  ToolbarItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  Page,
+  PageSection,
+  PageToggleButton,
+  MastheadContent,
+  MastheadToggle,
+  MastheadMain,
+  Brand,
+  SkipToContent
+} from '@patternfly/react-core';
+import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon';
 import { connectRouter, reduxActions, reduxTypes, store } from '../../redux';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 import { helpers } from '../../common';
 import { routes } from '../router/router';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
+import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
+import { translate } from '../i18n/i18n';
 
 class PageLayout extends React.Component {
   constructor(props) {
     super(props);
 
-    this.menuItems = [
-      { isActive: true, menuType: 'help', displayTitle: 'About', key: 'about', onClick: this.onAbout },
+    /*
+    this.helpItems = [
+      { isActive: true, menuType: 'help', title: 'About', key: 'about', onClick: this.onAbout },
       {
         isActive: false,
         menuType: 'help',
-        displayTitle: 'Guides - Install',
+        title: 'Guides - Install',
         key: 'install',
         href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
         target: '_blank'
@@ -25,13 +44,17 @@ class PageLayout extends React.Component {
       {
         isActive: true,
         menuType: 'help',
-        displayTitle: 'Guides - Using',
+        title: 'Guides - Using',
         key: 'use',
         href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
         target: '_blank'
-      },
+      }
+    ];
+
+    this.userItems = [
       { isActive: true, menuType: 'action', displayTitle: 'Logout', key: 'logout', onClick: this.onLogout }
     ];
+    */
   }
 
   onAbout = () => {
@@ -48,16 +71,19 @@ class PageLayout extends React.Component {
     });
   };
 
+  /*
   onNavigate = path => {
     const { history } = this.props;
 
     history.push(path);
   };
+   */
 
   onUnauthorized = () => {
     window.location = '/logout';
   };
 
+  /*
   renderIconBarActions() {
     const { session } = this.props;
 
@@ -119,23 +145,83 @@ class PageLayout extends React.Component {
       />
     ));
   }
+  */
 
   render() {
-    const { children, session, uiBrand, uiName } = this.props;
+    const { children, session, uiBrand, uiName, t } = this.props;
 
     if (!session.authorized) {
       return (
         <div className="layout-pf layout-pf-fixed fadein">
           <Masthead
-            titleImg={uiBrand ? titleImgBrand : titleImg}
+            // titleImg={uiBrand ? titleImgBrand : titleImg}
             title={uiName}
-            navToggle={false}
-            onTitleClick={this.onUnauthorized}
+            // navToggle={false}
+            // onTitleClick={this.onUnauthorized}
           />
           <div>{children}</div>
         </div>
       );
     }
+
+    const headerToolbar = (
+      <Toolbar id="toolbar" isFullHeight isStatic>
+        <ToolbarContent>
+          <ToolbarGroup
+            variant="icon-button-group"
+            alignment={{ default: 'alignRight' }}
+            spacer={{ default: 'spacerNone', md: 'spacerMd' }}
+          >
+            <ToolbarItem visibility={{ md: 'hidden' }}>
+              <DropdownSelect
+                isDropdownButton
+                icon={<span aria-hidden className="pficon pficon-help" />}
+                options={[
+                  { title: 'About', key: 'about', onClick: this.onAbout },
+                  {
+                    title: 'Guides - Install',
+                    key: 'install',
+                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
+                    target: '_blank'
+                  },
+                  {
+                    menuType: 'help',
+                    title: 'Guides - Using',
+                    key: 'use',
+                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
+                    target: '_blank'
+                  }
+                ]}
+              />
+            </ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
+            <DropdownSelect
+              isDropdownButton
+              icon={<ContextIcon symbol={ContextIconVariant.user} />}
+              placeholder={session?.username}
+              options={[{ title: 'Logout', key: 'logout', onClick: this.onLogout }]}
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+    );
+
+    const masthead = (
+      <Masthead>
+        <MastheadToggle>
+          <PageToggleButton variant="plain" aria-label="Global navigation">
+            <BarsIcon />
+          </PageToggleButton>
+        </MastheadToggle>
+        <MastheadMain>
+          <Brand alt={t('view.brand-image-alt', { name: helpers.UI_NAME })}>
+            <source srcSet={uiBrand ? titleImgBrand : titleImg} />
+          </Brand>
+        </MastheadMain>
+        <MastheadContent>{headerToolbar}</MastheadContent>
+      </Masthead>
+    );
 
     /**
      * ToDo: Evaluate PF3-React VerticalNav vs PF4-React Page component. The component contributes to throwing a warning regarding unmounted components setting state.
@@ -144,17 +230,19 @@ class PageLayout extends React.Component {
      * may be related to the PF4-React implementation around "onPageResize" where a check around the returned size helps squash a warning.
      */
     return (
-      <div className="layout-pf layout-pf-fixed fadein">
-        <VerticalNav persistentSecondary={false}>
-          <VerticalNav.Masthead>
-            <VerticalNav.Brand titleImg={uiBrand ? titleImgBrand : titleImg} />
-            <VerticalNav.IconBar>{this.renderIconBarActions()}</VerticalNav.IconBar>
-          </VerticalNav.Masthead>
-          {this.renderMenuItems()}
-          {this.renderMenuActions()}
-        </VerticalNav>
-        <div className="container-pf-nav-pf-vertical">{children}</div>
-      </div>
+      <Page
+        header={masthead}
+        className="fadein"
+        skipToContent={<SkipToContent href="#main-content">Skip to content</SkipToContent>}
+        mainContainerId="main-content"
+        groupProps={{
+          stickyOnBreakpoint: { default: 'top' }
+        }}
+      >
+        <PageSection>
+          <div className="container-pf-nav-pf-vertical">{children}</div>
+        </PageSection>
+      </Page>
     );
   }
 }
@@ -175,7 +263,8 @@ PageLayout.propTypes = {
     username: PropTypes.string
   }),
   uiBrand: PropTypes.bool,
-  uiName: PropTypes.string
+  uiName: PropTypes.string,
+  t: PropTypes.func
 };
 
 PageLayout.defaultProps = {
@@ -189,7 +278,8 @@ PageLayout.defaultProps = {
     username: ''
   },
   uiBrand: helpers.UI_BRAND,
-  uiName: helpers.UI_NAME
+  uiName: helpers.UI_NAME,
+  t: translate
 };
 
 const mapDispatchToProps = dispatch => ({
