@@ -25,7 +25,7 @@ module.exports = merge(
     optimization: {
       minimize: true,
       minimizer: [
-        new TerserJSPlugin({}),
+        new TerserJSPlugin({ parallel: true }),
         new CssMinimizerPlugin({
           minimizerOptions: {
             preset: ['default', { mergeLonghand: false }]
