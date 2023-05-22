@@ -1,205 +1,241 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Masthead, MenuItem, VerticalNav } from 'patternfly-react';
-import { connectRouter, reduxActions, reduxTypes, store } from '../../redux';
-import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
-import { helpers } from '../../common';
+import {
+  Nav,
+  NavList,
+  NavItem,
+  NavExpandable,
+  Page,
+  PageHeader,
+  PageHeaderTools,
+  PageSidebar,
+  SkipToContent,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem
+} from '@patternfly/react-core';
+import { translate } from '../i18n/i18n';
 import { routes } from '../router/router';
+import { useLocation, useNavigate } from '../router/routerContext';
+import { helpers } from '../../common/helpers';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
+import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
+import { storeHooks, reduxActions, reduxTypes } from '../../redux';
+import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 
-class PageLayout extends React.Component {
-  constructor(props) {
-    super(props);
+/**
+ * Main navigation and page layout.
+ *
+ * @param {object} props
+ * @param {React.ReactNode} props.children
+ * @param props.pageId
+ * @param props.t
+ * @param props.useNavigate
+ * @param props.uiBrand
+ * @param props.useLocation
+ * @param props.useDispatch
+ */
+const PageLayout = ({
+  children,
+  leftMenu,
+  pageId,
+  t,
+  uiName,
+  uiBrand,
+  useDispatch: useAliasDispatch,
+  useLocation: useAliasLocation,
+  useNavigate: useAliasNavigate,
+  useSelector: useAliasSelector
+}) => {
+  const [isNavOpen, setIsNavOpen] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(true);
+  const [isNavOpenMobile, setIsNavOpenMobile] = useState(false);
 
-    this.menuItems = [
-      { isActive: true, menuType: 'help', displayTitle: 'About', key: 'about', onClick: this.onAbout },
-      {
-        isActive: false,
-        menuType: 'help',
-        displayTitle: 'Guides - Install',
-        key: 'install',
-        href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
-        target: '_blank'
-      },
-      {
-        isActive: true,
-        menuType: 'help',
-        displayTitle: 'Guides - Using',
-        key: 'use',
-        href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
-        target: '_blank'
-      },
-      { isActive: true, menuType: 'action', displayTitle: 'Logout', key: 'logout', onClick: this.onLogout }
-    ];
-  }
+  const location = useAliasLocation();
+  const navigate = useAliasNavigate();
+  const dispatch = useAliasDispatch();
+  const session = useAliasSelector(({ user }) => user.session, {});
 
-  onAbout = () => {
-    store.dispatch({
+  const onNavToggleMobile = () => {
+    setIsNavOpenMobile(!isNavOpenMobile);
+  };
+
+  const onNavToggle = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  const onPageResize = ({ mobileView }) => {
+    setIsMobileView(mobileView);
+  };
+
+  const onAbout = () => {
+    dispatch({
       type: reduxTypes.aboutModal.ABOUT_MODAL_SHOW
     });
   };
 
-  onLogout = () => {
-    const { logoutUser } = this.props;
-
-    logoutUser().finally(() => {
+  const onLogout = () => {
+    dispatch(reduxActions.user.logoutUser()).finally(() => {
       window.location = '/logout';
     });
   };
 
-  onNavigate = path => {
-    const { history } = this.props;
-
-    history.push(path);
+  const onNavigate = (path, b, c, d) => {
+    console.log('>>>> on navigate', path, b, c, d);
+    return navigate(path);
   };
 
-  onUnauthorized = () => {
-    window.location = '/logout';
-  };
+  const headerToolbar = (
+    <PageHeaderTools>
+      <Toolbar id="toolbar" isFullHeight isStatic>
+        <ToolbarContent>
+          <ToolbarGroup
+            variant="icon-button-group"
+            alignment={{ default: 'alignRight' }}
+            spacer={{ default: 'spacerNone', md: 'spacerMd' }}
+          >
+            <ToolbarItem visibility={{ md: 'hidden' }}>
+              <DropdownSelect
+                isDropdownButton
+                icon={<span aria-hidden className="pficon pficon-help" />}
+                options={[
+                  { title: 'About', key: 'about', onClick: onAbout },
+                  {
+                    title: 'Guides - Install',
+                    key: 'install',
+                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
+                    target: '_blank'
+                  },
+                  {
+                    menuType: 'help',
+                    title: 'Guides - Using',
+                    key: 'use',
+                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
+                    target: '_blank'
+                  }
+                ]}
+              />
+            </ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
+            <DropdownSelect
+              isDropdownButton
+              icon={<ContextIcon symbol={ContextIconVariant.user} />}
+              placeholder={session?.username}
+              options={[{ title: 'Logout', key: 'logout', onClick: onLogout }]}
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+    </PageHeaderTools>
+  );
 
-  renderIconBarActions() {
-    const { session } = this.props;
+  const Header = (
+    <PageHeader
+      logo={<source srcSet={uiBrand ? titleImgBrand : titleImg} alt={t('view.brand-image-alt', { name: uiName })} />}
+      showNavToggle
+      isNavOpen={isNavOpen}
+      onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
+      headerTools={headerToolbar}
+    />
+  );
 
-    const title = (
-      <React.Fragment>
-        <ContextIcon symbol={ContextIconVariant.user} /> {session && session.username}
-      </React.Fragment>
-    );
+  const Navigation = (
+    <Nav id="nav-primary-simple" theme="dark">
+      <NavList id="nav-list-simple">
+        {leftMenu
+          ?.filter(({ title }) => typeof title === 'string' && title.length)
+          ?.map(({ title, path }) => (
+            <NavItem key={title} id={title} isActive={path === location.pathname} onClick={onNavigate}>
+              {title}
+            </NavItem>
+          ))}
+      </NavList>
+    </Nav>
+  );
 
-    return (
-      <React.Fragment>
-        <Masthead.Dropdown id="app-help-dropdown" title={<span aria-hidden className="pficon pficon-help" />}>
-          {this.menuItems.map(
-            ({ isActive, displayTitle, menuType, ...item }, index) =>
-              isActive &&
-              menuType === 'help' && (
-                <MenuItem eventKey={index} {...item}>
-                  {displayTitle}
-                </MenuItem>
-              )
-          )}
-        </Masthead.Dropdown>
-        <Masthead.Dropdown id="app-user-dropdown" title={title}>
-          {this.menuItems.map(
-            ({ isActive, displayTitle, menuType, ...item }, index) =>
-              isActive &&
-              menuType === 'action' && (
-                <MenuItem eventKey={index} {...item}>
-                  {displayTitle}
-                </MenuItem>
-              )
-          )}
-        </Masthead.Dropdown>
-      </React.Fragment>
-    );
-  }
+  const Sidebar = <PageSidebar theme="dark" nav={Navigation} isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} />;
 
-  renderMenuActions() {
-    return this.menuItems.map(
-      item => item.isActive && <VerticalNav.Item className="collapsed-nav-item" title={item.displayTitle} {...item} />
-    );
-  }
+  const PageSkipToContent = (
+    <SkipToContent
+      onClick={event => {
+        event.preventDefault();
+        const primaryContentContainer = document.getElementById(pageId);
 
-  renderMenuItems() {
-    const { location, menu, isFullPage } = this.props;
-    const activeItem = menu.find(item => item.path.indexOf(location.pathname) > -1);
+        if (primaryContentContainer) {
+          primaryContentContainer.focus();
+        }
+      }}
+      href={`#${pageId}`}
+    >
+      {t('view.skip-content')}
+    </SkipToContent>
+  );
+  return (
+    <Page
+      mainContainerId={pageId}
+      header={Header}
+      sidebar={Sidebar}
+      onPageResize={onPageResize}
+      skipToContent={PageSkipToContent}
+    >
+      {children}
+    </Page>
+  );
+};
 
-    if (isFullPage) {
-      return null;
-    }
-
-    return menu.map(item => (
-      <VerticalNav.Item
-        key={item.path}
-        title={item.title}
-        iconClass={item.iconClass}
-        active={item === activeItem || (!activeItem && item.redirect)}
-        onClick={() => this.onNavigate(item.path)}
-      />
-    ));
-  }
-
-  render() {
-    const { children, session, uiBrand, uiName } = this.props;
-
-    if (!session.authorized) {
-      return (
-        <div className="layout-pf layout-pf-fixed fadein">
-          <Masthead
-            titleImg={uiBrand ? titleImgBrand : titleImg}
-            title={uiName}
-            navToggle={false}
-            onTitleClick={this.onUnauthorized}
-          />
-          <div>{children}</div>
-        </div>
-      );
-    }
-
-    /**
-     * ToDo: Evaluate PF3-React VerticalNav vs PF4-React Page component. The component contributes to throwing a warning regarding unmounted components setting state.
-     * And forces the consumer to monitor more closely how state is managed. The warnings correlate to resize events. This warning can be squashed by using an
-     * `isMounted` state property to prevent render with a "null" return, or by avoiding the use of the onLayoutChange callback in the consuming component. This
-     * may be related to the PF4-React implementation around "onPageResize" where a check around the returned size helps squash a warning.
-     */
-    return (
-      <div className="layout-pf layout-pf-fixed fadein">
-        <VerticalNav persistentSecondary={false}>
-          <VerticalNav.Masthead>
-            <VerticalNav.Brand titleImg={uiBrand ? titleImgBrand : titleImg} />
-            <VerticalNav.IconBar>{this.renderIconBarActions()}</VerticalNav.IconBar>
-          </VerticalNav.Masthead>
-          {this.renderMenuItems()}
-          {this.renderMenuActions()}
-        </VerticalNav>
-        <div className="container-pf-nav-pf-vertical">{children}</div>
-      </div>
-    );
-  }
-}
-
+/**
+ * Prop types
+ *
+ * @type {{children: React.ReactNode}}
+ */
 PageLayout.propTypes = {
-  children: PropTypes.node.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func
-  }),
-  isFullPage: PropTypes.bool,
-  location: PropTypes.shape({
-    pathname: PropTypes.string
-  }),
-  logoutUser: PropTypes.func,
-  menu: PropTypes.array,
-  session: PropTypes.shape({
-    authorized: PropTypes.bool,
-    username: PropTypes.string
-  }),
+  children: PropTypes.node,
+  // helpMenu: PropTypes.array,
+  leftMenu: PropTypes.array,
+  // mainMenu: PropTypes.array,
+  pageId: PropTypes.string,
+  t: PropTypes.func,
   uiBrand: PropTypes.bool,
-  uiName: PropTypes.string
+  // uiName: PropTypes.string,
+  useDispatch: PropTypes.func,
+  useLocation: PropTypes.func,
+  useNavigate: PropTypes.func,
+  useSelector: PropTypes.func
 };
 
+/**
+ * Default props
+ *
+ * @type {{}}
+ */
 PageLayout.defaultProps = {
-  history: {},
-  isFullPage: false,
-  location: {},
-  logoutUser: helpers.noop,
-  menu: routes,
-  session: {
-    authorized: false,
-    username: ''
-  },
+  children: null,
+  helpMenu: [
+    { title: 'About', key: 'about', onClick: this.onAbout },
+    {
+      title: 'Guides - Install',
+      href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
+      target: '_blank'
+    },
+    {
+      title: 'Guides - Using',
+      href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
+      target: '_blank'
+    }
+  ],
+  leftMenu: routes,
+  // mainMenu: [{ isActive: true, menuType: 'action', displayTitle: 'Logout', key: 'logout', onClick: this.onLogout }],
+  pageId: 'primary-app-container',
+  t: translate,
   uiBrand: helpers.UI_BRAND,
-  uiName: helpers.UI_NAME
+  uiName: helpers.UI_NAME,
+  useDispatch: storeHooks.reactRedux.useDispatch,
+  useLocation,
+  useNavigate,
+  useSelector: storeHooks.reactRedux.useSelector
 };
 
-const mapDispatchToProps = dispatch => ({
-  logoutUser: () => dispatch(reduxActions.user.logoutUser())
-});
-
-const mapStateToProps = state => ({
-  session: state.user.session
-});
-
-const ConnectedPageLayout = connectRouter(mapStateToProps, mapDispatchToProps)(PageLayout);
-
-export { ConnectedPageLayout as default, ConnectedPageLayout, PageLayout };
+export { PageLayout as default, PageLayout };
