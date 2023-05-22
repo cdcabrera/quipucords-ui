@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlReplaceWebpackPlugin = require('html-replace-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const svgo = require('svgo');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./build.dotenv');
 
@@ -50,7 +51,11 @@ module.exports = () => ({
       },
       {
         test: /\.(svg|ttf|eot|woff|woff2)$/,
-        include: input => input.indexOf('fonts') > -1 || input.indexOf('pficon') > -1,
+        include: (input,b,c,d) => {
+          console.log('>>>>>>>>>>>>>>> FONTS', input);
+          console.log('>>>>>>>>>>>>>>> FONTS', b, c, d);
+          return input.indexOf('fonts') > -1 || input.indexOf('pficon') > -1
+        },
         type: 'asset/resource',
         generator: {
           filename: 'fonts/[hash][ext][query]'
@@ -62,9 +67,20 @@ module.exports = () => ({
         type: 'asset',
         parser: {
           dataUrlCondition: { maxSize: 5000 }
+          // prettier: false,
+          // svgo: false,
+          // svgoConfig: {
+          //  plugins: [{ removeViewBox: false }]
+          // }
+          // titleProp: true,
+          // ref: true
         },
         generator: {
-          dataUrl: content => svgToMiniDataURI(content.toString()),
+          dataUrl: content => {
+            const { data } = svgo.optimize(content.toString(), {  });
+            console.log('>>>>>>> SVGO', data);
+            return svgToMiniDataURI(data);
+          },
           filename: 'images/[hash][ext][query]'
         }
       },
