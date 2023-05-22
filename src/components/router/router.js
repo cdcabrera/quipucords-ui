@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Navigate, Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { baseName, routes } from './routerConstants';
 import { RouterContext } from './routerContext';
+import { routerHelpers } from './routerHelpers';
 
 /**
  * Routing wrapper
@@ -26,9 +27,10 @@ const Router = ({
     value={{ useLocation: useAliasLocation, useNavigate: useAliasNavigate, useParams: useAliasParams }}
   >
     <Routes basename={routesBaseName}>
-      {routesList.map(({ path, element }) => (
-        <Route key={path} element={element} path={path} />
-      ))}
+      {routesList.map(({ path, element }) => {
+        const View = routerHelpers.importView(element);
+        return <Route key={path} element={<View />} path={path} />;
+      })}
       {routesList.length && (
         <Route
           key="redirect"
