@@ -469,9 +469,9 @@ const DropdownSelect = ({
    */
   const renderSelect = () => (
     <PfSelect
-      className={`curiosity-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
-        (direction === SelectDirection.down && 'curiosity-select-pf__position-down') || ''
-      } ${(position === SelectPosition.right && 'curiosity-select-pf__position-right') || ''} ${className}`}
+      className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
+        (direction === SelectDirection.down && 'quipucords-select-pf__position-down') || ''
+      } ${(position === SelectPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
       variant={variant}
       aria-label={ariaLabel}
       onToggle={onToggle}
@@ -508,7 +508,7 @@ const DropdownSelect = ({
   return (
     <div
       ref={selectField}
-      className={`curiosity-select${(isInline && ' curiosity-select__inline') || ' curiosity-select__not-inline'}`}
+      className={`quipucords-select${(isInline && ' quipucords-select__inline') || ' quipucords-select__not-inline'}`}
     >
       {(isDropdownButton && renderDropdownButton()) || renderSelect()}
     </div>

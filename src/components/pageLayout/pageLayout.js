@@ -4,7 +4,7 @@ import {
   Nav,
   NavList,
   NavItem,
-  NavExpandable,
+  // NavExpandable,
   Page,
   PageHeader,
   PageHeaderTools,
@@ -15,9 +15,9 @@ import {
   ToolbarGroup,
   ToolbarItem
 } from '@patternfly/react-core';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { translate } from '../i18n/i18n';
 import { routes } from '../router/router';
-import { useLocation, useNavigate } from '../router/routerContext';
 import { helpers } from '../../common/helpers';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
@@ -36,6 +36,9 @@ import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
  * @param props.uiBrand
  * @param props.useLocation
  * @param props.useDispatch
+ * @param props.leftMenu
+ * @param props.uiName
+ * @param props.useSelector
  */
 const PageLayout = ({
   children,
@@ -82,9 +85,8 @@ const PageLayout = ({
     });
   };
 
-  const onNavigate = (path, b, c, d) => {
-    console.log('>>>> on navigate', path, b, c, d);
-    return navigate(path);
+  const onNavigate = path => {
+    navigate(path);
   };
 
   const headerToolbar = (
@@ -148,8 +150,8 @@ const PageLayout = ({
         {leftMenu
           ?.filter(({ title }) => typeof title === 'string' && title.length)
           ?.map(({ title, path }) => (
-            <NavItem key={title} id={title} isActive={path === location.pathname} onClick={onNavigate}>
-              {title}
+            <NavItem key={title} id={title} isActive={path === location?.pathname} onClick={() => onNavigate(path)}>
+              {t('view.page', { context: title })}
             </NavItem>
           ))}
       </NavList>
@@ -199,7 +201,7 @@ PageLayout.propTypes = {
   pageId: PropTypes.string,
   t: PropTypes.func,
   uiBrand: PropTypes.bool,
-  // uiName: PropTypes.string,
+  uiName: PropTypes.string,
   useDispatch: PropTypes.func,
   useLocation: PropTypes.func,
   useNavigate: PropTypes.func,
@@ -213,6 +215,7 @@ PageLayout.propTypes = {
  */
 PageLayout.defaultProps = {
   children: null,
+  /*
   helpMenu: [
     { title: 'About', key: 'about', onClick: this.onAbout },
     {
@@ -226,6 +229,7 @@ PageLayout.defaultProps = {
       target: '_blank'
     }
   ],
+  */
   leftMenu: routes,
   // mainMenu: [{ isActive: true, menuType: 'action', displayTitle: 'Logout', key: 'logout', onClick: this.onLogout }],
   pageId: 'primary-app-container',

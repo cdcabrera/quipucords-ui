@@ -3,7 +3,6 @@ import { ViewContext } from '../view/viewContext';
 import { Scans, CONFIG as ScansConfig } from '../scans/scans';
 import { Sources, CONFIG as SourcesConfig } from '../sources/sources';
 import { Credentials, CONFIG as CredentialsConfig } from '../credentials/credentials';
-import { translate } from '../i18n/i18n';
 
 /**
  * Return the application base directory.
@@ -20,7 +19,7 @@ const baseName = '/client';
 const routes = [
   {
     iconClass: 'fa fa-crosshairs',
-    title: translate('view.page', { context: 'sources' }),
+    title: 'sources',
     path: '/sources',
     redirect: true,
     element: (
@@ -31,7 +30,7 @@ const routes = [
   },
   {
     iconClass: 'pficon pficon-orders',
-    title: translate('view.page', { context: 'scans' }),
+    title: 'scans',
     path: '/scans',
     element: (
       <ViewContext.Provider value={{ ...ScansConfig }}>
@@ -41,7 +40,7 @@ const routes = [
   },
   {
     iconClass: 'fa fa-id-card',
-    title: translate('view.page', { context: 'credentials' }),
+    title: 'credentials',
     path: '/credentials',
     element: (
       <ViewContext.Provider value={{ ...CredentialsConfig }}>

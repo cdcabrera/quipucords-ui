@@ -19,6 +19,10 @@ $icon-font-path: '~patternfly/dist/fonts/';
 @import '~patternfly/dist/sass/patternfly/bootstrap-mixin-overrides';
 @import '~patternfly/dist/sass/patternfly/mixins';
 
+html, body, #root {
+  height: 100%;
+}
+
 @import 'app/vars';
 @import 'app/overrides';
 @import 'app/common';
@@ -34,7 +38,7 @@ $icon-font-path: '~patternfly/dist/fonts/';
 @import 'app/scans';
 @import 'app/toastNotifications';
 @import 'app/tooltip';
-@import 'app/views';
+// @import 'app/views';
 @import 'app/wizard';
 @import 'app/emptyState';
 @import 'app/patternflyOverrides';
