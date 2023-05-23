@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Button,
+  ButtonVariant,
   Nav,
   NavList,
   NavItem,
@@ -144,17 +146,26 @@ const PageLayout = ({
     />
   );
 
+  const test = leftMenu
+    ?.filter(({ title }) => typeof title === 'string' && title.length)
+    ?.map(({ icon: Icon, title, path }) => (
+      <NavItem
+        className="quipucords-navItem"
+        key={title}
+        id={title}
+        isActive={path === location?.pathname}
+        onClick={() => onNavigate(path)}
+        icon={<Icon />}
+        component={Button}
+        variant={ButtonVariant.link}
+      >
+        {t('view.page', { context: title })}
+      </NavItem>
+    ));
+
   const Navigation = (
     <Nav id="nav-primary-simple" theme="dark">
-      <NavList id="nav-list-simple">
-        {leftMenu
-          ?.filter(({ title }) => typeof title === 'string' && title.length)
-          ?.map(({ title, path }) => (
-            <NavItem key={title} id={title} isActive={path === location?.pathname} onClick={() => onNavigate(path)}>
-              {t('view.page', { context: title })}
-            </NavItem>
-          ))}
-      </NavList>
+      <NavList id="nav-list-simple">{test}</NavList>
     </Nav>
   );
 
