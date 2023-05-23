@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Brand,
   Button,
   ButtonVariant,
   Nav,
@@ -100,10 +101,11 @@ const PageLayout = ({
             alignment={{ default: 'alignRight' }}
             spacer={{ default: 'spacerNone', md: 'spacerMd' }}
           >
-            <ToolbarItem visibility={{ md: 'hidden' }}>
+            <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
               <DropdownSelect
                 isDropdownButton
                 icon={<span aria-hidden className="pficon pficon-help" />}
+                placeholder=""
                 options={[
                   { title: 'About', key: 'about', onClick: onAbout },
                   {
@@ -138,13 +140,35 @@ const PageLayout = ({
 
   const Header = (
     <PageHeader
-      logo={<source srcSet={uiBrand ? titleImgBrand : titleImg} alt={t('view.brand-image-alt', { name: uiName })} />}
+      logo={
+        <Brand alt={t('view.brand-image-alt', { name: uiName })}>
+          <source srcSet={uiBrand ? titleImgBrand : titleImg} />
+        </Brand>
+      }
       showNavToggle
       isNavOpen={isNavOpen}
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
       headerTools={headerToolbar}
     />
   );
+
+  /*
+  const Header = (
+    <Masthead>
+      <MastheadToggle>
+        <PageToggleButton variant="plain" aria-label="Global navigation">
+          <BarsIcon />
+        </PageToggleButton>
+      </MastheadToggle>
+      <MastheadMain>
+        <Brand alt={t('view.brand-image-alt', { name: helpers.UI_NAME })}>
+          <source srcSet={uiBrand ? titleImgBrand : titleImg} />
+        </Brand>
+      </MastheadMain>
+      <MastheadContent>{headerToolbar}</MastheadContent>
+    </Masthead>
+  );
+  */
 
   const test = leftMenu
     ?.filter(({ title }) => typeof title === 'string' && title.length)
