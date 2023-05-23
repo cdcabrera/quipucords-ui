@@ -13,9 +13,21 @@
 }
 
 .quipucords {
+  --pf-global--FontSize--md: 0.9rem;
+}
+/*
+.quipucords {
   .pf-c-pagination .pf-c-options-menu__toggle,
   .pf-c-pagination__nav-page-select > *,
   .pf-c-table tr > * {
     font-size: var(--pf-global--FontSize--md);
   }
 }
+
+.quipucords-modal {
+  .pf-c-alert__title,
+  .pf-c-form__label-text {
+    font-size: var(--pf-global--FontSize--md);
+  }
+}
+*/
