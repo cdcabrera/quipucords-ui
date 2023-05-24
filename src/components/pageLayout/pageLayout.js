@@ -103,34 +103,38 @@ const PageLayout = ({
 
   const fullKebabDropdownItems = [
     <DropdownGroup key="group 2">
-      <DropdownItem key="group 2 logout">Logout</DropdownItem>
+      <DropdownItem key="group 2 logout" onClick={() => onLogout()}>
+        Logout
+      </DropdownItem>
     </DropdownGroup>,
     <Divider key="divider" />,
-    <DropdownItem key="about">
+    <DropdownItem key="about" onClick={() => onAbout()}>
       <CogIcon /> About
     </DropdownItem>,
-    <DropdownItem key="guides-install">
+    <DropdownItem key="guides-install" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`}>
       <HelpIcon /> Guides - Install
     </DropdownItem>,
-    <DropdownItem key="guides-using">
+    <DropdownItem key="guides-using" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`}>
       <HelpIcon /> Guides - Using
     </DropdownItem>
   ];
 
   const userDropdownItems = [
     <DropdownGroup key="group 2">
-      <DropdownItem key="group 2 logout">Logout</DropdownItem>
+      <DropdownItem key="group 2 logout" onClick={() => onLogout()}>
+        Logout
+      </DropdownItem>
     </DropdownGroup>
   ];
 
   const appLauncherItems = [
-    <ApplicationLauncherItem key="application_1a" href="#">
+    <ApplicationLauncherItem key="application_1a" onClick={() => onAbout()}>
       About
     </ApplicationLauncherItem>,
-    <ApplicationLauncherItem key="application_2a" component="button" onClick={() => console.log('Clicked item 2')}>
+    <ApplicationLauncherItem key="application_2a" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`}>
       Guides - Install
     </ApplicationLauncherItem>,
-    <ApplicationLauncherItem key="application_3a" href="#">
+    <ApplicationLauncherItem key="application_3a" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`}>
       Guides - Using
     </ApplicationLauncherItem>
   ];
@@ -155,7 +159,7 @@ const PageLayout = ({
               />
             </ToolbarItem>
           </ToolbarGroup>
-          <ToolbarItem visibility={{ md: 'hidden' }}>
+          <ToolbarItem visibility={{ default: 'visible', lg: 'hidden' }}>
             <Dropdown
               isPlain
               position="right"
@@ -166,7 +170,7 @@ const PageLayout = ({
             />
           </ToolbarItem>
         </ToolbarGroup>
-        <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
+        <ToolbarItem visibility={{ default: 'hidden', lg: 'visible' }}>
           <Dropdown
             isFullHeight
             onSelect={onDropdownSelect}
@@ -201,7 +205,6 @@ const PageLayout = ({
     </Masthead>
   );
 
-  console.log(session, onAbout, onLogout, useAliasLocation, useAliasNavigate);
   const pageNav = (
     <Nav>
       <NavList>
