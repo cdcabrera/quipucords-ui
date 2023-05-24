@@ -11,6 +11,8 @@ import {
   Page,
   PageHeader,
   PageHeaderTools,
+  PageHeaderToolsGroup,
+  PageHeaderToolsItem,
   PageSidebar,
   SkipToContent,
   Toolbar,
@@ -19,12 +21,13 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 import { useLocation, useNavigate } from 'react-router-dom';
+import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
 import { translate } from '../i18n/i18n';
 import { routes } from '../router/router';
 import { helpers } from '../../common/helpers';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
-import { DropdownSelect } from '../dropdownSelect/dropdownSelect';
+import { DropdownSelect, SelectPosition } from '../dropdownSelect/dropdownSelect';
 import { storeHooks, reduxActions, reduxTypes } from '../../redux';
 import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 
@@ -101,11 +104,19 @@ const PageLayout = ({
             alignment={{ default: 'alignRight' }}
             spacer={{ default: 'spacerNone', md: 'spacerMd' }}
           >
+            <ToolbarItem visibility={{ default: 'visible', md: 'hidden' }}>
+              <Button aria-label="Settings" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
+            </ToolbarItem>
+            <ToolbarItem visibility={{ default: 'visible', md: 'hidden' }}>
+              <Button aria-label="Help" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
+            </ToolbarItem>
             <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
               <DropdownSelect
+                isPlain
                 isDropdownButton
                 icon={<span aria-hidden className="pficon pficon-help" />}
-                placeholder=""
+                placeholder={<span aria-hidden className="pficon pficon-help" />}
+                position={SelectPosition.right}
                 options={[
                   { title: 'About', key: 'about', onClick: onAbout },
                   {
@@ -127,7 +138,11 @@ const PageLayout = ({
           </ToolbarGroup>
           <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
             <DropdownSelect
+              isPlain
               isDropdownButton
+              isFullHeight
+              isInline={false}
+              position={SelectPosition.right}
               icon={<ContextIcon symbol={ContextIconVariant.user} />}
               placeholder={session?.username}
               options={[{ title: 'Logout', key: 'logout', onClick: onLogout }]}
