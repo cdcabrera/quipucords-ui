@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Avatar,
   Brand,
   Button,
-  ButtonVariant,
+  // ButtonVariant,
   Nav,
   NavList,
   NavItem,
@@ -14,22 +15,20 @@ import {
   PageHeaderToolsGroup,
   PageHeaderToolsItem,
   PageSidebar,
-  SkipToContent,
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  ToolbarItem
+  SkipToContent
 } from '@patternfly/react-core';
 import { useLocation, useNavigate } from 'react-router-dom';
-import QuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/question-circle-icon';
+import { QuestionCircleIcon, IconSize } from '@patternfly/react-icons';
+import imgAvatar from '@patternfly/react-core/src/components/Avatar/examples/avatarImg.svg';
+// import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
 import { translate } from '../i18n/i18n';
 import { routes } from '../router/router';
 import { helpers } from '../../common/helpers';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
-import { DropdownSelect, SelectPosition } from '../dropdownSelect/dropdownSelect';
+import { DropdownSelect, SelectPosition, ButtonVariant } from '../dropdownSelect/dropdownSelect';
 import { storeHooks, reduxActions, reduxTypes } from '../../redux';
-import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
+// import { ContextIcon, ContextIconVariant } from '../contextIcon/contextIcon';
 
 /**
  * Main navigation and page layout.
@@ -97,59 +96,55 @@ const PageLayout = ({
 
   const headerToolbar = (
     <PageHeaderTools>
-      <Toolbar id="toolbar" isFullHeight isStatic>
-        <ToolbarContent>
-          <ToolbarGroup
-            variant="icon-button-group"
-            alignment={{ default: 'alignRight' }}
-            spacer={{ default: 'spacerNone', md: 'spacerMd' }}
-          >
-            <ToolbarItem visibility={{ default: 'visible', md: 'hidden' }}>
-              <Button aria-label="Settings" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
-            </ToolbarItem>
-            <ToolbarItem visibility={{ default: 'visible', md: 'hidden' }}>
-              <Button aria-label="Help" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
-            </ToolbarItem>
-            <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
-              <DropdownSelect
-                isPlain
-                isDropdownButton
-                icon={<span aria-hidden className="pficon pficon-help" />}
-                placeholder={<span aria-hidden className="pficon pficon-help" />}
-                position={SelectPosition.right}
-                options={[
-                  { title: 'About', key: 'about', onClick: onAbout },
-                  {
-                    title: 'Guides - Install',
-                    key: 'install',
-                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
-                    target: '_blank'
-                  },
-                  {
-                    menuType: 'help',
-                    title: 'Guides - Using',
-                    key: 'use',
-                    href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
-                    target: '_blank'
-                  }
-                ]}
-              />
-            </ToolbarItem>
-          </ToolbarGroup>
-          <ToolbarItem visibility={{ default: 'hidden', md: 'visible' }}>
-            <DropdownSelect
-              isPlain
-              isDropdownButton
-              isFullHeight
-              isInline={false}
-              position={SelectPosition.right}
-              icon={<ContextIcon symbol={ContextIconVariant.user} />}
-              placeholder={session?.username}
-              options={[{ title: 'Logout', key: 'logout', onClick: onLogout }]}
-            />
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
+      <PageHeaderToolsGroup
+        variant="icon-button-group"
+        alignment={{ default: 'alignRight' }}
+        spacer={{ default: 'spacerNone', md: 'spacerMd' }}
+      >
+        <PageHeaderToolsItem visibility={{ default: 'visible', md: 'hidden' }}>
+          <Button aria-label="Settings" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
+        </PageHeaderToolsItem>
+        <PageHeaderToolsItem visibility={{ default: 'visible', md: 'hidden' }}>
+          <Button aria-label="Help" variant={ButtonVariant.plain} icon={<QuestionCircleIcon />} />
+        </PageHeaderToolsItem>
+        <PageHeaderToolsItem visibility={{ default: 'hidden', md: 'visible' }}>
+          <DropdownSelect
+            buttonVariant={ButtonVariant.plain}
+            isDropdownButton
+            // toggleIndicator={null}
+            placeholder={<QuestionCircleIcon size={IconSize.md} />}
+            ariaLabel="Help"
+            position={SelectPosition.right}
+            options={[
+              { title: 'About', key: 'about', onClick: onAbout },
+              {
+                title: 'Guides - Install',
+                key: 'install',
+                href: `${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`,
+                target: '_blank'
+              },
+              {
+                menuType: 'help',
+                title: 'Guides - Using',
+                key: 'use',
+                href: `${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`,
+                target: '_blank'
+              }
+            ]}
+          />
+        </PageHeaderToolsItem>
+      </PageHeaderToolsGroup>
+      <PageHeaderToolsItem visibility={{ default: 'hidden', md: 'visible' }}>
+        <DropdownSelect
+          isDropdownButton
+          isFullHeight
+          isInline={false}
+          position={SelectPosition.right}
+          toggleIcon={<Avatar src={imgAvatar} alt="Avatar" />}
+          placeholder={session?.username}
+          options={[{ title: 'Logout', key: 'logout', onClick: onLogout }]}
+        />
+      </PageHeaderToolsItem>
     </PageHeaderTools>
   );
 

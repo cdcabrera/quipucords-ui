@@ -28,3 +28,11 @@
     }
   }
 }
+
+.quipucords {
+  .pf-c-page__header-tools,
+  // .pf-c-page__header-tools-group,
+  .pf-c-page__header-tools-item:last-child {
+    height: 100%;
+  }
+}

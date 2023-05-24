@@ -14,6 +14,7 @@ import {
   SelectOption as PfSelectOption,
   SelectVariant
 } from '@patternfly/react-core';
+import { CaretDownIcon } from '@patternfly/react-icons';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
 import _isPlainObject from 'lodash/isPlainObject';
@@ -192,7 +193,16 @@ const formatSelectProps = _memoize(({ isDisabled, placeholder, options } = {}) =
  * @returns {*}
  */
 const formatButtonProps = _memoize(
-  ({ isDisabled, options, buttonVariant, onSplitButton, splitButtonCopy, splitButtonVariant } = {}) => {
+  ({
+    icon,
+    isDisabled,
+    options,
+    buttonVariant,
+    onSplitButton,
+    splitButtonCopy,
+    splitButtonVariant
+    // toggleIndicator
+  } = {}) => {
     const buttonVariantPropLookup = {
       default: { toggleVariant: 'default' },
       plain: { isPlain: true, toggleIndicator: null },
@@ -225,6 +235,8 @@ const formatButtonProps = _memoize(
     };
 
     const updatedProps = {
+      icon,
+      // toggleIndicator,
       ...buttonVariantPropLookup[buttonVariant],
       ...splitButtonVariantPropLookup[splitButtonVariant]
     };
@@ -283,6 +295,7 @@ const formatButtonParentProps = (formattedButtonProps = {}) => {
  * @param {string} props.position
  * @param {number|string|Array} props.selectedOptions
  * @param {string} props.splitButtonVariant
+ * @param props.toggleIndicator
  * @param {React.ReactNode|Function} props.toggleIcon
  * @param {string} props.variant
  * @param {object} props.props
@@ -309,6 +322,7 @@ const DropdownSelect = ({
   selectedOptions,
   splitButtonVariant,
   toggleIcon,
+  toggleIndicator,
   variant,
   ...props
 }) => {
@@ -421,6 +435,22 @@ const DropdownSelect = ({
    *
    * @returns {React.ReactNode}
    */
+  console.log(
+    '>>>>>> button props',
+    ariaLabel,
+    buttonVariant,
+    formatButtonProps({
+      icon: toggleIcon,
+      isDisabled,
+      onSplitButton: onUpdatedSplitButton,
+      options,
+      buttonVariant,
+      splitButtonCopy: placeholder || ariaLabel,
+      splitButtonVariant,
+      toggleIndicator
+    })
+  );
+
   const renderDropdownButton = () => (
     <Dropdown
       direction={direction}
@@ -431,12 +461,14 @@ const DropdownSelect = ({
         <DropdownToggle
           onToggle={onToggle}
           {...formatButtonProps({
+            icon: toggleIcon,
             isDisabled,
             onSplitButton: onUpdatedSplitButton,
             options,
             buttonVariant,
             splitButtonCopy: placeholder || ariaLabel,
-            splitButtonVariant
+            splitButtonVariant,
+            toggleIndicator
           })}
         >
           {(!splitButtonVariant && placeholder) || (!SplitButtonVariant && ariaLabel)}
@@ -548,6 +580,7 @@ DropdownSelect.propTypes = {
   ]),
   splitButtonVariant: PropTypes.oneOf(Object.values(SplitButtonVariant)),
   toggleIcon: PropTypes.element,
+  toggleIndicator: PropTypes.element,
   variant: PropTypes.oneOf([...Object.values(SelectVariant)])
 };
 
@@ -580,6 +613,7 @@ DropdownSelect.defaultProps = {
   selectedOptions: null,
   splitButtonVariant: null,
   toggleIcon: null,
+  toggleIndicator: <CaretDownIcon />,
   variant: SelectVariant.single
 };
 
