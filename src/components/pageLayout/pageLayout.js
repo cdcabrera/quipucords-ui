@@ -46,10 +46,10 @@ import { helpers } from '../../common/helpers';
  *
  * @param {object} props
  * @param {React.ReactNode} props.children
+ * @param {boolean} props.isUiBrand
  * @param {Array} props.leftMenu
  * @param {string} props.mainContainerId
  * @param {Function} props.t
- * @param {string} props.uiBrand
  * @param {string} props.uiName
  * @param {Function} props.useDispatch
  * @param {Function} props.useLocation
@@ -59,10 +59,10 @@ import { helpers } from '../../common/helpers';
  */
 const PageLayout = ({
   children,
+  isUiBrand,
   leftMenu,
   mainContainerId,
   t,
-  uiBrand,
   uiName,
   useDispatch: useAliasDispatch,
   useLocation: useAliasLocation,
@@ -234,7 +234,7 @@ const PageLayout = ({
       <MastheadMain>
         <MastheadBrand>
           <Brand alt={t('view.brand-image-alt', { name: uiName })}>
-            <source srcSet={uiBrand ? titleImgBrand : titleImg} />
+            <source srcSet={isUiBrand ? titleImgBrand : titleImg} />
           </Brand>
         </MastheadBrand>
       </MastheadMain>
@@ -287,14 +287,15 @@ const PageLayout = ({
 /**
  * Prop types
  *
- * @type {{children: React.ReactNode}}
+ * @type {{mainContainerId: string, useLocation: Function, t: Function, children: React.ReactNode, useSelector: Function,
+ *     isUiBrand: boolean, useDispatch: Function, useNavigate: Function, uiName: string, leftMenu: Array}}
  */
 PageLayout.propTypes = {
   children: PropTypes.node,
+  isUiBrand: PropTypes.bool,
   leftMenu: PropTypes.array,
   mainContainerId: PropTypes.string,
   t: PropTypes.func,
-  uiBrand: PropTypes.string,
   uiName: PropTypes.string,
   useDispatch: PropTypes.func,
   useLocation: PropTypes.func,
@@ -305,14 +306,15 @@ PageLayout.propTypes = {
 /**
  * Default props
  *
- * @type {{}}
+ * @type {{mainContainerId: string, useLocation: Function, t: translate, children: React.ReactNode, useSelector: Function,
+ *     isUiBrand: boolean, useDispatch: Function, useNavigate: Function, uiName: string, leftMenu: Array}}
  */
 PageLayout.defaultProps = {
   children: null,
+  isUiBrand: helpers.UI_BRAND,
   leftMenu: routes,
   mainContainerId: 'main-content',
   t: translate,
-  uiBrand: helpers.UI_BRAND,
   uiName: helpers.UI_NAME,
   useDispatch: storeHooks.reactRedux.useDispatch,
   useLocation,
