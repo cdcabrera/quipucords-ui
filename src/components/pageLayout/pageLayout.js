@@ -41,9 +41,26 @@ import { routes } from '../router/router';
 import { translate } from '../i18n/i18n';
 import { helpers } from '../../common/helpers';
 
+/**
+ * Page navigation and masthead.
+ *
+ * @param {object} props
+ * @param {React.ReactNode} props.children
+ * @param {Array} props.leftMenu
+ * @param {string} props.mainContainerId
+ * @param {Function} props.t
+ * @param {string} props.uiBrand
+ * @param {string} props.uiName
+ * @param {Function} props.useDispatch
+ * @param {Function} props.useLocation
+ * @param {Function} props.useNavigate
+ * @param {Function} props.useSelector
+ * @returns {React.ReactNode}
+ */
 const PageLayout = ({
   children,
   leftMenu,
+  mainContainerId,
   t,
   uiBrand,
   uiName,
@@ -52,8 +69,8 @@ const PageLayout = ({
   useNavigate: useAliasNavigate,
   useSelector: useAliasSelector
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isFullKebabDropdownOpen, setIsFullKebabDropdownOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isSmallScreenDropdownOpen, setIsSmallScreenDropdownOpen] = useState(false);
   const [isAppLauncherOpen, setIsAppLauncherOpen] = useState(false);
 
   const location = useAliasLocation();
@@ -77,20 +94,20 @@ const PageLayout = ({
     navigate(path);
   };
 
-  const onDropdownToggle = isOpen => {
-    setIsDropdownOpen(isOpen);
+  const onUserDropdownToggle = isOpen => {
+    setIsUserDropdownOpen(isOpen);
   };
 
-  const onDropdownSelect = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const onUserDropdownSelect = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
   };
 
-  const onFullKebabDropdownToggle = isOpen => {
-    setIsFullKebabDropdownOpen(isOpen);
+  const onSmallScreenDropdownToggle = isOpen => {
+    setIsSmallScreenDropdownOpen(isOpen);
   };
 
-  const onFullKebabDropdownSelect = () => {
-    setIsFullKebabDropdownOpen(!isFullKebabDropdownOpen);
+  const onSmallScreenDropdownSelect = () => {
+    setIsSmallScreenDropdownOpen(!isSmallScreenDropdownOpen);
   };
 
   const onAppLauncherToggle = isOpen => {
@@ -101,45 +118,65 @@ const PageLayout = ({
     setIsAppLauncherOpen(!isAppLauncherOpen);
   };
 
-  const fullKebabDropdownItems = [
+  /**
+   * Masthead small screen grouped menu
+   *
+   * @type {Array}
+   */
+  const smallScreenDropdownItems = [
     <DropdownGroup key="group 2">
-      <DropdownItem key="group 2 logout" onClick={() => onLogout()}>
-        Logout
+      <DropdownItem key="logout" onClick={() => onLogout()}>
+        {t('view.label', { context: ['logout'] })}
       </DropdownItem>
     </DropdownGroup>,
     <Divider key="divider" />,
     <DropdownItem key="about" onClick={() => onAbout()}>
-      <CogIcon /> About
+      <CogIcon /> {t('view.label', { context: ['about'] })}
     </DropdownItem>,
     <DropdownItem key="guides-install" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`}>
-      <HelpIcon /> Guides - Install
+      <HelpIcon /> {t('view.label', { context: ['guides-install'] })}
     </DropdownItem>,
     <DropdownItem key="guides-using" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`}>
-      <HelpIcon /> Guides - Using
+      <HelpIcon /> {t('view.label', { context: ['guides-using'] })}
     </DropdownItem>
   ];
 
+  /**
+   * Masthead help menu items
+   *
+   * @type {Array}
+   */
+  const appLauncherItems = [
+    <ApplicationLauncherItem key="application_about" onClick={() => onAbout()}>
+      {t('view.label', { context: ['about'] })}
+    </ApplicationLauncherItem>,
+    <ApplicationLauncherItem key="application_install" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`}>
+      {t('view.label', { context: ['guides-install'] })}
+    </ApplicationLauncherItem>,
+    <ApplicationLauncherItem key="application_using" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`}>
+      {t('view.label', { context: ['guides-using'] })}
+    </ApplicationLauncherItem>
+  ];
+
+  /**
+   * Masthead user menu
+   *
+   * @type {Array}
+   */
   const userDropdownItems = [
     <DropdownGroup key="group 2">
       <DropdownItem key="group 2 logout" onClick={() => onLogout()}>
-        Logout
+        {t('view.label', { context: ['logout'] })}
       </DropdownItem>
     </DropdownGroup>
   ];
 
-  const appLauncherItems = [
-    <ApplicationLauncherItem key="application_1a" onClick={() => onAbout()}>
-      About
-    </ApplicationLauncherItem>,
-    <ApplicationLauncherItem key="application_2a" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/install.html`}>
-      Guides - Install
-    </ApplicationLauncherItem>,
-    <ApplicationLauncherItem key="application_3a" href={`${(!helpers.DEV_MODE && '.') || ''}/docs/use.html`}>
-      Guides - Using
-    </ApplicationLauncherItem>
-  ];
-
-  const headerToolbar = (
+  /**
+   * Masthead toolbar
+   *
+   * @type {React.ReactNode}
+   */
+  const mastheadToolbar = (
     <Toolbar id="toolbar" isFullHeight isStatic>
       <ToolbarContent>
         <ToolbarGroup
@@ -163,20 +200,20 @@ const PageLayout = ({
             <Dropdown
               isPlain
               position="right"
-              onSelect={onFullKebabDropdownSelect}
-              toggle={<KebabToggle onToggle={onFullKebabDropdownToggle} />}
-              isOpen={isFullKebabDropdownOpen}
-              dropdownItems={fullKebabDropdownItems}
+              onSelect={onSmallScreenDropdownSelect}
+              toggle={<KebabToggle onToggle={onSmallScreenDropdownToggle} />}
+              isOpen={isSmallScreenDropdownOpen}
+              dropdownItems={smallScreenDropdownItems}
             />
           </ToolbarItem>
         </ToolbarGroup>
         <ToolbarItem visibility={{ default: 'hidden', lg: 'visible' }}>
           <Dropdown
             isFullHeight
-            onSelect={onDropdownSelect}
-            isOpen={isDropdownOpen}
+            onSelect={onUserDropdownSelect}
+            isOpen={isUserDropdownOpen}
             toggle={
-              <DropdownToggle icon={<Avatar src={imgAvatar} alt="Avatar" />} onToggle={onDropdownToggle}>
+              <DropdownToggle icon={<Avatar src={imgAvatar} alt="Avatar" />} onToggle={onUserDropdownToggle}>
                 {session?.username}
               </DropdownToggle>
             }
@@ -201,7 +238,7 @@ const PageLayout = ({
           </Brand>
         </MastheadBrand>
       </MastheadMain>
-      <MastheadContent>{headerToolbar}</MastheadContent>
+      <MastheadContent>{mastheadToolbar}</MastheadContent>
     </Masthead>
   );
 
@@ -221,7 +258,7 @@ const PageLayout = ({
               component={Button}
               variant={ButtonVariant.link}
             >
-              {t('view.page', { context: title })}
+              {t('view.label', { context: title })}
             </NavItem>
           ))}
       </NavList>
@@ -230,9 +267,9 @@ const PageLayout = ({
 
   const sidebar = <PageSidebar nav={pageNav} />;
 
-  const mainContainerId = 'main-content';
-
-  const pageSkipToContent = <SkipToContent href={`#${mainContainerId}`}>Skip to content</SkipToContent>;
+  const pageSkipToContent = (
+    <SkipToContent href={`#${mainContainerId}`}>{t('view.label', { context: ['skip-nav'] })}</SkipToContent>
+  );
 
   return (
     <Page
@@ -255,6 +292,7 @@ const PageLayout = ({
 PageLayout.propTypes = {
   children: PropTypes.node,
   leftMenu: PropTypes.array,
+  mainContainerId: PropTypes.string,
   t: PropTypes.func,
   uiBrand: PropTypes.string,
   uiName: PropTypes.string,
@@ -272,6 +310,7 @@ PageLayout.propTypes = {
 PageLayout.defaultProps = {
   children: null,
   leftMenu: routes,
+  mainContainerId: 'main-content',
   t: translate,
   uiBrand: helpers.UI_BRAND,
   uiName: helpers.UI_NAME,
