@@ -6,44 +6,24 @@
   font-size: var(--pf-global--FontSize--md) !important;
 }
 
-.pf-c-select.pf-m-expanded input[type="radio"],
-.pf-c-select.pf-m-expanded input[type="checkbox"] {
-  margin-top: inherit;
-}
-
-.quipucords-form__checkbox input,
-.quipucords-form__radio input {
-  margin: inherit;
-}
-
-/*
-.quipucords {
-  .pf-c-pagination .pf-c-options-menu__toggle,
-  .pf-c-pagination__nav-page-select > *,
-  .pf-c-table tr > * {
-    font-size: var(--pf-global--FontSize--md);
-  }
-}
-
 .quipucords-modal {
   .pf-c-alert__title,
   .pf-c-form__label-text {
     font-size: var(--pf-global--FontSize--md);
   }
 }
-*/
 
 .quipucords-navItem {
   button.quipucords-navItem {
-    color: var(--pf-c-nav__link--m-current--Color) !important;
+    color: var(--pf-c-nav__link--m-current--Color);
 
     .pf-c-button__icon {
-      color: var(--pf-c-nav__link--m-current--BackgroundColor) !important;
+      color: var(--pf-c-nav__link--m-current--BackgroundColor);
       margin-right: 1em;
     }
 
     &.pf-m-current .pf-c-button__icon {
-      color: var(--pf-c-page__header--BackgroundColor) !important;
+      color: var(--pf-c-page__header--BackgroundColor);
     }
   }
 }
