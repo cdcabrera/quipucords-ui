@@ -24,10 +24,10 @@ describe('Distribution', () => {
   });
 
   it('should have specific ajax environment parameters set', () => {
-    const envProductionLocalFile = loadFile('./.env.production');
+    const envProductionLocalFile = loadFile('./.env');
 
     const ajaxToken = envProductionLocalFile.match(/\bREACT_APP_AUTH_TOKEN=(.*)\n/i)[1];
-    const tokenWithinGui = execSync(`grep -rl "${ajaxToken}" ./dist/client/static/js`).toString();
+    const tokenWithinGui = execSync(`grep -rl "${ajaxToken}" ./dist/client`).toString();
 
     expect({ ajaxToken, files: trimSortDistList(tokenWithinGui) }).toMatchSnapshot('ajax parameters');
   });
