@@ -29,12 +29,19 @@ rimrafSync(DIST_DIR);
 
 module.exports = () => ({
   entry: {
+    // app: {
+    //  import: path.join(SRC_DIR, 'index.js'),
+    //  dependOn: 'vendor'
+    // }
+    // vendor: ['react', 'react-dom']
     app: path.join(SRC_DIR, 'index.js')
     // shared: ['react', 'react-dom', 'redux', 'react-redux']
   },
   output: {
-    chunkFilename: '[name].[contenthash:8].chunk.js',
-    filename: '[name].[contenthash:8].js',
+    // chunkFilename: '[name].[contenthash:8].chunk.js',
+    // filename: '[name].[contenthash:8].js',
+    // chunkFilename: '[name].bundle.chunk.js',
+    filename: '[name].bundle.js',
     path: DIST_DIR,
     publicPath: PUBLIC_PATH,
     clean: true
@@ -83,7 +90,6 @@ module.exports = () => ({
       },
       {
         test: /\.(sa|sc|c)ss$/i,
-        // include: input => input.indexOf(SRC_DIR) > -1 || input.indexOf('@patternfly') > -1,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       }
     ]

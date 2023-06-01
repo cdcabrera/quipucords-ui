@@ -23,6 +23,10 @@ module.exports = merge(
   {
     mode: MODE,
     devtool: undefined,
+    output: {
+      chunkFilename: '[name].[contenthash:8].chunk.js',
+      filename: '[name].[contenthash:8].js'
+    },
     optimization: {
       minimize: true,
       minimizer: [
@@ -35,8 +39,33 @@ module.exports = merge(
           }
         })
       ],
+      runtimeChunk: 'single',
       splitChunks: {
-        chunks: 'all'
+        chunks: 'all',
+        // usedExports: true,
+        // hidePathInfo: true,
+        minSize: 50000,
+        maxSize: 250000,
+        // name: false,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            chunks: 'all'
+            // reuseExistingChunk: true,
+            // usedExports: true
+          }
+          /*
+          commons: {
+            // test: /[\\/]node_modules[\\/](moment|react*|react-dom|react-router*|redux|@patternfly*)[\\/]/,
+            test: /[\\/]node_modules[\\/](moment|react*|react-router*|@remix|redux|reselect|@patternfly*)[\\/]/,
+            name: 'vendor',
+            reuseExistingChunk: true,
+            usedExports: true,
+            chunks: 'all'
+          }
+           */
+        }
       }
       /*
       ,
