@@ -13,9 +13,6 @@ exports[`Distribution should have specific ajax environment parameters set: ajax
 exports[`Distribution should match a specific file output: dist-output 1`] = `
 [
   "",
-  "./dist/client/482*css",
-  "./dist/client/482*js",
-  "./dist/client/482*js*txt",
   "./dist/client/app*css",
   "./dist/client/app*js",
   "./dist/client/app*js*txt",
@@ -646,6 +643,10 @@ exports[`Distribution should match a specific file output: dist-output 1`] = `
   "./dist/client/locales/en.json",
   "./dist/client/locales/locales.json",
   "./dist/client/manifest.json",
+  "./dist/client/runtime*js",
+  "./dist/client/vendor*css",
+  "./dist/client/vendor*js",
+  "./dist/client/vendor*js*txt",
   "./dist/templates/base.html",
   "./dist/templates/client/index.html",
   "./dist/templates/registration/logged_out.html",

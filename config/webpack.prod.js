@@ -42,56 +42,14 @@ module.exports = merge(
       runtimeChunk: 'single',
       splitChunks: {
         chunks: 'all',
-        // usedExports: true,
-        // hidePathInfo: true,
-        minSize: 50000,
-        maxSize: 250000,
-        // name: false,
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendor',
             chunks: 'all'
-            // reuseExistingChunk: true,
-            // usedExports: true
-          }
-          /*
-          commons: {
-            // test: /[\\/]node_modules[\\/](moment|react*|react-dom|react-router*|redux|@patternfly*)[\\/]/,
-            test: /[\\/]node_modules[\\/](moment|react*|react-router*|@remix|redux|reselect|@patternfly*)[\\/]/,
-            name: 'vendor',
-            reuseExistingChunk: true,
-            usedExports: true,
-            chunks: 'all'
-          }
-           */
-        }
-      }
-      /*
-      ,
-      splitChunks: {
-        chunks: 'all',
-        minSize: 25000,
-        maxInitialSize: 100000,
-        name: false
-      }
-      */
-      /*
-      splitChunks: {
-        chunks: 'all',
-        // minSize: 25000,
-        maxSize: 1000000,
-        // maxInitialSize: 100000,
-        name: false,
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/](react|react-dom|regenerator|@patternfly)[\\/]/,
-            name: 'vendor',
-            chunks: 'all'
           }
         }
       }
-      */
     },
     plugins: [
       new MiniCssExtractPlugin({
