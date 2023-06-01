@@ -19,7 +19,7 @@ module.exports = merge(
       })
     ]
   },
-  webpackCommon(MODE),
+  webpackCommon(),
   {
     mode: MODE,
     devtool: undefined,
@@ -42,11 +42,9 @@ module.exports = merge(
       runtimeChunk: 'single',
       splitChunks: {
         chunks: 'all',
-        maxSize: 350000,
         cacheGroups: {
           vendor: {
             chunks: 'all',
-            maxSize: 350000,
             name: 'vendor',
             test: /[\\/]node_modules[\\/]/
           }

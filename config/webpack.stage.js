@@ -27,10 +27,15 @@ module.exports = merge(
       })
     ]
   },
-  webpackCommon(MODE),
+  webpackCommon(),
   {
     mode: MODE,
     devtool: 'eval-source-map',
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: '[name].bundle.css'
+      })
+    ],
     devServer: {
       host: HOST,
       port: PORT,
@@ -51,11 +56,6 @@ module.exports = merge(
       watchFiles: {
         paths: ['src/**/*', 'public/**/*']
       }
-    },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '[name].bundle.css'
-      })
-    ]
+    }
   }
 );
