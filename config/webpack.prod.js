@@ -44,9 +44,10 @@ module.exports = merge(
         chunks: 'all',
         cacheGroups: {
           vendor: {
-            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+            maxSize: 250000,
             name: 'vendor',
-            chunks: 'all'
+            test: /[\\/]node_modules[\\/]/
           }
         }
       }
