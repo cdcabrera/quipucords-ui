@@ -1,5 +1,6 @@
 import React from 'react';
-import { fireEvent, queries, render } from '@testing-library/react';
+import { fireEvent, queries, render, screen } from '@testing-library/react';
+import { prettyDOM } from '@testing-library/dom';
 import { act } from 'react-dom/test-utils';
 import * as reactRedux from 'react-redux';
 import { setupDotenvFilesForEnv } from './build.dotenv';
@@ -35,6 +36,34 @@ jest.mock('react-redux', () => ({
 }));
 
 /**
+ * Emulate react router dom useLocation
+ */
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+  useLocation: () => ({ hash: '', search: '' })
+}));
+
+/**
+ * React testing for components. Add a screen render function that outputs HTML.
+ * Used by "renderComponent".
+ *
+ * @type {{render: Function}} The render output allows the use querySelector, querySelectorALl, but the
+ *     caveat is the "found" elements are not usable with other testing methods since they are recreated HTML.
+ */
+global.screenRender = {
+  ...screen,
+  render: (containerElement = screen) => {
+    const screenContainer = document.createElement('screen');
+    screenContainer.innerHTML = prettyDOM(containerElement.innerHTML, undefined, { highlight: false })
+      .replace(/(\s)+/g, ' ')
+      .replace(/>\s</g, '><');
+
+    return screenContainer;
+  }
+};
+
+/**
  * React testing for components.
  * try "shallowComponent" if results are not expected... see "shallowComponent"
  *
@@ -48,6 +77,7 @@ jest.mock('react-redux', () => ({
  * @returns {HTMLElement}
  */
 global.renderComponent = (testComponent, options = {}) => {
+  const updatedOptions = { includeInstanceRef: true, ...options };
   const getDisplayName = reactComponent =>
     reactComponent?.displayName ||
     reactComponent?.$$typeof?.displayName ||
@@ -76,10 +106,19 @@ global.renderComponent = (testComponent, options = {}) => {
   }
   containerElement.props = componentInfo.props;
 
-  const { container, ...renderRest } = render(testComponent, {
+  const updatedTestComponent = { ...testComponent };
+  let elementInstance;
+
+  if (updatedOptions.includeInstanceRef === true) {
+    updatedTestComponent.ref = element => {
+      elementInstance = element;
+    };
+  }
+
+  const { container, ...renderRest } = render(updatedTestComponent, {
     container: containerElement,
     queries,
-    ...options
+    ...updatedOptions
   });
 
   const appendProps = obj => {
@@ -89,14 +128,16 @@ global.renderComponent = (testComponent, options = {}) => {
   };
 
   const updatedContainer = container;
+  updatedContainer.screen = global.screenRender;
+  updatedContainer.instance = elementInstance;
   updatedContainer.find = selector => container?.querySelector(selector);
   updatedContainer.fireEvent = fireEvent;
   updatedContainer.setProps = updatedProps => {
-    const updatedComponent = { ...testComponent, props: { ...testComponent?.props, ...updatedProps } };
+    const updatedComponent = { ...updatedTestComponent, props: { ...updatedTestComponent?.props, ...updatedProps } };
     let rerender = renderRest.rerender(updatedComponent);
 
     if (rerender === undefined) {
-      rerender = global.renderComponent(updatedComponent, { queries, ...options });
+      rerender = global.renderComponent(updatedComponent, { queries, ...updatedOptions });
     }
 
     if (rerender) {
@@ -168,7 +209,7 @@ global.shallowComponent = async testComponent => {
   const localRenderHook = async (component, updatedProps) => {
     if (typeof component?.type === 'function') {
       try {
-        const { result } = await global.renderHook(() =>
+        const { unmount, result } = await global.renderHook(() =>
           component.type({ ...component.type.defaultProps, ...component.props, ...updatedProps })
         );
 
@@ -192,6 +233,7 @@ global.shallowComponent = async testComponent => {
 
         if (Array.isArray(result)) {
           const updatedR = result;
+          updatedR.unmount = unmount;
           updatedR.render = renderResult;
           updatedR.find = querySelector;
           updatedR.querySelector = querySelector;
@@ -202,6 +244,7 @@ global.shallowComponent = async testComponent => {
 
         return {
           ...result,
+          unmount,
           render: renderResult,
           find: querySelector,
           querySelector,
@@ -219,18 +262,52 @@ global.shallowComponent = async testComponent => {
   return localRenderHook(testComponent);
 };
 
+// ToDo: revisit squashing log and group messaging, redux leaks log messaging
+// ToDo: revisit squashing PF4 "popper" alerts
+// ToDo: revisit squashing PF4 "validateDOMNesting" select alerts
+// ToDo: revisit squashing PF4 "validateDOMNesting" table alerts
 /*
- * Apply invalid prop, failed prop checks.
- * jest-prop-type-error, https://www.npmjs.com/package/jest-prop-type-error
+ * For applying a global Jest "beforeAll", based on
+ * - jest-prop-type-error, https://www.npmjs.com/package/jest-prop-type-error
+ * - renderComponent, test function testComponent messaging
+ * - SVG syntax
+ * - PF4 popper alerts and validateDOMNesting for select, table
  */
 beforeAll(() => {
-  const { error } = console;
+  const { error, group, log } = console;
 
-  console.error = (message, ...args) => {
+  const interceptConsoleMessaging = (method, callback) => {
+    console[method.name] = (message, ...args) => {
+      const isValid = callback(message, ...args);
+      if (isValid === true) {
+        method.apply(console, [message, ...args]);
+      }
+    };
+  };
+
+  interceptConsoleMessaging(group, () => process.env.CI !== 'true');
+
+  interceptConsoleMessaging(log, () => process.env.CI !== 'true');
+
+  interceptConsoleMessaging(error, (message, ...args) => {
     if (/(Invalid prop|Failed prop type)/gi.test(message)) {
       throw new Error(message);
     }
 
-    error.apply(console, [message, ...args]);
-  };
+    // ignore SVG and other xml
+    if (
+      /<testComponent/gi.test(message) ||
+      args?.[0] === 'testComponent' ||
+      /<foreignObject/gi.test(message) ||
+      args?.[0] === 'foreignObject' ||
+      /<g/gi.test(message) ||
+      args?.[0] === 'g' ||
+      (/validateDOMNesting/gi.test(message) && args?.[0] === '<div>' && args?.[1] === 'select') ||
+      (/validateDOMNesting/gi.test(message) && args?.[0] === '<div>' && args?.[1] === 'table')
+    ) {
+      return false;
+    }
+
+    return !/(Not implemented: navigation)/gi.test(message) && !/Popper/gi.test(args?.[0]);
+  });
 });
