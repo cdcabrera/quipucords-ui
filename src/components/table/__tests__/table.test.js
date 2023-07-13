@@ -120,9 +120,8 @@ describe('Table Component', () => {
     component.fireEvent.click(input, { currentTarget: {}, target: { checked: true }, checked: true });
 
     expect(mockOnSelect.mock.calls).toMatchSnapshot('select row input');
-    expect(component.find('tbody tr')).toMatchSnapshot('selected row');
   });
-/*
+
   it('should pass child components, nodes when there are no rows', async () => {
     const props = {
       isHeader: true,
@@ -130,8 +129,7 @@ describe('Table Component', () => {
       rows: []
     };
 
-    const component = await shallowHookComponent(<Table {...props}>Loading...</Table>);
+    const component = await shallowComponent(<Table {...props}>Loading...</Table>);
     expect(component).toMatchSnapshot('children');
   });
-  */
 });

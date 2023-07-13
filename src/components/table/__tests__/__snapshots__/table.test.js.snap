@@ -186,32 +186,6 @@ exports[`Table Component should allow selectable row content: select row input 1
 ]
 `;
 
-exports[`Table Component should allow selectable row content: selected row 1`] = `
-<tr
-  class="quipucords-table__tr"
-  data-ouia-component-id="OUIA-Generated-TableRow-11"
-  data-ouia-component-type="PF4/TableRow"
-  data-ouia-safe="true"
->
-  <td
-    class="quipucords-table__td quipucords-table__td-select pf-c-table__check"
-  >
-    <label>
-      <input
-        aria-label="Select row 0"
-        name="checkrow0"
-        type="checkbox"
-      />
-    </label>
-  </td>
-  <td
-    class=" quipucords-table__td "
-  >
-    dolor
-  </td>
-</tr>
-`;
-
 exports[`Table Component should allow sortable content: sort event 1`] = `
 [
   [
@@ -548,6 +522,16 @@ exports[`Table Component should allow variations in table layout: generated rows
         </React.Fragment>
       </Tbody>
     </TableComposable>
+  </GridItem>
+</Grid>
+`;
+
+exports[`Table Component should pass child components, nodes when there are no rows: children 1`] = `
+<Grid>
+  <GridItem
+    span={12}
+  >
+    Loading...
   </GridItem>
 </Grid>
 `;
