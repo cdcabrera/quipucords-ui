@@ -12,16 +12,16 @@ describe('PageLayout Component', () => {
         username: 'lorem'
       })
     };
-    const component = await shallowHookComponent(
+    const component = await shallowComponent(
       <PageLayout {...props}>
         <span className="test">lorem</span>
       </PageLayout>
     );
 
-    expect(component.find(Page)).toMatchSnapshot('basic');
+    expect(component).toMatchSnapshot('basic');
   });
 
-  it('should render a basic component branded', async () => {
+  it('should render a basic component branded', () => {
     const props = {
       useLocation: jest.fn(),
       useNavigate: jest.fn(),
@@ -31,12 +31,12 @@ describe('PageLayout Component', () => {
       }),
       isUiBrand: true
     };
-    const component = await shallowHookComponent(
+    const component = renderComponent(
       <PageLayout {...props}>
         <span className="test">lorem</span>
       </PageLayout>
     );
 
-    expect(component.find(Page).prop('header')).toMatchSnapshot('brand');
+    expect(component.querySelector('.pf-c-masthead__brand')).toMatchSnapshot('brand');
   });
 });
