@@ -9,7 +9,6 @@ describe('CreateScanDialog Component', () => {
     };
 
     const component = renderComponent(<CreateScanDialog {...props} />);
-
     expect(component.screen.render()).toMatchSnapshot('basic');
   });
 
@@ -20,7 +19,6 @@ describe('CreateScanDialog Component', () => {
     };
 
     const component = renderComponent(<CreateScanDialog {...props} />);
-
     expect(component.screen.render()).toMatchSnapshot('empty');
   });
 
