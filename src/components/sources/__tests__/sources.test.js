@@ -12,7 +12,7 @@ describe('Sources Component', () => {
       useView: () => ({ viewId: CONFIG.viewId })
     };
 
-    const component = await shallowHookComponent(<Sources {...props} />);
+    const component = await shallowComponent(<Sources {...props} />);
     expect(component).toMatchSnapshot('basic');
   });
 
@@ -23,19 +23,19 @@ describe('Sources Component', () => {
       })
     };
 
-    const component = await shallowHookComponent(<Sources {...props} />);
+    const component = await shallowComponent(<Sources {...props} />);
     expect(component).toMatchSnapshot('pending');
 
-    component.setProps({
+    const componentError = await component.setProps({
       useGetSources: () => ({
         pending: false,
         error: true
       })
     });
 
-    expect(component).toMatchSnapshot('error');
+    expect(componentError).toMatchSnapshot('error');
 
-    component.setProps({
+    const componentFulfilled = await component.setProps({
       useGetSources: () => ({
         pending: false,
         error: false,
@@ -49,7 +49,7 @@ describe('Sources Component', () => {
       })
     });
 
-    expect(component).toMatchSnapshot('fulfilled');
+    expect(componentFulfilled).toMatchSnapshot('fulfilled');
   });
 
   it('should return an empty state when there are no sources', async () => {
@@ -60,15 +60,15 @@ describe('Sources Component', () => {
       })
     };
 
-    const component = await shallowHookComponent(<Sources {...props} />);
+    const component = await shallowComponent(<Sources {...props} />);
     expect(component).toMatchSnapshot('empty state, no data');
 
-    component.setProps({
+    const componentEmptyState = await component.setProps({
       useView: () => ({
         isFilteringActive: true
       })
     });
 
-    expect(component.find(EmptyState)).toMatchSnapshot('empty state, filtering active');
+    expect(componentEmptyState).toMatchSnapshot('empty state, filtering active');
   });
 });
