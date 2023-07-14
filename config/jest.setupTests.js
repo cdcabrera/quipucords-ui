@@ -160,10 +160,12 @@ global.renderComponent = (testComponent, options = {}) => {
  *
  * @param {Function} useHook
  * @param {object} options
+ * @param {Function} options.callback A result callback fired after the hook in the same context.
+ *     An alternative to using the "result" response.
  * @param {object} options.state An object representing a mock Redux store's state.
  * @returns {*}
  */
-global.renderHook = async (useHook = Function.prototype, { state } = {}) => {
+global.renderHook = async (useHook = Function.prototype, { callback, state } = {}) => {
   let result;
   let spyUseSelector;
   let unmountHook;
@@ -173,17 +175,21 @@ global.renderHook = async (useHook = Function.prototype, { state } = {}) => {
     return null;
   };
 
+  const unmount = async () => {
+    await act(async () => unmountHook());
+  };
+
   await act(async () => {
     if (state) {
       spyUseSelector = jest.spyOn(reactRedux, 'useSelector').mockImplementation(_ => _(state));
     }
-    const { unmount } = await render(<Hook />);
-    unmountHook = unmount;
-  });
+    const { unmount: unmountRender } = await render(<Hook />);
+    unmountHook = unmountRender;
 
-  const unmount = async () => {
-    await act(async () => unmountHook());
-  };
+    if (typeof callback === 'function') {
+      callback({ unmount, result });
+    }
+  });
 
   if (state) {
     spyUseSelector.mockClear();
