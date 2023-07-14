@@ -12,7 +12,7 @@ describe('Scans Component', () => {
       useView: () => ({ viewId: CONFIG.viewId })
     };
 
-    const component = await shallowHookComponent(<Scans {...props} />);
+    const component = await shallowComponent(<Scans {...props} />);
     expect(component).toMatchSnapshot('basic');
   });
 
@@ -23,19 +23,19 @@ describe('Scans Component', () => {
       })
     };
 
-    const component = await shallowHookComponent(<Scans {...props} />);
+    const component = await shallowComponent(<Scans {...props} />);
     expect(component).toMatchSnapshot('pending');
 
-    component.setProps({
+    const componentError = await component.setProps({
       useGetScans: () => ({
         pending: false,
         error: true
       })
     });
 
-    expect(component).toMatchSnapshot('error');
+    expect(componentError).toMatchSnapshot('error');
 
-    component.setProps({
+    const componentFulfilled = await component.setProps({
       useGetScans: () => ({
         pending: false,
         error: false,
@@ -49,7 +49,7 @@ describe('Scans Component', () => {
       })
     });
 
-    expect(component).toMatchSnapshot('fulfilled');
+    expect(componentFulfilled).toMatchSnapshot('fulfilled');
   });
 
   it('should return an empty state when there are no scans', async () => {
@@ -60,15 +60,15 @@ describe('Scans Component', () => {
       })
     };
 
-    const component = await shallowHookComponent(<Scans {...props} />);
+    const component = await shallowComponent(<Scans {...props} />);
     expect(component).toMatchSnapshot('empty state, no data');
 
-    component.setProps({
+    const componentEmptyState = await component.setProps({
       useView: () => ({
         isFilteringActive: true
       })
     });
 
-    expect(component.find(EmptyState)).toMatchSnapshot('empty state, filtering active');
+    expect(componentEmptyState).toMatchSnapshot('empty state, filtering active');
   });
 });
