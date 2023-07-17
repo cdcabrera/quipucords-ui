@@ -109,7 +109,7 @@ global.renderComponent = (testComponent, options = {}) => {
   const updatedTestComponent = { ...testComponent };
   let elementInstance;
 
-  if (typeof updatedTestComponent?.type !== 'function' && updatedOptions.includeInstanceRef === true) {
+  if (updatedTestComponent?.type?.prototype?.isReactComponent && updatedOptions.includeInstanceRef === true) {
     updatedTestComponent.ref = element => {
       elementInstance = element;
     };
