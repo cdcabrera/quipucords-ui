@@ -7,11 +7,10 @@ import App from './components/app';
 import { baseName } from './components/router/router';
 import { store } from './redux/store';
 
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <BrowserRouter basename={baseName}>
       <App />
     </BrowserRouter>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );
