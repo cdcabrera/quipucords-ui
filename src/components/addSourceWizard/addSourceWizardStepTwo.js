@@ -180,7 +180,6 @@ class AddSourceWizardStepTwo extends React.Component {
         errorMessage={stepTwoErrorMessages.name || t('form-dialog.label', { context: ['name', 'add-source', 'error'] })}
       >
         <TextInput
-          ouiaId="name"
           name="name"
           value={values.name}
           placeholder={t('form-dialog.label', { context: ['name', 'add-source', 'placeholder', type] })}
@@ -281,7 +280,6 @@ class AddSourceWizardStepTwo extends React.Component {
               })}
             >
               <TextInput
-                ouiaId="port"
                 name="port"
                 value={values.port}
                 maxLength={5}
@@ -341,7 +339,6 @@ class AddSourceWizardStepTwo extends React.Component {
             }
           >
             <TextInput
-              ouiaId="hosts_single"
               name="hostsSingle"
               value={values.hostsSingle}
               placeholder={t('form-dialog.label', {

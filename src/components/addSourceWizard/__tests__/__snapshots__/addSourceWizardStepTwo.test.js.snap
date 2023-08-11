@@ -161,6 +161,7 @@ exports[`AddSourceWizardStepTwo Component should render a basic component: basic
           class="pf-c-form-control quipucords-form__textarea   pf-m-resize-vertical"
           id="hostsMultiple"
           name="hostsMultiple"
+          ouiaid="hostsMultiple"
           placeholder="t(form-dialog.label_search-addresses, {"context":"placeholder"})"
           rows="5"
         />

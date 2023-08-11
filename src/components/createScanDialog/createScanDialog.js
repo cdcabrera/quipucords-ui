@@ -187,7 +187,6 @@ class CreateScanDialog extends React.Component {
             type="text"
             autoFocus
             name="scanName"
-            ouiaId="scan_name"
             value={values.scanName}
             maxLength={256}
             placeholder={t('form-dialog.label', { context: ['scan-name', 'placeholder'] })}
@@ -202,7 +201,6 @@ class CreateScanDialog extends React.Component {
           <TextArea
             className="quipucords-form-control"
             name="displayScanSources"
-            ouiaId="display_scan_sources"
             value={values.displayScanSources}
             rows={2}
             isReadOnly
@@ -345,7 +343,6 @@ class CreateScanDialog extends React.Component {
           <TextArea
             isDisabled={!checked.jbossEap && !checked.jbossFuse && !checked.jbossWs && !checked.jbossBrms}
             name="displayScanDirectories"
-            ouiaId="display_scan_directories"
             value={values.displayScanDirectories}
             rows={4}
             placeholder={t('form-dialog.label', { context: ['scan-alt-directories', 'placeholder'] })}
