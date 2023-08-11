@@ -71,7 +71,7 @@ const ViewToolbarSelectCategory = ({
       onSelect={onSelect}
       selectedOptions={selectedOption}
       toggleIcon={<FilterIcon />}
-      ouiaId="toolbar_select_category"
+      name="toolbar_select_category"
     />
   );
 };

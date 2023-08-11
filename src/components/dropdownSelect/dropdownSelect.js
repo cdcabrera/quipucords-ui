@@ -272,6 +272,7 @@ const formatButtonParentProps = (formattedButtonProps = {}) => {
  * @param {Function} props.onSelect
  * @param {Function} props.onSplitButton
  * @param {object|Array} props.options
+ * @param {string} props.ouiaId
  * @param {string} props.placeholder
  * @param {string} props.position
  * @param {number|string|Array} props.selectedOptions
@@ -297,6 +298,7 @@ const DropdownSelect = ({
   onSelect,
   onSplitButton,
   options: baseOptions,
+  ouiaId,
   placeholder,
   position,
   selectedOptions,
@@ -409,6 +411,8 @@ const DropdownSelect = ({
     }
   };
 
+  const updatedOuiaId = ouiaId || name || id || undefined;
+
   /**
    * Apply dropdown.
    *
@@ -416,6 +420,7 @@ const DropdownSelect = ({
    */
   const renderDropdownButton = () => (
     <Dropdown
+      {...(updatedOuiaId && { ouiaId: updatedOuiaId })}
       direction={direction}
       isFlipEnabled={isFlipEnabled}
       isOpen={isExpanded}
@@ -462,6 +467,7 @@ const DropdownSelect = ({
    */
   const renderSelect = () => (
     <PfSelect
+      {...(updatedOuiaId && { ouiaId: updatedOuiaId })}
       className={`quipucords-select-pf${(!isToggleText && '__no-toggle-text') || ''} ${
         (direction === SelectDirection.down && 'quipucords-select-pf__position-down') || ''
       } ${(position === SelectPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
@@ -512,9 +518,9 @@ const DropdownSelect = ({
  * Prop types.
  *
  * @type {{isFlipEnabled: boolean, toggleIcon: (React.ReactNode|Function), className: string, onSplitButton: Function, ariaLabel: string,
- *     onSelect: Function, isToggleText: boolean, isDropdownButton: boolean, maxHeight: number, buttonVariant: string, name: string,
- *     options: Array|object, selectedOptions: Array|number|string, variant: string, isInline: boolean, id: string, isDisabled: boolean,
- *     placeholder: string, position: string, splitButtonVariant: string, direction: string}}
+ *     onSelect: Function, isToggleText: boolean, ouiaId: null, isDropdownButton: boolean, maxHeight: number, buttonVariant: string,
+ *     name: string, options: Array|object, selectedOptions: Array|number|string, variant: string, isInline: boolean, id: string,
+ *     isDisabled: boolean, placeholder: string, position: string, splitButtonVariant: string, direction: string}}
  */
 DropdownSelect.propTypes = {
   ariaLabel: PropTypes.string,
@@ -549,6 +555,7 @@ DropdownSelect.propTypes = {
     }),
     PropTypes.object
   ]),
+  ouiaId: PropTypes.string,
   placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.any]),
   position: PropTypes.oneOf(Object.values(SelectPosition)),
   selectedOptions: PropTypes.oneOfType([
@@ -565,7 +572,7 @@ DropdownSelect.propTypes = {
  * Default props.
  *
  * @type {{isFlipEnabled: boolean, toggleIcon: null, className: string, onSplitButton: Function, ariaLabel: string, onSelect: Function,
- *     isToggleText: boolean, isDropdownButton: boolean, maxHeight: null, buttonVariant: string, name: null, options: Array,
+ *     isToggleText: boolean, ouiaId: null, isDropdownButton: boolean, maxHeight: null, buttonVariant: string, name: null, options: Array,
  *     selectedOptions: null, variant: SelectVariant.single, isInline: boolean, id: string, isDisabled: boolean, placeholder: string,
  *     position: string, splitButtonVariant: null, direction: string}}
  */
@@ -585,6 +592,7 @@ DropdownSelect.defaultProps = {
   onSelect: helpers.noop,
   onSplitButton: helpers.noop,
   options: [],
+  ouiaId: null,
   placeholder: 'Select option',
   position: SelectPosition.left,
   selectedOptions: null,

@@ -68,6 +68,7 @@ exports[`ScansTableCells should return consistent cell results: basic actionsCel
           },
         ]
       }
+      ouiaId={null}
       placeholder={
         <EllipsisVIcon
           color="currentColor"

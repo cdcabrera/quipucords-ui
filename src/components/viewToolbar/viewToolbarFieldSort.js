@@ -74,7 +74,7 @@ const ViewToolbarFieldSort = ({ t, useOnSelect: useAliasOnSelect, useView: useAl
         onSelect={onSelectUpdated}
         selectedOptions={selectedOption?.replace(/^-/, '')}
         data-test="toolbarSortType"
-        ouiaId="toolbar_sort_type"
+        name="toolbar_sort_type"
       />
       <ViewToolbarFieldSortButton />
     </React.Fragment>

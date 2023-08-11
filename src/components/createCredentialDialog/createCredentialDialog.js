@@ -226,7 +226,7 @@ const CreateCredentialDialog = ({
       {values[apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE] === 'network' && (
         <FormGroup label={t('form-dialog.label', { context: ['auth-type', 'create-credential'] })}>
           <DropdownSelect
-            ouiaId="auth_type"
+            name="auth_type"
             isInline={false}
             onSelect={onSetAuthType}
             options={authenticationOptions}
@@ -372,7 +372,6 @@ const CreateCredentialDialog = ({
       <React.Fragment>
         <FormGroup key="become_method" label={t('form-dialog.label', { context: ['become-method'] })}>
           <DropdownSelect
-            ouiaId="become_method"
             name={apiTypes.API_QUERY_TYPES.BECOME_METHOD}
             isInline={false}
             onSelect={handleOnEvent}

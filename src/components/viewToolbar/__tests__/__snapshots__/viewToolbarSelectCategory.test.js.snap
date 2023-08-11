@@ -49,7 +49,7 @@ exports[`ViewToolbarSelectCategory Component should render a basic component: ba
   isInline={true}
   isToggleText={true}
   maxHeight={null}
-  name={null}
+  name="toolbar_select_category"
   onSelect={[Function]}
   onSplitButton={[Function]}
   options={
@@ -72,7 +72,7 @@ exports[`ViewToolbarSelectCategory Component should render a basic component: ba
       },
     ]
   }
-  ouiaId="toolbar_select_category"
+  ouiaId={null}
   placeholder="t(toolbar.label_placeholder, {"context":"filter"})"
   position="left"
   selectedOptions={null}

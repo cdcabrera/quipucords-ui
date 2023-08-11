@@ -300,6 +300,7 @@ exports[`Sources Component should handle multiple display states, pending, error
                             },
                           ]
                         }
+                        ouiaId={null}
                         placeholder={
                           <EllipsisVIcon
                             color="currentColor"

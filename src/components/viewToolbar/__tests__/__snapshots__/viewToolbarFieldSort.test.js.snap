@@ -44,7 +44,7 @@ exports[`ViewToolbarFieldSort Component should render a basic component: basic 1
     isInline={true}
     isToggleText={true}
     maxHeight={null}
-    name={null}
+    name="toolbar_sort_type"
     onSelect={[Function]}
     onSplitButton={[Function]}
     options={
@@ -65,7 +65,7 @@ exports[`ViewToolbarFieldSort Component should render a basic component: basic 1
         },
       ]
     }
-    ouiaId="toolbar_sort_type"
+    ouiaId={null}
     placeholder="t(toolbar.label_option, {"context":"sort"})"
     position="left"
     selectedOptions={null}
