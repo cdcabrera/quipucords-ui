@@ -108,6 +108,7 @@ exports[`SourcesTableCells should return consistent cell results: basic actionsC
           },
         ]
       }
+      ouiaId={null}
       placeholder={
         <EllipsisVIcon
           color="currentColor"
@@ -164,7 +165,9 @@ exports[`SourcesTableCells should return consistent cell results: basic descript
     sm={10}
   >
     <div>
-      <strong />
+      <strong
+        data-test="item_name"
+      />
     </div>
   </GridItem>
 </Grid>

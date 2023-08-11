@@ -226,6 +226,7 @@ const CreateCredentialDialog = ({
       {values[apiTypes.API_QUERY_TYPES.CREDENTIAL_TYPE] === 'network' && (
         <FormGroup label={t('form-dialog.label', { context: ['auth-type', 'create-credential'] })}>
           <DropdownSelect
+            name="auth_type"
             isInline={false}
             onSelect={onSetAuthType}
             options={authenticationOptions}

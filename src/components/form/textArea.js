@@ -30,6 +30,7 @@ const TextAreResizeOrientation = {
  * @param {Function} props.onChange
  * @param {Function} props.onClear
  * @param {Function} props.onKeyUp
+ * @param {string} props.ouiaId
  * @param {boolean} props.isReadOnly
  * @param {string} props.resizeOrientation
  * @param {*|string} props.value
@@ -44,6 +45,7 @@ const TextArea = ({
   onChange,
   onClear,
   onKeyUp,
+  ouiaId,
   isReadOnly,
   resizeOrientation,
   value,
@@ -104,11 +106,13 @@ const TextArea = ({
 
   const updatedName = name || helpers.generateId();
   const updatedId = id || updatedName;
+  const updatedOuiaId = ouiaId || updatedName;
 
   return (
     <PfTextArea
       id={updatedId}
       name={updatedName}
+      ouiaId={updatedOuiaId}
       className={`quipucords-form__textarea ${
         (resizeOrientation === TextAreResizeOrientation.none && 'quipucords-form__textarea-resize-none') || ''
       } ${className}`}
@@ -128,8 +132,8 @@ const TextArea = ({
 /**
  * Prop types
  *
- * @type {{resizeOrientation: string, onKeyUp: Function, isReadOnly: boolean, onChange: Function, onClear: Function,
- *     name: string, className: string, id: string, isDisabled: boolean, value: string}}
+ * @type {{resizeOrientation: string, ouiaId: string, onKeyUp: Function, isReadOnly: boolean, onChange: Function,
+ *     onClear: Function, name: string, className: string, id: string, isDisabled: boolean, value: string}}
  */
 TextArea.propTypes = {
   className: PropTypes.string,
@@ -139,6 +143,7 @@ TextArea.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func,
   onClear: PropTypes.func,
+  ouiaId: PropTypes.string,
   onKeyUp: PropTypes.func,
   resizeOrientation: PropTypes.oneOf([...Object.values(TextAreResizeOrientation)]),
   value: PropTypes.string
@@ -147,7 +152,7 @@ TextArea.propTypes = {
 /**
  * Default props
  *
- * @type {{resizeOrientation: *, onKeyUp: Function, isReadOnly: boolean, onChange: Function, onClear: Function,
+ * @type {{resizeOrientation: *, ouiaId: null, onKeyUp: Function, isReadOnly: boolean, onChange: Function, onClear: Function,
  *     name: null, className: string, id: null, isDisabled: boolean, value: string}}
  */
 TextArea.defaultProps = {
@@ -159,6 +164,7 @@ TextArea.defaultProps = {
   onChange: helpers.noop,
   onClear: helpers.noop,
   onKeyUp: helpers.noop,
+  ouiaId: null,
   resizeOrientation: TextAreResizeOrientation.default,
   value: ''
 };

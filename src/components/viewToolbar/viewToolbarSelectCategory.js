@@ -71,6 +71,7 @@ const ViewToolbarSelectCategory = ({
       onSelect={onSelect}
       selectedOptions={selectedOption}
       toggleIcon={<FilterIcon />}
+      name="toolbar_select_category"
     />
   );
 };

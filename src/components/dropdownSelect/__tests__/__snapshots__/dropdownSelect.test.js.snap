@@ -110,6 +110,7 @@ exports[`Select Component should allow being disabled with missing options: no o
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -124,7 +125,7 @@ exports[`Select Component should allow being disabled with missing options: no o
   >
     <div
       class="pf-c-select quipucords-select-pf quipucords-select-pf__position-down  "
-      data-ouia-component-id="OUIA-Generated-Select-single-7"
+      data-ouia-component-id="test"
       data-ouia-component-type="PF4/Select"
       data-ouia-safe="true"
     >
@@ -190,6 +191,7 @@ exports[`Select Component should allow being disabled with missing options: opti
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -204,7 +206,7 @@ exports[`Select Component should allow being disabled with missing options: opti
   >
     <div
       class="pf-c-select quipucords-select-pf quipucords-select-pf__position-down  "
-      data-ouia-component-id="OUIA-Generated-Select-single-9"
+      data-ouia-component-id="test"
       data-ouia-component-type="PF4/Select"
       data-ouia-safe="true"
     >
@@ -265,6 +267,7 @@ exports[`Select Component should allow being disabled with missing options: opti
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -279,7 +282,7 @@ exports[`Select Component should allow being disabled with missing options: opti
   >
     <div
       class="pf-c-select quipucords-select-pf quipucords-select-pf__position-down  "
-      data-ouia-component-id="OUIA-Generated-Select-single-8"
+      data-ouia-component-id="test"
       data-ouia-component-type="PF4/Select"
       data-ouia-safe="true"
     >
@@ -345,6 +348,7 @@ exports[`Select Component should allow data- props: data- attributes 1`] = `
   "onSelect": [Function],
   "onSplitButton": [Function],
   "options": [],
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -508,6 +512,7 @@ exports[`Select Component should emulate pf dropdown: emulated dropdown 1`] = `
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -522,7 +527,7 @@ exports[`Select Component should emulate pf dropdown: emulated dropdown 1`] = `
   >
     <div
       class="pf-c-dropdown"
-      data-ouia-component-id="OUIA-Generated-Dropdown-1"
+      data-ouia-component-id="generatedid-"
       data-ouia-component-type="PF4/Dropdown"
       data-ouia-safe="true"
       togglevariant="secondary"
@@ -590,6 +595,7 @@ exports[`Select Component should render a basic component: basic component 1`] =
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "placeholder": "Select option",
   "position": "left",
   "selectedOptions": null,
@@ -604,7 +610,7 @@ exports[`Select Component should render a basic component: basic component 1`] =
   >
     <div
       class="pf-c-select quipucords-select-pf quipucords-select-pf__position-down  "
-      data-ouia-component-id="OUIA-Generated-Select-single-1"
+      data-ouia-component-id="test"
       data-ouia-component-type="PF4/Select"
       data-ouia-safe="true"
     >
@@ -680,6 +686,7 @@ exports[`Select Component should render a checkbox select: checkbox select 1`] =
   "isToggleText": true,
   "maxHeight": null,
   "name": null,
+  "ouiaId": null,
   "position": "left",
   "splitButtonVariant": null,
   "toggleIcon": null,
@@ -691,7 +698,7 @@ exports[`Select Component should render a checkbox select: checkbox select 1`] =
   >
     <div
       class="pf-c-select quipucords-select-pf quipucords-select-pf__position-down  "
-      data-ouia-component-id="OUIA-Generated-Select-checkbox-1"
+      data-ouia-component-id="test"
       data-ouia-component-type="PF4/Select"
       data-ouia-safe="true"
     >

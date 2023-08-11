@@ -20,6 +20,7 @@ import { helpers } from '../../common';
  * @param {Function} props.onClear
  * @param {Function} props.onKeyUp
  * @param {Function} props.onMouseUp
+ * @param {string} props.ouiaId
  * @param {boolean} props.isReadOnly
  * @param {string} props.type
  * @param {*|string} props.value
@@ -35,6 +36,7 @@ const TextInput = ({
   onClear,
   onKeyUp,
   onMouseUp,
+  ouiaId,
   isReadOnly,
   type,
   value,
@@ -119,11 +121,13 @@ const TextInput = ({
 
   const updatedName = name || helpers.generateId();
   const updatedId = id || updatedName;
+  const updatedOuiaId = ouiaId || updatedName;
 
   return (
     <PfTextInput
       id={updatedId}
       name={updatedName}
+      ouiaId={updatedOuiaId}
       className={`quipucords-form__text-input ${className}`}
       isDisabled={isDisabled || false}
       isReadOnly={isReadOnly || false}
@@ -140,7 +144,7 @@ const TextInput = ({
 /**
  * Prop types
  *
- * @type {{onKeyUp: Function, isReadOnly: boolean, onChange: Function, onClear: Function, name: string,
+ * @type {{onKeyUp: Function, ouiaId: string, isReadOnly: boolean, onChange: Function, onClear: Function, name: string,
  *     className: string, id: string, isDisabled: boolean, onMouseUp: Function, type: string,
  *     value: string}}
  */
@@ -154,6 +158,7 @@ TextInput.propTypes = {
   onClear: PropTypes.func,
   onKeyUp: PropTypes.func,
   onMouseUp: PropTypes.func,
+  ouiaId: PropTypes.string,
   type: PropTypes.oneOf([...Object.values(TextInputTypes)]),
   value: PropTypes.string
 };
@@ -161,7 +166,7 @@ TextInput.propTypes = {
 /**
  * Default props
  *
- * @type {{onKeyUp: Function, isReadOnly: boolean, onChange: Function, onClear: Function, name: null,
+ * @type {{onKeyUp: Function, ouiaId: null, isReadOnly: boolean, onChange: Function, onClear: Function, name: null,
  *     className: string, id: null, isDisabled: boolean, onMouseUp: Function, type: TextInputTypes.text,
  *     value: string}}
  */
@@ -175,6 +180,7 @@ TextInput.defaultProps = {
   onClear: helpers.noop,
   onKeyUp: helpers.noop,
   onMouseUp: helpers.noop,
+  ouiaId: null,
   type: TextInputTypes.text,
   value: ''
 };
