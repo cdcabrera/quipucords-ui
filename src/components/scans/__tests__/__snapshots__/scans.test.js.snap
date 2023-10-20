@@ -63,7 +63,7 @@ exports[`Scans Component should handle multiple display states, pending, error, 
       className="quipucords-list-container"
     >
       <Table
-        ariaLabel={null}
+        ariaLabel="t(table.ariaLabel)"
         className=""
         columnHeaders={[]}
         componentClassNames={
@@ -221,11 +221,7 @@ exports[`Scans Component should handle multiple display states, pending, error, 
                             ouiaId="delete"
                             variant="plain"
                           >
-                            <TrashIcon
-                              color="currentColor"
-                              noVerticalAlign={false}
-                              size="sm"
-                            />
+                            <TrashIcon />
                           </Button>
                         </Tooltip>
                       </OverflowMenuGroup>
@@ -254,13 +250,7 @@ exports[`Scans Component should handle multiple display states, pending, error, 
                             },
                           ]
                         }
-                        placeholder={
-                          <EllipsisVIcon
-                            color="currentColor"
-                            noVerticalAlign={false}
-                            size="sm"
-                          />
-                        }
+                        placeholder={<EllipsisVIcon />}
                         position="right"
                         selectedOptions={null}
                         splitButtonVariant={null}
@@ -283,33 +273,39 @@ exports[`Scans Component should handle multiple display states, pending, error, 
             },
           ]
         }
-        summary={null}
+        summary="t(table.summary)"
         variant="compact"
       >
         <EmptyState
           className="quipucords-empty-state"
-          variant="large"
+          variant="lg"
         >
-          <EmptyStateIcon
-            icon={[Function]}
-          />
-          <Title
+          <EmptyStateHeader
             headingLevel="h1"
-            size="lg"
-          >
-            t(view.empty-state_filter, {"context":"title"})
-          </Title>
+            icon={
+              <EmptyStateIcon
+                icon={[Function]}
+              />
+            }
+            titleText={
+              <React.Fragment>
+                t(view.empty-state_filter, {"context":"title"})
+              </React.Fragment>
+            }
+          />
           <EmptyStateBody>
             t(view.empty-state_filter, {"context":"description"})
           </EmptyStateBody>
-          <EmptyStatePrimary>
-            <Button
-              onClick={[Function]}
-              variant="link"
-            >
-              t(view.empty-state_label, {"context":"clear"})
-            </Button>
-          </EmptyStatePrimary>
+          <EmptyStateFooter>
+            <EmptyStateActions>
+              <Button
+                onClick={[Function]}
+                variant="link"
+              >
+                t(view.empty-state_label, {"context":"clear"})
+              </Button>
+            </EmptyStateActions>
+          </EmptyStateFooter>
         </EmptyState>
       </Table>
     </div>
@@ -335,7 +331,6 @@ exports[`Scans Component should handle multiple display states, pending, error, 
 >
   <Bullseye>
     <Spinner
-      isSVG={true}
       size="lg"
     />
        
@@ -355,7 +350,7 @@ exports[`Scans Component should render a basic component: basic 1`] = `
       className="quipucords-list-container"
     >
       <Table
-        ariaLabel={null}
+        ariaLabel="t(table.ariaLabel)"
         className=""
         columnHeaders={[]}
         componentClassNames={
@@ -382,7 +377,7 @@ exports[`Scans Component should render a basic component: basic 1`] = `
         onSelect={[Function]}
         onSort={null}
         rows={[]}
-        summary={null}
+        summary="t(table.summary)"
         variant="compact"
       >
         <ScansEmptyState
@@ -449,7 +444,7 @@ exports[`Scans Component should return an empty state when there are no scans: e
       className="quipucords-list-container"
     >
       <Table
-        ariaLabel={null}
+        ariaLabel="t(table.ariaLabel)"
         className=""
         columnHeaders={[]}
         componentClassNames={
@@ -476,33 +471,39 @@ exports[`Scans Component should return an empty state when there are no scans: e
         onSelect={[Function]}
         onSort={null}
         rows={[]}
-        summary={null}
+        summary="t(table.summary)"
         variant="compact"
       >
         <EmptyState
           className="quipucords-empty-state"
-          variant="large"
+          variant="lg"
         >
-          <EmptyStateIcon
-            icon={[Function]}
-          />
-          <Title
+          <EmptyStateHeader
             headingLevel="h1"
-            size="lg"
-          >
-            t(view.empty-state_filter, {"context":"title"})
-          </Title>
+            icon={
+              <EmptyStateIcon
+                icon={[Function]}
+              />
+            }
+            titleText={
+              <React.Fragment>
+                t(view.empty-state_filter, {"context":"title"})
+              </React.Fragment>
+            }
+          />
           <EmptyStateBody>
             t(view.empty-state_filter, {"context":"description"})
           </EmptyStateBody>
-          <EmptyStatePrimary>
-            <Button
-              onClick={[Function]}
-              variant="link"
-            >
-              t(view.empty-state_label, {"context":"clear"})
-            </Button>
-          </EmptyStatePrimary>
+          <EmptyStateFooter>
+            <EmptyStateActions>
+              <Button
+                onClick={[Function]}
+                variant="link"
+              >
+                t(view.empty-state_label, {"context":"clear"})
+              </Button>
+            </EmptyStateActions>
+          </EmptyStateFooter>
         </EmptyState>
       </Table>
     </div>
@@ -521,7 +522,7 @@ exports[`Scans Component should return an empty state when there are no scans: e
       className="quipucords-list-container"
     >
       <Table
-        ariaLabel={null}
+        ariaLabel="t(table.ariaLabel)"
         className=""
         columnHeaders={[]}
         componentClassNames={
@@ -548,7 +549,7 @@ exports[`Scans Component should return an empty state when there are no scans: e
         onSelect={[Function]}
         onSort={null}
         rows={[]}
-        summary={null}
+        summary="t(table.summary)"
         variant="compact"
       >
         <ScansEmptyState
