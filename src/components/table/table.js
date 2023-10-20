@@ -4,16 +4,18 @@ import { useShallowCompareEffect } from 'react-use';
 import _cloneDeep from 'lodash/cloneDeep';
 import { Grid, GridItem } from '@patternfly/react-core';
 import {
-  ExpandableRowContent,
-  SortByDirection,
-  Table as PfTable,
-  TableVariant,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr
+	ExpandableRowContent,
+	SortByDirection,
+	TableVariant,
+	Tbody,
+	Td,
+	Th,
+	Thead,
+	Tr
 } from '@patternfly/react-table';
+import {
+	Table as PfTable
+} from '@patternfly/react-table/deprecated';
 import { TableEmpty } from './tableEmpty';
 import { tableHelpers } from './tableHelpers';
 
