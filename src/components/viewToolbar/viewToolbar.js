@@ -107,7 +107,7 @@ const ViewToolbar = ({
           <ToolbarItem key="lastRefresh">
             <RefreshTimeButton onRefresh={onRefresh} lastRefresh={lastRefresh} />
           </ToolbarItem>
-          <ToolbarItem key="secondaryFields" alignment={{ lg: 'alignRight', md: 'alignLeft' }}>
+          <ToolbarItem key="secondaryFields" align={{ lg: 'alignRight', md: 'alignLeft' }}>
             {secondaryFields}
           </ToolbarItem>
         </ToolbarContent>

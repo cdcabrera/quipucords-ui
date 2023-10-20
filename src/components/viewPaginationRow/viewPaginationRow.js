@@ -93,7 +93,6 @@ const ViewPaginationRow = ({
   return (
     <Pagination
       className="quipucords-view__pagination"
-      perPageComponent="button"
       dropDirection="down"
       perPage={pageSize}
       page={currentPage}
