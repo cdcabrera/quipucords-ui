@@ -162,6 +162,8 @@ const Credentials = ({
         )}
         <div className="quipucords-list-container">
           <Table
+            ariaLabel={t('table.ariaLabel')}
+            summary={t('table.summary')}
             onExpand={onExpand}
             onSelect={onSelect}
             rows={data?.map((item, index) => ({

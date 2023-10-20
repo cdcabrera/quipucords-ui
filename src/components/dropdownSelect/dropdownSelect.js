@@ -1,20 +1,18 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
+import { ButtonVariant as PfButtonVariant } from '@patternfly/react-core';
 import {
-	ButtonVariant as PfButtonVariant
-} from '@patternfly/react-core';
-import {
-	Dropdown,
-	DropdownDirection,
-	DropdownItem,
-	DropdownPosition,
-	DropdownToggle,
-	DropdownToggleAction,
-	DropdownToggleCheckbox,
-	Select as PfSelect,
-	SelectOption as PfSelectOption,
-	SelectVariant
+  Dropdown,
+  DropdownDirection,
+  DropdownItem,
+  DropdownPosition,
+  DropdownToggle,
+  DropdownToggleAction,
+  DropdownToggleCheckbox,
+  Select as PfSelect,
+  SelectOption as PfSelectOption,
+  SelectVariant
 } from '@patternfly/react-core/deprecated';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';

@@ -147,15 +147,17 @@ const ViewToolbarTextInput = ({
 
   return (
     <InputGroup>
-      <InputGroupItem><TextInput
-        aria-label={t('toolbar.label', { context: ['placeholder', 'filter', filter] })}
-        maxLength={255}
-        onClear={onClear}
-        onKeyUp={onKeyUp}
-        value={currentValue}
-        placeholder={t('toolbar.label', { context: ['placeholder', 'filter', filter] })}
-        ouiaId="toolbar_search_name"
-      /></InputGroupItem>
+      <InputGroupItem>
+        <TextInput
+          aria-label={t('toolbar.label', { context: ['placeholder', 'filter', filter] })}
+          maxLength={255}
+          onClear={onClear}
+          onKeyUp={onKeyUp}
+          value={currentValue}
+          placeholder={t('toolbar.label', { context: ['placeholder', 'filter', filter] })}
+          ouiaId="toolbar_search_name"
+        />
+      </InputGroupItem>
     </InputGroup>
   );
 };
