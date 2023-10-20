@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { InputGroup, Button, TextInput, ButtonVariant } from '@patternfly/react-core';
+import { InputGroup, Button, TextInput, ButtonVariant, InputGroupItem } from '@patternfly/react-core';
 import { PlusIcon, MinusIcon } from '@patternfly/react-icons';
 import { helpers } from '../../common';
 import { translate } from '../i18n/i18n';
@@ -134,7 +134,7 @@ class TouchSpin extends React.Component {
     return (
       <div className={`pf-c-number-input ${className}`}>
         <InputGroup>
-          <Button
+          <InputGroupItem><Button
             onClick={this.onMinus}
             variant={ButtonVariant.control}
             onMouseDown={this.onFocusMin}
@@ -144,15 +144,15 @@ class TouchSpin extends React.Component {
             aria-label={labelMinDescription || t('form-dialog.label', { context: ['touchspin', 'min'] })}
           >
             {labelMin}
-          </Button>
-          <TextInput
+          </Button></InputGroupItem>
+          <InputGroupItem isFill ><TextInput
             type="number"
             name={name}
             value={displayValue}
-            onChange={(_, event) => this.onUpdateValue(event)}
+            onChange={(event, _) => this.onUpdateValue(event)}
             aria-label={t('form-dialog.label', { context: ['touchspin', 'input'] })}
-          />
-          <Button
+          /></InputGroupItem>
+          <InputGroupItem><Button
             variant={ButtonVariant.control}
             onClick={this.onPlus}
             onMouseDown={this.onFocusMax}
@@ -162,7 +162,7 @@ class TouchSpin extends React.Component {
             aria-label={labelMaxDescription || t('form-dialog.label', { context: ['touchspin', 'max'] })}
           >
             {labelMax}
-          </Button>
+          </Button></InputGroupItem>
         </InputGroup>
       </div>
     );

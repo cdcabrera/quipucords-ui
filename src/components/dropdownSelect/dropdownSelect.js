@@ -2,18 +2,20 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useShallowCompareEffect } from 'react-use';
 import {
-  ButtonVariant as PfButtonVariant,
-  Dropdown,
-  DropdownDirection,
-  DropdownItem,
-  DropdownPosition,
-  DropdownToggle,
-  DropdownToggleAction,
-  DropdownToggleCheckbox,
-  Select as PfSelect,
-  SelectOption as PfSelectOption,
-  SelectVariant
+	ButtonVariant as PfButtonVariant
 } from '@patternfly/react-core';
+import {
+	Dropdown,
+	DropdownDirection,
+	DropdownItem,
+	DropdownPosition,
+	DropdownToggle,
+	DropdownToggleAction,
+	DropdownToggleCheckbox,
+	Select as PfSelect,
+	SelectOption as PfSelectOption,
+	SelectVariant
+} from '@patternfly/react-core/deprecated';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
 import _isPlainObject from 'lodash/isPlainObject';
@@ -422,7 +424,7 @@ const DropdownSelect = ({
       position={position}
       toggle={
         <DropdownToggle
-          onToggle={onToggle}
+          onToggle={(_event, expanded) => onToggle(expanded)}
           {...formatButtonProps({
             isDisabled,
             onSplitButton: onUpdatedSplitButton,
@@ -467,7 +469,7 @@ const DropdownSelect = ({
       } ${(position === SelectPosition.right && 'quipucords-select-pf__position-right') || ''} ${className}`}
       variant={variant}
       aria-label={ariaLabel}
-      onToggle={onToggle}
+      onToggle={(_event, expanded) => onToggle(expanded)}
       onSelect={onDropdownSelect}
       selections={selected}
       isFlipEnabled={isFlipEnabled}

@@ -7,7 +7,7 @@ import {
   EmptyState,
   EmptyStateIcon,
   Spinner,
-  Title
+  Title, EmptyStateHeader
 } from '@patternfly/react-core';
 import { Modal } from '../modal/modal';
 import { connect, reduxActions, reduxTypes, store } from '../../redux';
@@ -177,10 +177,7 @@ class MergeReportsDialog extends React.Component {
       >
         {pending && (
           <EmptyState className="quipucords-empty-state">
-            <EmptyStateIcon icon={Spinner} />
-            <Title headingLevel="h3">
-              {t('form-dialog.empty-state', { context: ['title', 'merge-reports', 'pending'] })}
-            </Title>
+            <EmptyStateHeader titleText={<>{t('form-dialog.empty-state', { context: ['title', 'merge-reports', 'pending'] })}</>} icon={<EmptyStateIcon icon={Spinner} />} headingLevel="h3" />
           </EmptyState>
         )}
         {!pending && (

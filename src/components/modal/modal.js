@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useMount, useUnmount } from 'react-use';
-import { Modal as PfModal, ModalProps, ModalVariant } from '@patternfly/react-core';
+import { Modal as PfModal, ModalVariant } from '@patternfly/react-core';
 import classNames from 'classnames';
 import { translate } from '../i18n/i18n';
 

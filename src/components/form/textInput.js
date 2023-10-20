@@ -129,14 +129,14 @@ const TextInput = ({
       name={updatedName}
       className={`quipucords-form__text-input ${className}`}
       isDisabled={isDisabled || false}
-      isReadOnly={isReadOnly || false}
-      onChange={onTextInputChange}
+      
+      onChange={(event, changedValue) => onTextInputChange(changedValue, event)}
       onKeyUp={onTextInputKeyUp}
       onMouseUp={onTextInputMouseUp}
       type={type}
       value={updatedValue ?? value ?? ''}
       ouiaId={updatedOuiaId}
-      {...props}
+      {...props} readOnlyVariant="default"
     />
   );
 };
