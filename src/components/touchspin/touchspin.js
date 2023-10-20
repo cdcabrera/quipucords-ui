@@ -134,35 +134,41 @@ class TouchSpin extends React.Component {
     return (
       <div className={`pf-c-number-input ${className}`}>
         <InputGroup>
-          <InputGroupItem><Button
-            onClick={this.onMinus}
-            variant={ButtonVariant.control}
-            onMouseDown={this.onFocusMin}
-            onMouseUp={this.onBlur}
-            onMouseLeave={this.onBlur}
-            isDisabled={displayValue <= minValue}
-            aria-label={labelMinDescription || t('form-dialog.label', { context: ['touchspin', 'min'] })}
-          >
-            {labelMin}
-          </Button></InputGroupItem>
-          <InputGroupItem isFill ><TextInput
-            type="number"
-            name={name}
-            value={displayValue}
-            onChange={(event, _) => this.onUpdateValue(event)}
-            aria-label={t('form-dialog.label', { context: ['touchspin', 'input'] })}
-          /></InputGroupItem>
-          <InputGroupItem><Button
-            variant={ButtonVariant.control}
-            onClick={this.onPlus}
-            onMouseDown={this.onFocusMax}
-            onMouseUp={this.onBlur}
-            onMouseLeave={this.onBlur}
-            isDisabled={displayValue >= maxValue}
-            aria-label={labelMaxDescription || t('form-dialog.label', { context: ['touchspin', 'max'] })}
-          >
-            {labelMax}
-          </Button></InputGroupItem>
+          <InputGroupItem>
+            <Button
+              onClick={this.onMinus}
+              variant={ButtonVariant.control}
+              onMouseDown={this.onFocusMin}
+              onMouseUp={this.onBlur}
+              onMouseLeave={this.onBlur}
+              isDisabled={displayValue <= minValue}
+              aria-label={labelMinDescription || t('form-dialog.label', { context: ['touchspin', 'min'] })}
+            >
+              {labelMin}
+            </Button>
+          </InputGroupItem>
+          <InputGroupItem isFill>
+            <TextInput
+              type="number"
+              name={name}
+              value={displayValue}
+              onChange={this.onUpdateValue}
+              aria-label={t('form-dialog.label', { context: ['touchspin', 'input'] })}
+            />
+          </InputGroupItem>
+          <InputGroupItem>
+            <Button
+              variant={ButtonVariant.control}
+              onClick={this.onPlus}
+              onMouseDown={this.onFocusMax}
+              onMouseUp={this.onBlur}
+              onMouseLeave={this.onBlur}
+              isDisabled={displayValue >= maxValue}
+              aria-label={labelMaxDescription || t('form-dialog.label', { context: ['touchspin', 'max'] })}
+            >
+              {labelMax}
+            </Button>
+          </InputGroupItem>
         </InputGroup>
       </div>
     );

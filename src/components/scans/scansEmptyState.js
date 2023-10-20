@@ -5,8 +5,10 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateVariant, EmptyStateActions, EmptyStateHeader, EmptyStateFooter,
-  
+  EmptyStateVariant,
+  EmptyStateActions,
+  EmptyStateHeader,
+  EmptyStateFooter
 } from '@patternfly/react-core';
 import { AddCircleOIcon } from '@patternfly/react-icons';
 import { useNavigate } from '../router/routerContext';
@@ -53,16 +55,26 @@ const ScansEmptyState = ({
 
   return (
     <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.lg}>
-      <EmptyStateHeader titleText={<>{t('view.empty-state', { context: ['title', viewId], count: totalResults, name: uiShortName })}</>} icon={<EmptyStateIcon icon={AddCircleOIcon} />} headingLevel="h1" />
+      <EmptyStateHeader
+        titleText={
+          <React.Fragment>
+            {t('view.empty-state', { context: ['title', viewId], count: totalResults, name: uiShortName })}
+          </React.Fragment>
+        }
+        icon={<EmptyStateIcon icon={AddCircleOIcon} />}
+        headingLevel="h1"
+      />
       <EmptyStateBody>
         {t('view.empty-state', { context: ['description', viewId], count: totalResults })}
-      </EmptyStateBody><EmptyStateFooter>
-      <EmptyStateActions>
-        <Button onClick={onAddSource}>
-          {t('view.empty-state', { context: ['label', 'source-navigate'], count: totalResults })}
-        </Button>
-      </EmptyStateActions>
-    </EmptyStateFooter></EmptyState>
+      </EmptyStateBody>
+      <EmptyStateFooter>
+        <EmptyStateActions>
+          <Button onClick={onAddSource}>
+            {t('view.empty-state', { context: ['label', 'source-navigate'], count: totalResults })}
+          </Button>
+        </EmptyStateActions>
+      </EmptyStateFooter>
+    </EmptyState>
   );
 };
 

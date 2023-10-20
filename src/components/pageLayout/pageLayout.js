@@ -1,37 +1,38 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-	Avatar,
-	Brand,
-	Button,
-	ButtonVariant,
-	Divider,
-	Masthead,
-	MastheadBrand,
-	MastheadContent,
-	MastheadMain,
-	MastheadToggle,
-	Nav,
-	NavItem,
-	NavList,
-	Page,
-	PageSidebar,
-	PageToggleButton,
-	SkipToContent,
-	Toolbar,
-	ToolbarContent,
-	ToolbarGroup,
-	ToolbarItem, PageSidebarBody
+  Avatar,
+  Brand,
+  Button,
+  ButtonVariant,
+  Divider,
+  Masthead,
+  MastheadBrand,
+  MastheadContent,
+  MastheadMain,
+  MastheadToggle,
+  Nav,
+  NavItem,
+  NavList,
+  Page,
+  PageSidebar,
+  PageToggleButton,
+  SkipToContent,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem,
+  PageSidebarBody
 } from '@patternfly/react-core';
 import {
-	ApplicationLauncher,
-	ApplicationLauncherItem,
-	Dropdown,
-	DropdownGroup,
-	DropdownItem,
-	DropdownPosition,
-	DropdownToggle,
-	KebabToggle
+  ApplicationLauncher,
+  ApplicationLauncherItem,
+  Dropdown,
+  DropdownGroup,
+  DropdownItem,
+  DropdownPosition,
+  DropdownToggle,
+  KebabToggle
 } from '@patternfly/react-core/deprecated';
 import { BarsIcon, CogIcon, QuestionCircleIcon } from '@patternfly/react-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -204,7 +205,10 @@ const PageLayout = ({
             onSelect={onUserDropdownSelect}
             isOpen={isUserDropdownOpen}
             toggle={
-              <DropdownToggle icon={<Avatar src={imgAvatar} alt="Avatar" />} onToggle={(_event, isOpen) => onUserDropdownToggle(isOpen)}>
+              <DropdownToggle
+                icon={<Avatar src={imgAvatar} alt="Avatar" />}
+                onToggle={(_event, isOpen) => onUserDropdownToggle(isOpen)}
+              >
                 {session?.username}
               </DropdownToggle>
             }
@@ -257,11 +261,11 @@ const PageLayout = ({
     </Nav>
   );
 
-  const sidebar = <PageSidebar  >
-<PageSidebarBody>
-{pageNav}
-</PageSidebarBody>
-</PageSidebar>;
+  const sidebar = (
+    <PageSidebar>
+      <PageSidebarBody>{pageNav}</PageSidebarBody>
+    </PageSidebar>
+  );
 
   const pageSkipToContent = (
     <SkipToContent href={`#${mainContainerId}`}>{t('view.label', { context: ['skip-nav'] })}</SkipToContent>
