@@ -60,7 +60,7 @@ class ScanJobsList extends React.Component {
     if (pending) {
       return (
         <EmptyState className="quipucords-empty-state" variant={EmptyStateVariant.lg}>
-          <Spinner  size="sm" /> {t('view.loading')}
+          <Spinner size="sm" /> {t('view.loading')}
         </EmptyState>
       );
     }

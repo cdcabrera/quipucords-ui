@@ -116,7 +116,6 @@ const TextArea = ({
         (resizeOrientation === TextAreResizeOrientation.none && 'quipucords-form__textarea-resize-none') || ''
       } ${className}`}
       isDisabled={isDisabled || false}
-      
       onChange={(event, changedValue) => onTextInputChange(changedValue, event)}
       onKeyUp={onTextAreaKeyUp}
       resizeOrientation={
@@ -124,7 +123,8 @@ const TextArea = ({
       }
       value={updatedValue ?? value ?? ''}
       data-ouia-component-id={updatedOuiaId}
-      {...props} readOnlyVariant="default"
+      {...props}
+      readOnlyVariant="default"
     />
   );
 };

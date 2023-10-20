@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-	SelectVariant
-} from '@patternfly/react-core/deprecated';
+import { SelectVariant } from '@patternfly/react-core/deprecated';
 import { FilterIcon } from '@patternfly/react-icons';
 import {
   ButtonVariant,

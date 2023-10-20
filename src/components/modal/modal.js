@@ -21,7 +21,7 @@ import { translate } from '../i18n/i18n';
  * @param {boolean} props.showClose
  * @param {Function} props.t
  * @param {string} props.variant
- * @param {ModalProps} props.props
+ * @param {object} props.props
  * @returns {React.ReactNode}
  */
 const Modal = ({
