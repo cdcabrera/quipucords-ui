@@ -123,8 +123,8 @@ const TextArea = ({
       }
       value={updatedValue ?? value ?? ''}
       data-ouia-component-id={updatedOuiaId}
+      readOnlyVariant={(isReadOnly && 'default') || undefined}
       {...props}
-      readOnlyVariant="default"
     />
   );
 };
