@@ -1,3 +1,6 @@
+/**
+ * Defines constants for API queries, responses, and types, standardizing access to API parameters and ensuring consistency in data handling.
+ */
 const API_QUERY_TYPES = {
   AUTH_TOKEN: 'auth_token',
   BECOME_METHOD: 'become_method',
@@ -19,6 +22,15 @@ const API_QUERY_TYPES = {
   SSH_KEYFILE: 'ssh_keyfile',
   SSH_PASSPHRASE: 'ssh_passphrase',
   USERNAME: 'username'
+};
+
+const API_DATA_SOURCE_TYPES = {
+  ANSIBLE: 'ansible',
+  NETWORK: 'network',
+  OPENSHIFT: 'openshift',
+  RHACS: 'rhacs',
+  SATELLITE: 'satellite',
+  VCENTER: 'vcenter'
 };
 
 const API_QUERY_SORT_TYPES = {
@@ -154,8 +166,12 @@ const API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL = 'disable_ssl';
 const API_SUBMIT_SOURCE_OPTIONS_PARAMIKO = 'use_paramiko';
 const API_SUBMIT_SOURCE_PORT = 'port';
 const API_SUBMIT_SOURCE_SOURCE_TYPE = 'source_type';
+const API_SOURCES_LIST_QUERY = 'sourcesList';
+const API_CREDS_LIST_QUERY = 'credentialsList';
+const API_SCANS_LIST_QUERY = 'scansList';
 
 const apiTypes = {
+  API_DATA_SOURCE_TYPES,
   API_QUERY_TYPES,
   API_QUERY_SORT_TYPES,
   API_QUERY_PAGE,
@@ -266,12 +282,16 @@ const apiTypes = {
   API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL,
   API_SUBMIT_SOURCE_OPTIONS_PARAMIKO,
   API_SUBMIT_SOURCE_PORT,
-  API_SUBMIT_SOURCE_SOURCE_TYPE
+  API_SUBMIT_SOURCE_SOURCE_TYPE,
+  API_SOURCES_LIST_QUERY,
+  API_CREDS_LIST_QUERY,
+  API_SCANS_LIST_QUERY
 };
 
 export {
   apiTypes as default,
   apiTypes,
+  API_DATA_SOURCE_TYPES,
   API_QUERY_TYPES,
   API_QUERY_SORT_TYPES,
   API_QUERY_PAGE,
@@ -382,5 +402,8 @@ export {
   API_SUBMIT_SOURCE_OPTIONS_DISABLE_SSL,
   API_SUBMIT_SOURCE_OPTIONS_PARAMIKO,
   API_SUBMIT_SOURCE_PORT,
-  API_SUBMIT_SOURCE_SOURCE_TYPE
+  API_SUBMIT_SOURCE_SOURCE_TYPE,
+  API_SOURCES_LIST_QUERY,
+  API_CREDS_LIST_QUERY,
+  API_SCANS_LIST_QUERY
 };

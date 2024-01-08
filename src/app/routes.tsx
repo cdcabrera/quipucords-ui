@@ -1,9 +1,14 @@
+/**
+ * Manages application routes with lazy loading for efficient performance. Includes navigation to 'Sources', 'Scans',
+ * 'Credentials', a default redirect, and authentication check redirecting unauthenticated users to the login page.
+ * @module routes
+ */
 import * as React from 'react';
 import { Route, Routes } from 'react-router';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import NotFound from '../pages/notFound/NotFound';
-import { Login } from 'src/pages/login/Login';
 import axios from 'axios';
+import { Login } from '../pages/login/Login';
+import NotFound from '../pages/notFound/NotFound';
 
 const Sources = React.lazy(() => import('../pages/sources/SourcesListView'));
 const Scans = React.lazy(() => import('../pages/scans/ScansListView'));
@@ -59,7 +64,7 @@ const AppRoutes = (): React.ReactElement => {
   const nav = useNavigate();
   const location = useLocation();
 
-  axios.get('https://0.0.0.0:9443/api/v1/users/current/').catch(err => {
+  axios.get('https://0.0.0.0:9443/api/v1/users/current/').catch(() => {
     if (location.pathname !== '/login') {
       nav('/login');
     }
@@ -75,7 +80,7 @@ const AppRoutes = (): React.ReactElement => {
         <Route path="*" element={<NotFound />} />
       </Routes>
     </React.Suspense>
-  )
+  );
 };
 
 export { AppRoutes, routes };
