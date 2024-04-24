@@ -61,7 +61,7 @@ exports[`Confirmation Modal Component should allow custom content: custom 1`] = 
                 class="pf-v5-c-alert__title"
               >
                 <span
-                  class="pf-v5-u-screen-reader"
+                  class="pf-v5-screen-reader"
                 >
                    Warning alert: 
                 </span>
@@ -85,7 +85,7 @@ exports[`Confirmation Modal Component should allow passed children, or specific 
   class="pf-v5-c-alert__title"
 >
   <span
-    class="pf-v5-u-screen-reader"
+    class="pf-v5-screen-reader"
   >
     Warning alert:
   </span>
@@ -188,7 +188,7 @@ exports[`Confirmation Modal Component should display a confirmation modal: show 
                   class="pf-v5-c-alert__title"
                 >
                   <span
-                    class="pf-v5-u-screen-reader"
+                    class="pf-v5-screen-reader"
                   >
                      Custom alert: 
                   </span>
@@ -318,7 +318,7 @@ exports[`Confirmation Modal Component should render a connected component: conne
                   class="pf-v5-c-alert__title"
                 >
                   <span
-                    class="pf-v5-u-screen-reader"
+                    class="pf-v5-screen-reader"
                   >
                      Custom alert: 
                   </span>
