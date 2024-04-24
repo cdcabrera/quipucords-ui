@@ -67,7 +67,7 @@ exports[`Authentication Component should render a component error: error 1`] = `
           class="pf-v5-c-alert__title"
         >
           <span
-            class="pf-v5-u-screen-reader"
+            class="pf-v5-screen-reader"
           >
             Danger alert:
           </span>

@@ -36,7 +36,7 @@ import {
 } from '@patternfly/react-core/deprecated';
 import { BarsIcon, CogIcon, QuestionCircleIcon } from '@patternfly/react-icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import imgAvatar from '@patternfly/react-core/src/components/Avatar/examples/avatarImg.svg';
+import imgAvatar from '@patternfly/react-core/src/components/assets/avatarImg.svg';
 import titleImgBrand from '../../styles/images/title-brand.svg';
 import titleImg from '../../styles/images/title.svg';
 import { storeHooks, reduxActions, reduxTypes } from '../../redux';
