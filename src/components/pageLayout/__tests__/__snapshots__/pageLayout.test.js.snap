@@ -190,6 +190,7 @@ exports[`PageLayout Component should render a basic component: basic 1`] = `
   isBreadcrumbWidthLimited={false}
   isManagedSidebar={true}
   isNotificationDrawerExpanded={false}
+  mainComponent="main"
   mainContainerId="main-content"
   mainTabIndex={-1}
   onNotificationDrawerExpand={[Function]}
@@ -205,6 +206,8 @@ exports[`PageLayout Component should render a basic component: basic 1`] = `
           <NavList
             ariaLeftScroll="Scroll left"
             ariaRightScroll="Scroll right"
+            backScrollAriaLabel="Scroll back"
+            forwardScrollAriaLabel="Scroll foward"
           >
             <NavItem
               className="quipucords-navItem"
