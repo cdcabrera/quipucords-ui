@@ -63,6 +63,10 @@ stageApi()
   $PODMAN rm $NAME
   $PODMAN pull $CONTAINER
 
+  mkdir -p "${HOME}/.local/share/discovery/log"
+  mkdir -p "${HOME}/.local/share/discovery/data"
+  mkdir -p "${HOME}/.local/share/discovery/sshkeys"
+
   if [ -z "$($PODMAN ps | grep $NAME)" ]; then
     printf "\n"
     echo "Starting API, this could take a minute..."
@@ -70,6 +74,9 @@ stageApi()
       -e QPC_SERVER_PASSWORD=$PASSWORD \
       -e QPC_DBMS=sqlite \
       -p $PORT:443 \
+      -v "${HOME}"/.local/share/discovery/log/:/var/log \
+      -v "${HOME}"/.local/share/discovery/data/:/var/data \
+      -v "${HOME}"/.local/share/discovery/sshkeys/:/sshkeys \
       --tls-verify=false \
       --name $NAME \
       $CONTAINER
