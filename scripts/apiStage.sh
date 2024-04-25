@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #
+#
 # Quick check to see if a container is running
 #
 checkContainerRunning()
