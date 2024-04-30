@@ -69,13 +69,13 @@ const AppRoutes = (): React.ReactElement => {
       nav('/login');
     }
   });
+
   return (
     <React.Suspense fallback={<p> Loading...</p>}>
       <Routes>
         {flattenedRoutes.map(route => (
           <Route path={route.path} element={route.component} key={route.id} />
         ))}
-        <Route path="/" element={<Navigate to="/sources" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

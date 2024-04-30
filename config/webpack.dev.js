@@ -45,14 +45,31 @@ module.exports = merge(
       },
       client: {
         overlay: false,
-        progress: false
+        progress: true
       },
       static: {
         directory: DIST_DIR
       },
       watchFiles: {
         paths: ['src/**/*', 'public/**/*']
-      }
+      },
+      proxy: [
+        {
+          context: [
+            '/credentials',
+            '/jobs',
+            '/ping',
+            '/reports',
+            '/sources',
+            '/scans',
+            '/status',
+            '/token',
+            '/users'
+          ],
+          target: 'http://0.0.0.0:8000',
+          secure: false
+        }
+      ]
     },
     plugins: [
       new MiniCssExtractPlugin({
