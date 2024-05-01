@@ -109,12 +109,10 @@ const Scans = ({
   };
 
   /**
-   * Return toolbar actions.
-   *
-   * @returns {React.ReactNode}
+   * Toolbar actions.
    */
-  const renderToolbarActions = () => (
-    <Tooltip content={t('table.tooltip', { context: ['merge-reports'] })}>
+  const toolbarActions = [
+    <Tooltip key="secondaryMergeReports" content={t('table.tooltip', { context: ['merge-reports'] })}>
       <Button
         style={{ display: 'none' }}
         variant={ButtonVariant.primary}
@@ -124,7 +122,7 @@ const Scans = ({
         {t('table.label', { context: ['merge-reports'] })}
       </Button>
     </Tooltip>
-  );
+  ];
 
   if (pending) {
     return (
@@ -154,7 +152,7 @@ const Scans = ({
       <div className="quipucords-view-container">
         {isActive && (
           <React.Fragment>
-            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={toolbarActions} />
             <ViewPaginationRow totalResults={totalResults} />
           </React.Fragment>
         )}

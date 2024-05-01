@@ -21,9 +21,12 @@ $pf-global--breakpoint--lg: $pf-v5-global--breakpoint--lg;
   --pf-global--palette--red-100: var(--pf-v5-global--palette--red-100);
   --pf-global--palette--white: var(--pf-v5-global--palette--white);
 
+  --pf-global--spacer--sm: var(--pf-v5-global--spacer--sm);
+
   --pf-c-backdrop--ZIndex: var(--pf-v5-c-backdrop--ZIndex);
   --pf-c-modal-box__body--PaddingTop: var(--pf-v5-c-modal-box__body--PaddingTop);
 
+  --pf-v5-global--FontSize--md: 0.9rem;
   --pf-global--FontSize--md: 0.9rem;
   --pf-global--FontSize--xs: var(--pf-v5-global--FontSize--xs);
 
@@ -33,8 +36,6 @@ $pf-global--breakpoint--lg: $pf-v5-global--breakpoint--lg;
 
   --pf-c-table--m-compact__expandable-row-content--PaddingTop: var(--pf-v5-c-table--m-compact__expandable-row-content--PaddingTop);
   --pf-c-table--m-compact__expandable-row-content--PaddingBottom: var(--pf-v5-c-table--m-compact__expandable-row-content--PaddingBottom);
-
-
 }
 
 @import 'app/common';
@@ -46,6 +47,7 @@ $pf-global--breakpoint--lg: $pf-v5-global--breakpoint--lg;
 @import 'app/scans';
 @import 'app/toastNotifications';
 @import 'app/tooltip';
+@import 'app/views';
 @import 'app/wizard';
 @import 'app/emptyState';
 @import 'app/patternflyOverrides';

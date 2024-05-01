@@ -583,6 +583,7 @@ exports[`Distribution should match a specific file output: dist-output 1`] = `
   "./dist/client/fonts/e4faf134e53e0f37296b.woff2",
   "./dist/client/fonts/ed292ec87cce0d76fd3c.woff2",
   "./dist/client/images/032b764e59d78db07b56.svg",
+  "./dist/client/images/c0ce9e7676e8e8f83167.png",
   "./dist/client/images/e78a57c31c986962302a.svg",
   "./dist/client/locales/en.json",
   "./dist/client/locales/locales.json",

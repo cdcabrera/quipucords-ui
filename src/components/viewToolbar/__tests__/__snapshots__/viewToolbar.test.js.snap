@@ -55,18 +55,25 @@ exports[`ViewToolbar Component should handle displaying secondary components, fi
           t={[Function]}
         />
       </ToolbarItem>
-      <ToolbarItem
+      <ForwardRef
         align={
           {
             "lg": "alignRight",
             "md": "alignLeft",
           }
         }
+        spacer={
+          {
+            "default": "spacerSm",
+          }
+        }
       >
-        <React.Fragment>
-          dolor sit
-        </React.Fragment>
-      </ToolbarItem>
+        <ToolbarItem>
+          <React.Fragment>
+            dolor sit
+          </React.Fragment>
+        </ToolbarItem>
+      </ForwardRef>
     </ToolbarContent>
   </Toolbar>
   <Divider />
@@ -172,11 +179,16 @@ exports[`ViewToolbar Component should render a basic component: basic 1`] = `
           t={[Function]}
         />
       </ToolbarItem>
-      <ToolbarItem
+      <ForwardRef
         align={
           {
             "lg": "alignRight",
             "md": "alignLeft",
+          }
+        }
+        spacer={
+          {
+            "default": "spacerSm",
           }
         }
       />

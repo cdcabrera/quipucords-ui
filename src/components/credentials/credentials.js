@@ -107,26 +107,24 @@ const Credentials = ({
 
   /**
    * Return toolbar actions.
-   *
-   * @returns {React.ReactNode}
    */
-  const renderToolbarActions = () => (
-    <React.Fragment>
-      <AddCredentialType
-        buttonVariant={CredentialButtonVariant.primary}
-        position={SelectPosition.right}
-        ouiaId="add_credential"
-        placeholder={t('form-dialog.label', { context: 'add' })}
-      />{' '}
-      <Button
-        variant={ButtonVariant.secondary}
-        isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
-        onClick={onDeleteCredentials}
-      >
-        {t('form-dialog.label', { context: 'delete' })}
-      </Button>
-    </React.Fragment>
-  );
+  const toolbarActions = [
+    <AddCredentialType
+      key="secondaryAddCredential"
+      buttonVariant={CredentialButtonVariant.primary}
+      position={SelectPosition.right}
+      ouiaId="add_credential"
+      placeholder={t('form-dialog.label', { context: 'add' })}
+    />,
+    <Button
+      key="secondaryDeleteCredential"
+      variant={ButtonVariant.secondary}
+      isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
+      onClick={onDeleteCredentials}
+    >
+      {t('form-dialog.label', { context: 'delete' })}
+    </Button>
+  ];
 
   if (pending) {
     return (
@@ -156,7 +154,7 @@ const Credentials = ({
       <div className="quipucords-view-container">
         {isActive && (
           <React.Fragment>
-            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={toolbarActions} />
             <ViewPaginationRow totalResults={totalResults} />
           </React.Fragment>
         )}

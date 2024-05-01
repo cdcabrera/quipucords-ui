@@ -60,6 +60,7 @@ exports[`AboutModal Component should render a basic component with default props
         >
           <div
             class="pf-v5-c-about-modal-box quipucords-about-modal"
+            style="--pf-v5-c-about-modal-box--BackgroundImage: url(about-bg.png);"
           >
             <div
               class="pf-v5-c-about-modal-box__brand"

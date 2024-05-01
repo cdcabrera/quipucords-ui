@@ -24,26 +24,28 @@ exports[`Scans Component should handle multiple display states, pending, error, 
       <ViewToolbar
         lastRefresh={NaN}
         secondaryFields={
-          <Tooltip
-            content="t(table.tooltip, {"context":"merge-reports"})"
-            delayShow={500}
-            id={null}
-            isPopover={false}
-            placement="top"
-          >
-            <Button
-              isDisabled={true}
-              onClick={[Function]}
-              style={
-                {
-                  "display": "none",
-                }
-              }
-              variant="primary"
+          [
+            <Tooltip
+              content="t(table.tooltip, {"context":"merge-reports"})"
+              delayShow={500}
+              id={null}
+              isPopover={false}
+              placement="top"
             >
-              t(table.label, {"context":"merge-reports"})
-            </Button>
-          </Tooltip>
+              <Button
+                isDisabled={true}
+                onClick={[Function]}
+                style={
+                  {
+                    "display": "none",
+                  }
+                }
+                variant="primary"
+              >
+                t(table.label, {"context":"merge-reports"})
+              </Button>
+            </Tooltip>,
+          ]
         }
         t={[Function]}
         useOnRefresh={[Function]}
@@ -405,26 +407,28 @@ exports[`Scans Component should return an empty state when there are no scans: e
       <ViewToolbar
         lastRefresh={NaN}
         secondaryFields={
-          <Tooltip
-            content="t(table.tooltip, {"context":"merge-reports"})"
-            delayShow={500}
-            id={null}
-            isPopover={false}
-            placement="top"
-          >
-            <Button
-              isDisabled={true}
-              onClick={[Function]}
-              style={
-                {
-                  "display": "none",
-                }
-              }
-              variant="primary"
+          [
+            <Tooltip
+              content="t(table.tooltip, {"context":"merge-reports"})"
+              delayShow={500}
+              id={null}
+              isPopover={false}
+              placement="top"
             >
-              t(table.label, {"context":"merge-reports"})
-            </Button>
-          </Tooltip>
+              <Button
+                isDisabled={true}
+                onClick={[Function]}
+                style={
+                  {
+                    "display": "none",
+                  }
+                }
+                variant="primary"
+              >
+                t(table.label, {"context":"merge-reports"})
+              </Button>
+            </Tooltip>,
+          ]
         }
         t={[Function]}
         useOnRefresh={[Function]}

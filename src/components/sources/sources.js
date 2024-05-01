@@ -112,23 +112,20 @@ const Sources = ({
 
   /**
    * Return toolbar actions.
-   *
-   * @returns {React.ReactNode}
    */
-  const renderToolbarActions = () => (
-    <React.Fragment>
-      <Button onClick={onShowAddSourceWizard} ouiaId="add_source">
-        {t('table.label', { context: 'add' })}
-      </Button>{' '}
-      <Button
-        variant={ButtonVariant.secondary}
-        isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
-        onClick={onScanSources}
-      >
-        {t('table.label', { context: 'scan' })}
-      </Button>
-    </React.Fragment>
-  );
+  const toolbarActions = [
+    <Button key="secondaryAddSource" onClick={onShowAddSourceWizard} ouiaId="add_source">
+      {t('table.label', { context: 'add' })}
+    </Button>,
+    <Button
+      key="secondaryScanSource"
+      variant={ButtonVariant.secondary}
+      isDisabled={Object.values(selectedRows).filter(val => val !== null).length <= 1}
+      onClick={onScanSources}
+    >
+      {t('table.label', { context: 'scan' })}
+    </Button>
+  ];
 
   if (pending) {
     return (
@@ -158,7 +155,7 @@ const Sources = ({
       <div className="quipucords-view-container">
         {isActive && (
           <React.Fragment>
-            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={renderToolbarActions()} />
+            <ViewToolbar lastRefresh={new Date(date).getTime()} secondaryFields={toolbarActions} />
             <ViewPaginationRow totalResults={totalResults} />
           </React.Fragment>
         )}

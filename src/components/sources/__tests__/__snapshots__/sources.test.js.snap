@@ -24,22 +24,21 @@ exports[`Sources Component should handle multiple display states, pending, error
       <ViewToolbar
         lastRefresh={NaN}
         secondaryFields={
-          <React.Fragment>
+          [
             <Button
               onClick={[Function]}
               ouiaId="add_source"
             >
               t(table.label, {"context":"add"})
-            </Button>
-             
+            </Button>,
             <Button
               isDisabled={true}
               onClick={[Function]}
               variant="secondary"
             >
               t(table.label, {"context":"scan"})
-            </Button>
-          </React.Fragment>
+            </Button>,
+          ]
         }
         t={[Function]}
         useOnRefresh={[Function]}
@@ -443,22 +442,21 @@ exports[`Sources Component should return an empty state when there are no source
       <ViewToolbar
         lastRefresh={NaN}
         secondaryFields={
-          <React.Fragment>
+          [
             <Button
               onClick={[Function]}
               ouiaId="add_source"
             >
               t(table.label, {"context":"add"})
-            </Button>
-             
+            </Button>,
             <Button
               isDisabled={true}
               onClick={[Function]}
               variant="secondary"
             >
               t(table.label, {"context":"scan"})
-            </Button>
-          </React.Fragment>
+            </Button>,
+          ]
         }
         t={[Function]}
         useOnRefresh={[Function]}

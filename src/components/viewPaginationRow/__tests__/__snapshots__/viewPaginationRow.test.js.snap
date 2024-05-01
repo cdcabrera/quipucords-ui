@@ -42,24 +42,39 @@ exports[`ViewPaginationRow Component should render a basic component: basic 1`] 
   "itemCount": 200,
   "itemsStart": 1,
   "itemsEnd": 10,
-  "variant": "bottom",
   "children": []
 }"
 >
   <div
-    class="pf-v5-c-pagination pf-m-bottom quipucords-view__pagination"
-    data-ouia-component-id="OUIA-Generated-Pagination-bottom-1"
+    class="pf-v5-c-pagination quipucords-view__pagination"
+    data-ouia-component-id="OUIA-Generated-Pagination-top-1"
     data-ouia-component-type="PF5/Pagination"
     data-ouia-safe="true"
-    id="options-menu-bottom-pagination"
+    id="options-menu-top-pagination"
     style="--pf-v5-c-pagination__nav-page-select--c-form-control--width-chars: 2;"
   >
+    <div
+      class="pf-v5-c-pagination__total-items"
+    >
+      <b>
+        1
+         - 
+        10
+      </b>
+       
+      of
+       
+      <b>
+        200
+      </b>
+       
+    </div>
     <div>
       <button
         aria-expanded="false"
         aria-haspopup="listbox"
         class="pf-v5-c-menu-toggle pf-m-plain pf-m-text"
-        id="options-menu-bottom-toggle"
+        id="options-menu-top-toggle"
         type="button"
       >
         <span
