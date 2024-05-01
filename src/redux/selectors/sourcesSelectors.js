@@ -1,5 +1,5 @@
-import { createSelector } from 'reselect';
 import _get from 'lodash/get';
+import { createSimpleSelector as createSelector } from '../hooks/useReactRedux';
 import helpers from '../../common/helpers';
 import apiTypes from '../../constants/apiConstants';
 

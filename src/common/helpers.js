@@ -124,6 +124,37 @@ const generateId = prefix =>
   `${prefix || 'generatedid'}-${(process.env.REACT_APP_ENV !== 'test' && Math.ceil(1e5 * Math.random())) || ''}`;
 
 /**
+ * Simple memoize, cache based arguments with adjustable limit.
+ *
+ * @param {Function} func
+ * @param {object} options
+ * @param {number} options.cacheLimit
+ * @returns {Function}
+ */
+const memo = (func, { cacheLimit = 1 } = {}) => {
+  // eslint-disable-next-line func-names
+  const ized = function () {
+    const cache = [];
+
+    return (...args) => {
+      const key = JSON.stringify({ value: [...args].map(arg => (typeof arg === 'function' && arg.toString()) || arg) });
+      const keyIndex = cache.indexOf(key);
+
+      if (keyIndex < 0) {
+        const result = func.call(null, ...args);
+        cache.unshift(key, result);
+        cache.length = cacheLimit * 2;
+        return cache[1];
+      }
+
+      return cache[keyIndex + 1];
+    };
+  };
+
+  return ized();
+};
+
+/**
  * An empty function.
  * Typically used as a default prop.
  */
@@ -448,6 +479,7 @@ const helpers = {
   devModeNormalizeCount,
   downloadData,
   generateId,
+  memo,
   noop,
   noopPromise,
   noopTranslate,

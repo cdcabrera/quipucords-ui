@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSimpleSelector as createSelector } from '../hooks/useReactRedux';
 import apiTypes from '../../constants/apiConstants';
 
 /**

@@ -25,6 +25,34 @@ describe('Helpers', () => {
     expect(helpers.generateId('lorem')).toBe('lorem-');
   });
 
+  it('should memoize function return values with memo', () => {
+    const testArr = [];
+    const testMemoReturnValue = helpers.memo(
+      str => {
+        const arr = ['lorem', 'ipsum', 'dolor', 'sit'];
+        const randomStr = Math.floor(Math.random() * arr.length);
+        const genStr = `${arr[randomStr]}-${str}`;
+        testArr.push(genStr);
+        return genStr;
+      },
+      { cacheLimit: 3 }
+    );
+
+    testMemoReturnValue('one');
+    testMemoReturnValue('one');
+    testMemoReturnValue('one');
+    testMemoReturnValue('two');
+    testMemoReturnValue('three');
+
+    expect(testArr[0] === testMemoReturnValue('one')).toBe(true);
+    expect(testArr[1] === testMemoReturnValue('two')).toBe(true);
+    expect(testArr[2] === testMemoReturnValue('three')).toBe(true);
+    expect(testArr[2] === testMemoReturnValue('three')).toBe(true);
+
+    testMemoReturnValue('four');
+    expect(testArr[3] === testMemoReturnValue('four')).toBe(true);
+  });
+
   it('should support displaying the ui version', () => {
     expect(helpers.UI_VERSION).toMatchSnapshot('ui version');
   });

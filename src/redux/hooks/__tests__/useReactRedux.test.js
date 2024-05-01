@@ -6,6 +6,35 @@ describe('useReactRedux', () => {
     expect(reactReduxHooks).toMatchSnapshot('specific properties');
   });
 
+  it('should create a selector from multiple selectors', () => {
+    const mockSelectorOne = jest.fn().mockImplementation(({ lorem }) => lorem);
+    const mockSelectorTwo = jest.fn().mockImplementation(({ dolor }) => dolor);
+    const mockCallback = jest.fn().mockImplementation((...args) => args);
+    const results = reactReduxHooks.createSimpleSelector([mockSelectorOne, mockSelectorTwo], mockCallback);
+
+    // confirm memoize
+    const output = results({ lorem: 'ipsum', dolor: 'sit' });
+    results({ lorem: 'ipsum', dolor: 'sit' });
+    results({ lorem: 'ipsum', dolor: 'sit' });
+    expect(output === results({ lorem: 'ipsum', dolor: 'sit' })).toBe(true);
+    expect(mockCallback).toHaveBeenCalledTimes(1);
+
+    // confirm memoize
+    const output2 = results({ lorem: 'ipsum', dolor: 'sit', hello: 'world' });
+    results({ lorem: 'ipsum', dolor: 'sit', hello: 'world' });
+    results({ lorem: 'ipsum', dolor: 'sit', hello: 'world' });
+    expect(output2 === results({ lorem: 'ipsum', dolor: 'sit', hello: 'world' })).toBe(true);
+    expect(mockCallback).toHaveBeenCalledTimes(1);
+
+    // confirm memoize
+    expect(output === results({ lorem: 'ipsum', dolor: 'sit' })).toBe(true);
+    expect(mockCallback).toHaveBeenCalledTimes(1);
+    expect(output2 === results({ lorem: 'ipsum', dolor: 'sit', hello: 'world' })).toBe(true);
+    expect(mockCallback).toHaveBeenCalledTimes(1);
+
+    expect(output).toMatchSnapshot('createSimpleSelector, callback');
+  });
+
   it('should apply a hook for useDispatch', () => {
     const mockDispatch = jest.spyOn(store, 'dispatch').mockImplementation((type, data) => ({ type, data }));
     const dispatch = useDispatch();

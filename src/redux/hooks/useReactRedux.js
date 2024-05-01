@@ -1,14 +1,50 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import { useSelector as useReactReduxSelector, shallowEqual } from 'react-redux';
-import { createSelector } from 'reselect';
 import _cloneDeep from 'lodash/cloneDeep';
+import _isEqual from 'lodash/isEqual';
 import { store } from '../store';
 import { helpers } from '../../common';
 
 /**
- * ToDo: Review using react-redux useDispatch on package update.
- * Originally there was an issue with useDispatch in React-Redux v7+ and integrating
- * with custom middleware. Accessing store.dispatch directly bypassed the issue.
+ * Create a simple selector. Groups selector function arguments into a single memoized result function for
+ * use as a Redux selector.
+ *
+ * @param {Function|Array<Function>} selectors
+ * @param {Function} callback
+ * @returns {Function}
+ */
+const createSimpleSelector = (selectors, callback) => {
+  const updatedSelectors = (Array.isArray(selectors) && selectors) || [selectors];
+
+  // eslint-disable-next-line prefer-spread
+  const result = helpers.memo((...resultArgs) => callback.apply(null, resultArgs));
+
+  // eslint-disable-next-line func-names
+  const selector = function (...args) {
+    const results = [];
+    updatedSelectors.forEach(sel => {
+      // eslint-disable-next-line prefer-spread
+      results.push(sel.apply(this, args));
+    });
+    // eslint-disable-next-line prefer-spread
+    return result.apply(this, results);
+  };
+
+  return helpers.memo(selector);
+};
+
+/**
+ * Deep equal comparison with extended memoized cache. Is argument A equal to argument B.
+ *
+ * @param {object} args
+ * @param {object|any} args.A
+ * @param {object|any} args.B
+ * @returns {boolean}
+ */
+const deepEqual = helpers.memo((...args) => _isEqual(...args), { cacheLimit: 50 });
+
+/**
+ * FixMe: Appears to be an issue in trying to use Redux Promise with the default "useDispatch"
  */
 /**
  * Wrapper for store.dispatch, emulating useDispatch.
@@ -48,7 +84,7 @@ const useSelector = (
 const useSelectors = (
   selectors,
   value,
-  { equality = shallowEqual, useSelector: useAliasSelector = useReactReduxSelector } = {}
+  { equality = deepEqual, useSelector: useAliasSelector = useReactReduxSelector } = {}
 ) => {
   let updatedSelectors = Array.isArray(selectors) ? selectors : [selectors];
   const selectorIds = new Set();
@@ -61,8 +97,7 @@ const useSelectors = (
     return selector;
   });
 
-  const multiSelector = createSelector(updatedSelectors, (...results) => results);
-
+  const multiSelector = createSimpleSelector(updatedSelectors, (...results) => results);
   let listMultiSelectorResponse = (useAliasSelector(multiSelector, equality) ?? value) || [];
   const undefinedMultiSelectorResponse = listMultiSelectorResponse.filter(response => response === undefined);
 
@@ -94,8 +129,8 @@ const useSelectors = (
  * @param {object} options
  * @param {Function} options.useSelectors
  * @param {Function} options.customResponse Callback for customizing your own response
- * @returns {{data: ({}|*[]), pending: boolean, fulfilled: boolean, responses: {errorList: *[], errorId: {},
- *     id: {}, list: *[]}, cancelled: boolean, error: boolean, message: null}}
+ * @returns {{data: ({}|Array), pending: boolean, fulfilled: boolean, responses: {errorList: Array, errorId: {},
+ *     id: {}, list: Array}, cancelled: boolean, error: boolean, message: null}}
  */
 const useSelectorsResponse = (selectors, { useSelectors: useAliasSelectors = useSelectors, customResponse } = {}) => {
   const selectorResponse = useAliasSelectors(selectors, []);
@@ -279,8 +314,8 @@ const useSelectorsResponse = (selectors, { useSelectors: useAliasSelectors = use
  * @param {Array|Function} selectors
  * @param {object} options
  * @param {Function} options.useSelectorsResponse
- * @returns {{data: ({}|*[]), pending: boolean, fulfilled: boolean, responses: {errorList: *[], errorId: {},
- *     id: {}, list: *[]}, cancelled: boolean, error: boolean, message: null}}
+ * @returns {{data: ({}|Array), pending: boolean, fulfilled: boolean, responses: {errorList: Array, errorId: {},
+ *     id: {}, list: Array}, cancelled: boolean, error: boolean, message: null}}
  */
 const useSelectorsAllSettledResponse = (
   selectors,
@@ -320,8 +355,8 @@ const useSelectorsAllSettledResponse = (
  * @param {Array|Function} selectors
  * @param {object} options
  * @param {Function} options.useSelectorsResponse
- * @returns {{data: ({}|*[]), pending: boolean, fulfilled: boolean, responses: {errorList: *[], errorId: {},
- *     id: {}, list: *[]}, cancelled: boolean, error: boolean, message: null}}
+ * @returns {{data: ({}|Array), pending: boolean, fulfilled: boolean, responses: {errorList: Array, errorId: {},
+ *     id: {}, list: Array}, cancelled: boolean, error: boolean, message: null}}
  */
 const useSelectorsAnyResponse = (
   selectors,
@@ -394,8 +429,8 @@ const useSelectorsAnyResponse = (
  * @param {Array|Function} selectors
  * @param {object} options
  * @param {Function} options.useSelectorsResponse
- * @returns {{data: ({}|*[]), pending: boolean, fulfilled: boolean, responses: {errorList: *[], errorId: {},
- *     id: {}, list: *[]}, cancelled: boolean, error: boolean, message: null}}
+ * @returns {{data: ({}|Array), pending: boolean, fulfilled: boolean, responses: {errorList: Array, errorId: {},
+ *     id: {}, list: Array}, cancelled: boolean, error: boolean, message: null}}
  */
 const useSelectorsRaceResponse = (
   selectors,
@@ -475,6 +510,8 @@ const useSelectorsRaceResponse = (
 };
 
 const reactReduxHooks = {
+  createSimpleSelector,
+  deepEqual,
   shallowEqual,
   useDispatch,
   useSelector,
@@ -488,6 +525,8 @@ const reactReduxHooks = {
 export {
   reactReduxHooks as default,
   reactReduxHooks,
+  createSimpleSelector,
+  deepEqual,
   shallowEqual,
   useDispatch,
   useSelector,
