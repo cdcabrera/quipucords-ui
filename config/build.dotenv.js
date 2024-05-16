@@ -81,26 +81,34 @@ const setupDotenvFilesForEnv = ({
   dotenvNamePrefix = 'BUILD',
   setBuildDefaults = true
 } = {}) => {
-  if (env) {
-    setupDotenvFile(path.resolve(relativePath, `.env.${env}.local`));
-    setupDotenvFile(path.resolve(relativePath, `.env.${env}`));
-  }
+  console.info(`Parsing dotenv files at: ${relativePath}`);
 
-  setupDotenvFile(path.resolve(relativePath, '.env.local'));
-  setupDotenvFile(path.resolve(relativePath, '.env'));
+  try {
+    if (env) {
+      setupDotenvFile(path.resolve(relativePath, `.env.${env}.local`));
+      setupDotenvFile(path.resolve(relativePath, `.env.${env}`));
+    }
+
+    setupDotenvFile(path.resolve(relativePath, '.env.local'));
+    setupDotenvFile(path.resolve(relativePath, '.env'));
+  } catch (e) {
+    console.warn(`setupDotenvFilesForEnv: ${e.message}`);
+  }
 
   if (setBuildDefaults) {
     // Core Build
-    const DEV_MODE =
-      process.env[`${dotenvNamePrefix}_DEV_MODE`] || process.env.DEV_MODE || undefined;
+    const DEV_MODE = process.env[`${dotenvNamePrefix}_DEV_MODE`] || process.env.DEV_MODE || '';
     const DIST_DIR = path.resolve(
       relativePath,
       process.env[`${dotenvNamePrefix}_DIST_DIR`] || process.env.DIST_DIR || 'dist'
     );
     const HOST = process.env[`${dotenvNamePrefix}_HOST`] || process.env.HOST || 'localhost';
+    const HTML_INDEX_DIR = path.resolve(
+      relativePath,
+      process.env[`${dotenvNamePrefix}_HTML_INDEX_DIR`] || process.env.HTML_INDEX_DIR || 'public'
+    );
     const OUTPUT_ONLY = process.env[`_${dotenvNamePrefix}_OUTPUT_ONLY`] === 'true';
-    const OPEN_PATH =
-      process.env[`${dotenvNamePrefix}_OPEN_PATH`] || process.env.OPEN_PATH || undefined;
+    const OPEN_PATH = process.env[`${dotenvNamePrefix}_OPEN_PATH`] || process.env.OPEN_PATH || '';
     const PORT = process.env[`${dotenvNamePrefix}_PORT`] || process.env.PORT || '3000';
     const PUBLIC_PATH =
       process.env[`${dotenvNamePrefix}_PUBLIC_PATH`] || process.env.PUBLIC_PATH || '/';
@@ -121,7 +129,8 @@ const setupDotenvFilesForEnv = ({
      * build specific dotenv parameters for webpack here.
      */
 
-    if (!process.env.NODE_ENV) {
+    if (!process.env.NODE_ENV && env) {
+      console.info(`Setting NODE_ENV: ${env}`);
       process.env.NODE_ENV = env;
     }
 
@@ -133,6 +142,7 @@ const setupDotenvFilesForEnv = ({
     process.env[`_${dotenvNamePrefix}_SRC_DIR`] = SRC_DIR;
     process.env[`_${dotenvNamePrefix}_DIST_DIR`] = DIST_DIR;
     process.env[`_${dotenvNamePrefix}_HOST`] = HOST;
+    process.env[`_${dotenvNamePrefix}_HTML_INDEX_DIR`] = HTML_INDEX_DIR;
     process.env[`_${dotenvNamePrefix}_PORT`] = PORT;
     process.env[`_${dotenvNamePrefix}_OUTPUT_ONLY`] = OUTPUT_ONLY;
     process.env[`_${dotenvNamePrefix}_DEV_MODE`] = DEV_MODE;

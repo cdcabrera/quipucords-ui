@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -12,6 +11,7 @@ const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./bui
 
 const {
   _BUILD_DIST_DIR: DIST_DIR,
+  _BUILD_HTML_INDEX_DIR: HTML_INDEX_DIR,
   _BUILD_OUTPUT_ONLY: OUTPUT_ONLY,
   _BUILD_PUBLIC_PATH: PUBLIC_PATH,
   _BUILD_RELATIVE_DIRNAME: RELATIVE_DIRNAME,
@@ -31,7 +31,24 @@ rimrafSync(DIST_DIR);
 
 module.exports = () => ({
   entry: {
-    app: path.join(SRC_DIR, 'index.tsx')
+    app: (() => {
+      let entryFiles;
+      try {
+        entryFiles = [path.join(SRC_DIR, `index.ts`), path.join(SRC_DIR, `index.tsx`)].filter(
+          file => fs.existsSync(file)
+        );
+
+        if (!entryFiles.length) {
+          console.warn(
+            `webpack app entry file error: Missing entry/app file. Expected one of index.(ts|tsx)`
+          );
+        }
+      } catch (e) {
+        console.error(`webpack app entry file error: ${e.message}`);
+      }
+
+      return entryFiles;
+    })()
   },
   output: {
     filename: '[name].bundle.js',
@@ -42,16 +59,17 @@ module.exports = () => ({
   module: {
     rules: [
       {
-        test: /\.(tsx|ts|jsx)?$/,
+        test: /\.(tsx|ts|jsx|js)?$/,
+        include: [SRC_DIR],
         use: [
           {
             loader: 'ts-loader',
             options: {
               transpileOnly: true,
-              experimentalWatchApi: true,
-            },
-          },
-        ],
+              experimentalWatchApi: true
+            }
+          }
+        ]
       },
       {
         test: /\.(svg|ttf|eot|woff|woff2)$/,
@@ -93,25 +111,41 @@ module.exports = () => ({
     ...setupWebpackDotenvFilesForEnv({
       directory: RELATIVE_DIRNAME
     }),
-    new HtmlWebpackPlugin({
-      ...(UI_NAME && { title: UI_NAME }),
-      template: path.join(STATIC_DIR, 'index.html')
-    }),
-    new HtmlReplaceWebpackPlugin([
-      {
-        pattern: /%([A-Z_]+)%/g,
-        replacement: (match, $1) => process.env?.[$1] || match
+    ...(() => {
+      const staticFile = path.join(HTML_INDEX_DIR, 'index.html');
+      if (fs.existsSync(staticFile)) {
+        return [
+          new HtmlWebpackPlugin({
+            ...(UI_NAME && { title: UI_NAME }),
+            template: staticFile
+          }),
+          new HtmlReplaceWebpackPlugin([
+            {
+              pattern: /%([A-Z_]+)%/g,
+              replacement: (match, $1) => process.env?.[$1] || match
+            }
+          ])
+        ];
       }
-    ]),
+      return [
+        new HtmlWebpackPlugin({
+          ...(UI_NAME && { title: UI_NAME })
+        })
+      ];
+    })(),
     ...(() => {
       try {
-        const fileResults = fs
-          .readdirSync(STATIC_DIR)
-          ?.filter(fileDir => !/^(\.|index)/.test(fileDir))
-          ?.map(fileDir => ({
-            from: path.join(STATIC_DIR, fileDir),
-            to: path.join(DIST_DIR, fileDir)
-          }));
+        let fileResults;
+
+        if (fs.existsSync(STATIC_DIR)) {
+          fileResults = fs
+            .readdirSync(STATIC_DIR)
+            ?.filter(fileDir => !/^(\.|index)/.test(fileDir))
+            ?.map(fileDir => ({
+              from: path.join(STATIC_DIR, fileDir),
+              to: path.join(DIST_DIR, fileDir)
+            }));
+        }
 
         return (
           (fileResults?.length > 0 && [
@@ -131,8 +165,8 @@ module.exports = () => ({
     extensions: ['.js', '.ts', '.tsx', '.jsx'],
     plugins: [
       new TsconfigPathsPlugin({
-        configFile: path.resolve(__dirname, '../tsconfig.json'),
-      }),
+        configFile: path.resolve(__dirname, '../tsconfig.json')
+      })
     ],
     symlinks: false,
     cacheWithContext: false
