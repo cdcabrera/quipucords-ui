@@ -14,4 +14,4 @@ const useQueryClientConfig = () => {
   return { queryClient };
 };
 
-export default useQueryClientConfig;
+export { useQueryClientConfig as default, useQueryClientConfig };

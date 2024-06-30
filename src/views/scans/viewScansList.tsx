@@ -45,7 +45,7 @@ import { API_QUERY_TYPES, API_SCANS_LIST_QUERY } from '../../constants/apiConsta
 import { helpers } from '../../helpers';
 import { useAlerts } from '../../hooks/useAlerts';
 import useScanApi from '../../hooks/useScanApi';
-import useQueryClientConfig from '../../queryClientConfig';
+import { useQueryClientConfig } from '../../queryClientConfig';
 import { ScanJobType, ScanType } from '../../types/types';
 import { ScansModal } from './showScansModal';
 import { useScansQuery } from './useScansQuery';
@@ -125,7 +125,9 @@ const ScansListView: React.FunctionComponent = () => {
   };
 
   /**
-   * Configures table state for scan results, with URL persistence. Includes columns for scan ID, last scanned, sources, and actions. Enables name-based filtering, sorting by ID or last scanned, pagination, and row selection. Utilizes `useTableState` for setup.
+   * Configures table state for scan results, with URL persistence. Includes columns for scan ID, last scanned,
+   * sources, and actions. Enables name-based filtering, sorting by ID or last scanned, pagination, and row selection.
+   * Utilizes `useTableState` for setup.
    */
   const tableState = useTableState({
     persistTo: 'urlParams',
@@ -169,18 +171,7 @@ const ScansListView: React.FunctionComponent = () => {
     selection: { selectedItems },
     currentPageItems,
     numRenderedColumns,
-    components: {
-      Toolbar,
-      FilterToolbar,
-      PaginationToolbarItem,
-      Pagination,
-      Table,
-      Tbody,
-      Td,
-      Th,
-      Thead,
-      Tr
-    }
+    components: { Toolbar, FilterToolbar, PaginationToolbarItem, Pagination, Table, Tbody, Td, Th, Thead, Tr }
   } = tableBatteries;
 
   const renderToolbar = () => (
@@ -188,11 +179,7 @@ const ScansListView: React.FunctionComponent = () => {
       <ToolbarContent>
         <FilterToolbar id="client-paginated-example-filters" />
         <ToolbarItem>
-          <Button
-            variant={ButtonVariant.secondary}
-            isDisabled={!selectedItems?.length}
-            onClick={onDeleteSelectedScans}
-          >
+          <Button variant={ButtonVariant.secondary} isDisabled={!selectedItems?.length} onClick={onDeleteSelectedScans}>
             {t('table.label', { context: 'delete' })}
           </Button>
         </ToolbarItem>
@@ -206,33 +193,27 @@ const ScansListView: React.FunctionComponent = () => {
     </Toolbar>
   );
 
-  const renderConnection = (scan: ScanType): React.ReactNode => {
-    return (
-      <Button
-        variant={ButtonVariant.link}
-        onClick={() => {
-          setScanSelected(scan);
-          getScanJobs(scan.id).then(res => {
-            setScanJobs(res.data.results);
-          });
-        }}
-      >
-        <ContextIcon symbol={ContextIconVariant[scan.most_recent?.status]} />{' '}
-        {scan.most_recent && (
-          <>
-            {scan.most_recent.status === 'failed' &&
-              t('table.label', { context: 'status_failed_scans' })}
-            {scan.most_recent.status === 'completed' &&
-              t('table.label', { context: 'status_completed_scans' })}{' '}
-            {helpers.getTimeDisplayHowLongAgo(
-              scan.most_recent.end_time || scan.most_recent.start_time
-            )}
-          </>
-        )}
-        {!scan.most_recent && t('table.label', { context: 'status_scans' })}
-      </Button>
-    );
-  };
+  const renderConnection = (scan: ScanType): React.ReactNode => (
+    <Button
+      variant={ButtonVariant.link}
+      onClick={() => {
+        setScanSelected(scan);
+        getScanJobs(scan.id).then(res => {
+          setScanJobs(res.data.results);
+        });
+      }}
+    >
+      <ContextIcon symbol={ContextIconVariant[scan.most_recent?.status]} />{' '}
+      {scan.most_recent && (
+        <React.Fragment>
+          {scan.most_recent.status === 'failed' && t('table.label', { context: 'status_failed_scans' })}
+          {scan.most_recent.status === 'completed' && t('table.label', { context: 'status_completed_scans' })}{' '}
+          {helpers.getTimeDisplayHowLongAgo(scan.most_recent.end_time || scan.most_recent.start_time)}
+        </React.Fragment>
+      )}
+      {!scan.most_recent && t('table.label', { context: 'status_scans' })}
+    </Button>
+  );
 
   return (
     <PageSection variant="light">
@@ -257,8 +238,7 @@ const ScansListView: React.FunctionComponent = () => {
                 icon={<EmptyStateIcon icon={PlusCircleIcon} />}
               />
               <EmptyStateBody>
-                Create a scan from the Sources page by selecting an individual source or multiple
-                sources.
+                Create a scan from the Sources page by selecting an individual source or multiple sources.
               </EmptyStateBody>
               <EmptyStateFooter>
                 <EmptyStateActions>
@@ -311,11 +291,7 @@ const ScansListView: React.FunctionComponent = () => {
           isOpen={!!scanSelectedForSources}
           onClose={() => setScanSelectedForSources(undefined)}
           actions={[
-            <Button
-              key="cancel"
-              variant="secondary"
-              onClick={() => setScanSelectedForSources(undefined)}
-            >
+            <Button key="cancel" variant="secondary" onClick={() => setScanSelectedForSources(undefined)}>
               Close
             </Button>
           ]}
