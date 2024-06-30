@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { act } from 'react';
 import { fireEvent, queries, render, screen } from '@testing-library/react';
 import { prettyDOM } from '@testing-library/dom';
-import { act } from 'react-dom/test-utils';
 import * as reactRedux from 'react-redux';
-import { setupDotenvFilesForEnv } from './build.dotenv';
+import { dotenv } from 'weldable';
 
 /**
  * Set dotenv params.
  */
-setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
+dotenv.setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
 
 /**
  * Emulate for component checks
@@ -28,19 +27,10 @@ jest.mock('i18next', () => {
 jest.mock('lodash/debounce', () => jest.fn);
 
 /**
- * We currently use a wrapper for useSelector, emulate for component checks
- */
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useSelector: jest.fn()
-}));
-
-/**
  * Emulate react router dom useLocation
  */
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
   useLocation: () => ({ hash: '', search: '' })
 }));
 
@@ -74,8 +64,8 @@ global.screenRender = {
  *
  * @param {React.ReactNode} testComponent
  * @param {object} options
- * @param {boolean} options.includeInstanceRef The component includes an instance ref for class components. If the component instance
- *     includes functions, they are wrapped in "act" for convenience.
+ * @param {boolean} options.includeInstanceRef The component includes an instance ref for class components. If the
+ *     component instance includes functions, they are wrapped in "act" for convenience.
  * @returns {HTMLElement}
  */
 global.renderComponent = (testComponent, options = {}) => {
@@ -183,7 +173,8 @@ global.renderComponent = (testComponent, options = {}) => {
  *
  * @param {Function} useHook
  * @param {object} options
- * @param {boolean} options.includeInstanceContext The hook result, if it includes functions, is wrapped in "act" for convenience.
+ * @param {boolean} options.includeInstanceContext The hook result, if it includes functions, is wrapped
+ *     in "act" for convenience.
  * @param {object} options.state An object representing a mock Redux store's state.
  * @returns {*}
  */
@@ -309,8 +300,11 @@ global.shallowComponent = async testComponent => {
 };
 
 // ToDo: revisit squashing log and group messaging, redux leaks log messaging
+
 // ToDo: revisit squashing PF4 "popper" alerts
+
 // ToDo: revisit squashing PF4 "validateDOMNesting" select alerts
+
 // ToDo: revisit squashing PF4 "validateDOMNesting" table alerts
 /*
  * For applying a global Jest "beforeAll", based on
