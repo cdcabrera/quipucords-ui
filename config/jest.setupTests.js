@@ -1,9 +1,9 @@
-import { setupDotenvFilesForEnv } from './build.dotenv';
+import { dotenv } from 'weldable';
 
 /**
  * Set dotenv params.
  */
-setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
+dotenv.setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
 
 /**
  * Emulate i18next setup

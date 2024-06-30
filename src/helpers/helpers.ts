@@ -1,18 +1,27 @@
 /**
  * Offers utilities for error handling, clipboard copying, data download, ID generation, and property setting. Includes
- * helpers for API response processing, IP address validation, authentication type determination, and UI environment settings.
+ * helpers for API response processing, IP address validation, authentication type determination, and UI environment
+ * settings.
+ *
  * @module helpers
  */
 import React from 'react';
-import moment, { MomentInput } from 'moment';
+import moment, { type MomentInput } from 'moment';
 import { CredentialType } from '../types/types';
+
+const DEV_MODE = process.env.REACT_APP_ENV === 'development';
+
+const PROD_MODE = process.env.REACT_APP_ENV === 'production';
+
+const TEST_MODE = process.env.REACT_APP_ENV === 'test';
 
 /**
  * Generates a translation key for internationalization.
  *
  * @param {string | string[]} key - The translation key(s).
  * @param {string | string[]} value - The translation value(s).
- * @param {React.ReactElement[] | { [tagName: string]: React.ReactElement }} components - React components for the translation.
+ * @param {React.ReactElement[] | { [tagName: string]: React.ReactElement }} components - React components for the
+ *     translation.
  * @returns {string} - The translation key.
  */
 const noopTranslate = (
@@ -40,7 +49,7 @@ const noopTranslate = (
  * @returns {string} - A string representing the time difference, e.g., "2 hours ago".
  */
 const getTimeDisplayHowLongAgo = (timestamp: MomentInput) => {
-  if (!timestamp || !moment.utc(timestamp).isValid()) {
+  if ((!timestamp || !moment.utc(timestamp).isValid()) && !DEV_MODE) {
     throw new Error(`Invalid timestamp: ${timestamp}`);
   }
 
@@ -49,21 +58,20 @@ const getTimeDisplayHowLongAgo = (timestamp: MomentInput) => {
 
 /**
  * Formats the given date in UTC as 'DD MMMM Y, h:mm A z'.
+ *
  * @param {Date} date - The date to format.
  * @returns {string} The formatted date string.
  */
 const formatDate = (date: Date) => moment.utc(date).format('DD MMMM Y, h:mm A z');
 
-const DEV_MODE = process.env.REACT_APP_ENV === 'development';
-
 /**
  * Normalizes a total count to a non-negative number less than a given modulus,
  * optionally based on development mode.
  *
- * @param {Object} data - The data object containing a count property.
+ * @param {object} data - The data object containing a count property.
  * @param {number} [data.count] - The count to be normalized.
- * @param {boolean} [devMode=DEV_MODE] - Flag to normalize count based on development mode.
- * @param {number} [modulus=100] - The modulus to use for normalization. Defaults to 100.
+ * @param {boolean} [devMode] - Flag to normalize count based on development mode.
+ * @param {number} [modulus] - The modulus to use for normalization. Defaults to 100.
  * @returns {number} - The normalized total count.
  */
 const normalizeTotal = (
@@ -105,16 +113,13 @@ const getAuthType = ({ username, password, auth_token, ssh_keyfile }: Credential
 
 /**
  * Downloads the given data as a file with the specified name and type.
+ *
  * @param data The data to download.
  * @param fileName The name of the file to download. Defaults to 'download.txt'.
  * @param fileType The type of the file to download. Defaults to 'text/plain'.
  * @returns A promise that resolves with an object containing the downloaded file's name and the original data.
  */
-const downloadData = (
-  data: string | ArrayBuffer | ArrayBufferView | Blob,
-  fileName: string,
-  fileType = 'text/plain'
-) =>
+const downloadData = (data: string | ArrayBuffer | ArrayBufferView | Blob, fileName: string, fileType = 'text/plain') =>
   new Promise((resolve, reject) => {
     try {
       const { document, navigator, URL } = window;
@@ -144,10 +149,6 @@ const downloadData = (
       reject(error);
     }
   });
-
-const PROD_MODE = process.env.REACT_APP_ENV === 'production';
-
-const TEST_MODE = process.env.REACT_APP_ENV === 'test';
 
 const helpers = {
   authType,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders proper dom including elipse icon 1`] = `
+exports[`renders proper dom including ellipsis icon 1`] = `
 <DocumentFragment>
   <button
     aria-expanded="false"

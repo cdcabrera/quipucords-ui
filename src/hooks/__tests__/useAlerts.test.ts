@@ -1,4 +1,4 @@
-import { AlertProps } from '@patternfly/react-core';
+import { type AlertProps } from '@patternfly/react-core';
 import { act, renderHook } from '@testing-library/react';
 import { useAlerts } from '../useAlerts';
 

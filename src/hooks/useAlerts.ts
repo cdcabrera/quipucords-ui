@@ -1,10 +1,11 @@
 /**
  * This Hook provides functions to manage alerts.
  * It allows you to add and remove alerts using PatternFly's AlertProps and unique IDs.
+ *
  * @module useAlerts
  */
 import React from 'react';
-import { AlertProps } from '@patternfly/react-core';
+import { type AlertProps } from '@patternfly/react-core';
 
 const useAlerts = () => {
   const [alerts, setAlerts] = React.useState<AlertProps[]>([]);
@@ -12,7 +13,8 @@ const useAlerts = () => {
   /**
    * Adds a new alert or multiple alerts to the list.
    *
-   * @param {AlertProps | AlertProps[]} options - The alert object or array of alert objects containing properties like `id`, `title`, `variant`, etc.
+   * @param {AlertProps | AlertProps[]} options - The alert object or array of alert objects containing properties
+   *     like `id`, `title`, `variant`, etc.
    */
   const addAlert = (options: AlertProps | AlertProps[]) => {
     setAlerts(prevAlerts => [...prevAlerts, ...((Array.isArray(options) && options) || [options])]);
