@@ -13,14 +13,7 @@ import { SourceType } from '../../types/types';
 
 export const SOURCES_LIST_QUERY = 'sourcesList';
 
-type SourcesColumnKey =
-  | 'name'
-  | 'connection'
-  | 'type'
-  | 'actions'
-  | 'credentials'
-  | 'unreachableSystems'
-  | 'scan';
+type SourcesColumnKey = 'name' | 'connection' | 'type' | 'actions' | 'credentials' | 'unreachableSystems' | 'scan';
 
 type SourcesSortableColumnKey = 'name' | 'connection' | 'type';
 

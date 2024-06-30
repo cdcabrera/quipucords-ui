@@ -1,6 +1,7 @@
 /**
  * This Hook provides functions to manage alerts.
  * It allows you to add and remove alerts using PatternFly's AlertProps and unique IDs.
+ *
  * @module useAlerts
  */
 import React from 'react';

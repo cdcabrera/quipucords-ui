@@ -14,7 +14,7 @@ test('renders proper dom snapshot', () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -31,7 +31,7 @@ test('dropdown label is visible', () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -48,7 +48,7 @@ test('options will not show before toggle is clicked', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -68,7 +68,7 @@ test('snapshot after toggle is clicked', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -88,7 +88,7 @@ test('options will show after toggle is clicked', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -110,7 +110,7 @@ test('menu will go away after toggle is clicked twice', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -133,7 +133,7 @@ test('menu will go away after option selected', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}
@@ -162,7 +162,7 @@ test('onclick callback should get called when clicked', async () => {
     <SimpleDropdown
       isFullWidth
       label="dropdown label"
-      variant={'default'}
+      variant="default"
       dropdownItems={exampleItems.map(s => (
         <DropdownItem key={s} onClick={() => setSslProtocol(s)}>
           {s}

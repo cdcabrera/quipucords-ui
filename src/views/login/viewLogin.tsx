@@ -1,6 +1,7 @@
 /**
  * Provides a login interface, handling user authentication with visual feedback. Uses PatternFly for UI and Axios for API requests,
  * redirecting on successful login or displaying errors on failure.
+ *
  * @module login
  */
 import React from 'react';
@@ -21,11 +22,11 @@ export const Login: React.FunctionComponent = () => {
   axios
     .get(`${process.env.REACT_APP_USER_SERVICE_CURRENT}`)
     .then(() => {
-      //already logged in..
+      // already logged in..
       nav('/');
     })
     .catch(() => {
-      //this is good, catch the error and let them log in
+      // this is good, catch the error and let them log in
     });
 
   const handleUsernameChange = (_event: React.FormEvent<HTMLInputElement>, value: string) => {
@@ -45,15 +46,15 @@ export const Login: React.FunctionComponent = () => {
       const noInteceptAxios = axios.create();
       noInteceptAxios
         .post(`${process.env.REACT_APP_AUTH_TOKEN_SERVICE}`, {
-          username: username,
-          password: password
+          username,
+          password
         })
         .then(res => {
           localStorage.setItem('authToken', res.data.token);
           if (localStorage.getItem('authToken')) {
             axios.interceptors.request.use(
               config => {
-                config.headers['Authorization'] = `Token ${res.data.token}`;
+                config.headers.Authorization = `Token ${res.data.token}`;
                 return config;
               },
               error => {

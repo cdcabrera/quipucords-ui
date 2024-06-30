@@ -30,9 +30,7 @@ const useSourceApi = () => {
    * @param {SourceType} payload - The payload containing source-related information for the scan.
    * @returns {AxiosResponse} - The Axios response object representing the result of request.
    */
-  const runScan = (payload: SourceType) => {
-    return axios.post(`${process.env.REACT_APP_SCANS_SERVICE}`, payload);
-  };
+  const runScan = (payload: SourceType) => axios.post(`${process.env.REACT_APP_SCANS_SERVICE}`, payload);
 
   /**
    * Executes a POST request to add a source, optionally triggering a scan.
@@ -40,9 +38,7 @@ const useSourceApi = () => {
    * @param {SourceType} payload - The payload containing information about the source to be added.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
-  const addSource = (payload: SourceType) => {
-    return axios.post(`${process.env.REACT_APP_SOURCES_SERVICE}?scan=true`, payload);
-  };
+  const addSource = (payload: SourceType) => axios.post(`${process.env.REACT_APP_SOURCES_SERVICE}?scan=true`, payload);
 
   /**
    * Executes a PUT request to submit edits to a source.
@@ -50,9 +46,8 @@ const useSourceApi = () => {
    * @param {SourceType} payload - The payload containing information about the source to be updated.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
-  const submitEditedSource = (payload: SourceType) => {
-    return axios.put(`${process.env.REACT_APP_SOURCES_SERVICE}${payload.id}/`, payload);
-  };
+  const submitEditedSource = (payload: SourceType) =>
+    axios.put(`${process.env.REACT_APP_SOURCES_SERVICE}${payload.id}/`, payload);
 
   /**
    * Executes a DELETE request to delete a source.
@@ -60,11 +55,8 @@ const useSourceApi = () => {
    * @param {SourceType} [source] - (Optional) The source to be deleted. If not provided, it uses `pendingDeleteSource`.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
-  const deleteSource = (source?: SourceType) => {
-    return axios.delete(
-      `${process.env.REACT_APP_SOURCES_SERVICE}${(source || pendingDeleteSource)?.id}/`
-    );
-  };
+  const deleteSource = (source?: SourceType) =>
+    axios.delete(`${process.env.REACT_APP_SOURCES_SERVICE}${(source || pendingDeleteSource)?.id}/`);
 
   /**
    * Executes a GET request to retrieve connection information related to a source.
@@ -72,11 +64,10 @@ const useSourceApi = () => {
    * @param {SourceType} source - The source to which connections are related.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
-  const showConnections = (source: SourceType) => {
-    return axios.get(
+  const showConnections = (source: SourceType) =>
+    axios.get(
       `${process.env.REACT_APP_SCAN_JOBS_SERVICE}${source.connection.id}/connection/?page=1&page_size=1000&ordering=name&source_type=${source.id}`
     );
-  };
 
   /**
    * Sets the source that is currently being edited.

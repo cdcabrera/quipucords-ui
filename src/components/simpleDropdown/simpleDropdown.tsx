@@ -2,6 +2,7 @@
  * A simplified dropdown component using PatternFly, designed for basic dropdown needs. It supports customizable
  * labels, items, accessibility options, and styling variants. The component is flexible, allowing for optional
  * full-width display and an onSelect callback for additional interaction handling.
+ *
  * @module simpleDropdown
  */
 import React, { useState } from 'react';

@@ -1,6 +1,7 @@
 /**
  * Manages application routes with lazy loading for efficient performance. Includes navigation to 'Sources', 'Scans',
  * 'Credentials', a default redirect, and authentication check redirecting unauthenticated users to the login page.
+ *
  * @module routes
  */
 import * as React from 'react';
@@ -66,7 +67,7 @@ const AppRoutes = (): React.ReactElement => {
 
   axios.get(`${process.env.REACT_APP_USER_SERVICE_CURRENT}`).catch(() => {
     if (location.pathname !== '/login') {
-      nav('/login');
+      //nav('/login');
     }
   });
   return (

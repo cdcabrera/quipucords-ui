@@ -1,33 +1,29 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "dist",
-    "module": "esnext",
-    "target": "es5",
-    "lib": ["es6", "dom"],
-    "sourceMap": true,
-    "jsx": "react",
-    "moduleResolution": "node",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "node",
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
-    "paths": {
-      "@assets/*": ["node_modules/@patternfly/react-core/dist/styles/assets/*"]
-    },
-    "importHelpers": true,
-    "skipLibCheck": true
+    "target": "esnext",
   },
   "include": [
+    "*.js",
     "**/*.ts",
     "**/*.tsx",
     "**/*.jsx",
     "**/*.js"
-  ],
-  "exclude": ["node_modules"]
+  ]
 }

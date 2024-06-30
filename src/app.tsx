@@ -1,6 +1,7 @@
 /**
  * Root component of the application that sets up global styles, localization, secure API requests, and routing.
  * It includes automatic token authorization for axios requests and wraps the UI with localization and routing contexts.
+ *
  * @module app
  */
 import React from 'react';
@@ -18,7 +19,7 @@ const App: React.FC = () => {
   if (localStorage.getItem('authToken')) {
     axios.interceptors.request.use(
       config => {
-        config.headers['Authorization'] = `Token ${localStorage.getItem('authToken')}`;
+        config.headers.Authorization = `Token ${localStorage.getItem('authToken')}`;
         return config;
       },
       error => {
