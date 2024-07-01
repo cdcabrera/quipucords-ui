@@ -1,6 +1,7 @@
 /**
  * Displays a "404 Page Not Found" message with an option to navigate back to the homepage. Utilizes PatternFly components
  * for a consistent and accessible UI, providing a clear indication that the requested page could not be found.
+ *
  * @module notFound
  */
 import * as React from 'react';
@@ -33,9 +34,7 @@ const NotFound: React.FunctionComponent = () => {
           icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
           headingLevel="h1"
         />
-        <EmptyStateBody>
-          We didn&apos;t find a page that matches the address you navigated to.
-        </EmptyStateBody>
+        <EmptyStateBody>We didn&apos;t find a page that matches the address you navigated to.</EmptyStateBody>
         <EmptyStateFooter>
           <GoHomeBtn />
         </EmptyStateFooter>

@@ -15,7 +15,13 @@ type CredentialsColumnKey = 'name' | 'type' | 'auth_type' | 'sources' | 'updated
 
 type CredentialsSortableColumnKey = 'name' | 'type';
 
-/** Fetches and manages credentials data based on table state. */
+/**
+ * Fetches and manages credentials data based on table state.
+ *
+ * @param root0
+ * @param root0.tableState
+ * @param root0.setRefreshTime
+ */
 export const useCredentialsQuery = ({
   tableState,
   setRefreshTime

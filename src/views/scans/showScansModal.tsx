@@ -25,9 +25,7 @@ export interface ScansModalProps {
 export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownload, onClose }) => {
   const { t } = useTranslation();
   const [activeSortIndex, setActiveSortIndex] = React.useState<number | undefined>();
-  const [activeSortDirection, setActiveSortDirection] = React.useState<
-    'asc' | 'desc' | undefined
-  >();
+  const [activeSortDirection, setActiveSortDirection] = React.useState<'asc' | 'desc' | undefined>();
   // const [selectedJobs, setSelectedJobs] = React.useState<number[]>([]);
 
   const getSortParams = (columnIndex: number): ThProps['sort'] => ({
@@ -75,7 +73,7 @@ export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownlo
       }
       return (bValue as string)?.localeCompare(aValue as string);
     });
-  }*/
+  } */
 
   return (
     <Modal
@@ -85,7 +83,7 @@ export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownlo
       onClose={onClose}
     >
       {scanJobs && (
-        <>
+        <React.Fragment>
           <div>
             {scanJobs?.length} scan{scanJobs?.length === 1 ? ' has' : 's have'} run
           </div>
@@ -101,7 +99,7 @@ export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownlo
                                 /> */}
                 <Th sort={getSortParams(0)}>Scan Time</Th>
                 <Th sort={getSortParams(1)}>Scan Result</Th>
-                <Th></Th>
+                <Th />
               </Tr>
             </Thead>
             <Tbody>
@@ -115,17 +113,11 @@ export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownlo
                                             isDisabled: !isJobSelectable(job)
                                         }}
                                     /> */}
-                  <Td dataLabel="Scan Time">
-                    {job.end_time ? helpers.formatDate(job.end_time) : ''}
-                  </Td>
+                  <Td dataLabel="Scan Time">{job.end_time ? helpers.formatDate(job.end_time) : ''}</Td>
                   <Td dataLabel="Scan Result">{job.status}</Td>
                   <Td dataLabel="Download" isActionCell>
                     {job.report_id && (
-                      <Button
-                        onClick={() => onDownload(job.report_id)}
-                        icon={<DownloadIcon />}
-                        variant="link"
-                      >
+                      <Button onClick={() => onDownload(job.report_id)} icon={<DownloadIcon />} variant="link">
                         Download
                       </Button>
                     )}
@@ -134,16 +126,12 @@ export const ScansModal: React.FC<ScansModalProps> = ({ scan, scanJobs, onDownlo
               ))}
             </Tbody>
           </Table>
-        </>
+        </React.Fragment>
       )}
       {!scanJobs && (
         <Bullseye>
           <EmptyState>
-            <EmptyStateHeader
-              titleText="Loading scans"
-              headingLevel="h2"
-              icon={<EmptyStateIcon icon={Spinner} />}
-            />
+            <EmptyStateHeader titleText="Loading scans" headingLevel="h2" icon={<EmptyStateIcon icon={Spinner} />} />
           </EmptyState>
         </Bullseye>
       )}

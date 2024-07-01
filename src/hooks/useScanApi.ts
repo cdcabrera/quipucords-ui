@@ -20,11 +20,8 @@ const useScanApi = () => {
    * @param {ScanType} [scan] - (Optional) The scan to be deleted. If not provided, it uses `pendingDeleteScan`.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
-  const deleteScan = (scan?: ScanType) => {
-    return axios.delete(
-      `${process.env.REACT_APP_SCANS_SERVICE}${(scan || pendingDeleteScan)?.id}/`
-    );
-  };
+  const deleteScan = (scan?: ScanType) =>
+    axios.delete(`${process.env.REACT_APP_SCANS_SERVICE}${(scan || pendingDeleteScan)?.id}/`);
 
   /**
    * Executes a POST request to initiate a scan using the provided payload.
@@ -32,9 +29,7 @@ const useScanApi = () => {
    * @param {ScanType} payload - The payload containing source-related information for the scan.
    * @returns {AxiosResponse} - The Axios response object representing the result of request.
    */
-  const runScan = (payload: ScanType) => {
-    return axios.post(`${process.env.REACT_APP_SCANS_SERVICE}`, payload);
-  };
+  const runScan = (payload: ScanType) => axios.post(`${process.env.REACT_APP_SCANS_SERVICE}`, payload);
 
   /**
    * Deletes several selected scans based on user interaction.
@@ -47,18 +42,17 @@ const useScanApi = () => {
 
   /**
    * Gets a list of scan jobs for a specific scan id
+   *
+   * @param scanId
    */
-  const getScanJobs = (scanId: number) => {
-    return axios.get(`${process.env.REACT_APP_SCANS_SERVICE}${scanId}/jobs/`);
-  };
+  const getScanJobs = (scanId: number) => axios.get(`${process.env.REACT_APP_SCANS_SERVICE}${scanId}/jobs/`);
 
-  const downloadReport = (reportId: number) => {
-    return axios({
+  const downloadReport = (reportId: number) =>
+    axios({
       url: `${process.env.REACT_APP_REPORTS_SERVICE}${reportId}/`,
       method: 'GET',
       responseType: 'blob'
     });
-  };
 
   return {
     deleteScan,
