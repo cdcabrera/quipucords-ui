@@ -1,8 +1,7 @@
-import React from 'react';
-import * as reactRedux from 'react-redux';
-import { prettyDOM } from '@testing-library/dom';
+import React, { act } from 'react';
 import { fireEvent, queries, render, screen } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { prettyDOM } from '@testing-library/dom';
+import * as reactRedux from 'react-redux';
 import { dotenv } from 'weldable';
 
 /**
@@ -28,19 +27,10 @@ jest.mock('i18next', () => {
 jest.mock('lodash/debounce', () => jest.fn);
 
 /**
- * We currently use a wrapper for useSelector, emulate for component checks
- */
-jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useSelector: jest.fn()
-}));
-
-/**
  * Emulate react router dom useLocation
  */
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn(),
   useLocation: () => ({ hash: '', search: '' })
 }));
 
@@ -55,9 +45,7 @@ global.screenRender = {
   ...screen,
   render: (containerElement = screen) => {
     const screenContainer = document.createElement('screen');
-    screenContainer.innerHTML = prettyDOM(containerElement.innerHTML, undefined, {
-      highlight: false
-    })
+    screenContainer.innerHTML = prettyDOM(containerElement.innerHTML, undefined, { highlight: false })
       .replace(/(\s)+/g, ' ')
       .replace(/>\s</g, '><');
 
@@ -76,8 +64,8 @@ global.screenRender = {
  *
  * @param {React.ReactNode} testComponent
  * @param {object} options
- * @param {boolean} options.includeInstanceRef The component includes an instance ref for class components. If the component instance
- *     includes functions, they are wrapped in "act" for convenience.
+ * @param {boolean} options.includeInstanceRef The component includes an instance ref for class components. If the
+ *     component instance includes functions, they are wrapped in "act" for convenience.
  * @returns {HTMLElement}
  */
 global.renderComponent = (testComponent, options = {}) => {
@@ -113,10 +101,7 @@ global.renderComponent = (testComponent, options = {}) => {
   const updatedTestComponent = { ...testComponent };
   let elementInstance;
 
-  if (
-    updatedTestComponent?.type?.prototype?.isReactComponent &&
-    updatedOptions.includeInstanceRef === true
-  ) {
+  if (updatedTestComponent?.type?.prototype?.isReactComponent && updatedOptions.includeInstanceRef === true) {
     updatedTestComponent.ref = element => {
       const updatedElement = element;
 
@@ -161,10 +146,7 @@ global.renderComponent = (testComponent, options = {}) => {
   updatedContainer.find = selector => container?.querySelector(selector);
   updatedContainer.fireEvent = fireEvent;
   updatedContainer.setProps = updatedProps => {
-    const updatedComponent = {
-      ...updatedTestComponent,
-      props: { ...updatedTestComponent?.props, ...updatedProps }
-    };
+    const updatedComponent = { ...updatedTestComponent, props: { ...updatedTestComponent?.props, ...updatedProps } };
     let rerender = renderRest.rerender(updatedComponent);
 
     if (rerender === undefined) {
@@ -191,7 +173,8 @@ global.renderComponent = (testComponent, options = {}) => {
  *
  * @param {Function} useHook
  * @param {object} options
- * @param {boolean} options.includeInstanceContext The hook result, if it includes functions, is wrapped in "act" for convenience.
+ * @param {boolean} options.includeInstanceContext The hook result, if it includes functions, is wrapped
+ *     in "act" for convenience.
  * @param {object} options.state An object representing a mock Redux store's state.
  * @returns {*}
  */
@@ -212,9 +195,7 @@ global.renderHook = async (useHook = Function.prototype, options = {}) => {
 
   await act(async () => {
     if (updatedOptions.state) {
-      spyUseSelector = jest
-        .spyOn(reactRedux, 'useSelector')
-        .mockImplementation(_ => _(updatedOptions.state));
+      spyUseSelector = jest.spyOn(reactRedux, 'useSelector').mockImplementation(_ => _(updatedOptions.state));
     }
     const { unmount: unmountRender } = await render(<Hook />);
     unmountHook = unmountRender;
@@ -265,8 +246,7 @@ global.shallowComponent = async testComponent => {
     if (typeof component?.type === 'function') {
       try {
         const { unmount, result } = await global.renderHook(
-          () =>
-            component.type({ ...component.type.defaultProps, ...component.props, ...updatedProps }),
+          () => component.type({ ...component.type.defaultProps, ...component.props, ...updatedProps }),
           { includeInstanceContext: false }
         );
 
@@ -320,8 +300,11 @@ global.shallowComponent = async testComponent => {
 };
 
 // ToDo: revisit squashing log and group messaging, redux leaks log messaging
+
 // ToDo: revisit squashing PF4 "popper" alerts
+
 // ToDo: revisit squashing PF4 "validateDOMNesting" select alerts
+
 // ToDo: revisit squashing PF4 "validateDOMNesting" table alerts
 /*
  * For applying a global Jest "beforeAll", based on
