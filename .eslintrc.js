@@ -77,6 +77,7 @@ module.exports = {
     'jest/no-done-callback': 0,
     'jest/no-standalone-expect': [2, { additionalTestBlockFunctions: ['skipIt'] }],
     'jest/prefer-to-have-length': 0,
+    'jest/valid-describe-callback': 2,
     'jsdoc/check-tag-names': [
       2,
       {
