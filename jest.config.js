@@ -1,36 +1,32 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
-
 module.exports = {
-  // Automatically clear mock calls and instances between every test
-  clearMocks: true,
-
-  // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: false,
-
-  // The directory where Jest should output its coverage files
-  coverageDirectory: 'coverage',
-
-  // An array of directory names to be searched recursively up from the requiring module's location
-  moduleDirectories: ['node_modules', '<rootDir>/src'],
-
-  // A map from regular expressions to module names that allow to stub out resources with a single module
-  moduleNameMapper: {
-    '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      '<rootDir>/__mocks__/fileMock.js',
-    '@app/(.*)': '<rootDir>/src/app/$1'
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/.*/**'],
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50
+    }
   },
-
-  // A preset that is used as a base for Jest's configuration
-  preset: 'ts-jest/presets/js-with-ts',
-
-  roots: ['src'],
-
-  // The test environment that will be used for testing.
+  moduleFileExtensions: ['web.js', 'js', 'web.ts', 'ts', 'web.tsx', 'tsx', 'json', 'web.jsx', 'jsx', 'node'],
+  moduleNameMapper: {
+    '^react-native$': 'react-native-web',
+    '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy'
+  },
+  modulePaths: [],
+  resetMocks: true,
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  setupFilesAfterEnv: ['<rootDir>/config/jest.setupTests.js'],
+  testMatch: ['<rootDir>/**/__tests__/**/*.{ts,tsx}', '<rootDir>/**/*.{spec,test}.{ts,tsx}'],
   testEnvironment: 'jsdom',
-
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/ts-jest',
+    '^.+\\.css$': '<rootDir>/config/jest.transform.style.js',
+    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '<rootDir>/config/jest.transform.file.js'
+  },
   transformIgnorePatterns: [
-    "/node_modules/(?!(string-width|cliui)/)"
-  ]
+    '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
+    '^.+\\.module\\.(css|sass|scss)$'
+  ],
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname']
 };

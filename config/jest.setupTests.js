@@ -1,14 +1,14 @@
 import React from 'react';
-import { fireEvent, queries, render, screen } from '@testing-library/react';
-import { prettyDOM } from '@testing-library/dom';
-import { act } from 'react-dom/test-utils';
 import * as reactRedux from 'react-redux';
-import { setupDotenvFilesForEnv } from './build.dotenv';
+import { prettyDOM } from '@testing-library/dom';
+import { fireEvent, queries, render, screen } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
+import { dotenv } from 'weldable';
 
 /**
  * Set dotenv params.
  */
-setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
+dotenv.setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
 
 /**
  * Emulate for component checks
@@ -55,7 +55,9 @@ global.screenRender = {
   ...screen,
   render: (containerElement = screen) => {
     const screenContainer = document.createElement('screen');
-    screenContainer.innerHTML = prettyDOM(containerElement.innerHTML, undefined, { highlight: false })
+    screenContainer.innerHTML = prettyDOM(containerElement.innerHTML, undefined, {
+      highlight: false
+    })
       .replace(/(\s)+/g, ' ')
       .replace(/>\s</g, '><');
 
@@ -111,7 +113,10 @@ global.renderComponent = (testComponent, options = {}) => {
   const updatedTestComponent = { ...testComponent };
   let elementInstance;
 
-  if (updatedTestComponent?.type?.prototype?.isReactComponent && updatedOptions.includeInstanceRef === true) {
+  if (
+    updatedTestComponent?.type?.prototype?.isReactComponent &&
+    updatedOptions.includeInstanceRef === true
+  ) {
     updatedTestComponent.ref = element => {
       const updatedElement = element;
 
@@ -156,7 +161,10 @@ global.renderComponent = (testComponent, options = {}) => {
   updatedContainer.find = selector => container?.querySelector(selector);
   updatedContainer.fireEvent = fireEvent;
   updatedContainer.setProps = updatedProps => {
-    const updatedComponent = { ...updatedTestComponent, props: { ...updatedTestComponent?.props, ...updatedProps } };
+    const updatedComponent = {
+      ...updatedTestComponent,
+      props: { ...updatedTestComponent?.props, ...updatedProps }
+    };
     let rerender = renderRest.rerender(updatedComponent);
 
     if (rerender === undefined) {
@@ -204,7 +212,9 @@ global.renderHook = async (useHook = Function.prototype, options = {}) => {
 
   await act(async () => {
     if (updatedOptions.state) {
-      spyUseSelector = jest.spyOn(reactRedux, 'useSelector').mockImplementation(_ => _(updatedOptions.state));
+      spyUseSelector = jest
+        .spyOn(reactRedux, 'useSelector')
+        .mockImplementation(_ => _(updatedOptions.state));
     }
     const { unmount: unmountRender } = await render(<Hook />);
     unmountHook = unmountRender;
@@ -255,7 +265,8 @@ global.shallowComponent = async testComponent => {
     if (typeof component?.type === 'function') {
       try {
         const { unmount, result } = await global.renderHook(
-          () => component.type({ ...component.type.defaultProps, ...component.props, ...updatedProps }),
+          () =>
+            component.type({ ...component.type.defaultProps, ...component.props, ...updatedProps }),
           { includeInstanceContext: false }
         );
 
