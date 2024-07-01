@@ -27,7 +27,6 @@
     ]
   },
   "scripts": {
-    "build:old": "export NODE_ENV=production; webpack --config ./config/webpack.prod.js && npm run dr:surge",
     "build": "export NODE_ENV=production; run-s -l build:js",
     "build:js": "weldable -l ts -x ./config/webpack.prod.config.js",
     "start": "export NODE_ENV=development; run-p -l start:js",
