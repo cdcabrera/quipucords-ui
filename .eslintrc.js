@@ -55,6 +55,25 @@ module.exports = {
     ],
     'import/no-named-as-default': 0,
     'import/no-named-as-default-member': 0,
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: 'react**',
+            group: 'external',
+            position: 'before'
+          }
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true
+        },
+        'newlines-between': 'never'
+      }
+    ],
     'jest/no-done-callback': 0,
     'jest/no-standalone-expect': [2, { additionalTestBlockFunctions: ['skipIt'] }],
     'jest/prefer-to-have-length': 0,
