@@ -1,11 +1,12 @@
 const {
-  cssLoaderResolve,
-  sassLoaderResolve,
-  EslintWebpackPlugin,
-  MiniCssExtractPlugin
+  // cssLoaderResolve,
+  // sassLoaderResolve,
+  EslintWebpackPlugin
+  // MiniCssExtractPlugin
 } = require('weldable/lib/packages');
 
 module.exports = ({ SRC_DIR } = {}) => ({
+  /*
   module: {
     rules: [
       {
@@ -14,6 +15,7 @@ module.exports = ({ SRC_DIR } = {}) => ({
       }
     ]
   },
+  */
   plugins: [
     new EslintWebpackPlugin({
       context: SRC_DIR,

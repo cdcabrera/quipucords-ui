@@ -1,10 +1,15 @@
-const {
-  cssLoaderResolve,
-  sassLoaderResolve,
-  MiniCssExtractPlugin
-} = require('weldable/lib/packages');
+// const {
+//  sassLoaderResolve,
+//  MiniCssExtractPlugin
+// } = require('weldable/lib/packages');
 
 module.exports = () => ({
+  ignoreWarnings: [
+    {
+      message: /mini-css-extract-plugin/
+    }
+  ]
+  /*
   module: {
     rules: [
       {
@@ -13,4 +18,14 @@ module.exports = () => ({
       }
     ]
   }
+  */
+  /*
+  plugins: [
+    new MiniCssExtractPlugin({
+      chunkFilename: '[name].[contenthash:8].chunk.css',
+      filename: '[name].[contenthash:8].css',
+      ignoreOrder: true
+    })
+  ]
+  */
 });
