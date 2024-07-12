@@ -91,10 +91,12 @@ export const Login: React.FunctionComponent = () => {
     />
   );
 
+  const textContent = `Welcome to Quipucords! This inspection and reporting tool is designed to identify and report environment data, or facts, such as the number of physical and virtual systems on a network, their operating systems, and other configuration data.`;
+
   return (
     <LoginPage
       loginTitle="Log in to your account"
-      textContent="Welcome to Quipucords! This inspection and reporting tool is designed to identify and report environment data, or facts, such as the number of physical and virtual systems on a network, their operating systems, and other configuration data."
+      textContent={textContent}
       backgroundImgSrc={bgImage}
     >
       {loginForm}
