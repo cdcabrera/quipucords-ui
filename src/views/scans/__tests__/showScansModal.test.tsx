@@ -6,12 +6,6 @@ import '@testing-library/jest-dom';
 import { ScanJobType, ScanType } from '../../../types/types';
 import { ScansModal } from '../showScansModal';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (str, obj) => `${str}-${JSON.stringify(obj)}`
-  })
-}));
-
 jest.spyOn(document, 'createElement');
 jest.spyOn(document.body, 'addEventListener');
 

@@ -28,7 +28,7 @@ const App: React.FC = () => {
           headers: {
             ...config.headers,
             Authorization: `Token ${localStorage.getItem('authToken')}`
-          }
+          } as any
         }),
         error => {
           console.error('Failed to set axios configuration', error);

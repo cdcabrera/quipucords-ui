@@ -1,6 +1,6 @@
 /**
- * Provides a login interface, handling user authentication with visual feedback. Uses PatternFly for UI and Axios for API requests,
- * redirecting on successful login or displaying errors on failure.
+ * Provides a login interface, handling user authentication with visual feedback.
+ * Uses PatternFly for UI and Axios for API requests, redirecting on successful login or displaying errors on failure.
  *
  * @module login
  */
@@ -94,7 +94,11 @@ export const Login: React.FunctionComponent = () => {
   return (
     <LoginPage
       loginTitle="Log in to your account"
-      textContent="Welcome to Quipucords! This inspection and reporting tool is designed to identify and report environment data, or facts, such as the number of physical and virtual systems on a network, their operating systems, and other configuration data."
+      textContent={
+        'Welcome to Quipucords!' +
+        'This inspection and reporting tool is designed to identify and report environment data, or facts,' +
+        'such as the number of physical and virtual systems on a network, their operating systems, and other configuration data.'
+      }
       backgroundImgSrc={bgImage}
     >
       {loginForm}

@@ -6,7 +6,7 @@
  * @module simpleDropdown
  */
 import React, { useState } from 'react';
-import { Dropdown, DropdownList, MenuToggle, MenuToggleElement } from '@patternfly/react-core';
+import { Dropdown, DropdownList, MenuToggle, type MenuToggleElement } from '@patternfly/react-core';
 
 export interface ISimpleDropdownProps {
   label: string;

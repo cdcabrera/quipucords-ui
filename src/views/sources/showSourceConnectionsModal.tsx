@@ -1,5 +1,6 @@
 /**
- * A modal component displaying connection statuses (successful, failed, unreachable) for a source. Utilizes expandable lists and status icons for clarity.
+ * A modal component displaying connection statuses (successful, failed, unreachable) for a source.
+ * Utilizes expandable lists and status icons for clarity.
  *
  * @module connectionsModal
  */

@@ -125,7 +125,9 @@ const ScansListView: React.FunctionComponent = () => {
   };
 
   /**
-   * Configures table state for scan results, with URL persistence. Includes columns for scan ID, last scanned, sources, and actions. Enables name-based filtering, sorting by ID or last scanned, pagination, and row selection. Utilizes `useTableState` for setup.
+   * Configures table state for scan results, with URL persistence. Includes columns for scan ID, last scanned,
+   * sources, and actions. Enables name-based filtering, sorting by ID or last scanned, pagination, and row selection.
+   * Utilizes `useTableState` for setup.
    */
   const tableState = useTableState({
     persistTo: 'urlParams',
