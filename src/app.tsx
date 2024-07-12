@@ -9,7 +9,7 @@ import '@patternfly/react-core/dist/styles/base.css';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { I18n } from './components/i18n/I18n';
 import { useLocale } from './components/sessionContext/sessionProvider';
 import { AppLayout } from './components/viewLayout/viewLayout';

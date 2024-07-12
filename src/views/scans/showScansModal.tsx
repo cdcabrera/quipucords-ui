@@ -11,7 +11,7 @@ import {
   Spinner
 } from '@patternfly/react-core';
 import { DownloadIcon } from '@patternfly/react-icons';
-import { Table, Thead, Tr, Th, Tbody, Td, ThProps } from '@patternfly/react-table';
+import { Table, Thead, Tr, Th, Tbody, Td, type ThProps } from '@patternfly/react-table';
 import { helpers } from '../../helpers';
 import { ScanJobType, ScanType } from '../../types/types';
 

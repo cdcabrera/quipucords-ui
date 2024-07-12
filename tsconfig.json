@@ -20,7 +20,7 @@
     "target": "esnext",
   },
   "include": [
-    "*.js",
+    "**.js",
     "**/*.ts",
     "**/*.tsx",
     "**/*.jsx",

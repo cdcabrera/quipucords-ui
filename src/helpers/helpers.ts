@@ -6,7 +6,7 @@
  * @module helpers
  */
 import React from 'react';
-import moment, { MomentInput } from 'moment';
+import moment, { type MomentInput } from 'moment';
 import { CredentialType } from '../types/types';
 
 /**

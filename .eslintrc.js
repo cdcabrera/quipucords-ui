@@ -2,23 +2,27 @@ module.exports = {
   env: {
     browser: true,
     es2022: true,
-    jest: true
+    jest: true,
+    node: true
   },
   extends: [
-    'airbnb',
-    'airbnb-typescript',
-    'airbnb/hooks',
-    'prettier',
-    'plugin:jest/recommended',
-    'plugin:jsdoc/recommended'
+    'eslint:recommended',
+    'plugin:import/recommended',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:comment-length/recommended',
+    'plugin:jsdoc/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jest/recommended'
   ],
   overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2022,
     project: './tsconfig.json'
   },
-  plugins: ['import', 'jest', 'jsdoc', 'json', 'node', 'prettier', 'react', '@typescript-eslint'],
+  plugins: ['@typescript-eslint'],
   settings: {
     'import/external-module-folders': ['public'],
     'import/resolver': {
@@ -26,17 +30,31 @@ module.exports = {
         extensions: ['.js', '.jsx', '.ts', '.tsx']
       }
     },
-    jsdoc: {}
+    jsdoc: {},
+    react: {
+      version: 'detect'
+    }
   },
-  globals: {
-    renderHook: 'readonly',
-    renderComponent: 'readonly',
-    shallowComponent: 'readonly'
-  },
+  globals: {},
   rules: {
+    '@typescript-eslint/no-explicit-any': 1,
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 1,
     'comma-dangle': 0,
+    'comment-length/limit-single-line-comments': [
+      'warn',
+      {
+        maxLength: 120,
+        logicalWrap: true
+      }
+    ],
+    'comment-length/limit-multi-line-comments': [
+      'warn',
+      {
+        maxLength: 120,
+        logicalWrap: true
+      }
+    ],
     'consistent-return': 1,
     'default-param-last': 0,
     'import/extensions': [
@@ -93,19 +111,19 @@ module.exports = {
         ]
       }
     ],
-    'jsdoc/no-undefined-types': [2, { definedTypes: ['html'] }],
+    'jsdoc/no-undefined-types': 0,
     'jsdoc/require-jsdoc': 2,
-    'jsdoc/require-param': 2,
+    'jsdoc/require-param': 0,
     'jsdoc/require-param-description': 0,
-    'jsdoc/require-param-name': 2,
-    'jsdoc/require-param-type': 2,
+    'jsdoc/require-param-name': 0,
+    'jsdoc/require-param-type': 0,
     'jsdoc/require-property': 2,
     'jsdoc/require-property-description': 0,
     'jsdoc/require-property-name': 2,
-    'jsdoc/require-property-type': 2,
-    'jsdoc/require-returns': 2,
+    'jsdoc/require-property-type': 0,
+    'jsdoc/require-returns': 0,
     'jsdoc/require-returns-description': 0,
-    'jsdoc/require-returns-type': 2,
+    'jsdoc/require-returns-type': 0,
     'jsdoc/tag-lines': [
       'warn',
       'always',
@@ -113,6 +131,25 @@ module.exports = {
         count: 0,
         applyToEndTag: false,
         startLines: 1
+      }
+    ],
+    'jsx-a11y/anchor-is-valid': 1,
+    'jsx-a11y/label-has-associated-control': [
+      2,
+      {
+        labelComponents: ['CustomInputLabel'],
+        labelAttributes: ['label'],
+        controlComponents: ['CustomInput'],
+        depth: 3
+      }
+    ],
+    'jsx-a11y/label-has-for': [
+      2,
+      {
+        components: ['Label'],
+        required: {
+          some: ['nesting', 'id']
+        }
       }
     ],
     'max-len': [
@@ -161,25 +198,6 @@ module.exports = {
     'react/jsx-no-useless-fragment': 1,
     'react/require-default-props': 0,
     'react/state-in-constructor': [1, 'never'],
-    'space-before-function-paren': 0,
-    'jsx-a11y/anchor-is-valid': 1,
-    'jsx-a11y/label-has-associated-control': [
-      2,
-      {
-        labelComponents: ['CustomInputLabel'],
-        labelAttributes: ['label'],
-        controlComponents: ['CustomInput'],
-        depth: 3
-      }
-    ],
-    'jsx-a11y/label-has-for': [
-      2,
-      {
-        components: ['Label'],
-        required: {
-          some: ['nesting', 'id']
-        }
-      }
-    ]
+    'space-before-function-paren': 0
   }
 };

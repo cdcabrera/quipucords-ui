@@ -1,7 +1,7 @@
 /**
  * Credential API Hook
  *
- * This hook provides functions for for interacting with credential-related API calls,
+ * This hook provides functions for interacting with credential-related API calls,
  * including adding,editing and deleting credentials and managing selected credentials.
  *
  * @module useCredentialApi
@@ -16,7 +16,8 @@ const useCredentialApi = () => {
   /**
    * Executes a DELETE request to delete a credential.
    *
-   * @param {CredentialType} [credential] - (Optional) The credential to be deleted. If not provided, it uses `pendingDeleteCredential`.
+   * @param {CredentialType} [credential] - (Optional) The credential to be deleted. If not provided, it uses
+   *     `pendingDeleteCredential`.
    * @returns {AxiosResponse} - The Axios response object representing the result of the request.
    */
   const deleteCredential = (credential?: CredentialType) =>

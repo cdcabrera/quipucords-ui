@@ -1,6 +1,6 @@
 /**
- * Provides a login interface, handling user authentication with visual feedback. Uses PatternFly for UI and Axios for API requests,
- * redirecting on successful login or displaying errors on failure.
+ * Provides a login interface, handling user authentication with visual feedback.
+ * Uses PatternFly for UI and Axios for API requests, redirecting on successful login or displaying errors on failure.
  *
  * @module login
  */

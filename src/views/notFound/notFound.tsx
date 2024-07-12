@@ -1,6 +1,7 @@
 /**
- * Displays a "404 Page Not Found" message with an option to navigate back to the homepage. Utilizes PatternFly components
- * for a consistent and accessible UI, providing a clear indication that the requested page could not be found.
+ * Displays a "404 Page Not Found" message with an option to navigate back to the homepage.
+ * Utilizes PatternFly components for a consistent and accessible UI,
+ * providing a clear indication that the requested page could not be found.
  *
  * @module notFound
  */

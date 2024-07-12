@@ -4,7 +4,7 @@
  * This component displays a table of credentials, allowing users to view, filter, and manage credentials.
  * It provides features like adding credentials, deleting selected credentials, and refreshing the data.
  *
- *@module credentialsListView
+ * @module credentialsListView
  */
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -111,7 +111,8 @@ const CredentialsListView: React.FunctionComponent = () => {
   };
 
   /**
-   * Initializes table state with URL persistence, including configurations for columns, filters, sorting, pagination, and selection.
+   * Initializes table state with URL persistence, including configurations for columns, filters, sorting, pagination,
+   * and selection.
    *
    * Features:
    * - Column definitions: 'name', 'type', 'auth_type', 'sources', 'updated', with actions placeholder.
