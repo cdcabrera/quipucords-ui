@@ -24,11 +24,11 @@
     "test:ci": "export CI=true; jest ./src --coverage",
     "test:clearCache": "jest --clearCache",
     "test:dev": "export NODE_ENV=test; run-s test:lint test:local",
+    "test:integration": "jest --roots=./tests",
+    "test:integration-dev": "jest --roots=./tests --watchAll",
     "test:lint": "export ESLINT_USE_FLAT_CONFIG=false; eslint --ext=json --ext=ts --ext=tsx ./src",
     "test:lint-fix": "npm run test:lint -- --fix",
     "test:local": "jest --roots=./src --watch",
-    "test:integration": "jest ./tests",
-    "test:integration-dev": "jest --roots=./tests --watch",
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
