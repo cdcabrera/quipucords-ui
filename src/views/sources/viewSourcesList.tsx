@@ -47,7 +47,7 @@ import { API_DATA_SOURCE_TYPES, API_QUERY_TYPES, API_SOURCES_LIST_QUERY } from '
 import { helpers } from '../../helpers';
 import { useAlerts } from '../../hooks/useAlerts';
 import useSourceApi from '../../hooks/useSourceApi';
-import useQueryClientConfig from '../../queryClientConfig';
+import { useQueryClientConfig } from '../../queryClientConfig';
 import { CredentialType, SourceType } from '../../types/types';
 import AddSourceModal from './addSourceModal';
 import SourcesScanModal from './addSourcesScanModal';

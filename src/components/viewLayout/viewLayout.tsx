@@ -119,4 +119,4 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   );
 };
 
-export default AppLayout;
+export { AppLayout as default, AppLayout };

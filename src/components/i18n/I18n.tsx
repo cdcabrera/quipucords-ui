@@ -74,4 +74,4 @@ const I18n: React.FunctionComponent<I18nProps> = ({
   return children;
 };
 
-export { I18n as default, EMPTY_CONTEXT, translate };
+export { I18n as default, I18n, EMPTY_CONTEXT, translate };

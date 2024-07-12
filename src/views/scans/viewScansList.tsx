@@ -45,7 +45,7 @@ import { API_QUERY_TYPES, API_SCANS_LIST_QUERY } from '../../constants/apiConsta
 import { helpers } from '../../helpers';
 import { useAlerts } from '../../hooks/useAlerts';
 import useScanApi from '../../hooks/useScanApi';
-import useQueryClientConfig from '../../queryClientConfig';
+import { useQueryClientConfig } from '../../queryClientConfig';
 import { ScanJobType, ScanType } from '../../types/types';
 import { ScansModal } from './showScansModal';
 import { useScansQuery } from './useScansQuery';

@@ -67,7 +67,7 @@ const AppRoutes = (): React.ReactElement => {
 
   axios.get(`${process.env.REACT_APP_USER_SERVICE_CURRENT}`).catch(() => {
     if (location.pathname !== '/login') {
-      //nav('/login');
+      nav('/login');
     }
   });
   return (
