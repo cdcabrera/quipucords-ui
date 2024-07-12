@@ -1,6 +1,7 @@
 /**
  * Offers utilities for error handling, clipboard copying, data download, ID generation, and property setting. Includes
- * helpers for API response processing, IP address validation, authentication type determination, and UI environment settings.
+ * helpers for API response processing, IP address validation, authentication type determination, and UI environment
+ * settings.
  *
  * @module helpers
  */
@@ -13,7 +14,8 @@ import { CredentialType } from '../types/types';
  *
  * @param {string | string[]} key - The translation key(s).
  * @param {string | string[]} value - The translation value(s).
- * @param {React.ReactElement[] | { [tagName: string]: React.ReactElement }} components - React components for the translation.
+ * @param {React.ReactElement[] | { [tagName: string]: React.ReactElement }} components - React components for the
+ *     translation.
  * @returns {string} - The translation key.
  */
 const noopTranslate = (

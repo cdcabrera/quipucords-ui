@@ -18,11 +18,10 @@ type CredentialsSortableColumnKey = 'name' | 'type';
 /**
  * Fetches and manages credentials data based on table state.
  *
- * @param root0
- * @param root0.tableState
- * @param root0.setRefreshTime
+ * @param {{ tableState, setRefreshTime }} params
+ * @returns {{}}
  */
-export const useCredentialsQuery = ({
+const useCredentialsQuery = ({
   tableState,
   setRefreshTime
 }: {
@@ -39,3 +38,5 @@ export const useCredentialsQuery = ({
     tableState,
     setRefreshTime
   });
+
+export { useCredentialsQuery as default, useCredentialsQuery };
