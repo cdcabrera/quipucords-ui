@@ -1,6 +1,6 @@
 /**
  * Provides the main layout for the application using PatternFly, incorporating a header, navigation sidebar,
- * and content area. It dynamically adjusts navigation based on routing, supports a toggleable sidebar, and
+ * and content area. It dynamically adjusts navigation based on routing, supports a sidebar toggle, and
  * ensures accessibility with a "Skip to Content" link. Excludes header and sidebar on the login page for a
  * simplified UI.
  *

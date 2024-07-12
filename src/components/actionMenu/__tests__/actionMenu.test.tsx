@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import ActionMenu from '../actionMenu';
 import '@testing-library/jest-dom';
 
-test('renders proper dom including elipse icon', () => {
+test('renders proper dom including ellipsis icon', () => {
   const item = { foo: 'bar' };
   const actionClicked = jest.fn();
   const { asFragment } = render(

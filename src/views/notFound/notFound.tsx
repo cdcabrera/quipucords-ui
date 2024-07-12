@@ -35,7 +35,7 @@ const NotFound: React.FunctionComponent = () => {
           icon={<EmptyStateIcon icon={ExclamationTriangleIcon} />}
           headingLevel="h1"
         />
-        <EmptyStateBody>We didn&apos;t find a page that matches the address you navigated to.</EmptyStateBody>
+        <EmptyStateBody>Page is missing</EmptyStateBody>
         <EmptyStateFooter>
           <GoHomeBtn />
         </EmptyStateFooter>

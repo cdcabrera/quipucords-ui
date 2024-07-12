@@ -43,8 +43,8 @@ export const Login: React.FunctionComponent = () => {
     setIsValidPassword(!!password);
     setShowHelperText(!username || !password);
     if (username && password) {
-      const noInteceptAxios = axios.create();
-      noInteceptAxios
+      axios
+        .create()
         .post(`${process.env.REACT_APP_AUTH_TOKEN_SERVICE}`, {
           username,
           password
