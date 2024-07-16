@@ -1,6 +1,6 @@
 const { EslintWebpackPlugin } = require('weldable/lib/packages');
 
-module.exports = ({ SRC_DIR, MOCK_PORT, HOST } = {}) => ({
+module.exports = ({ SRC_DIR, PROTOCOL, MOCK_PORT, HOST } = {}) => ({
   plugins: [
     new EslintWebpackPlugin({
       context: SRC_DIR,
@@ -8,10 +8,11 @@ module.exports = ({ SRC_DIR, MOCK_PORT, HOST } = {}) => ({
     })
   ],
   devServer: {
+    server: `${PROTOCOL}`,
     proxy: [
       {
         context: ['/api'],
-        target: `http://${HOST}:${MOCK_PORT}`,
+        target: `${PROTOCOL}://${HOST}:${MOCK_PORT}`,
         secure: false
       }
     ]

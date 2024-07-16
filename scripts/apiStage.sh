@@ -50,17 +50,6 @@ stopApi()
 }
 #
 #
-# open login
-#
-openLogin()
-{
-  local HOST=$1
-  local PORT=$2
-  local LOGIN="https://${HOST}:${PORT}/login/"
-  xdg-open $LOGIN || open $LOGIN
-}
-#
-#
 # Run stage/dev setup, used for local development against the latest API, partially working login
 #
 stageApi()
@@ -99,7 +88,6 @@ stageApi()
   checkContainerRunning $NAME
 
   if [ ! -z "$($PODMAN ps | grep $NAME)" ]; then
-    openLogin $HOST $PORT
     echo "  Container: $($PODMAN ps | grep $NAME | cut -c 1-80)"
     echo "  QPC container running: https://${HOST}:${PORT}/"
     printf "  To stop: $ ${GREEN}$PODMAN stop ${NAME}${NOCOLOR}\n"
