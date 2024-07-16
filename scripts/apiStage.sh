@@ -110,11 +110,12 @@ stageApi()
   CONTAINER="quay.io/quipucords/quipucords:latest"
   PODMAN=""
 
-  while getopts p:t:c option;
+  while getopts p:t:w:c option;
     do
       case $option in
         p ) PORT=$OPTARG;;
         t ) TYPE="$OPTARG";;
+        w ) PASSWORD="$OPTARG";;
       esac
   done
 
