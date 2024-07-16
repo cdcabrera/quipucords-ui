@@ -47,7 +47,7 @@ jobs:
       - name: Compress upstream assets
         if: ${{ success() && startsWith(matrix.node-version, env.COV_NODE_VERSION) && startsWith(github.ref, 'refs/tags/') }}
         run: |
-          tar -cf ${UPSTREAM_TAR} dist
+          tar -cf ${UPSTREAM_TAR} build
           gzip -f --best ${UPSTREAM_TAR}
       - name: Release artifacts
         uses: ncipollo/release-action@v1.13.0

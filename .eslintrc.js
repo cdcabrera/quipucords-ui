@@ -38,6 +38,7 @@ module.exports = {
   globals: {},
   rules: {
     '@typescript-eslint/no-explicit-any': 1,
+    '@typescript-eslint/no-var-requires': 0,
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 1,
     'comma-dangle': 0,

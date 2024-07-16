@@ -16,8 +16,10 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "export NODE_ENV=production; run-s -l build:js test:integration",
-    "build:js": "weldable -l ts -x ./config/webpack.prod.config.js",
+    "build": "run-s -l build:pre build:js build:post test:integration",
+    "build:js": "export NODE_ENV=production; weldable -l ts -x ./config/webpack.prod.config.js",
+    "build:post": "bash ./scripts/post.sh",
+    "build:pre": "bash ./scripts/pre.sh",
     "release": "changelog --link-url https://github.com/quipucords/quipucords-ui.git",
     "start": "export NODE_ENV=development; run-p -l start:js",
     "start:js": "weldable -l ts -x ./config/webpack.dev.config.js",
