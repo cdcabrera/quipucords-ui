@@ -48,10 +48,7 @@ const parseCommitMessage = (message, messageTypes = availableMessageTypes) => {
 
   if (!output.type || (output.type && !descriptionEtAll?.length)) {
     const [hashFallback, ...descriptionEtAllFallback] = message.trim().split(/\s/);
-    const [descriptionFallback, ...partialPrFallback] = descriptionEtAllFallback
-      .join(' ')
-      .trim()
-      .split(/\(#/);
+    const [descriptionFallback, ...partialPrFallback] = descriptionEtAllFallback.join(' ').trim().split(/\(#/);
 
     output = {
       hash: hashFallback,
@@ -65,9 +62,7 @@ const parseCommitMessage = (message, messageTypes = availableMessageTypes) => {
   }
 
   const updatedMessage = [
-    `${output.typeScope || ''}${(output.isBreaking && '!') || ''}${
-      (output.typeScope && ':') || ''
-    }`,
+    `${output.typeScope || ''}${(output.isBreaking && '!') || ''}${(output.typeScope && ':') || ''}`,
     output.description
   ]
     .filter(value => !!value)
@@ -101,26 +96,17 @@ const parseCommitMessage = (message, messageTypes = availableMessageTypes) => {
 const messagesList = (
   parsedMessages,
   {
-    issueNumberExceptions = ['chore', 'fix'],
+    issueNumberExceptions = ['build', 'chore', 'ci', 'docs', 'fix', 'perf', 'refactor', 'test'],
     maxMessageLength = 65,
     typeScopeExceptions = '*'
   } = {}
 ) =>
   parsedMessages.map(
-    ({
-      messageLength = 0,
-      type = null,
-      scope = null,
-      description = null,
-      message = null,
-      hash = null
-    }) => {
+    ({ messageLength = 0, type = null, scope = null, description = null, message = null, hash = null }) => {
       const typeValid =
-        (type && 'valid') ||
-        'INVALID: type (expected known types and format "<type>:" or "<type>(<scope>):")';
+        (type && 'valid') || 'INVALID: type (expected known types and format "<type>:" or "<type>(<scope>):")';
 
-      let scopeException =
-        !typeScopeExceptions || !typeScopeExceptions?.length || typeScopeExceptions === '*';
+      let scopeException = !typeScopeExceptions || !typeScopeExceptions?.length || typeScopeExceptions === '*';
 
       if (!scopeException && Array.isArray(typeScopeExceptions)) {
         scopeException = typeScopeExceptions.includes(type);
@@ -143,8 +129,7 @@ const messagesList = (
         (isIssueNumber && 'valid') ||
         'INVALID: issue number (expected format "<desc>/<number>" or "<desc>-<number>")';
 
-      const descriptionValid =
-        (description && 'valid') || 'INVALID: description (missing description)';
+      const descriptionValid = (description && 'valid') || 'INVALID: description (missing description)';
 
       const lengthValid =
         (messageLength <= maxMessageLength && 'valid') ||
@@ -191,9 +176,8 @@ const actionCommitCheck = commits => {
       });
     });
 
-    filteredResults = filteredResults.filter(
-      ({ hash, commit, ...rest }) => Object.keys(rest).length > 0
-    );
+    // eslint-disable-next-line
+    filteredResults = filteredResults.filter(({ hash, commit, ...rest }) => Object.keys(rest).length > 0);
     lintResults.resultsArray = filteredResults;
     lintResults.resultsString = JSON.stringify(filteredResults, null, 2);
   }
