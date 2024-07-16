@@ -1,3 +1,8 @@
+/**
+ * Defines TypeScript types for handling credentials, source connections, sources, connections, and scans within the application.
+ * These types include detailed structures for data related to authentication credentials, network sources and their connections,
+ * as well as comprehensive information about scans and their outcomes.
+ */
 export type CredentialType = {
   id: string;
   name: string;
@@ -7,7 +12,6 @@ export type CredentialType = {
   username: string;
   password: string;
   ssh_keyfile: string;
-  ssh_key: string;
   auth_token: string;
   ssh_passphrase: string;
   become_method: string;
@@ -64,3 +68,101 @@ export type ConnectionType = {
     name: string;
   };
 };
+
+export type ScanType = {
+  id: number;
+  jobs: { id: number; report_id?: number }[];
+  most_recent: {
+    end_time: string;
+    id: number;
+    report_id?: number;
+    scan_type: string;
+    start_time: string;
+    status: string;
+    status_details: {
+      job_status_message: string;
+    };
+    system_fingerprint_count: number;
+    systems_count: number;
+    systems_failed: number;
+    systems_scanned: number;
+    systems_unreachable: number;
+  };
+  sources: SourceType[];
+};
+
+export type ScanJobType = {
+  id: number,
+  scan: {
+      id: number,
+      name: string
+  },
+  sources: [
+      {
+          id: number,
+          name: string,
+          source_type: string
+      }
+  ],
+  scan_type: string,
+  status: string,
+  status_message: string,
+  tasks: [
+      {
+          sequence_number: number,
+          source: number,
+          scan_type: string,
+          status: string,
+          status_message: string,
+          systems_count: number,
+          systems_scanned: number,
+          systems_failed: number,
+          systems_unreachable: number,
+          start_time: Date,
+          end_time: Date
+      },
+      {
+          sequence_number: number,
+          source: number,
+          scan_type: string,
+          status: string,
+          status_message: string,
+          systems_count: number,
+          systems_scanned: number,
+          systems_failed: number,
+          systems_unreachable: number,
+          start_time: Date,
+          end_time: Date
+      },
+      {
+          sequence_number: number,
+          scan_type: string,
+          status: string,
+          status_message: string,
+          systems_count: number,
+          systems_scanned: number,
+          systems_failed: number,
+          systems_unreachable: number,
+          start_time: Date,
+          end_time: Date,
+          system_fingerprint_count: number
+      }
+  ],
+  options: {
+      max_concurrency: number,
+      enabled_extended_product_search: {
+          jboss_eap: false,
+          jboss_fuse: false,
+          jboss_brms: false,
+          jboss_ws: false
+      }
+  },
+  report_id: number,
+  start_time: Date,
+  end_time: Date,
+  systems_count: number,
+  systems_scanned: number,
+  systems_failed: number,
+  systems_unreachable: number,
+  system_fingerprint_count: number
+}

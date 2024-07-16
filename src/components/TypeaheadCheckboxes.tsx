@@ -1,3 +1,8 @@
+/**
+ * Implements a multi-select typeahead component with checkboxes, enabling users to filter and select multiple options.
+ * Utilizes PatternFly for UI consistency and accessibility.
+ * @module TypeaheadCheckboxes
+ */
 import React from 'react';
 import {
   Select,
@@ -11,7 +16,7 @@ import {
   TextInputGroupUtilities,
   Button
 } from '@patternfly/react-core';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+import { TimesIcon } from '@patternfly/react-icons/';
 
 export interface ITypeaheadCheckboxesProps {
   onChange: (selections: string[]) => void;

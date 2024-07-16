@@ -1,3 +1,11 @@
+/**
+ * Credentials List View Component
+ *
+ * This component displays a table of credentials, allowing users to view, filter, and manage credentials.
+ * It provides features like adding credentials, deleting selected credentials, and refreshing the data.
+ *
+ ** @module CredentialsListView
+ */
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,9 +15,13 @@ import {
   useTableState
 } from '@mturley-latest/react-table-batteries';
 import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  AlertVariant,
   Button,
   ButtonVariant,
-  Divider,
+  DropdownItem,
   EmptyState,
   EmptyStateIcon,
   List,
@@ -19,91 +31,147 @@ import {
   PageSection,
   Title,
   ToolbarContent,
-  ToolbarItem
+  ToolbarItem,
+  getUniqueId
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
-import { useQueryClient } from '@tanstack/react-query';
+import ActionMenu from 'src/components/ActionMenu';
+import { SimpleDropdown } from 'src/components/SimpleDropdown';
+import {
+  API_CREDS_LIST_QUERY,
+  API_DATA_SOURCE_TYPES,
+  API_QUERY_TYPES
+} from 'src/constants/apiConstants';
+import useCredentialApi from 'src/hooks/api/useCredentialApi';
+import useAlerts from 'src/hooks/useAlerts';
+import useQueryClientConfig from 'src/services/queryClientConfig';
 import { helpers } from '../../common';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/RefreshTimeButton';
 import { CredentialType, SourceType } from '../../types';
-import CredentialActionMenu from './CredentialActionMenu';
 import { useCredentialsQuery } from './useCredentialsQuery';
-
-const CREDS_LIST_QUERY = 'credentialsList';
-
-const CredentialTypeLabels = {
-  ansible: 'Ansible Controller',
-  network: 'Network',
-  openshift: 'OpenShift',
-  rhacs: 'RHACS',
-  satellite: 'Satellite',
-  vcenter: 'vCenter Server'
-};
 
 const CredentialsListView: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const [refreshTime, setRefreshTime] = React.useState<Date | null>();
   const [sourcesSelected, setSourcesSelected] = React.useState<SourceType[]>([]);
-  const queryClient = useQueryClient();
+  const [addCredentialModal, setAddCredentialModal] = React.useState<string>();
+  const {
+    deleteCredential,
+    onDeleteSelectedCredentials,
+    pendingDeleteCredential,
+    setPendingDeleteCredential
+  } = useCredentialApi();
+  const { queryClient } = useQueryClientConfig();
+  const { alerts, addAlert, removeAlert } = useAlerts();
+  const { getAuthType, getTimeDisplayHowLongAgo } = helpers;
 
-  const onRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: [CREDS_LIST_QUERY] });
+  /** Fetches the translated label for a credential type.
+   *
+   * @param {string} credentialType - The cred type identifier.
+   * @returns {string} Translated label for the given source type.
+   */
+  const getTranslatedCredentialTypeLabel = credentialType => {
+    const labelKey = `dataSource.${credentialType}`;
+    return t(labelKey);
   };
 
+  /**
+   * Invalidates the query cache for the creds list, triggering a refresh.
+   */
+  const onRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: [API_CREDS_LIST_QUERY] });
+  };
+
+  /**
+   * Deletes the pending credential and handles success, error, and cleanup operations.
+   */
+  const onDeleteCredential = () => {
+    deleteCredential()
+      .then(() => {
+        const successMessage = t('toast-notifications.description', {
+          context: 'deleted-credential',
+          name: pendingDeleteCredential?.name
+        });
+        addAlert(successMessage, 'success', getUniqueId());
+        onRefresh();
+      })
+      .catch(err => {
+        console.log(err);
+        const errorMessage = t('toast-notifications.description', {
+          context: 'deleted-credential_error',
+          name: pendingDeleteCredential?.name,
+          message: err.response.data.detail
+        });
+        addAlert(errorMessage, 'danger', getUniqueId());
+      })
+      .finally(() => setPendingDeleteCredential(undefined));
+  };
+
+  /**
+   * Initializes table state with URL persistence, including configurations for columns, filters, sorting, pagination, and selection.
+   *
+   * Features:
+   * - Column definitions: 'name', 'type', 'auth_type', 'sources', 'updated', with actions placeholder.
+   * - Filters for name and credential type, with selectable options for data source types.
+   * - Sortable columns with 'name' as default sort field.
+   * - Pagination and selection enabled for enhanced table interaction.
+   *
+   * Utilizes `useTableState` hook for state management based on these configurations.
+   */
   const tableState = useTableState({
     persistTo: 'urlParams',
     columnNames: {
-      name: 'Name',
-      type: 'Type',
-      auth_type: 'Authentication type',
-      sources: 'Sources',
-      updated: 'Last updated',
+      name: t('table.header', { context: 'name' }),
+      type: t('table.header', { context: 'type' }),
+      auth_type: t('table.header', { context: 'auth-type' }),
+      sources: t('table.header', { context: 'sources' }),
+      updated: t('table.header', { context: 'last-updated' }),
       actions: ' '
     },
     filter: {
       isEnabled: true,
       filterCategories: [
         {
-          key: 'search_by_name',
-          title: 'Name',
+          key: API_QUERY_TYPES.SEARCH_NAME,
+          title: t('toolbar.label', { context: 'option_name' }),
           type: FilterType.search,
-          placeholderText: 'Filter by name'
+          placeholderText: t('toolbar.label', { context: 'placeholder_filter_search_by_name' })
         },
         {
-          key: 'cred_type',
-          title: 'Credential type',
+          key: API_QUERY_TYPES.CREDENTIAL_TYPE,
+          title: t('toolbar.label', { context: 'option_cred_type' }),
           type: FilterType.select,
-          placeholderText: 'Filter by credential type',
+          placeholderText: t('toolbar.label', { context: 'placeholder_filter_cred_type' }),
           selectOptions: [
             {
-              key: 'ansible',
-              label: 'ansible',
-              value: 'Ansible'
+              key: API_DATA_SOURCE_TYPES.ANSIBLE,
+              label: API_DATA_SOURCE_TYPES.ANSIBLE,
+              value: t('toolbar.label', { context: 'chip_ansible' })
             },
             {
-              key: 'network',
-              label: 'network',
-              value: 'Network'
+              key: API_DATA_SOURCE_TYPES.NETWORK,
+              label: API_DATA_SOURCE_TYPES.NETWORK,
+              value: t('toolbar.label', { context: 'chip_network' })
             },
             {
-              key: 'openshift',
-              label: 'openShift',
-              value: 'Openshift'
+              key: API_DATA_SOURCE_TYPES.OPENSHIFT,
+              label: API_DATA_SOURCE_TYPES.OPENSHIFT,
+              value: t('toolbar.label', { context: 'chip_openshift' })
             },
             {
-              key: 'rhacs',
-              label: 'rhacs',
-              value: 'RHACS'
+              key: API_DATA_SOURCE_TYPES.RHACS,
+              label: API_DATA_SOURCE_TYPES.RHACS,
+              value: t('toolbar.label', { context: 'chip_rhacs' })
             },
             {
-              key: 'satellite',
-              label: 'satellite',
-              value: 'Satellite'
+              key: API_DATA_SOURCE_TYPES.SATELLITE,
+              label: API_DATA_SOURCE_TYPES.SATELLITE,
+              value: t('toolbar.label', { context: 'chip_satellite' })
             },
             {
-              key: 'vcenter',
-              label: 'vcenter',
-              value: 'vCenter'
+              key: API_DATA_SOURCE_TYPES.VCENTER,
+              label: API_DATA_SOURCE_TYPES.VCENTER,
+              value: t('toolbar.label', { context: 'chip_vcenter' })
             }
           ]
         }
@@ -111,7 +179,7 @@ const CredentialsListView: React.FunctionComponent = () => {
     },
     sort: {
       isEnabled: true,
-      sortableColumns: ['name', 'type', 'auth_type', 'sources', 'updated'],
+      sortableColumns: ['name', 'type'],
       initialSort: { columnKey: 'name', direction: 'asc' }
     },
     pagination: { isEnabled: true },
@@ -152,12 +220,6 @@ const CredentialsListView: React.FunctionComponent = () => {
     }
   } = tableBatteries;
 
-  const onShowAddCredentialWizard = () => {};
-  const onDeleteSelectedCredentials = () => {
-    const itemsToDelete = Object.values(selectedItems).filter(val => val !== null);
-    // add logic
-    console.log('Deleting selected credentials:', itemsToDelete);
-  };
   const hasSelectedCredentials = () => {
     return Object.values(selectedItems).filter(val => val !== null).length > 0;
   };
@@ -166,17 +228,25 @@ const CredentialsListView: React.FunctionComponent = () => {
     <Toolbar>
       <ToolbarContent>
         <FilterToolbar id="client-paginated-example-filters" />
-        {/* You can render whatever other custom toolbar items you may need here! */}
-        <Divider orientation={{ default: 'vertical' }} />
         <ToolbarItem>
-          <RefreshTimeButton lastRefresh={refreshTime?.getTime() ?? 0} onRefresh={onRefresh} />
-          <Button
-            className="pf-v5-u-mr-md"
-            onClick={onShowAddCredentialWizard}
-            ouiaId="add_credential"
-          >
-            {t('table.label', { context: 'add' })}
-          </Button>{' '}
+          <SimpleDropdown
+            label={t('view.empty-state_label_credentials')}
+            variant="primary"
+            dropdownItems={[
+              t('dataSource.network'),
+              t('dataSource.openshift'),
+              t('dataSource.rhacs'),
+              t('dataSource.satellite'),
+              t('dataSource.vcenter'),
+              t('dataSource.ansible')
+            ].map(type => (
+              <DropdownItem key={type} onClick={() => setAddCredentialModal(type)}>
+                {type}
+              </DropdownItem>
+            ))}
+          />
+        </ToolbarItem>
+        <ToolbarItem>
           <Button
             variant={ButtonVariant.secondary}
             isDisabled={!hasSelectedCredentials()}
@@ -185,61 +255,15 @@ const CredentialsListView: React.FunctionComponent = () => {
             {t('table.label', { context: 'delete' })}
           </Button>
         </ToolbarItem>
+        <ToolbarItem>
+          <RefreshTimeButton lastRefresh={refreshTime?.getTime() ?? 0} onRefresh={onRefresh} />
+        </ToolbarItem>
         <PaginationToolbarItem>
           <Pagination variant="top" isCompact widgetId="client-paginated-example-pagination" />
         </PaginationToolbarItem>
       </ToolbarContent>
     </Toolbar>
   );
-  const getAuthType = (credential: CredentialType): string => {
-    if (credential.username && credential.password) {
-      return 'Username and Password';
-    } else if (credential.ssh_key) {
-      return 'SSH Key';
-    } else if (credential.auth_token) {
-      return 'Token';
-    } else if (credential.ssh_keyfile) {
-      return 'SSH Key file';
-    } else {
-      return 'Unknown'; // Default value or handle as needed
-    }
-  };
-
-  const getLastUpdated = (credential: CredentialType): string => {
-    const now = new Date();
-    const lastUpdated = credential.updated_at || credential.created_at || now;
-    const timeDifference = now.getTime() - new Date(lastUpdated).getTime();
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(days / 365);
-
-    if (seconds < 60) {
-      return 'Just now';
-    } else if (minutes === 1) {
-      return 'A minute ago';
-    } else if (minutes < 60) {
-      return `${minutes} minutes ago`;
-    } else if (hours === 1) {
-      return 'An hour ago';
-    } else if (hours < 24) {
-      return `${hours} hours ago`;
-    } else if (days === 1) {
-      return 'Yesterday';
-    } else if (days < 30) {
-      return `${days} days ago`;
-    } else if (months === 1) {
-      return 'A month ago';
-    } else if (months < 12) {
-      return `${months} months ago`;
-    } else if (years === 1) {
-      return 'A year ago';
-    } else {
-      return `${years} years ago`;
-    }
-  };
 
   return (
     <PageSection variant="light">
@@ -272,7 +296,7 @@ const CredentialsListView: React.FunctionComponent = () => {
             {currentPageItems?.map((credential: CredentialType, rowIndex) => (
               <Tr key={credential.id} item={credential} rowIndex={rowIndex}>
                 <Td columnKey="name">{credential.name}</Td>
-                <Td columnKey="type">{CredentialTypeLabels[credential.cred_type]}</Td>
+                <Td columnKey="type">{getTranslatedCredentialTypeLabel(credential.cred_type)}</Td>
                 <Td columnKey="auth_type">{getAuthType(credential)}</Td>
                 <Td columnKey="sources">
                   <Button
@@ -288,20 +312,42 @@ const CredentialsListView: React.FunctionComponent = () => {
                     {credential.sources?.length || 0}
                   </Button>
                 </Td>
-                <Td columnKey="updated">{getLastUpdated(credential).toString()}</Td>
+                <Td columnKey="updated">{getTimeDisplayHowLongAgo(credential.updated_at)}</Td>
                 <Td isActionCell columnKey="actions">
-                  <CredentialActionMenu credential={credential} />
+                  <ActionMenu<CredentialType>
+                    item={credential}
+                    actions={[{ label: 'Delete', onClick: setPendingDeleteCredential }]}
+                  />
                 </Td>
               </Tr>
             ))}
           </Tbody>
         </ConditionalTableBody>
       </Table>
-      <Pagination variant="bottom" isCompact widgetId="server-paginated-example-pagination" />
+      <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+      {!!addCredentialModal && (
+        <Modal
+          variant={ModalVariant.small}
+          title="Add"
+          isOpen={!!addCredentialModal}
+          onClose={() => setAddCredentialModal(undefined)}
+          actions={[
+            <Button
+              key="cancel"
+              variant="secondary"
+              onClick={() => setAddCredentialModal(undefined)}
+            >
+              Close
+            </Button>
+          ]}
+        >
+          Placeholder - add {addCredentialModal}
+        </Modal>
+      )}
       {!!sourcesSelected.length && (
         <Modal
           variant={ModalVariant.small}
-          title="Sources"
+          title={t('form-dialog.label', { context: 'sources' })}
           isOpen={!!sourcesSelected}
           onClose={() => setSourcesSelected([])}
           actions={[
@@ -317,6 +363,47 @@ const CredentialsListView: React.FunctionComponent = () => {
           </List>
         </Modal>
       )}
+      {!!pendingDeleteCredential && (
+        <Modal
+          variant={ModalVariant.small}
+          title={t('form-dialog.confirmation', { context: 'title_delete-credential' })}
+          isOpen={!!pendingDeleteCredential}
+          onClose={() => setPendingDeleteCredential(undefined)}
+          actions={[
+            <Button key="confirm" variant="danger" onClick={() => onDeleteCredential()}>
+              Delete
+            </Button>,
+            <Button
+              key="cancel"
+              variant="link"
+              onClick={() => setPendingDeleteCredential(undefined)}
+            >
+              Cancel
+            </Button>
+          ]}
+        >
+          Are you sure you want to delete the credential &quot;
+          {pendingDeleteCredential.name}&quot;
+        </Modal>
+      )}
+      <AlertGroup isToast isLiveRegion>
+        {alerts.map(({ key, variant, title }) => (
+          <Alert
+            timeout={8000}
+            onTimeout={() => key && removeAlert(key)}
+            variant={AlertVariant[variant || 'info']}
+            title={title}
+            actionClose={
+              <AlertActionCloseButton
+                title={title as string}
+                variantLabel={`${variant} alert`}
+                onClose={() => key && removeAlert(key)}
+              />
+            }
+            key={key}
+          />
+        ))}
+      </AlertGroup>
     </PageSection>
   );
 };
