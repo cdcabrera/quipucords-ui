@@ -7,6 +7,8 @@ import React from 'react';
 import moment, { MomentInput } from 'moment';
 import { CredentialType } from '../types/types';
 
+const DEV_MODE = process.env.REACT_APP_ENV === 'development';
+
 /**
  * Generates a translation key for internationalization.
  *
@@ -40,7 +42,7 @@ const noopTranslate = (
  * @returns {string} - A string representing the time difference, e.g., "2 hours ago".
  */
 const getTimeDisplayHowLongAgo = (timestamp: MomentInput) => {
-  if (!timestamp || !moment.utc(timestamp).isValid()) {
+  if ((!timestamp || !moment.utc(timestamp).isValid()) && !DEV_MODE) {
     throw new Error(`Invalid timestamp: ${timestamp}`);
   }
 
@@ -53,8 +55,6 @@ const getTimeDisplayHowLongAgo = (timestamp: MomentInput) => {
  * @returns {string} The formatted date string.
  */
 const formatDate = (date: Date) => moment.utc(date).format('DD MMMM Y, h:mm A z');
-
-const DEV_MODE = process.env.REACT_APP_ENV === 'development';
 
 /**
  * Normalizes a total count to a non-negative number less than a given modulus,
