@@ -1,8 +1,8 @@
-const { merge } = require('webpack-merge');
+/* eslint-disable @typescript-eslint/no-var-requires */
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { merge } = require('webpack-merge');
 const { setupWebpackDotenvFilesForEnv, setupDotenvFilesForEnv } = require('./build.dotenv');
-
 const {
   NODE_ENV: MODE,
   _BUILD_DIST_DIR: DIST_DIR,
@@ -12,7 +12,6 @@ const {
   _BUILD_PORT: PORT,
   _BUILD_SRC: SRC_DIR
 } = setupDotenvFilesForEnv({ env: process.env.NODE_ENV });
-
 const webpackCommon = require('./webpack.common');
 
 module.exports = merge(
@@ -24,7 +23,8 @@ module.exports = merge(
       }),
       new ESLintPlugin({
         context: SRC_DIR,
-        failOnError: false
+        failOnError: false,
+        extensions: ['js', 'jsx', 'ts', 'tsx']
       })
     ]
   },
@@ -40,7 +40,7 @@ module.exports = merge(
       historyApiFallback: true,
       hot: true,
       devMiddleware: {
-        stats: 'errors-only',
+        stats: 'errors-warnings',
         writeToDisk: false
       },
       client: {
