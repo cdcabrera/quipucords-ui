@@ -10,6 +10,12 @@ import _set from 'lodash/set';
 import moment from 'moment';
 import { CredentialType } from '../types/types';
 
+const DEV_MODE = process.env.REACT_APP_ENV === 'development';
+
+const PROD_MODE = process.env.REACT_APP_ENV === 'production';
+
+const TEST_MODE = process.env.REACT_APP_ENV === 'test';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const aggregatedError = (errors: any, message: any, { name = 'AggregateError' } = {}) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,118 +137,6 @@ const setPropIfDefined = (obj: any, props: PropertyPath, value: any) =>
 const setPropIfTruthy = (obj: any, props: PropertyPath, value: any) =>
   obj && value ? _set(obj, props, value) : obj;
 
-const getMessageFromResults = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  results: { status: any; statusText: string; message: string; detail: any },
-  filter = null
-) => {
-  const status: number = _get(results, 'response.status', results.status);
-  const statusResponse: string = _get(results, 'response.statusText', results.statusText);
-  const messageResponse: string = _get(results, 'response.data', results.message);
-  const detailResponse = _get(results, 'response.data', results.detail);
-  const requestUrl: string | null = _get(results, 'config.url', null);
-
-  const messages = {
-    messages: { message: '' },
-    message: '',
-    status: status || 0,
-    url: requestUrl
-  };
-
-  const displayStatus = status >= 500 ? `${status} ` : '';
-
-  if (!messageResponse && !detailResponse) {
-    if (status < 400) {
-      messages.message = statusResponse;
-      return messages;
-    }
-
-    if (status >= 500 || status === undefined) {
-      messages.message = `${status || ''} Server is currently unable to handle this request.`;
-      return messages;
-    }
-  }
-
-  if (status >= 500 && /Request\sURL:/.test(messageResponse)) {
-    messages.message = `${status} ${messageResponse.split(/Request\sURL:/)[0]}`;
-    return messages;
-  }
-
-  if (status === 404) {
-    messages.message = `404 Not Found`;
-    return messages;
-  }
-
-  if (typeof messageResponse === 'string') {
-    messages.message = `${displayStatus}${messageResponse}`;
-    return messages;
-  }
-
-  if (typeof detailResponse === 'string') {
-    messages.message = `${displayStatus}${detailResponse}`;
-    return messages;
-  }
-
-  const getMessages = messageObjectArrayString => {
-    const parsed = {};
-
-    if (messageObjectArrayString && typeof messageObjectArrayString === 'string') {
-      return messageObjectArrayString.replace(/\[object\sObject]/g, '');
-    }
-
-    if (Array.isArray(messageObjectArrayString)) {
-      return getMessages(messageObjectArrayString.join('\n'));
-    }
-
-    Object.keys(messageObjectArrayString).forEach(key => {
-      parsed[key] = getMessages(messageObjectArrayString[key]);
-    });
-
-    return parsed;
-  };
-
-  const filtered = (messageObjectArrayString, filterField) => {
-    const parsed = {};
-    const str = JSON.stringify(messageObjectArrayString);
-    const filterFields =
-      (Array.isArray(filterField) && filterField) || (filterField && [filterField]) || [];
-
-    filterFields.forEach(val => {
-      const match = str.match(new RegExp(`"${val}":(\\[(.*?)]]?|{(.*?)}]?|"(.*?)"),?`));
-
-      if (match && match[1]) {
-        parsed[val] = match[1]; // eslint-disable-line
-
-        if (match && match[2]) {
-          parsed[val] = JSON.parse(match[1]);
-
-          if (Array.isArray(parsed[val])) {
-            parsed[val] = parsed[val].join(', ');
-          } else if (typeof parsed[val] !== 'string') {
-            parsed[val] = Object.values(parsed[val]).join(', ');
-          }
-
-          parsed[val] = parsed[val].replace(/,?\s?\[object\sObject]/, '');
-        }
-      }
-    });
-
-    return parsed;
-  };
-
-  messages.messages =
-    (filter && filtered(messageResponse || detailResponse, filter)) ||
-    getMessages(messageResponse || detailResponse);
-  messages.message = `${displayStatus}${Object.values(messages.messages).join('\n')}`;
-
-  if (messages.message === '[object Object]') {
-    messages.message = JSON.stringify(messages.messages);
-  } else {
-    messages.message = messages.message.replace(/\n?\[object\sObject]/g, '');
-  }
-
-  return messages;
-};
 const getStatusFromResults = results => {
   let status = _get(results, 'response.status', results.status);
 
@@ -271,7 +165,7 @@ const getTimeStampFromResults =
  * @returns {string} - A string representing the time difference, e.g., "2 hours ago".
  */
 const getTimeDisplayHowLongAgo = timestamp => {
-  if (!moment.utc(timestamp).isValid()) {
+  if (!moment.utc(timestamp).isValid() && !DEV_MODE) {
     throw new Error('Invalid timestamp');
   }
   try {
@@ -336,12 +230,6 @@ const getAuthType = (credential: CredentialType): authType => {
   }
 };
 
-const DEV_MODE = process.env.REACT_APP_ENV === 'development';
-
-const PROD_MODE = process.env.REACT_APP_ENV === 'production';
-
-const TEST_MODE = process.env.REACT_APP_ENV === 'test';
-
 const UI_BRAND = process.env.REACT_APP_UI_BRAND === 'true';
 
 const UI_NAME = UI_BRAND ? process.env.REACT_APP_UI_BRAND_NAME : process.env.REACT_APP_UI_NAME;
@@ -380,7 +268,6 @@ const helpers = {
   setPropIfDefined,
   setPropIfTruthy,
   getAuthType,
-  getMessageFromResults,
   getStatusFromResults,
   getTimeStampFromResults,
   getTimeDisplayHowLongAgo,
