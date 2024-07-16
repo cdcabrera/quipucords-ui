@@ -301,6 +301,7 @@ The dotenv files are structured to cascade each additional dotenv file settings 
 | REACT_APP_USER_SERVICE_CURRENT                    | A static string reference to the API spec                                                    |
 | REACT_APP_USER_SERVICE_LOGOUT                     | A static string reference to the API spec                                                    |
 | REACT_APP_STATUS_SERVICE                          | A static string reference to the API spec                                                    |
+| REACT_APP_AUTH_TOKEN_SERVICE                          | A static string reference to the API spec                                                    |
 
 </details>
 
@@ -326,7 +327,7 @@ This is a local run designed to function with minimal resources and a mock API.
    ```
    $ yarn test:dev
    ```
-1. Make sure your browser opened around the domain `https://localhost:3000/`
+1. Make sure your browser opened around the domain `https://localhost:3001/`
 1. Start developing...
 
 #### Start writing code with staging
