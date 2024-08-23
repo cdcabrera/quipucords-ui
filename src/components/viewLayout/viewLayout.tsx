@@ -30,11 +30,11 @@ import logo from '../../images/title.svg';
 import { IAppRoute, IAppRouteGroup, routes } from '../../routes';
 import AppToolbar from './viewLayoutToolbar';
 
-interface IAppLayout {
+interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const Header = (
     <Masthead>
@@ -106,17 +106,11 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     </SkipToContent>
   );
 
-  const isLogin = location.pathname === '/login';
   return (
-    <Page
-      mainContainerId={pageId}
-      header={!isLogin && Header}
-      sidebar={!isLogin && sidebarOpen && Sidebar}
-      skipToContent={PageSkipToContent}
-    >
+    <Page mainContainerId={pageId} header={Header} sidebar={sidebarOpen && Sidebar} skipToContent={PageSkipToContent}>
       {children}
     </Page>
   );
 };
 
-export default AppLayout;
+export { AppLayout as default, AppLayout };
