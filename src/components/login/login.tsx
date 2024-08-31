@@ -13,12 +13,18 @@ import bgImage from '../../images/aboutBg.png';
 
 interface LoginProps {
   children: React.ReactNode;
+  useGetSetAuth?: typeof useGetSetAuth | (() => any);
+  useLogin?: typeof useLogin | (() => any);
 }
 
-const Login: React.FC<LoginProps> = ({ children }) => {
-  const { isAuthorized } = useGetSetAuth();
+const Login: React.FC<LoginProps> = ({
+  children,
+  useGetSetAuth: useAliasGetSetAuth = useGetSetAuth,
+  useLogin: useAliasLogin = useLogin
+}) => {
+  const { isAuthorized } = useAliasGetSetAuth();
   const { t } = useTranslation();
-  const { login } = useLogin();
+  const { login } = useAliasLogin();
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
   const [isLoginError, setIsLoginError] = React.useState<boolean>(false);
   const [isValidUsername, setIsValidUsername] = React.useState(true);

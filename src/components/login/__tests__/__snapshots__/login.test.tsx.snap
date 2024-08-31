@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login should render a basic component: basic 1`] = `
+<LoginPage
+  backgroundImgSrc="aboutBg.png"
+  className="fadein"
+  loginTitle={
+    [
+      "login.title",
+    ]
+  }
+  textContent={
+    [
+      "login.description",
+    ]
+  }
+>
+  <LoginForm
+    helperText={
+      [
+        "login.invalid",
+      ]
+    }
+    helperTextIcon={<ExclamationCircleIcon />}
+    isValidPassword={true}
+    isValidUsername={true}
+    loginButtonLabel={
+      [
+        "login.label",
+        {
+          "context": "login",
+        },
+      ]
+    }
+    onChangePassword={[Function]}
+    onChangeUsername={[Function]}
+    onLoginButtonClick={[Function]}
+    passwordLabel={
+      [
+        "login.label",
+        {
+          "context": "password",
+        },
+      ]
+    }
+    passwordValue=""
+    showHelperText={false}
+    usernameLabel={
+      [
+        "login.label",
+        {
+          "context": "username",
+        },
+      ]
+    }
+    usernameValue=""
+  />
+</LoginPage>
+`;
+
+exports[`Login should render authorized children: authorized 1`] = `"Lorem ipsum"`;
