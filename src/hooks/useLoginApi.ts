@@ -24,7 +24,7 @@ type ApiLoginErrorType = {
 /**
  * A login API call
  */
-const useLogin = () => {
+const useLoginApi = () => {
   const apiCall = useCallback(
     (payload: ApiLoginPayloadType): Promise<AxiosResponse<ApiLoginSuccessType>> =>
       axios.post(`${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`, payload),
@@ -74,7 +74,7 @@ const useLogin = () => {
 /**
  * A logout API call
  */
-const useLogout = () => {
+const useLogoutApi = () => {
   const apiCall = useCallback(
     (): Promise<AxiosResponse> => axios.put(`${process.env.REACT_APP_USER_SERVICE_LOGOUT}`),
     []
@@ -86,16 +86,14 @@ const useLogout = () => {
     return;
   }, []);
 
-  const callbackError = useCallback(() => {
-    return;
-  }, []);
+  const callbackError = useCallback((error: AxiosError<ApiLoginErrorType>) => Promise.reject(error), []);
 
   const logout = useCallback(async () => {
     try {
       await apiCall();
     } catch (error) {
       if (isAxiosError(error)) {
-        return callbackError();
+        return callbackError(error);
       }
       if (!helpers.TEST_MODE) {
         console.error(error);
@@ -115,13 +113,13 @@ const useLogout = () => {
 /**
  * A user response API call
  */
-const useUser = () => {
+const useUserApi = () => {
   const apiCall = useCallback(
     (): Promise<AxiosResponse<ApiUserSuccessType>> => axios.get(`${process.env.REACT_APP_USER_SERVICE_CURRENT}`),
     []
   );
 
-  const callbackSuccess = useCallback((response: AxiosResponse<ApiUserSuccessType>) => response.data.username, []);
+  const callbackSuccess = useCallback((response: AxiosResponse<ApiUserSuccessType>) => response?.data?.username, []);
 
   const callbackError = useCallback((error: AxiosError<ApiLoginErrorType>) => {
     return Promise.reject(error);
@@ -151,42 +149,56 @@ const useUser = () => {
 };
 
 /**
- * Get initial token. Apply and set token for Axios request interceptors for global auth
+ * Get initial token. Apply and set token for all Axios request interceptors, global authorization
  */
-const useGetSetAuth = () => {
+const useGetSetAuthApi = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   const getToken = useCallback(() => {
-    const headerToken = window.atob(cookies.get(`${process.env.REACT_APP_AUTH_COOKIE}`) || '');
+    const token = cookies.get(`${process.env.REACT_APP_AUTH_COOKIE}`) || '';
+    let parsedToken;
 
-    if (headerToken) {
+    try {
+      parsedToken = window.atob(token);
+    } catch (e) {
+      if (!helpers.TEST_MODE) {
+        console.error('Invalid token, unable to parse format');
+      }
+      parsedToken = '';
+    }
+
+    if (parsedToken) {
       setIsAuthorized(true);
     } else {
       setIsAuthorized(false);
     }
 
-    return headerToken;
+    return parsedToken;
   }, []);
 
-  const setInterceptors = useCallback(
-    () =>
-      axios.interceptors.request.use(
-        config => {
-          const headerToken = getToken();
-          const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
-            `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
-          );
+  const interceptorSuccess = useCallback(
+    config => {
+      const headerToken = getToken();
 
-          if (headerToken || isTokenServiceBeingCalled) {
-            config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
-            return config;
-          }
+      const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
+        `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
+      );
 
-          return Promise.reject(new Error('Unauthorized, missing token'));
-        },
-        err => Promise.reject(err)
-      ),
+      if (headerToken || isTokenServiceBeingCalled) {
+        config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
+        return config;
+      }
+
+      return Promise.reject(new Error('Unauthorized, missing token'));
+    },
     [getToken]
+  );
+
+  const interceptorError = useCallback(error => Promise.reject(error), []);
+
+  const setInterceptors = useCallback(
+    () => axios.interceptors.request.use(interceptorSuccess, interceptorError),
+    [interceptorError, interceptorSuccess]
   );
 
   useEffect(() => {
@@ -195,10 +207,12 @@ const useGetSetAuth = () => {
   }, []);
 
   return {
-    setInterceptors,
     getToken,
-    isAuthorized
+    isAuthorized,
+    interceptorError,
+    interceptorSuccess,
+    setInterceptors
   };
 };
 
-export { useLogin, useLogout, useUser, useGetSetAuth };
+export { useLoginApi, useLogoutApi, useUserApi, useGetSetAuthApi };

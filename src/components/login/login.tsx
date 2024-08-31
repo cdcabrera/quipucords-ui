@@ -4,27 +4,29 @@
  *
  * @module login
  */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LoginForm, LoginPage } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
-import { useLogin, useGetSetAuth } from '../../hooks/useLoginApi';
+import { useLoginApi, useGetSetAuthApi } from '../../hooks/useLoginApi';
 import bgImage from '../../images/aboutBg.png';
 
 interface LoginProps {
   children: React.ReactNode;
+  useGetSetAuth?: typeof useGetSetAuthApi;
+  useLogin?: typeof useLoginApi;
 }
 
-const Login: React.FC<LoginProps> = ({ children }) => {
-  const { isAuthorized } = useGetSetAuth();
+const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthApi, useLogin = useLoginApi }) => {
   const { t } = useTranslation();
+  const { isAuthorized } = useGetSetAuth();
   const { login } = useLogin();
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
-  const [isLoginError, setIsLoginError] = React.useState<boolean>(false);
-  const [isValidUsername, setIsValidUsername] = React.useState(true);
-  const [isValidPassword, setIsValidPassword] = React.useState(true);
-  const [username, setUsername] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoginError, setIsLoginError] = useState<boolean>(false);
+  const [isValidUsername, setIsValidUsername] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   useEffect(() => {
     setIsLoggedIn(isAuthorized);
@@ -41,7 +43,10 @@ const Login: React.FC<LoginProps> = ({ children }) => {
   };
 
   const onLoginButtonClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      { username, password }: { username: string; password: string }
+    ) => {
       event.preventDefault();
 
       if (username && password) {
@@ -55,7 +60,7 @@ const Login: React.FC<LoginProps> = ({ children }) => {
         );
       }
     },
-    [login, password, username]
+    [login]
   );
 
   if (isLoggedIn) {
@@ -81,11 +86,11 @@ const Login: React.FC<LoginProps> = ({ children }) => {
         passwordValue={password}
         onChangePassword={onChangePassword}
         isValidPassword={isValidPassword}
-        onLoginButtonClick={onLoginButtonClick}
+        onLoginButtonClick={event => onLoginButtonClick(event, { username, password })}
         loginButtonLabel={t('login.label', { context: 'login' })}
       />
     </LoginPage>
   );
 };
 
-export { Login as default, Login };
+export { Login as default, Login, type LoginProps };

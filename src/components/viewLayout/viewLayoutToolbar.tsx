@@ -19,11 +19,16 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 import { EllipsisVIcon, MoonIcon, QuestionCircleIcon, SunIcon } from '@patternfly/react-icons';
-import { useLogout, useUser } from '../../hooks/useLoginApi';
+import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
 import '@patternfly/react-styles/css/components/Avatar/avatar.css';
 import './viewLayoutToolbar.css';
 
-const AppToolbar: React.FC = () => {
+interface AppToolbarProps {
+  useLogout?: typeof useLogoutApi;
+  useUser?: typeof useUserApi;
+}
+
+const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUser = useUserApi }) => {
   const { logout: onLogout } = useLogout();
   const { getUser } = useUser();
   const [userName, setUserName] = useState<string>();
@@ -189,4 +194,4 @@ const AppToolbar: React.FC = () => {
   );
 };
 
-export { AppToolbar as default, AppToolbar };
+export { AppToolbar as default, AppToolbar, type AppToolbarProps };
