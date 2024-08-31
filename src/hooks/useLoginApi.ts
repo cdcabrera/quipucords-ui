@@ -24,7 +24,7 @@ type ApiLoginErrorType = {
 /**
  * A login API call
  */
-const useLogin = () => {
+const useLoginApi = () => {
   const apiCall = useCallback(
     (payload: ApiLoginPayloadType): Promise<AxiosResponse<ApiLoginSuccessType>> =>
       axios.post(`${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`, payload),
@@ -74,7 +74,7 @@ const useLogin = () => {
 /**
  * A logout API call
  */
-const useLogout = () => {
+const useLogoutApi = () => {
   const apiCall = useCallback(
     (): Promise<AxiosResponse> => axios.put(`${process.env.REACT_APP_USER_SERVICE_LOGOUT}`),
     []
@@ -115,7 +115,7 @@ const useLogout = () => {
 /**
  * A user response API call
  */
-const useUser = () => {
+const useUserApi = () => {
   const apiCall = useCallback(
     (): Promise<AxiosResponse<ApiUserSuccessType>> => axios.get(`${process.env.REACT_APP_USER_SERVICE_CURRENT}`),
     []
@@ -153,7 +153,7 @@ const useUser = () => {
 /**
  * Get initial token. Apply and set token for Axios request interceptors for global auth
  */
-const useGetSetAuth = () => {
+const useGetSetAuthApi = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   const getToken = useCallback(() => {
@@ -201,4 +201,4 @@ const useGetSetAuth = () => {
   };
 };
 
-export { useLogin, useLogout, useUser, useGetSetAuth };
+export { useLoginApi, useLogoutApi, useUserApi, useGetSetAuthApi };

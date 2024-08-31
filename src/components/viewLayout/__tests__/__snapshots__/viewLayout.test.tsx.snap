@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ViewLayout should render a basic component: basic 1`] = `
+<AppLayout>
+  Lorem ipsum
+</AppLayout>
+`;

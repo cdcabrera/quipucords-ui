@@ -28,7 +28,7 @@ import {
 import { BarsIcon } from '@patternfly/react-icons';
 import logo from '../../images/title.svg';
 import { IAppRoute, IAppRouteGroup, routes } from '../../routes';
-import AppToolbar from './viewLayoutToolbar';
+import { AppToolbar } from './viewLayoutToolbar';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -113,4 +113,4 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   );
 };
 
-export { AppLayout as default, AppLayout };
+export { AppLayout as default, AppLayout, type AppLayoutProps };

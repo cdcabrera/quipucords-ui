@@ -8,16 +8,18 @@ import React, { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LoginForm, LoginPage } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
-import { useLogin, useGetSetAuth } from '../../hooks/useLoginApi';
+import { useLoginApi, useGetSetAuthApi } from '../../hooks/useLoginApi';
 import bgImage from '../../images/aboutBg.png';
 
 interface LoginProps {
   children: React.ReactNode;
+  useGetSetAuth?: typeof useGetSetAuthApi;
+  useLogin?: typeof useLoginApi;
 }
 
-const Login: React.FC<LoginProps> = ({ children }) => {
-  const { isAuthorized } = useGetSetAuth();
+const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthApi, useLogin = useLoginApi }) => {
   const { t } = useTranslation();
+  const { isAuthorized } = useGetSetAuth();
   const { login } = useLogin();
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
   const [isLoginError, setIsLoginError] = React.useState<boolean>(false);
@@ -88,4 +90,4 @@ const Login: React.FC<LoginProps> = ({ children }) => {
   );
 };
 
-export { Login as default, Login };
+export { Login as default, Login, type LoginProps };
