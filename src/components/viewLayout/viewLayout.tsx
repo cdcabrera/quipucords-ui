@@ -28,7 +28,7 @@ import {
 import { BarsIcon } from '@patternfly/react-icons';
 import logo from '../../images/title.svg';
 import { IAppRoute, IAppRouteGroup, routes } from '../../routes';
-import AppToolbar from './viewLayoutToolbar';
+import { AppToolbar } from './viewLayoutToolbar';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -73,9 +73,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     </NavExpandable>
   );
 
+  // FixMe: PF spelling bug in attr "forwardScrollAriaLabel"
   const Navigation = (
     <Nav id="nav-primary-simple" theme="dark">
-      <NavList id="nav-list-simple">
+      <NavList id="nav-list-simple" forwardScrollAriaLabel="Scroll forward">
         {routes.map(
           (route, idx) => route.label && (!route.routes ? renderNavItem(route, idx) : renderNavGroup(route, idx))
         )}
@@ -113,4 +114,4 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   );
 };
 
-export { AppLayout as default, AppLayout };
+export { AppLayout as default, AppLayout, type AppLayoutProps };
