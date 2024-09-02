@@ -4,7 +4,7 @@
  *
  * @module login
  */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LoginForm, LoginPage } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
@@ -21,12 +21,12 @@ const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthAp
   const { t } = useTranslation();
   const { isAuthorized } = useGetSetAuth();
   const { login } = useLogin();
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
-  const [isLoginError, setIsLoginError] = React.useState<boolean>(false);
-  const [isValidUsername, setIsValidUsername] = React.useState(true);
-  const [isValidPassword, setIsValidPassword] = React.useState(true);
-  const [username, setUsername] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoginError, setIsLoginError] = useState<boolean>(false);
+  const [isValidUsername, setIsValidUsername] = useState(true);
+  const [isValidPassword, setIsValidPassword] = useState(true);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   useEffect(() => {
     setIsLoggedIn(isAuthorized);
@@ -43,7 +43,10 @@ const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthAp
   };
 
   const onLoginButtonClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+      { username, password }: { username?: string; password?: string } = {}
+    ) => {
       event.preventDefault();
 
       if (username && password) {
@@ -57,7 +60,7 @@ const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthAp
         );
       }
     },
-    [login, password, username]
+    [login]
   );
 
   if (isLoggedIn) {
@@ -83,7 +86,7 @@ const Login: React.FC<LoginProps> = ({ children, useGetSetAuth = useGetSetAuthAp
         passwordValue={password}
         onChangePassword={onChangePassword}
         isValidPassword={isValidPassword}
-        onLoginButtonClick={onLoginButtonClick}
+        onLoginButtonClick={event => onLoginButtonClick(event, { username, password })}
         loginButtonLabel={t('login.label', { context: 'login' })}
       />
     </LoginPage>
