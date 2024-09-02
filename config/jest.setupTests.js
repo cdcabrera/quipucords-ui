@@ -1,4 +1,4 @@
-import { act } from 'react';
+import React, { act } from 'react';
 import { render, renderHook } from '@testing-library/react';
 import { dotenv } from 'weldable';
 
@@ -28,6 +28,19 @@ jest.mock('react-i18next', () => ({
 }));
 
 /**
+ * Emulate for router-dom hooks
+ */
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  NavLink: (...args) => {
+    // eslint-disable-next-line jsx-a11y/anchor-has-content
+    const MockNavLink = (...props) => <a {...props} />;
+    return <MockNavLink {...args} />;
+  },
+  useLocation: () => ({ pathname: '/' })
+}));
+
+/**
  * Quick React function component and hook results testing. Based off of classic Enzyme testing,
  * Use "shallowComponent" if
  * - the component is a function, class results may not be expected
@@ -40,6 +53,8 @@ jest.mock('react-i18next', () => ({
  *     querySelectorAll: () => any, setProps: () => Promise<any> } | any}
  */
 export const shallowComponent = async testComponent => {
+  const isOneOff = result => !result || typeof result === 'string' || typeof result === 'number';
+
   const localRenderHook = async (component, updatedProps) => {
     if (typeof component?.type === 'function') {
       try {
@@ -56,8 +71,8 @@ export const shallowComponent = async testComponent => {
 
         unmount = reactTestingUnmount;
 
-        if (!result || !result.current || typeof result.current === 'string' || typeof result.current === 'number') {
-          return result.current;
+        if (isOneOff(result) || isOneOff(result.current)) {
+          return result?.current;
         }
 
         if (typeof result.current === 'function') {
@@ -70,26 +85,30 @@ export const shallowComponent = async testComponent => {
         };
 
         const renderComponent = (sel = '*', _internalRender = result.current) => {
-          if (!_internalRender || typeof _internalRender === 'string' || typeof _internalRender === 'number') {
-            return _internalRender;
+          try {
+            const { container } = render(_internalRender);
+            return container.querySelector(sel);
+          } catch (e) {
+            return null;
           }
-
-          if (typeof _internalRender === 'function') {
-            return _internalRender.toString();
-          }
-
-          const { container } = render(_internalRender);
-          return container.querySelector(sel);
         };
 
         const querySelector = (sel, _internalRender = result.current) => {
-          const { container } = render(_internalRender);
-          return container.querySelector(sel);
+          try {
+            const { container } = render(_internalRender);
+            return container.querySelector(sel);
+          } catch (e) {
+            return null;
+          }
         };
 
         const querySelectorAll = (sel, _internalRender = result.current) => {
-          const { container } = render(_internalRender);
-          return container.querySelectorAll(sel);
+          try {
+            const { container } = render(_internalRender);
+            return container.querySelectorAll(sel);
+          } catch (e) {
+            return null;
+          }
         };
 
         const setProps = async p => localRenderHook(component, p);

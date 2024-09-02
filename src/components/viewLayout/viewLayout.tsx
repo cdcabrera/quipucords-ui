@@ -73,9 +73,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     </NavExpandable>
   );
 
+  // FixMe: PF spelling bug in attr "forwardScrollAriaLabel"
   const Navigation = (
     <Nav id="nav-primary-simple" theme="dark">
-      <NavList id="nav-list-simple">
+      <NavList id="nav-list-simple" forwardScrollAriaLabel="Scroll forward">
         {routes.map(
           (route, idx) => route.label && (!route.routes ? renderNavItem(route, idx) : renderNavGroup(route, idx))
         )}
