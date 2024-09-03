@@ -15,22 +15,43 @@ exports[`Login should render a basic component: basic 1`] = `
 <LoginPage
   backgroundImgSrc="aboutBg.png"
   className="fadein"
-  loginTitle="t(["login.title"])"
-  textContent="t(["login.description"])"
+  loginTitle="t([
+  "login.title"
+])"
+  textContent="t([
+  "login.description"
+])"
 >
   <LoginForm
-    helperText="t(["login.invalid"])"
+    helperText="t([
+  "login.invalid"
+])"
     helperTextIcon={<ExclamationCircleIcon />}
     isValidPassword={true}
     isValidUsername={true}
-    loginButtonLabel="t(["login.label",{"context":"login"}])"
+    loginButtonLabel="t([
+  "login.label",
+  {
+    "context": "login"
+  }
+])"
     onChangePassword={[Function]}
     onChangeUsername={[Function]}
     onLoginButtonClick={[Function]}
-    passwordLabel="t(["login.label",{"context":"password"}])"
+    passwordLabel="t([
+  "login.label",
+  {
+    "context": "password"
+  }
+])"
     passwordValue=""
     showHelperText={false}
-    usernameLabel="t(["login.label",{"context":"username"}])"
+    usernameLabel="t([
+  "login.label",
+  {
+    "context": "username"
+  }
+])"
     usernameValue=""
   />
 </LoginPage>
