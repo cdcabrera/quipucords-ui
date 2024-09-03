@@ -24,7 +24,7 @@ jest.mock('i18next', () => {
  */
 jest.mock('react-i18next', () => ({
   ...jest.requireActual('react-i18next'),
-  useTranslation: () => ({ t: (...args) => `t(${JSON.stringify(args)})` })
+  useTranslation: () => ({ t: (...args) => `t(${JSON.stringify(args, null, 2)})` })
 }));
 
 /**
@@ -49,22 +49,22 @@ jest.mock('react-router-dom', () => ({
  * - the insanity of having a more complicated testing API than actual React components/hooks has finally gotten to you
  *
  * @param {React.ReactNode} testComponent
- * @returns {{unmount: () => void, render: () => any, getHTML: () => any, querySelector: () => any,
+ * @returns {{unmount: () => void, getHTML: () => any, querySelector: () => any,
  *     querySelectorAll: () => any, setProps: () => Promise<any> } | any}
  */
 export const shallowComponent = async testComponent => {
   const isOneOff = result => !result || typeof result === 'string' || typeof result === 'number';
 
-  const localRenderHook = async (component, updatedProps) => {
+  const localRenderFC = async (component, updatedProps) => {
     if (typeof component?.type === 'function') {
       try {
         let result;
         let unmount;
 
-        // const { result: reactTestingResult, rerender, unmount: reactTestingUnmount } = testingRenderHook(() =>
         const { result: reactTestingResult, unmount: reactTestingUnmount } = renderHook(() =>
           component.type({ ...component.props, ...updatedProps })
         );
+
         await act(async () => {
           result = await reactTestingResult;
         });
@@ -82,15 +82,6 @@ export const shallowComponent = async testComponent => {
         const getHTML = (sel, _internalRender = result.current) => {
           const { container } = render(_internalRender);
           return container.innerHTML;
-        };
-
-        const renderComponent = (sel = '*', _internalRender = result.current) => {
-          try {
-            const { container } = render(_internalRender);
-            return container.querySelector(sel);
-          } catch (e) {
-            return null;
-          }
         };
 
         const querySelector = (sel, _internalRender = result.current) => {
@@ -111,12 +102,11 @@ export const shallowComponent = async testComponent => {
           }
         };
 
-        const setProps = async p => localRenderHook(component, p);
+        const setProps = async p => localRenderFC(component, p);
 
         if (Array.isArray(result.current)) {
           const updatedR = result.current;
           updatedR.unmount = unmount;
-          updatedR.render = () => result.current.map(res => renderComponent(undefined, res));
           updatedR.getHTML = getHTML;
           updatedR.querySelector = querySelector;
           updatedR.querySelectorAll = querySelectorAll;
@@ -127,9 +117,6 @@ export const shallowComponent = async testComponent => {
         return {
           ...result.current,
           unmount,
-          // rerender,
-          render: renderComponent,
-          find: querySelector,
           getHTML,
           querySelector,
           querySelectorAll,
@@ -143,7 +130,5 @@ export const shallowComponent = async testComponent => {
     return component;
   };
 
-  return localRenderHook(testComponent);
+  return localRenderFC(testComponent);
 };
-
-export const shallowHook = shallowComponent;

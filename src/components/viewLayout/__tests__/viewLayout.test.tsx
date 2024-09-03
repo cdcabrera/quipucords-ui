@@ -1,13 +1,13 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { shallowComponent } from '../../../../config/jest.setupTests';
 import { AppLayout as ViewLayout } from '../viewLayout';
 
 describe('ViewLayout', () => {
-  it('should render a basic component', () => {
+  it('should render a basic component', async () => {
     const props = {
       children: 'Lorem ipsum'
     };
-    const { asFragment } = render(<ViewLayout {...props} />);
-    expect(asFragment()).toMatchSnapshot('basic');
+    const component = await shallowComponent(<ViewLayout {...props} />);
+    expect(component).toMatchSnapshot('basic');
   });
 });

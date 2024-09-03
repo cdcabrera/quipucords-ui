@@ -1,12 +1,12 @@
-import React, { act } from 'react';
-import { render, screen } from '@testing-library/react';
+import React from 'react';
+import { shallowComponent } from '../../../../config/jest.setupTests';
 import { AppToolbar as ViewToolbar } from '../viewLayoutToolbar';
 
 describe('ViewToolbar', () => {
-  it('should render a basic component', () => {
+  it('should render a basic component', async () => {
     const props = {};
-    const { asFragment } = render(<ViewToolbar {...props} />);
-    expect(asFragment()).toMatchSnapshot('basic');
+    const component = await shallowComponent(<ViewToolbar {...props} />);
+    expect(component).toMatchSnapshot('basic');
   });
 
   it('should attempt to load and display a username', async () => {
@@ -15,8 +15,8 @@ describe('ViewToolbar', () => {
       useUser: jest.fn().mockReturnValue({ getUser: mockGetUser })
     };
 
-    await act(() => render(<ViewToolbar {...props} />));
+    const component = await shallowComponent(<ViewToolbar {...props} />);
     expect(mockGetUser).toHaveBeenCalledTimes(1);
-    // expect(screen.getByDisplayValue('Dolor sit')).toMatchSnapshot('user');
+    expect(component.querySelector('.quipucords-toolbar__user-dropdown')).toMatchSnapshot('user');
   });
 });
