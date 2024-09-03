@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import axios from 'axios';
 import cookies from 'js-cookie';
-import { useLoginApi, useLogoutApi, useUserApi } from '../useLoginApi';
+import { useLoginApi, useLogoutApi, useUserApi, useGetSetAuthApi } from '../useLoginApi';
 
 describe('useLoginApi', () => {
   let spyCookies;
@@ -174,5 +174,56 @@ describe('useUserApi', () => {
         }
       })
     ).rejects.toMatchSnapshot('callbackError');
+  });
+});
+
+describe('useGetSetAuthApi', () => {
+  let hookResult;
+
+  beforeEach(() => {
+    const hook = renderHook(() => useGetSetAuthApi());
+    hookResult = hook?.result?.current;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should attempt a call to get a token', () => {
+    const { getToken } = hookResult;
+    const spyCookie = jest.spyOn(cookies, 'get');
+
+    getToken();
+    expect(spyCookie.mock.calls).toMatchSnapshot('getToken');
+  });
+
+  it('should process an interceptor success', () => {
+    const { interceptorSuccess } = hookResult;
+
+    jest.spyOn(cookies, 'get').mockReturnValueOnce('RG9sb3Igc2l0');
+    const mockConfig = { headers: {}, url: '//mock-url' };
+    interceptorSuccess(mockConfig);
+    expect(mockConfig).toMatchSnapshot('interceptorSuccess');
+
+    jest.spyOn(cookies, 'get').mockReturnValueOnce('');
+    const mockConfigTokenService = { headers: {}, url: `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}` };
+    interceptorSuccess(mockConfigTokenService);
+    expect(mockConfigTokenService).toMatchSnapshot('interceptorSuccess, token service');
+  });
+
+  it('should process an interceptor error', async () => {
+    const { interceptorError } = hookResult;
+
+    await expect(interceptorError()).rejects.toMatchSnapshot('interceptorError');
+  });
+
+  it('should return an authorization value on mount', async () => {
+    const { isAuthorized: isAuthorizedTestMock } = hookResult;
+    expect(isAuthorizedTestMock).toBe(false);
+
+    jest.spyOn(cookies, 'get').mockReturnValueOnce('RG9sb3Igc2l0');
+    const { result } = renderHook(() => useGetSetAuthApi());
+    const { isAuthorized } = result.current;
+    expect(isAuthorized).toBe(true);
   });
 });

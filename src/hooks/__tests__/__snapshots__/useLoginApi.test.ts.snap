@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`useGetSetAuthApi should attempt a call to get a token: getToken 1`] = `
+[
+  [
+    "user",
+  ],
+]
+`;
+
+exports[`useGetSetAuthApi should process an interceptor error: interceptorError 1`] = `undefined`;
+
+exports[`useGetSetAuthApi should process an interceptor success: interceptorSuccess 1`] = `
+{
+  "headers": {
+    "Authorization": "Token Dolor sit",
+  },
+  "url": "//mock-url",
+}
+`;
+
+exports[`useGetSetAuthApi should process an interceptor success: interceptorSuccess, token service 1`] = `
+{
+  "headers": {
+    "Authorization": "",
+  },
+  "url": "/api/v1/token/",
+}
+`;
+
 exports[`useLoginApi should attempt an api call to login: apiCall 1`] = `
 [
   [

@@ -155,30 +155,44 @@ const useGetSetAuthApi = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
   const getToken = useCallback(() => {
-    const headerToken = window.atob(cookies.get(`${process.env.REACT_APP_AUTH_COOKIE}`) || '');
+    const token = cookies.get(`${process.env.REACT_APP_AUTH_COOKIE}`) || '';
+    let parsedToken;
 
-    if (headerToken) {
+    try {
+      parsedToken = window.atob(token);
+    } catch (e) {
+      if (!helpers.TEST_MODE) {
+        console.error('Invalid token, unable to parse format');
+      }
+      parsedToken = '';
+    }
+
+    if (parsedToken) {
       setIsAuthorized(true);
     } else {
       setIsAuthorized(false);
     }
 
-    return headerToken;
+    return parsedToken;
   }, []);
 
-  const interceptorSuccess = useCallback(config => {
-    const headerToken = getToken();
-    const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
-      `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
-    );
+  const interceptorSuccess = useCallback(
+    config => {
+      const headerToken = getToken();
 
-    if (headerToken || isTokenServiceBeingCalled) {
-      config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
-      return config;
-    }
+      const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
+        `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
+      );
 
-    return Promise.reject(new Error('Unauthorized, missing token'));
-  }, []);
+      if (headerToken || isTokenServiceBeingCalled) {
+        config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
+        return config;
+      }
+
+      return Promise.reject(new Error('Unauthorized, missing token'));
+    },
+    [getToken]
+  );
 
   const interceptorError = useCallback(error => Promise.reject(error), []);
 
