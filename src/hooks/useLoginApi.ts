@@ -166,25 +166,25 @@ const useGetSetAuthApi = () => {
     return headerToken;
   }, []);
 
+  const interceptorSuccess = useCallback(config => {
+    const headerToken = getToken();
+    const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
+      `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
+    );
+
+    if (headerToken || isTokenServiceBeingCalled) {
+      config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
+      return config;
+    }
+
+    return Promise.reject(new Error('Unauthorized, missing token'));
+  }, []);
+
+  const interceptorError = useCallback(error => Promise.reject(error), []);
+
   const setInterceptors = useCallback(
-    () =>
-      axios.interceptors.request.use(
-        config => {
-          const headerToken = getToken();
-          const isTokenServiceBeingCalled = new RegExp(config.url || '').test(
-            `${process.env.REACT_APP_USER_SERVICE_AUTH_TOKEN}`
-          );
-
-          if (headerToken || isTokenServiceBeingCalled) {
-            config.headers.Authorization = (headerToken && `Token ${headerToken}`) || '';
-            return config;
-          }
-
-          return Promise.reject(new Error('Unauthorized, missing token'));
-        },
-        err => Promise.reject(err)
-      ),
-    [getToken]
+    () => axios.interceptors.request.use(interceptorSuccess, interceptorError),
+    [interceptorError, interceptorSuccess]
   );
 
   useEffect(() => {
@@ -193,9 +193,11 @@ const useGetSetAuthApi = () => {
   }, []);
 
   return {
-    setInterceptors,
     getToken,
-    isAuthorized
+    isAuthorized,
+    interceptorError,
+    interceptorSuccess,
+    setInterceptors
   };
 };
 
