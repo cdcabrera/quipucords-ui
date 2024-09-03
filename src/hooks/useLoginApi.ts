@@ -86,16 +86,14 @@ const useLogoutApi = () => {
     return;
   }, []);
 
-  const callbackError = useCallback(() => {
-    return;
-  }, []);
+  const callbackError = useCallback((error: AxiosError<ApiLoginErrorType>) => Promise.reject(error), []);
 
   const logout = useCallback(async () => {
     try {
       await apiCall();
     } catch (error) {
       if (isAxiosError(error)) {
-        return callbackError();
+        return callbackError(error);
       }
       if (!helpers.TEST_MODE) {
         console.error(error);
@@ -121,7 +119,7 @@ const useUserApi = () => {
     []
   );
 
-  const callbackSuccess = useCallback((response: AxiosResponse<ApiUserSuccessType>) => response.data.username, []);
+  const callbackSuccess = useCallback((response: AxiosResponse<ApiUserSuccessType>) => response?.data?.username, []);
 
   const callbackError = useCallback((error: AxiosError<ApiLoginErrorType>) => {
     return Promise.reject(error);
@@ -151,7 +149,7 @@ const useUserApi = () => {
 };
 
 /**
- * Get initial token. Apply and set token for Axios request interceptors for global auth
+ * Get initial token. Apply and set token for all Axios request interceptors, global authorization
  */
 const useGetSetAuthApi = () => {
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
