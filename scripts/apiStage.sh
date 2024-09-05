@@ -58,8 +58,9 @@ stageApi()
   local HOST=$1
   local PORT=$2
   local PASSWORD=$3
-  local NAME=$4
-  local CONTAINER=$5
+  local REDIS=$4
+  local NAME=$5
+  local CONTAINER=$6
 
   $PODMAN stop -t 0 $NAME
   $PODMAN rm $NAME
@@ -67,7 +68,7 @@ stageApi()
 
   $PODMAN stop -t 0 qpc-redis
   $PODMAN rm qpc-redis
-  $PODMAN pull redis:6-alpine
+  $PODMAN pull $REDIS
 
   $PODMAN network rm -f -t 0 qpc-stage-network
   $PODMAN network create qpc-stage-network
@@ -124,6 +125,7 @@ stageApi()
   PORT=8000
   PASSWORD="1_2_3_4_5_"
   CONTAINER="quay.io/quipucords/quipucords:latest"
+  REDIS=${CUSTOM_REDIS:-"registry.redhat.io/rhel9/redis-6:latest"}
   PODMAN=""
 
   while getopts p:t:w:c option;
@@ -150,7 +152,7 @@ stageApi()
     clean )
       cleanApi;;
     stage )
-      stageApi $HOST $PORT $PASSWORD "qpc-stage" $CONTAINER;;
+      stageApi $HOST $PORT $PASSWORD $REDIS "qpc-stage" $CONTAINER;;
     stopApi )
       stopApi;;
   esac
