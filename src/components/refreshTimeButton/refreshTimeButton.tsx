@@ -5,40 +5,45 @@
  *
  * @module refreshTimeButton
  */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@patternfly/react-core';
 import { RebootingIcon } from '@patternfly/react-icons';
 import { helpers } from '../../helpers';
 
 type RefreshTimeButtonProps = {
-  lastRefresh: number;
-  onRefresh: () => void;
+  lastRefresh?: number;
+  onRefresh?: () => void;
+  delay?: number;
 };
 
-const RefreshTimeButton: React.FC<RefreshTimeButtonProps> = ({ lastRefresh = 0, onRefresh }) => {
+const RefreshTimeButton: React.FC<RefreshTimeButtonProps> = ({
+  lastRefresh = 0,
+  onRefresh = Function.prototype,
+  delay = 3000
+}) => {
   const { t } = useTranslation();
   const [refresh, setRefresh] = React.useState<string | null>(
-    lastRefresh ? helpers.getTimeDisplayHowLongAgo(lastRefresh) : null
+    (lastRefresh && helpers.getTimeDisplayHowLongAgo(lastRefresh)) || null
   );
 
-  const pollingInterval = React.useRef<NodeJS.Timeout>();
+  const pollingInterval = React.useRef<number>();
 
-  React.useEffect(() => {
-    pollingInterval.current = setInterval(() => {
+  useEffect(() => {
+    pollingInterval.current = window.setInterval(() => {
       if (lastRefresh) {
         setRefresh(helpers.getTimeDisplayHowLongAgo(lastRefresh));
       }
-    }, 3000);
+    }, delay);
 
     return () => {
       clearInterval(pollingInterval.current);
       pollingInterval.current = undefined;
     };
-  }, [lastRefresh]);
+  }, [lastRefresh, delay]);
 
   return (
-    <Button variant="link" icon={<RebootingIcon />} onClick={onRefresh} ouiaId="refresh">
+    <Button variant="link" icon={<RebootingIcon />} onClick={() => onRefresh()} ouiaId="refresh">
       <span className="last-refresh-time">
         {t('refresh-time-button.refreshed', {
           context: lastRefresh && 'load',
@@ -49,4 +54,4 @@ const RefreshTimeButton: React.FC<RefreshTimeButtonProps> = ({ lastRefresh = 0, 
   );
 };
 
-export { RefreshTimeButton as default, RefreshTimeButton };
+export { RefreshTimeButton as default, RefreshTimeButton, type RefreshTimeButtonProps };
