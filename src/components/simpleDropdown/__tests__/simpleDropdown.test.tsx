@@ -1,4 +1,4 @@
-import React, { act } from 'react';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -6,7 +6,6 @@ import { shallowComponent } from '../../../../config/jest.setupTests';
 import { SimpleDropdown } from '../simpleDropdown';
 
 describe('SimpleDropdown', () => {
-
   it('should render a basic component', async () => {
     const props = {
       label: 'lorem ipsum'
@@ -35,10 +34,10 @@ describe('SimpleDropdown', () => {
 
     const { asFragment } = render(<SimpleDropdown {...props} />);
 
-    await act(() => user.click(screen.getByText(props.label)));
+    await user.click(screen.getByText(props.label));
     expect(asFragment()).toMatchSnapshot('expanded');
 
-    await act(() => user.click(screen.getByText('dolor')));
+    await user.click(screen.getByText('dolor'));
     expect(onMockSelect.mock.calls).toMatchSnapshot('select');
   });
 });

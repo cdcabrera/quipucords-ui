@@ -19,7 +19,7 @@ interface SimpleDropdownProps {
   label: string;
   dropdownItems?: string[];
   ariaLabel?: string;
-  onSelect?: () => void;
+  onSelect?: (item: string) => void;
   variant?: MenuToggleProps['variant'];
   isFullWidth?: boolean;
 }
