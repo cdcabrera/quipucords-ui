@@ -225,3 +225,7 @@ export type Connections = {
   failed: ConnectionType[];
   unreachable: ConnectionType[];
 };
+
+export type CredentialAuthType = 'Username and Password' | 'Token' | 'SSH Key';
+
+export type SourceDataType = 'ansible' | 'network' | 'openshift' | 'rhacs' | 'satellite' | 'vcenter';

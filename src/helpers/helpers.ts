@@ -7,7 +7,7 @@
  */
 import React from 'react';
 import moment, { type MomentInput } from 'moment';
-import { type CredentialType } from '../types/types';
+import { type CredentialType, type CredentialAuthType } from '../types/types';
 
 /**
  * Generates a translation key for internationalization.
@@ -96,7 +96,7 @@ enum authType {
  * @param {CredentialType} credential - The CredentialType object representing authentication information.
  * @returns {string} - A string indicating the authentication type, e.g., "Username and Password".
  */
-const getAuthType = ({ username, password, auth_token, ssh_key }: CredentialType): authType => {
+const getAuthType = ({ username, password, auth_token, ssh_key }: CredentialType): CredentialAuthType => {
   if (username && password) {
     return authType.UsernameAndPassword;
   }
@@ -162,7 +162,6 @@ const PROD_MODE = process.env.REACT_APP_ENV === 'production';
 const TEST_MODE = process.env.REACT_APP_ENV === 'test';
 
 const helpers = {
-  authType,
   downloadData,
   noopTranslate,
   generateId,
