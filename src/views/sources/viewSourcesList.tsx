@@ -6,7 +6,7 @@
  *
  * @module sourcesListView
  */
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ConditionalTableBody,
@@ -54,17 +54,17 @@ import SourcesScanModal from './addSourcesScanModal';
 import { ConnectionsModal } from './showSourceConnectionsModal';
 import { SOURCES_LIST_QUERY, useSourcesQuery } from './useSourcesQuery';
 
-const SourcesListView: React.FunctionComponent = () => {
+const SourcesListView: React.FC = () => {
   const { t } = useTranslation();
-  const [refreshTime, setRefreshTime] = React.useState<Date | null>();
-  const [credentialsSelected, setCredentialsSelected] = React.useState<CredentialType[]>([]);
-  const [scanSelected, setScanSelected] = React.useState<SourceType[]>();
-  const [pendingDeleteSource, setPendingDeleteSource] = React.useState<SourceType>();
-  const [sourceBeingEdited, setSourceBeingEdited] = React.useState<SourceType>();
-  const [addSourceModal, setAddSourceModal] = React.useState<string>();
-  const [connectionsSelected, setConnectionsSelected] = React.useState<SourceType>();
+  const [refreshTime, setRefreshTime] = useState<Date | null>();
+  const [credentialsSelected, setCredentialsSelected] = useState<CredentialType[]>([]);
+  const [scanSelected, setScanSelected] = useState<SourceType[]>();
+  const [pendingDeleteSource, setPendingDeleteSource] = useState<SourceType>();
+  const [sourceBeingEdited, setSourceBeingEdited] = useState<SourceType>();
+  const [addSourceModal, setAddSourceModal] = useState<string>();
+  const [connectionsSelected, setConnectionsSelected] = useState<SourceType>();
   const emptyConnectionData: Connections = { successful: [], failed: [], unreachable: [] };
-  const [connectionsData, setConnectionsData] = React.useState<Connections>(emptyConnectionData);
+  const [connectionsData, setConnectionsData] = useState<Connections>(emptyConnectionData);
   const { queryClient } = useQueryClientConfig();
   const { alerts, addAlert, removeAlert } = useAlerts();
   const { deleteSources } = useDeleteSourceApi(addAlert);
@@ -512,4 +512,4 @@ const SourcesListView: React.FunctionComponent = () => {
   );
 };
 
-export default SourcesListView;
+export { SourcesListView as default, SourcesListView };
