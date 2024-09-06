@@ -16,18 +16,26 @@ import {
   TextInput
 } from '@patternfly/react-core';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
-import { CredentialType } from '../../types/types';
+import { type CredentialType, type CredentialAuthType, type SourceDataType } from '../../types/types';
 
 interface AddCredentialModalProps {
   isOpen: boolean;
   credential?: CredentialType;
   credentialType?: string;
-  onClose: () => void;
-  onSubmit: (payload: any) => void;
+  onClose?: () => void;
+  onSubmit?: (payload: any) => void;
 }
 
 interface CredentialFormType extends Partial<CredentialType> {
   authenticationType?: string;
+}
+
+interface CredentialFormFieldsProps {
+  formData?: CredentialFormType;
+  authType?: CredentialAuthType | string;
+  typeValue?: SourceDataType | string;
+  setAuthType?: (credentialType: string) => void;
+  handleInputChange?: (field: string, value: string) => void;
 }
 
 const useCredentialForm = (credentialType: string | undefined, credential?: CredentialType) => {
@@ -87,23 +95,23 @@ const useCredentialForm = (credentialType: string | undefined, credential?: Cred
   };
 };
 
-const CredentialFormFields: React.FC<{
-  formData: CredentialFormType;
-  authType: string;
-  typeValue: string;
-  setAuthType: (credentialType: string) => void;
-  handleInputChange: (field: string, value: string) => void;
-}> = ({ formData, authType, typeValue, setAuthType, handleInputChange }) => (
+const CredentialFormFields: React.FC<CredentialFormFieldsProps> = ({
+  formData,
+  authType = 'Username and Password',
+  typeValue = 'network',
+  setAuthType = Function.prototype,
+  handleInputChange = Function.prototype
+}) => (
   <React.Fragment>
     <FormGroup label="Name" isRequired fieldId="name">
       <TextInput
-        value={formData.name}
+        value={formData?.name}
         placeholder="Enter a name for the credential"
         isRequired
         type="text"
         id="credential-name"
         name="name"
-        onChange={ev => handleInputChange('name', (ev.target as HTMLInputElement).value)}
+        onChange={event => handleInputChange('name', (event.target as HTMLInputElement).value)}
       />
     </FormGroup>
 
@@ -135,13 +143,13 @@ const CredentialFormFields: React.FC<{
     {authType === 'Token' && (
       <FormGroup label="Token" isRequired fieldId="auth_token">
         <TextInput
-          value={formData.auth_token}
+          value={formData?.auth_token}
           placeholder="Enter Token"
           isRequired
           type="text"
           id="credential-token"
           name="auth_token"
-          onChange={ev => handleInputChange('auth_token', (ev.target as HTMLInputElement).value)}
+          onChange={event => handleInputChange('auth_token', (event.target as HTMLInputElement).value)}
         />
       </FormGroup>
     )}
@@ -151,23 +159,23 @@ const CredentialFormFields: React.FC<{
       <React.Fragment>
         <FormGroup label="Username" isRequired fieldId="username">
           <TextInput
-            value={formData.username}
+            value={formData?.username}
             isRequired
             placeholder="Enter username"
             id="credential-username"
             name="username"
-            onChange={ev => handleInputChange('username', (ev.target as HTMLInputElement).value)}
+            onChange={event => handleInputChange('username', (event.target as HTMLInputElement).value)}
           />
         </FormGroup>
         <FormGroup label="Password" isRequired fieldId="password">
           <TextInput
-            value={formData.password}
+            value={formData?.password}
             isRequired
             placeholder="Enter password"
             type="password"
             id="credential-password"
             name="password"
-            onChange={ev => handleInputChange('password', (ev.target as HTMLInputElement).value)}
+            onChange={event => handleInputChange('password', (event.target as HTMLInputElement).value)}
           />
         </FormGroup>
       </React.Fragment>
@@ -178,22 +186,22 @@ const CredentialFormFields: React.FC<{
       <React.Fragment>
         <FormGroup label="Username" isRequired fieldId="username">
           <TextInput
-            value={formData.username}
+            value={formData?.username}
             isRequired
             placeholder="Enter username"
             id="credential-username"
             name="username"
-            onChange={ev => handleInputChange('username', (ev.target as HTMLInputElement).value)}
+            onChange={event => handleInputChange('username', (event.target as HTMLInputElement).value)}
           />
         </FormGroup>
         <FormGroup label="SSH Key" isRequired fieldId="ssh_key">
           <TextArea
-            value={formData.ssh_key}
+            value={formData?.ssh_key}
             placeholder="Enter SSH Key"
             isRequired
             id="credential-ssh-key"
             name="ssh_key"
-            onChange={ev => handleInputChange('ssh_key', ev.target.value)}
+            onChange={event => handleInputChange('ssh_key', event.target.value)}
             rows={10}
           />
         </FormGroup>
@@ -205,7 +213,7 @@ const CredentialFormFields: React.FC<{
       <React.Fragment>
         <FormGroup label="Become Method" fieldId="become_method">
           <SimpleDropdown
-            label={formData.become_method || 'Select option'}
+            label={formData?.become_method || 'Select option'}
             variant="default"
             isFullWidth
             dropdownItems={[
@@ -226,22 +234,22 @@ const CredentialFormFields: React.FC<{
         </FormGroup>
         <FormGroup label="Become User" fieldId="become_user">
           <TextInput
-            value={formData.become_user}
+            value={formData?.become_user}
             placeholder="Enter become user (optional)"
             type="text"
             id="become_user"
             name="become_user"
-            onChange={ev => handleInputChange('become_user', (ev.target as HTMLInputElement).value)}
+            onChange={event => handleInputChange('become_user', (event.target as HTMLInputElement).value)}
           />
         </FormGroup>
         <FormGroup label="Become Password" fieldId="become_password">
           <TextInput
-            value={formData.become_password}
+            value={formData?.become_password}
             placeholder="Enter become password (optional)"
             type="password"
             id="become_password"
             name="become_password"
-            onChange={ev => handleInputChange('become_password', (ev.target as HTMLInputElement).value)}
+            onChange={event => handleInputChange('become_password', (event.target as HTMLInputElement).value)}
           />
         </FormGroup>
       </React.Fragment>
@@ -253,8 +261,8 @@ const AddCredentialModal: React.FC<AddCredentialModalProps> = ({
   isOpen,
   credential,
   credentialType,
-  onClose,
-  onSubmit
+  onClose = Function.prototype,
+  onSubmit = Function.prototype
 }) => {
   const { formData, authType, typeValue, setAuthType, handleInputChange, filterFormData } = useCredentialForm(
     credentialType,
@@ -274,9 +282,9 @@ const AddCredentialModal: React.FC<AddCredentialModalProps> = ({
   return (
     <Modal
       variant={ModalVariant.small}
-      title={(credential && 'Edit Credential') || `Add Credential: ${credentialType}`}
+      title={(credential && 'Edit Credential') || `Add Credential: ${credentialType || ''}`}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => onClose()}
     >
       <Form>
         <CredentialFormFields
@@ -290,7 +298,7 @@ const AddCredentialModal: React.FC<AddCredentialModalProps> = ({
           <Button variant="primary" onClick={onAdd}>
             Save
           </Button>
-          <Button variant="link" onClick={onClose}>
+          <Button variant="link" onClick={() => onClose()}>
             Cancel
           </Button>
         </ActionGroup>
