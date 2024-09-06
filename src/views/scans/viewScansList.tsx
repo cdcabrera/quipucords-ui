@@ -6,7 +6,7 @@
  *
  * @module scansListView
  */
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -50,13 +50,13 @@ import { type Scan, type ScanJobType } from '../../types/types';
 import { ScansModal } from './showScansModal';
 import { useScansQuery } from './useScansQuery';
 
-const ScansListView: React.FunctionComponent = () => {
+const ScansListView: React.FC = () => {
   const { t } = useTranslation();
-  const [refreshTime, setRefreshTime] = React.useState<Date | null>();
-  const [scanSelectedForSources, setScanSelectedForSources] = React.useState<Scan>();
-  const [scanSelected, setScanSelected] = React.useState<Scan>();
-  const [scanJobs, setScanJobs] = React.useState<ScanJobType[]>();
-  const [pendingDeleteScan, setPendingDeleteScan] = React.useState<Scan>();
+  const [refreshTime, setRefreshTime] = useState<Date | null>();
+  const [scanSelectedForSources, setScanSelectedForSources] = useState<Scan>();
+  const [scanSelected, setScanSelected] = useState<Scan>();
+  const [scanJobs, setScanJobs] = useState<ScanJobType[]>();
+  const [pendingDeleteScan, setPendingDeleteScan] = useState<Scan>();
   const { queryClient } = useQueryClientConfig();
   const { alerts, addAlert, removeAlert } = useAlerts();
   const { deleteScans } = useDeleteScanApi(addAlert);
@@ -340,4 +340,4 @@ const ScansListView: React.FunctionComponent = () => {
   );
 };
 
-export default ScansListView;
+export { ScansListView as default, ScansListView };

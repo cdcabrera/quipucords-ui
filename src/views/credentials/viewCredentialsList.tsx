@@ -6,7 +6,7 @@
  *
  *@module credentialsListView
  */
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ConditionalTableBody,
@@ -48,12 +48,12 @@ import useQueryClientConfig from '../../queryClientConfig';
 import { type CredentialType, type SourceType } from '../../types/types';
 import { useCredentialsQuery } from './useCredentialsQuery';
 
-const CredentialsListView: React.FunctionComponent = () => {
+const CredentialsListView: React.FC = () => {
   const { t } = useTranslation();
-  const [refreshTime, setRefreshTime] = React.useState<Date | null>();
-  const [sourcesSelected, setSourcesSelected] = React.useState<SourceType[]>([]);
-  const [addCredentialModal, setAddCredentialModal] = React.useState<string>();
-  const [pendingDeleteCredential, setPendingDeleteCredential] = React.useState<CredentialType>();
+  const [refreshTime, setRefreshTime] = useState<Date | null>();
+  const [sourcesSelected, setSourcesSelected] = useState<SourceType[]>([]);
+  const [addCredentialModal, setAddCredentialModal] = useState<string>();
+  const [pendingDeleteCredential, setPendingDeleteCredential] = useState<CredentialType>();
   const { addAlert, alerts, removeAlert } = useAlerts();
   const { deleteCredentials } = useDeleteCredentialApi(addAlert);
   const { queryClient } = useQueryClientConfig();
@@ -374,4 +374,4 @@ const CredentialsListView: React.FunctionComponent = () => {
   );
 };
 
-export default CredentialsListView;
+export { CredentialsListView as default, CredentialsListView };
