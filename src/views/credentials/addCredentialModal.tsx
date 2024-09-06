@@ -16,7 +16,7 @@ import {
   TextInput
 } from '@patternfly/react-core';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
-import { type CredentialType, type CredentialAuthType, type SourceDataType } from '../../types/types';
+import { type CredentialType } from '../../types/types';
 
 interface AddCredentialModalProps {
   isOpen: boolean;
@@ -32,8 +32,8 @@ interface CredentialFormType extends Partial<CredentialType> {
 
 interface CredentialFormFieldsProps {
   formData?: CredentialFormType;
-  authType?: CredentialAuthType | string;
-  typeValue?: SourceDataType | string;
+  authType?: string;
+  typeValue?: string;
   setAuthType?: (credentialType: string) => void;
   handleInputChange?: (field: string, value: string) => void;
 }
