@@ -151,7 +151,7 @@ const useUserApi = () => {
 /**
  * Get initial token. Apply and set token for all Axios request interceptors, global authorization
  */
-const useGetSetAuthApi = ({ useLogout = useLogoutApi } = {}) => {
+const useGetSetAuthApi = ({ useLogout = useLogoutApi }: { useLogout?: typeof useLogoutApi } = {}) => {
   const { callbackSuccess: revokeToken } = useLogout();
   const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
