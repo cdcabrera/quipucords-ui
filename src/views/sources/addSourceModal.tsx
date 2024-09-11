@@ -23,6 +23,7 @@ import {
 import axios from 'axios';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { TypeaheadCheckboxes } from '../../components/typeAheadCheckboxes/typeaheadCheckboxes';
+import { useGetCredentialsApi } from '../../hooks/useCredentialApi';
 import { type SourceType } from '../../types/types';
 
 interface AddSourceModalProps {
@@ -31,6 +32,7 @@ interface AddSourceModalProps {
   sourceType?: string;
   onClose?: () => void;
   onSubmit?: (payload) => void;
+  useGetCredentials?: typeof useGetCredentialsApi;
 }
 
 const AddSourceModal: React.FC<AddSourceModalProps> = ({
@@ -38,8 +40,10 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   source,
   sourceType,
   onClose = Function.prototype,
-  onSubmit = Function.prototype
+  onSubmit = Function.prototype,
+  useGetCredentials = useGetCredentialsApi
 }) => {
+  const { getCredentials } = useGetCredentials();
   const [credOptions, setCredOptions] = useState<{ value: string; label: string }[]>([]);
   const [credentials, setCredentials] = useState<number[]>(source?.credentials?.map(c => c.id) || []);
   const [useParamiko, setUseParamiko] = useState<boolean>(source?.options?.use_paramiko ?? false);
@@ -52,13 +56,16 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   const isNetwork = sourceTypeValue === 'network';
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_CREDENTIALS_SERVICE}?cred_type=${sourceTypeValue}`)
-      .then(res => {
-        setCredOptions(res.data.results.map(o => ({ label: o.name, value: '' + o.id })));
+    getCredentials({
+      params: {
+        cred_type: sourceTypeValue
+      }
+    })
+      .then(({ data }) => {
+        setCredOptions(data.results.map(({ name, id }) => ({ label: name, value: `${id}` })));
       })
       .catch(err => console.error(err));
-  }, [sourceTypeValue]);
+  }, [getCredentials, sourceTypeValue]);
 
   const onAdd = values => {
     const payload = {
