@@ -16,6 +16,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "api:mock": "mock -p $MOCK_PORT -w ./.qpc",
     "api:dev": "node ./scripts/apiDev.js --port $MOCK_PORT --file https://raw.githubusercontent.com/quipucords/quipucords/master/docs/swagger.yml",
     "api:spec": "SPEC=https://petstore.swagger.io/?url=https://raw.githubusercontent.com/quipucords/quipucords/master/docs/swagger.yml; xdg-open $SPEC || open $SPEC",
     "api:stage": "sh ./scripts/apiStage.sh -p $MOCK_PORT -t stage",
@@ -28,7 +29,7 @@
     "build:pre": "bash ./scripts/pre.sh",
     "build:pre-brand": "bash ./scripts/pre.sh -b",
     "release": "changelog --link-url https://github.com/quipucords/quipucords-ui.git",
-    "start": "export PROTOCOL=http; export HOST=127.0.0.1; export PORT=${PORT:-3000}; export MOCK_PORT=${MOCK_PORT:-3030}; run-p -l api:dev start:js start:open",
+    "start": "export PROTOCOL=http; export HOST=127.0.0.1; export PORT=${PORT:-3000}; export MOCK_PORT=${MOCK_PORT:-3030}; run-p -l api:mock start:js start:open",
     "start:js": "export NODE_ENV=development; weldable -l ts -x ./config/webpack.dev.js",
     "start:open": "xdg-open $PROTOCOL://$HOST:$PORT/ || open $PROTOCOL://$HOST:$PORT/",
     "start:stage": "export PROTOCOL=http; export HOST=127.0.0.1; export PORT=${PORT:-3000}; export MOCK_PORT=${MOCK_PORT:-8000}; run-p -l api:stage start:js start:open",
@@ -78,6 +79,7 @@
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
+    "apidoc-mock": "^5.0.3",
     "changelog-light": "^2.0.2",
     "cspell": "^8.14.2",
     "eslint": "8.57.0",
