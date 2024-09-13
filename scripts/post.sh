@@ -20,5 +20,5 @@ cleanTsConfig()
 # main()
 #
 {
-  cleanTsConfig()
+  cleanTsConfig
 }
