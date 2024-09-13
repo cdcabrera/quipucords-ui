@@ -20,9 +20,10 @@ import {
   TextArea,
   TextInput
 } from '@patternfly/react-core';
-import axios from 'axios';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { TypeaheadCheckboxes } from '../../components/typeAheadCheckboxes/typeaheadCheckboxes';
+import { helpers } from '../../helpers';
+import { useGetCredentialsApi } from '../../hooks/useCredentialApi';
 import { type SourceType } from '../../types/types';
 
 interface AddSourceModalProps {
@@ -31,15 +32,20 @@ interface AddSourceModalProps {
   sourceType?: string;
   onClose?: () => void;
   onSubmit?: (payload) => void;
+  useGetCredentials?: typeof useGetCredentialsApi;
 }
+
+// const useGetCredentials = () => {};
 
 const AddSourceModal: React.FC<AddSourceModalProps> = ({
   isOpen,
   source,
   sourceType,
   onClose = Function.prototype,
-  onSubmit = Function.prototype
+  onSubmit = Function.prototype,
+  useGetCredentials = useGetCredentialsApi
 }) => {
+  const { getCredentials } = useGetCredentials();
   const [credOptions, setCredOptions] = useState<{ value: string; label: string }[]>([]);
   const [credentials, setCredentials] = useState<number[]>(source?.credentials?.map(c => c.id) || []);
   const [useParamiko, setUseParamiko] = useState<boolean>(source?.options?.use_paramiko ?? false);
@@ -52,13 +58,20 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   const isNetwork = sourceTypeValue === 'network';
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_CREDENTIALS_SERVICE}?cred_type=${sourceTypeValue}`)
-      .then(res => {
-        setCredOptions(res.data.results.map(o => ({ label: o.name, value: '' + o.id })));
+    getCredentials({
+      params: {
+        cred_type: sourceTypeValue
+      }
+    })
+      .then(response => {
+        setCredOptions(response?.data?.results?.map(({ name, id }) => ({ label: name, value: `${id}` })));
       })
-      .catch(err => console.error(err));
-  }, [sourceTypeValue]);
+      .catch(err => {
+        if (!helpers.TEST_MODE) {
+          console.error(err);
+        }
+      });
+  }, [getCredentials, sourceTypeValue]);
 
   const onAdd = values => {
     const payload = {
