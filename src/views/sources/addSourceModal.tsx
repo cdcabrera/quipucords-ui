@@ -35,7 +35,9 @@ interface AddSourceModalProps {
   useGetCredentials?: typeof useGetCredentialsApi;
 }
 
-// const useGetCredentials = () => {};
+const useCredentials = (sourceType, { useGetCredentials = useGetCredentialsApi } = {}) => {
+
+};
 
 const AddSourceModal: React.FC<AddSourceModalProps> = ({
   isOpen,
@@ -44,9 +46,10 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   onClose = Function.prototype,
   onSubmit = Function.prototype,
   useGetCredentials = useGetCredentialsApi
+  // useCreds = useCredentials
 }) => {
   const { getCredentials } = useGetCredentials();
-  const [credOptions, setCredOptions] = useState<{ value: string; label: string }[]>([]);
+  const [credOptions, setCredOptions] = useState<{ value: string; label: string }[] | []>([]);
   const [credentials, setCredentials] = useState<number[]>(source?.credentials?.map(c => c.id) || []);
   const [useParamiko, setUseParamiko] = useState<boolean>(source?.options?.use_paramiko ?? false);
   const [sslVerify, setSslVerify] = useState<boolean>(source?.options?.ssl_cert_verify ?? true);
@@ -57,6 +60,8 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   const sourceTypeValue = source?.source_type || sourceType?.split(' ')?.shift()?.toLowerCase();
   const isNetwork = sourceTypeValue === 'network';
 
+  // const credOptions = useCreds(sourceTypeValue);
+
   useEffect(() => {
     getCredentials({
       params: {
@@ -64,7 +69,8 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
       }
     })
       .then(response => {
-        setCredOptions(response?.data?.results?.map(({ name, id }) => ({ label: name, value: `${id}` })));
+        const updatedOptions = response?.data?.results?.map(({ name, id }) => ({ label: name, value: `${id}` }));
+        setCredOptions(updatedOptions || []);
       })
       .catch(err => {
         if (!helpers.TEST_MODE) {
