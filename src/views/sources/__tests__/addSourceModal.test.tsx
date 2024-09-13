@@ -1,25 +1,42 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { shallowComponent } from '../../../../config/jest.setupTests';
 import { AddSourceModal } from '../addSourceModal';
+import axios from 'axios';
 
 describe('AddSourceModal', () => {
   let mockOnClose;
   let mockOnSubmit;
 
-  beforeEach(() => {
-    mockOnClose = jest.fn();
-    mockOnSubmit = jest.fn();
-    render(
-      <AddSourceModal
-        isOpen={true}
-        sourceType="network"
-        source={undefined}
-        onClose={mockOnClose}
-        onSubmit={mockOnSubmit}
-      />
-    );
+  //count?: number;
+  //   next?: string | null;
+  //   previous?: string | null;
+  //   results?: CredentialType[];
+
+  beforeEach(async () => {
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({}));
+
+    await act(async () => {
+      mockOnClose = jest.fn();
+      mockOnSubmit = jest.fn();
+      const mockUseCredentialsApi = () => ({
+        callbackSuccess: () => jest.fn(),
+        callbackError: () => jest.fn(),
+        apiCall: () => Promise.resolve({}),
+        getCredentials: () => Promise.resolve({ data: { results: [] } })
+      });
+      await render(
+        <AddSourceModal
+          isOpen={true}
+          sourceType="network"
+          source={undefined}
+          onClose={mockOnClose}
+          onSubmit={mockOnSubmit}
+          // useGetCredentials={mockUseCredentialsApi}
+        />
+      );
+    });
   });
 
   afterEach(() => {
