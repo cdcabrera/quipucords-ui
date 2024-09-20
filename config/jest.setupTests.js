@@ -95,15 +95,18 @@ export const shallowComponent = async testComponent => {
             const { container } = render(_internalRender);
             return container.querySelector(sel);
           } catch (e) {
+            console.warn('Shallow component, querySelector', e.message);
             return null;
           }
         };
 
         const querySelectorAll = (sel, _internalRender = result.current) => {
+          console.log('>>>>>>>> INT', _internalRender);
           try {
             const { container } = render(_internalRender);
             return container.querySelectorAll(sel);
           } catch (e) {
+            console.warn('Shallow component, querySelectorAll', e.message);
             return null;
           }
         };

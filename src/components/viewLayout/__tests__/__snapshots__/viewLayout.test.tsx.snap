@@ -112,7 +112,9 @@ exports[`ViewLayout should render a basic component: basic 1`] = `
     </SkipToContent>
   }
 >
-  Lorem ipsum
+  <span>
+    Lorem ipsum
+  </span>
 </Page>
 `;
 

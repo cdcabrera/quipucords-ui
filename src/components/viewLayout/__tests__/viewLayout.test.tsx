@@ -5,7 +5,7 @@ import { AppLayout as ViewLayout } from '../viewLayout';
 describe('ViewLayout', () => {
   it('should render a basic component', async () => {
     const props = {
-      children: 'Lorem ipsum'
+      children: <span>Lorem ipsum</span>
     };
     const component = await shallowComponent(<ViewLayout {...props} />);
     expect(component).toMatchSnapshot('basic');
@@ -13,7 +13,7 @@ describe('ViewLayout', () => {
 
   it('should render a brand component', async () => {
     const props = {
-      children: 'Lorem ipsum',
+      children: <span>Lorem ipsum</span>,
       isBrand: true,
       uiName: 'Discovery'
     };
