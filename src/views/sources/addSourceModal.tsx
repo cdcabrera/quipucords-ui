@@ -6,20 +6,16 @@
  *
  * @module addSourceModal
  */
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActionGroup,
   Button,
   Checkbox,
   Form,
-  FormContextProvider,
   FormGroup,
-  FormSelect,
-  FormSelectOption,
   HelperText,
   Modal,
   ModalVariant,
-  Radio,
   TextArea,
   TextInput
 } from '@patternfly/react-core';
@@ -35,54 +31,97 @@ interface AddSourceModalProps {
   sourceType?: string;
   onClose?: () => void;
   onSubmit?: (payload: any) => void;
-  useGetCredentials?: typeof useGetCredentialsApi;
+}
+
+interface SourceFormType {
+  credentials?: number[];
+  useParamiko?: boolean;
+  sslVerify?: boolean;
+  sslProtocol: string;
+  name?: string;
+  hosts?: string;
+  port?: string;
 }
 
 interface SourceFormFieldsProps {
-  formData: any;
-  credOptions: { value: string; label: string }[];
-  isNetwork: boolean;
-  handleInputChange: (field: string, value: any) => void;
-  setValue: (field: string, value: any) => void;
-  getValue: (field: string) => any;
+  formData?: SourceFormType;
+  credOptions?: { value: string; label: string }[];
+  isNetwork?: boolean;
+  handleInputChange?: (field: string, value: string) => void;
 }
 
-const useSourceForm = (sourceType: string | undefined, source?: SourceType) => {
-  const [formData, setFormData] = useState({
-    credentials: source?.credentials?.map(c => c.id) || [],
-    useParamiko: source?.options?.use_paramiko ?? false,
-    sslVerify: source?.options?.ssl_cert_verify ?? true,
-    sslProtocol: source?.options?.disable_ssl ? 'Disable SSL' : source?.options?.ssl_protocol || 'SSLv23',
-    name: source?.name || '',
-    hosts: source?.hosts?.join(',') || '',
-    port: source?.port ? String(source.port) : ''
-  });
-
-  const sourceTypeValue = source?.source_type || sourceType?.split(' ')?.shift()?.toLowerCase();
-  const isNetwork = sourceTypeValue === 'network';
-
-  const resetForm = () => {
-    setFormData({
-      credentials: [],
-      useParamiko: false,
-      sslVerify: true,
-      sslProtocol: 'SSLv23',
-      name: '',
-      hosts: '',
-      port: ''
-    });
+const useSourceForm = ({
+  sourceType,
+  source,
+  useGetCredentials = useGetCredentialsApi
+}: { sourceType?: string; source?: SourceType; useGetCredentials?: typeof useGetCredentialsApi } = {}) => {
+  const initialFormState: SourceFormType = {
+    credentials: [],
+    useParamiko: false,
+    sslVerify: true,
+    sslProtocol: 'SSLv23',
+    name: '',
+    hosts: '',
+    port: ''
   };
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  const { getCredentials } = useGetCredentials();
+  const [credOptions, setCredOptions] = useState<{ value: string; label: string }[] | []>([]);
+  const [formData, setFormData] = useState<SourceFormType>(initialFormState);
 
-  const filterFormData = (values: any) => {
+  const typeValue = source?.source_type || sourceType?.split(' ')?.shift()?.toLowerCase();
+  const isNetwork = typeValue === 'network';
+
+  useEffect(() => {
+    if (source) {
+      console.log('>>> CREDS', source?.credentials?.map(c => c.id));
+
+      setFormData({
+        credentials: source?.credentials?.map(c => c.id) || [],
+        useParamiko: source?.options?.use_paramiko || false,
+        sslVerify: source?.options?.ssl_cert_verify || true,
+        sslProtocol: (source?.options?.disable_ssl && 'Disable SSL') || source?.options?.ssl_protocol || 'SSLv23',
+        name: source?.name || '',
+        hosts: source?.hosts?.join(',') || '',
+        port: source?.port?.toString() || ''
+      });
+    }
+
+    return () => {
+      setFormData(initialFormState);
+    };
+  }, [source]);
+
+  useEffect(() => {
+    getCredentials({
+      params: {
+        cred_type: typeValue
+      }
+    })
+      .then(response => {
+        const updatedOptions = response?.data?.results?.map(({ name, id }) => ({ label: name, value: `${id}` }));
+        setCredOptions(updatedOptions || []);
+      })
+      .catch(err => {
+        if (!helpers.TEST_MODE) {
+          console.error(err);
+        }
+      });
+  }, [typeValue, getCredentials]);
+
+  const handleInputChange = useCallback(
+    (field: string, value: string) => {
+      setFormData({ ...formData, [field]: value });
+    },
+    [formData]
+  );
+
+  const filterFormData = useCallback(() => {
     const { credentials, useParamiko, sslVerify, sslProtocol, name, hosts, port } = formData;
-    const payload = {
+    return {
       name: name,
-      credentials: credentials.map(c => Number(c)),
-      hosts: hosts.split(','),
+      credentials: credentials?.map(c => Number(c)),
+      hosts: hosts?.split(','),
       port: port || (isNetwork ? '22' : '443'),
       options: !isNetwork
         ? {
@@ -93,172 +132,152 @@ const useSourceForm = (sourceType: string | undefined, source?: SourceType) => {
         : {
             use_paramiko: useParamiko
           },
-      ...(!source && { source_type: sourceTypeValue }),
+      ...(!source && { source_type: typeValue }),
       ...(source && { id: source.id })
     };
-
-    return payload;
-  };
+  }, [isNetwork, formData, source, typeValue]);
 
   return {
+    credOptions,
     formData,
     isNetwork,
-    resetForm,
     handleInputChange,
-    filterFormData
+    filterFormData,
+    typeValue
   };
 };
 
 const SourceFormFields: React.FC<SourceFormFieldsProps> = ({
   formData,
-  credOptions,
+  credOptions = [],
   isNetwork,
-  handleInputChange,
-  setValue,
-  getValue
+  handleInputChange = Function.prototype
 }) => (
-  <>
+  <React.Fragment>
     <FormGroup label="Name" isRequired fieldId="name">
       <TextInput
         value={formData?.name}
-        placeholder="Enter a name for the credential"
+        placeholder="Enter a name for the source"
         isRequired
         type="text"
-        id="credential-name"
+        id="source-name"
         name="name"
         onChange={event => handleInputChange('name', (event.target as HTMLInputElement).value)}
+        ouiaId="name"
       />
     </FormGroup>
-
     <FormGroup label="Credentials" fieldId="credentials" isRequired>
-      {isNetwork ? (
-        <TypeaheadCheckboxes
-          onChange={(selections: string[]) => {
-            const selectedIds = selections.map(Number);
-            const validIds = selectedIds.filter(id => !isNaN(id));
-            handleInputChange('credentials', validIds);
-          }}
-          options={credOptions}
-          selectedOptions={formData.credentials?.map(String) || []}
-        />
-      ) : (
-        <FormSelect
-          value={formData.credentials[0]?.toString() || ''}
-          onChange={(event: FormEvent<HTMLSelectElement>, value: string) => {
-            const selectedCredential = Number(value);
-            if (!isNaN(selectedCredential)) {
-              handleInputChange('credentials', [selectedCredential]);
-            } else {
-              handleInputChange('credentials', []);
-            }
-          }}
-        >
-          <FormSelectOption value="" label="Select a credential" isDisabled />
-          {credOptions.map(option => (
-            <FormSelectOption
-              key={option.value}
-              value={option.value.toString()}
-              label={option.label}
-            />
-          ))}
-        </FormSelect>
-      )}
+      <TypeaheadCheckboxes
+        onChange={(selections: string[]) => {
+          const selectedIds = selections.map(Number);
+          const validIds = selectedIds.filter(id => !isNaN(id));
+          handleInputChange('credentials', validIds);
+        }}
+        options={credOptions}
+        selectedOptions={formData?.credentials?.map(String) || []}
+        menuToggleOuiaId="add_credentials_select"
+      />
     </FormGroup>
-
     {isNetwork ? (
-      <>
+      <React.Fragment>
         <FormGroup label="Search addresses" isRequired fieldId="hosts">
           <TextArea
             placeholder="Enter values separated by commas"
-            value={getValue('hosts')}
-            onChange={(_ev, val) => setValue('hosts', val)}
+            value={formData?.hosts}
+            onChange={event => handleInputChange('hosts', event.target.value)}
             isRequired
             id="source-hosts"
             name="hosts"
+            data-ouia-component-id="hosts_multiple"
           />
           <HelperText>
-            Type IP addresses, IP ranges, and DNS host names. Wildcards are valid. Use CIDR or Ansible notation for ranges.
+            Type IP addresses, IP ranges, and DNS host names. Wildcards are valid. Use CIDR or Ansible notation for
+            ranges.
           </HelperText>
         </FormGroup>
-
         <FormGroup label="Port" fieldId="port">
           <TextInput
-            value={getValue('port')}
+            value={formData?.port}
             placeholder="Optional"
             type="text"
             id="source-port"
             name="port"
-            onChange={ev => {
-              setValue('port', (ev.target as HTMLInputElement).value);
-            }}
+            onChange={event => handleInputChange('port', (event.target as HTMLInputElement).value)}
+            ouiaId="port"
           />
           <HelperText>Default port is 22</HelperText>
         </FormGroup>
-      </>
+      </React.Fragment>
     ) : (
-      <>
+      <React.Fragment>
         <FormGroup label="IP address or hostname" isRequired fieldId="hosts">
           <TextInput
-            value={getValue('hosts')}
-            onChange={(_ev, val) => setValue('hosts', val)}
+            value={formData?.hosts}
+            onChange={event => handleInputChange('hosts', (event.target as HTMLInputElement).value)}
             isRequired
             id="source-hosts"
             name="hosts"
+            ouiaId="hosts_single"
           />
           <HelperText>Enter an IP address or hostname</HelperText>
         </FormGroup>
-
         <FormGroup label="Port" fieldId="port">
           <TextInput
-            value={getValue('port')}
+            value={formData?.port}
             placeholder="Optional"
             type="text"
             id="source-port"
             name="port"
-            onChange={ev => {
-              setValue('port', (ev.target as HTMLInputElement).value);
-            }}
+            onChange={event => handleInputChange('port', (event.target as HTMLInputElement).value)}
+            ouiaId="port"
           />
           <HelperText>Default port is 443</HelperText>
         </FormGroup>
-      </>
+      </React.Fragment>
     )}
-
     {isNetwork ? (
-      <FormGroup fieldId="paramiko">
+      <FormGroup label="" fieldId="paramiko">
         <Checkbox
           key="paramiko"
           label="Connect using Paramiko instead of Open SSH"
           id="paramiko"
-          isChecked={formData.useParamiko}
+          isChecked={formData?.useParamiko}
           onChange={(_ev, checked) => handleInputChange('useParamiko', checked)}
+          ouiaId="options_paramiko"
         />
       </FormGroup>
     ) : (
-      <>
+      <React.Fragment>
         <FormGroup label="Connection" fieldId="connection">
           <SimpleDropdown
             isFullWidth
-            label={formData.sslProtocol}
-            variant="default"
+            label={formData?.sslProtocol || 'Select protocol'}
+            menuToggleOuiaId="options_ssl_protocol"
+            variant={'default'}
             onSelect={item => handleInputChange('sslProtocol', item)}
-            dropdownItems={['SSLv23', 'TLSv1', 'TLSv1.1', 'TLSv1.2', 'Disable SSL']}
+            dropdownItems={[
+              { item: 'SSLv23', ouiaId: 'sslv23' },
+              { item: 'TLSv1', ouiaId: 'tlsv1' },
+              { item: 'TLSv1.1', ouiaId: 'tlsv11' },
+              { item: 'TLSv1.2', ouiaId: 'tlsv12' },
+              { item: 'Disable SSL', ouiaId: 'disable_ssl' }
+            ]}
           />
         </FormGroup>
-
-        <FormGroup fieldId="ssl_verify">
+        <FormGroup label="" fieldId="ssl_verify">
           <Checkbox
             key="ssl_verify"
             label="Verify SSL certificate"
             id="ssl_verify"
-            isDisabled={formData.sslProtocol === 'Disable SSL'}
-            isChecked={formData.sslProtocol !== 'Disable SSL' && formData.sslVerify}
+            isDisabled={formData?.sslProtocol === 'Disable SSL'}
+            isChecked={formData?.sslProtocol !== 'Disable SSL' && formData?.sslVerify}
             onChange={(_ev, checked) => handleInputChange('sslVerify', checked)}
+            ouiaId="options_ssl_cert"
           />
         </FormGroup>
-      </>
+      </React.Fragment>
     )}
-  </>
+  </React.Fragment>
 );
 
 const AddSourceModal: React.FC<AddSourceModalProps> = ({
@@ -266,98 +285,34 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   source,
   sourceType,
   onClose = Function.prototype,
-  onSubmit = Function.prototype,
-  useGetCredentials = useGetCredentialsApi
+  onSubmit = Function.prototype
 }) => {
-  const { getCredentials } = useGetCredentials();
-  const [credOptions, setCredOptions] = useState<{ value: string; label: string }[] | []>([]);
-
-  const {
-    formData,
-    isNetwork,
-    handleInputChange,
-    resetForm,
-    filterFormData
-  } = useSourceForm(sourceType, source);
-
-  useEffect(() => {
-    if (isOpen) {
-      getCredentials({
-        params: {
-          cred_type: sourceType?.split(' ')?.shift()?.toLowerCase() || ''
-        }
-      })
-        .then(response => {
-          const updatedOptions = response?.data?.results?.map(({ name, id }) => ({ label: name, value: `${id}` }));
-          setCredOptions(updatedOptions || []);
-        })
-        .catch(err => {
-          if (!helpers.TEST_MODE) {
-            console.error(err);
-          }
-        });
-    }
-  }, [getCredentials, sourceType, isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      resetForm();
-    }
-  }, [isOpen, sourceType, resetForm]);
-
-  const onAdd = (values: any) => {
-    const filteredData = filterFormData(values);
-    console.log("!!!!!!!!");  // Check if name is correctly set here
-
-    console.log(filteredData.name);  // Check if name is correctly set here
-    onSubmit(filteredData);
-  };
+  const { formData, isNetwork, credOptions, handleInputChange, filterFormData } = useSourceForm({ sourceType, source });
+  const onAdd = () => onSubmit(filterFormData());
 
   return (
     <Modal
       variant={ModalVariant.small}
-      title={(source && 'Edit') || `Add Source: ${sourceType}`}
+      title={(source && 'Edit Source') || `Add Source: ${sourceType}`}
       isOpen={isOpen}
-      onClose={() => {
-        resetForm();
-        onClose();
-      }}
+      onClose={() => onClose()}
     >
-      <FormContextProvider
-        initialValues={{
-          name: formData.name,
-          hosts: formData.hosts,
-          port: formData.port
-        }}
-      >
-        {({ setValue, getValue, values }) => (
-          <Form>
-            <SourceFormFields
-              formData={formData}
-              credOptions={credOptions}
-              isNetwork={isNetwork}
-              handleInputChange={handleInputChange}
-              setValue={setValue}
-              getValue={getValue}
-            />
-            <ActionGroup>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  onAdd(values);
-                  resetForm();
-                  onClose();
-                }}
-              >
-                Save
-              </Button>
-              <Button variant="link" onClick={() => onClose()}>
-                Cancel
-              </Button>
-            </ActionGroup>
-          </Form>
-        )}
-      </FormContextProvider>
+      <Form>
+        <SourceFormFields
+          formData={formData}
+          credOptions={credOptions}
+          isNetwork={isNetwork}
+          handleInputChange={handleInputChange}
+        />
+        <ActionGroup>
+          <Button variant="primary" onClick={onAdd}>
+            Save
+          </Button>
+          <Button variant="link" onClick={() => onClose()}>
+            Cancel
+          </Button>
+        </ActionGroup>
+      </Form>
     </Modal>
   );
 };
