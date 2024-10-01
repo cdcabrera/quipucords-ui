@@ -72,10 +72,9 @@ const useSourceForm = ({
   const typeValue = source?.source_type || sourceType?.split(' ')?.shift()?.toLowerCase();
   const isNetwork = typeValue === 'network';
 
+  // Edit props, reset state on unmount
   useEffect(() => {
     if (source) {
-      console.log('>>> CREDS', source?.credentials?.map(c => c.id));
-
       setFormData({
         credentials: source?.credentials?.map(c => c.id) || [],
         useParamiko: source?.options?.use_paramiko || false,
@@ -92,6 +91,7 @@ const useSourceForm = ({
     };
   }, [source]);
 
+  // Load credentials
   useEffect(() => {
     getCredentials({
       params: {
@@ -293,7 +293,7 @@ const AddSourceModal: React.FC<AddSourceModalProps> = ({
   return (
     <Modal
       variant={ModalVariant.small}
-      title={(source && 'Edit Source') || `Add Source: ${sourceType}`}
+      title={(source && 'Edit Source') || `Add Source: ${sourceType || ''}`}
       isOpen={isOpen}
       onClose={() => onClose()}
     >

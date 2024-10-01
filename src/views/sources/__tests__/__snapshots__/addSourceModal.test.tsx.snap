@@ -23,7 +23,7 @@ exports[`AddSourceModal should have the correct title: title 1`] = `
 <span
   class="pf-v5-c-modal-box__title-text"
 >
-  Add source: network
+  Add Source: network
 </span>
 `;
 
@@ -41,21 +41,42 @@ exports[`AddSourceModal should render a basic component: basic 1`] = `
   ouiaSafe={true}
   position="default"
   showClose={true}
-  title="Add source: undefined"
+  title="Add Source: "
   titleIconVariant={null}
   titleLabel=""
   variant="small"
 >
-  <FormContextProvider
-    initialValues={
-      {
-        "hosts": "",
-        "name": "",
-        "port": "",
+  <Form>
+    <SourceFormFields
+      credOptions={[]}
+      formData={
+        {
+          "credentials": [],
+          "hosts": "",
+          "name": "",
+          "port": "",
+          "sslProtocol": "SSLv23",
+          "sslVerify": true,
+          "useParamiko": false,
+        }
       }
-    }
-  >
-    [Function]
-  </FormContextProvider>
+      handleInputChange={[Function]}
+      isNetwork={false}
+    />
+    <ActionGroup>
+      <Button
+        onClick={[Function]}
+        variant="primary"
+      >
+        Save
+      </Button>
+      <Button
+        onClick={[Function]}
+        variant="link"
+      >
+        Cancel
+      </Button>
+    </ActionGroup>
+  </Form>
 </Modal>
 `;
