@@ -40,20 +40,6 @@ exports[`AboutModal Component should attempt to display username, status data: u
           component="dt"
         >
           t([
-  "about.server-version"
-])
-        </TextListItem>
-        <TextListItem
-          component="dd"
-        >
-          0.0.0.12345678
-        </TextListItem>
-      </React.Fragment>
-      <React.Fragment>
-        <TextListItem
-          component="dt"
-        >
-          t([
   "about.ui-version"
 ])
         </TextListItem>
@@ -61,6 +47,22 @@ exports[`AboutModal Component should attempt to display username, status data: u
           component="dd"
         >
           0.0.0.0000000
+        </TextListItem>
+      </React.Fragment>
+      <React.Fragment>
+        <TextListItem
+          className=""
+          component="dt"
+        >
+          t([
+  "about.server-version"
+])
+        </TextListItem>
+        <TextListItem
+          className=""
+          component="dd"
+        >
+          0.0.0.12345678
         </TextListItem>
       </React.Fragment>
     </TextList>

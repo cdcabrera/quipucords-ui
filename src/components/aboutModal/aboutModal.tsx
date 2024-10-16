@@ -35,6 +35,7 @@ const AboutModal: React.FC<AboutModalProps> = ({
   const [userName, setUserName] = useState<string>();
   const [stats, setStats] = useState<ApiStatusSuccessType>();
   const browser = detect();
+  const loadingClassName = (!stats && 'fadein') || '';
 
   useEffect(() => {
     if (isOpen && !stats) {
@@ -56,7 +57,7 @@ const AboutModal: React.FC<AboutModalProps> = ({
       onClose={() => onClose()}
       trademark={t('about.copyright', { year: currentYear })}
     >
-      <TextContent className={(!stats && 'fadein') || ''}>
+      <TextContent className={loadingClassName}>
         <TextList component="dl">
           {userName && (
             <React.Fragment>
@@ -76,16 +77,20 @@ const AboutModal: React.FC<AboutModalProps> = ({
               <TextListItem component="dd">{browser.os || ''}</TextListItem>
             </React.Fragment>
           )}
-          {stats?.server_version && (
-            <React.Fragment>
-              <TextListItem component="dt">{t('about.server-version')}</TextListItem>
-              <TextListItem component="dd">{stats.server_version}</TextListItem>
-            </React.Fragment>
-          )}
           {uiVersion && (
             <React.Fragment>
               <TextListItem component="dt">{t('about.ui-version')}</TextListItem>
               <TextListItem component="dd">{uiVersion}</TextListItem>
+            </React.Fragment>
+          )}
+          {stats?.server_version && (
+            <React.Fragment>
+              <TextListItem className={loadingClassName} component="dt">
+                {t('about.server-version')}
+              </TextListItem>
+              <TextListItem className={loadingClassName} component="dd">
+                {stats.server_version}
+              </TextListItem>
             </React.Fragment>
           )}
         </TextList>
