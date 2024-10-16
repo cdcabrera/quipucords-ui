@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AboutModal as PfAboutModal, TextContent, TextList, TextListItem } from '@patternfly/react-core';
+import { detect } from 'detect-browser';
 import moment from 'moment/moment';
 import { helpers } from '../../helpers';
 import { useUserApi } from '../../hooks/useLoginApi';
@@ -33,6 +34,7 @@ const AboutModal: React.FC<AboutModalProps> = ({
   const { getUser } = useUser();
   const [userName, setUserName] = useState<string>();
   const [stats, setStats] = useState<ApiStatusSuccessType>();
+  const browser = detect();
 
   useEffect(() => {
     if (isOpen && !stats) {
@@ -62,16 +64,22 @@ const AboutModal: React.FC<AboutModalProps> = ({
               <TextListItem component="dd">{userName}</TextListItem>
             </React.Fragment>
           )}
+          {browser && (
+            <React.Fragment>
+              <TextListItem component="dt">{t('about.browser-version')}</TextListItem>
+              <TextListItem component="dd">{`${browser.name} ${browser.version}`}</TextListItem>
+            </React.Fragment>
+          )}
+          {browser && (
+            <React.Fragment>
+              <TextListItem component="dt">{t('about.browser-os')}</TextListItem>
+              <TextListItem component="dd">{browser.os || ''}</TextListItem>
+            </React.Fragment>
+          )}
           {stats?.server_version && (
             <React.Fragment>
               <TextListItem component="dt">{t('about.server-version')}</TextListItem>
               <TextListItem component="dd">{stats.server_version}</TextListItem>
-            </React.Fragment>
-          )}
-          {stats?.api_version && (
-            <React.Fragment>
-              <TextListItem component="dt">{t('about.api-version')}</TextListItem>
-              <TextListItem component="dd">{stats.api_version}</TextListItem>
             </React.Fragment>
           )}
           {uiVersion && (

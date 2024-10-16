@@ -3,7 +3,6 @@ import axios, { type AxiosError, type AxiosResponse, isAxiosError } from 'axios'
 import helpers from '../helpers';
 
 type ApiStatusSuccessType = {
-  api_version: string;
   server_version: string;
 };
 

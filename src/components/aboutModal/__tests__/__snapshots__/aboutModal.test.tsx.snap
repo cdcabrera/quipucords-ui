@@ -54,20 +54,6 @@ exports[`AboutModal Component should attempt to display username, status data: u
           component="dt"
         >
           t([
-  "about.api-version"
-])
-        </TextListItem>
-        <TextListItem
-          component="dd"
-        >
-          1
-        </TextListItem>
-      </React.Fragment>
-      <React.Fragment>
-        <TextListItem
-          component="dt"
-        >
-          t([
   "about.ui-version"
 ])
         </TextListItem>

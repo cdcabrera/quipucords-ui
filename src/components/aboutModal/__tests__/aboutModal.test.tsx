@@ -12,7 +12,7 @@ describe('AboutModal Component', () => {
   });
 
   it('should attempt to display username, status data', async () => {
-    const mockGetStatus = jest.fn().mockResolvedValue({ server_version: '0.0.0.12345678', api_version: '1' });
+    const mockGetStatus = jest.fn().mockResolvedValue({ server_version: '0.0.0.12345678' });
     const mockUseStatusApi = jest.fn().mockReturnValue({ getStatus: mockGetStatus });
     const mockGetUser = jest.fn().mockResolvedValue('lorem ipsum');
     const mockUseUserApi = jest.fn().mockReturnValue({ getUser: mockGetUser });

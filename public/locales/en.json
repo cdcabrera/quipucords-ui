@@ -1,6 +1,8 @@
 {
   "about": {
     "api-version": "API Version",
+    "browser-os": "Browser OS",
+    "browser-version": "Browser Version",
     "copyright": "Copyright (c) {{year}} Red Hat Inc.",
     "server-version": "Server Version",
     "ui-version": "UI Version",
