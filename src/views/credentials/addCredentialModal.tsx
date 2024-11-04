@@ -131,7 +131,27 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     credential
   });
 
-  const onAdd = () => onSubmit(filterFormData());
+  const getCleanedFormData = useCallback(() => {
+    const cleanedData = { ...formData };
+
+    if (authType === 'Token') {
+      cleanedData.password = '';
+      cleanedData.username = '';
+    } else if (authType === 'Username and Password') {
+      cleanedData.auth_token = '';
+      cleanedData.ssh_key = '';
+      cleanedData.ssh_passphrase = '';
+    } else if (authType === 'SSH Key') {
+      cleanedData.password = '';
+    }
+
+    return cleanedData;
+  }, [formData, authType]);
+
+  const onAdd = () => {
+    const dataToSubmit = credential ? getCleanedFormData() : filterFormData();
+    onSubmit(dataToSubmit);
+  };
 
   return (
     <Form>
