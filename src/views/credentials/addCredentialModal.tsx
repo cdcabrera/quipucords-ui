@@ -35,6 +35,24 @@ interface CredentialFormType extends Partial<CredentialType> {
   authenticationType?: string;
 }
 
+const getCleanedFormData = (formData, authType) => {
+  const cleanedData = { ...formData };
+
+  if (authType === 'Token') {
+    cleanedData.password = '';
+    cleanedData.username = '';
+  } else if (authType === 'Username and Password') {
+    cleanedData.auth_token = '';
+    cleanedData.ssh_key = '';
+    cleanedData.ssh_passphrase = '';
+  } else if (authType === 'SSH Key') {
+    cleanedData.password = '';
+  }
+
+  return cleanedData;
+};
+
+
 const useCredentialForm = ({
   credentialType,
   credential
@@ -131,25 +149,8 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     credential
   });
 
-  const getCleanedFormData = useCallback(() => {
-    const cleanedData = { ...formData };
-
-    if (authType === 'Token') {
-      cleanedData.password = '';
-      cleanedData.username = '';
-    } else if (authType === 'Username and Password') {
-      cleanedData.auth_token = '';
-      cleanedData.ssh_key = '';
-      cleanedData.ssh_passphrase = '';
-    } else if (authType === 'SSH Key') {
-      cleanedData.password = '';
-    }
-
-    return cleanedData;
-  }, [formData, authType]);
-
   const onAdd = () => {
-    const dataToSubmit = credential ? getCleanedFormData() : filterFormData();
+    const dataToSubmit = credential ? getCleanedFormData(formData, authType) : filterFormData();
     onSubmit(dataToSubmit);
   };
 
@@ -379,4 +380,11 @@ const AddCredentialModal: React.FC<AddCredentialModalProps> = ({
   </Modal>
 );
 
-export { AddCredentialModal as default, AddCredentialModal, useCredentialForm, AddCredentialModalProps };
+export {
+  AddCredentialModal as default,
+  AddCredentialModal,
+  useCredentialForm,
+  CredentialForm,
+  getCleanedFormData,
+  AddCredentialModalProps
+};
