@@ -52,7 +52,6 @@ const getCleanedFormData = (formData, authType) => {
   return cleanedData;
 };
 
-
 const useCredentialForm = ({
   credentialType,
   credential
@@ -110,7 +109,8 @@ const useCredentialForm = ({
     return () => {
       setFormData(initialFormState);
     };
-  }, [typeValue, credential]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleInputChange = useCallback(
     (field: string, value: string) => {
