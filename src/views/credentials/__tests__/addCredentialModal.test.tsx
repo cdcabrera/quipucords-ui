@@ -71,6 +71,20 @@ describe('useCredentialForm', () => {
     await act(() => expect(result.current.formData).toMatchSnapshot('formData'));
   });
 
+  it('should allow editing a credential', async () => {
+    const { result } = renderHook(() =>
+      useCredentialForm({
+        credential: {
+          id: 123,
+          name: 'lorem',
+          auth_token: 'Ipsum',
+          cred_type: 'openshift'
+        }
+      })
+    );
+    expect(result.current.formData).toMatchSnapshot('formData, edit');
+  });
+
   it('should derive token auth for specific credential types', () => {
     const { current: openshift } = renderHook(() => useCredentialForm({ credentialType: 'openshift' })).result;
     const { current: rhacs } = renderHook(() => useCredentialForm({ credentialType: 'rhacs' })).result;
@@ -95,17 +109,6 @@ describe('useCredentialForm', () => {
     }).toMatchSnapshot('username and password');
   });
 
-  it('should update and filter formData when handleInputChange is called', () => {
-    const result = renderHook(() => useCredentialForm({ credentialType: 'network' })).result;
-    const mockValue = 'Lorem ipsum';
-
-    act(() => result.current.handleInputChange('name', mockValue));
-    expect(result.current.formData.name).toBe(mockValue);
-
-    const filteredData = result.current.filterFormData();
-    expect(filteredData.name).toBe(mockValue);
-  });
-
   it('should mask sensitive fields when credential has corresponding values', () => {
     const mockCredential = {
       has_password: true,
@@ -118,18 +121,15 @@ describe('useCredentialForm', () => {
     expect(result.current.formData).toMatchSnapshot('masked sensitive fields');
   });
 
-  it('should allow editing a credential', async () => {
-    const { result } = renderHook(() =>
-      useCredentialForm({
-        credential: {
-          id: 123,
-          name: 'lorem',
-          auth_token: 'Ipsum',
-          cred_type: 'openshift'
-        }
-      })
-    );
-    expect(result.current.formData).toMatchSnapshot('formData, edit');
+  it('should update and filter formData when handleInputChange is called', () => {
+    const result = renderHook(() => useCredentialForm({ credentialType: 'network' })).result;
+    const mockValue = 'Lorem ipsum';
+
+    act(() => result.current.handleInputChange('name', mockValue));
+    expect(result.current.formData.name).toBe(mockValue);
+
+    const filteredData = result.current.filterFormData();
+    expect(filteredData.name).toBe(mockValue);
   });
 });
 
