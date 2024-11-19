@@ -296,8 +296,16 @@ const CredentialsListView: React.FunctionComponent = () => {
                   <ActionMenu<CredentialType>
                     item={credential}
                     actions={[
-                      { label: t('table.label', { context: 'edit' }), onClick: onEditCredential },
-                      { label: t('table.label', { context: 'delete' }), onClick: setPendingDeleteCredential }
+                      {
+                        label: t('table.label', { context: 'edit' }),
+                        onClick: onEditCredential,
+                        ouiaId: 'edit-credential'
+                      },
+                      {
+                        label: t('table.label', { context: 'delete' }),
+                        onClick: setPendingDeleteCredential,
+                        ouiaId: 'delete-credential'
+                      }
                     ]}
                   />
                 </Td>

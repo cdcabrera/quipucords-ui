@@ -38,18 +38,35 @@ interface CredentialFormType extends Partial<CredentialType> {
 const getCleanedFormData = (formData, authType) => {
   const cleanedData = { ...formData };
 
-  if (authType === 'Token') {
-    cleanedData.password = '';
-    cleanedData.username = '';
-  } else if (authType === 'Username and Password') {
-    cleanedData.auth_token = '';
-    cleanedData.ssh_key = '';
-    cleanedData.ssh_passphrase = '';
-  } else if (authType === 'SSH Key') {
-    cleanedData.password = '';
+  switch (authType) {
+    case 'Token':
+      cleanedData.password = '';
+      cleanedData.username = '';
+      break;
+    case 'Username and Password':
+      cleanedData.auth_token = '';
+      cleanedData.ssh_key = '';
+      cleanedData.ssh_passphrase = '';
+      break;
+    case 'SSH Key':
+      cleanedData.password = '';
+      break;
   }
 
   return cleanedData;
+};
+
+const deriveAuthType = (credential, typeValue) => {
+  if (credential) {
+    return helpers.getAuthType(credential);
+  }
+  switch (typeValue) {
+    case 'openshift':
+    case 'rhacs':
+      return 'Token';
+    default:
+      return 'Username and Password';
+  }
 };
 
 const useCredentialForm = ({
@@ -73,19 +90,6 @@ const useCredentialForm = ({
   const typeValue = credential?.cred_type || credentialType?.split(' ')?.shift()?.toLowerCase();
   const [authType, setAuthType] = useState('');
 
-  const deriveAuthType = () => {
-    if (credential) {
-      return helpers.getAuthType(credential);
-    }
-    switch (typeValue) {
-      case 'openshift':
-      case 'rhacs':
-        return 'Token';
-      default:
-        return 'Username and Password';
-    }
-  };
-
   useEffect(() => {
     const maskIfTrue = hasValue => (hasValue ? '****' : '');
 
@@ -103,12 +107,13 @@ const useCredentialForm = ({
       });
     }
 
-    setAuthType(deriveAuthType());
+    setAuthType(deriveAuthType(credential, typeValue));
     setFormData(prev => ({ ...prev, ...credential }));
 
     return () => {
       setFormData(initialFormState);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = useCallback(
@@ -118,13 +123,18 @@ const useCredentialForm = ({
     [formData]
   );
 
-  const filterFormData = useCallback(() => {
-    return {
-      ...formData,
-      ...(!credential && { cred_type: typeValue }),
-      ...(credential && { id: credential.id })
-    };
-  }, [formData, credential, typeValue]);
+  const filterFormData = useCallback(
+    () =>
+      getCleanedFormData(
+        {
+          ...formData,
+          ...(!credential && { cred_type: typeValue }),
+          ...(credential && { id: credential.id })
+        },
+        authType
+      ),
+    [authType, formData, credential, typeValue]
+  );
 
   return {
     formData,
@@ -148,10 +158,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     credential
   });
 
-  const onAdd = () => {
-    const dataToSubmit = credential ? getCleanedFormData(formData, authType) : filterFormData();
-    onSubmit(dataToSubmit);
-  };
+  const onAdd = () => onSubmit(filterFormData());
 
   return (
     <Form>
