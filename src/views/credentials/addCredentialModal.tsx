@@ -44,6 +44,9 @@ const getCleanedFormData = (formData, authType) => {
       cleanedData.username = '';
       break;
     case 'Username and Password':
+      // cleanedData.password = (/^(\*)+$/.test(cleanedData.password) && '') ?? cleanedData.password;
+      // cleanedData.password = /^(\*)+$/.test(cleanedData.password) ? undefined : cleanedData.password;
+      cleanedData.password = (!/^(\*)+$/.test(cleanedData.password) && cleanedData.password) || undefined;
       cleanedData.auth_token = '';
       cleanedData.ssh_key = '';
       cleanedData.ssh_passphrase = '';
@@ -122,6 +125,16 @@ const useCredentialForm = ({
     },
     [formData]
   );
+  /*
+  const filterFormData = useCallback(
+    () =>
+      (credential && getCleanedFormData(formData, authType)) || {
+        ...formData,
+        ...(!credential && { cred_type: typeValue }),
+        ...(credential && { id: credential.id })
+      },
+    [authType, formData, credential, typeValue]
+  );*/
 
   const filterFormData = useCallback(
     () =>
