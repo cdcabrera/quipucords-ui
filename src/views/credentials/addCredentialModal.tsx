@@ -35,7 +35,7 @@ interface CredentialFormType extends Partial<CredentialType> {
   authenticationType?: string;
 }
 
-const getCleanedFormData = (formData, authType) => {
+const getCleanedFormData = (formData: CredentialFormType, authType: string, maskedFields: string[]) => {
   const cleanedData = { ...formData };
 
   switch (authType) {
@@ -52,6 +52,20 @@ const getCleanedFormData = (formData, authType) => {
       cleanedData.password = '';
       break;
   }
+
+  Object.entries(cleanedData).forEach(([key, value]) => {
+    if (maskedFields.includes(key) && value === '') {
+      delete cleanedData[key];
+    }
+  });
+
+  /*
+  Object.entries(cleanedData).forEach(([key, value]) => {
+    if (Object.values(MaskedFields).includes(key) && value === '') {
+      delete cleanedData[key];
+    }
+  });
+  */
 
   return cleanedData;
 };
@@ -85,9 +99,9 @@ const useCredentialForm = ({
     become_method: '',
     username: ''
   };
-  const [formData, setFormData] = useState<CredentialFormType>(initialFormState);
-  const [maskedFields, setMaskedFields] = useState<Record<string, boolean>>({});
+  const maskedFields = ['password', 'ssh_key', 'ssh_passphrase', 'become_password', 'auth_token'];
 
+  const [formData, setFormData] = useState<CredentialFormType>(initialFormState);
   const typeValue = credential?.cred_type || credentialType?.split(' ')?.shift()?.toLowerCase();
   const [authType, setAuthType] = useState('');
 
@@ -104,20 +118,11 @@ const useCredentialForm = ({
         become_method: credential?.become_method || '',
         username: credential?.username || ''
       });
-
-      setMaskedFields({
-        password: credential?.has_password || false,
-        ssh_key: credential?.has_ssh_key || false,
-        ssh_passphrase: credential?.has_ssh_passphrase || false,
-        become_password: credential?.has_become_password || false,
-        auth_token: credential?.has_auth_token || false
-      });
     }
 
     setAuthType(deriveAuthType(credential, typeValue));
     return () => {
       setFormData(initialFormState);
-      setMaskedFields({});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -125,31 +130,24 @@ const useCredentialForm = ({
   const handleInputChange = useCallback(
     (field: string, value: string) => {
       setFormData({ ...formData, [field]: value });
-      if (maskedFields[field]) {
-        setMaskedFields({ ...maskedFields, [field]: false });
-      }
     },
-    [formData, maskedFields]
+    [formData]
   );
 
-  const filterFormData = useCallback(() => {
-    const cleanedData = getCleanedFormData(
-      {
-        ...formData,
-        ...(!credential && { cred_type: typeValue }),
-        ...(credential && { id: credential.id })
-      },
-      authType
-    );
-
-    Object.keys(maskedFields).forEach(key => {
-      if (maskedFields[key]) {
-        delete cleanedData[key];
-      }
-    });
-
-    return cleanedData;
-  }, [authType, formData, credential, typeValue, maskedFields]);
+  const filterFormData = useCallback(
+    () =>
+      getCleanedFormData(
+        {
+          ...formData,
+          ...(!credential && { cred_type: typeValue }),
+          ...(credential && { id: credential.id })
+        },
+        authType,
+        maskedFields
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [authType, formData, credential, typeValue]
+  );
 
   return {
     formData,
@@ -157,11 +155,9 @@ const useCredentialForm = ({
     typeValue,
     setAuthType,
     handleInputChange,
-    filterFormData,
-    maskedFields
+    filterFormData
   };
 };
-
 
 const CredentialForm: React.FC<CredentialFormProps> = ({
   credential,
@@ -170,7 +166,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
   onSubmit = () => {},
   useForm = useCredentialForm
 }) => {
-  const { formData, authType, typeValue, setAuthType, handleInputChange, filterFormData, maskedFields } = useForm({
+  const { formData, authType, typeValue, setAuthType, handleInputChange, filterFormData } = useForm({
     credentialType,
     credential
   });
@@ -219,7 +215,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
         <FormGroup label="Token" isRequired fieldId="auth_token">
           <TextInput
             value={formData?.auth_token}
-            placeholder={maskedFields.auth_token ? '****' : 'Enter Token'}
+            placeholder={(credential?.has_auth_token && '****') || 'Enter Token'}
             isRequired
             type="text"
             id="credential-token"
@@ -248,7 +244,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
             <TextInput
               value={formData?.password}
               isRequired
-              placeholder={maskedFields.password ? '****' : 'Enter password'}
+              placeholder={credential?.has_password ? '****' : 'Enter password'}
               type="password"
               id="credential-password"
               name="password"
@@ -276,7 +272,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
           <FormGroup label="SSH Key" isRequired fieldId="ssh_key">
             <TextArea
               value={formData?.ssh_key}
-              placeholder={maskedFields.ssh_key ? '****' : 'Enter private SSH Key'}
+              placeholder={credential?.has_ssh_key ? '****' : 'Enter private SSH Key'}
               isRequired
               id="credential-ssh-key"
               name="ssh_key"
@@ -291,7 +287,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
           <FormGroup label="SSH passphrase" fieldId="ssh_passphrase">
             <TextInput
               value={formData?.ssh_passphrase}
-              placeholder={maskedFields.ssh_passphrase ? '****' : "Enter SSH passphrase (optional)"}
+              placeholder={credential?.has_ssh_passphrase ? '****' : 'Enter SSH passphrase (optional)'}
               type="password"
               id="ssh_passphrase"
               name="ssh_passphrase"
@@ -339,7 +335,7 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
           <FormGroup label="Become Password" fieldId="become_password">
             <TextInput
               value={formData?.become_password}
-              placeholder={maskedFields.become_password ? '****' : "Enter become password (optional)"}
+              placeholder={credential?.has_become_password ? '****' : 'Enter become password (optional)'}
               type="password"
               id="become_password"
               name="become_password"
