@@ -161,7 +161,6 @@ const CredentialForm: React.FC<CredentialFormProps> = ({
     credentialType,
     credential
   });
-
   const onAdd = () => onSubmit(filterFormData());
 
   return (
