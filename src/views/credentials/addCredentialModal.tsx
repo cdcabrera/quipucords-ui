@@ -35,7 +35,11 @@ interface CredentialFormType extends Partial<CredentialType> {
   authenticationType?: string;
 }
 
-const getCleanedFormData = (formData: CredentialFormType, authType: string, maskedFields: string[]) => {
+const getCleanedFormData = (
+  formData: CredentialFormType,
+  authType: string,
+  maskedFields: string[] = ['password', 'ssh_key', 'ssh_passphrase', 'become_password', 'auth_token']
+) => {
   const cleanedData = { ...formData };
 
   switch (authType) {
@@ -61,7 +65,7 @@ const getCleanedFormData = (formData: CredentialFormType, authType: string, mask
   return cleanedData;
 };
 
-const deriveAuthType = (credential, typeValue) => {
+const deriveAuthType = (credential: Partial<CredentialType>, typeValue: string) => {
   if (credential) {
     return helpers.getAuthType(credential);
   }
@@ -93,7 +97,6 @@ const useCredentialForm = ({
   const [formData, setFormData] = useState<CredentialFormType>(initialFormState);
   const typeValue = credential?.cred_type || credentialType?.split(' ')?.shift()?.toLowerCase();
   const [authType, setAuthType] = useState('');
-  const maskedFields = ['password', 'ssh_key', 'ssh_passphrase', 'become_password', 'auth_token'];
 
   useEffect(() => {
     if (credential) {
@@ -132,8 +135,7 @@ const useCredentialForm = ({
           ...(!credential && { cred_type: typeValue }),
           ...(credential && { id: credential.id })
         },
-        authType,
-        maskedFields
+        authType
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [authType, formData, credential, typeValue]
