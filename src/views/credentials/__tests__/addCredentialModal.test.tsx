@@ -203,7 +203,6 @@ describe('CredentialForm', () => {
 });
 
 describe('getCleanedFormData', () => {
-  const maskedFields = ['password', 'ssh_key', 'ssh_passphrase', 'become_password', 'auth_token'];
   it('should clean formData correctly for Token authType', () => {
     const formData = {
       name: 'Test Credential',
@@ -214,7 +213,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'Token', maskedFields);
+    const cleanedData = getCleanedFormData(formData, 'Token');
     expect(cleanedData).toMatchSnapshot('Token auth cleanedData');
   });
 
@@ -228,7 +227,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'Username and Password', maskedFields);
+    const cleanedData = getCleanedFormData(formData, 'Username and Password');
     expect(cleanedData).toMatchSnapshot('Username and Password auth cleanedData');
   });
 
@@ -242,7 +241,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'SSH Key', maskedFields);
+    const cleanedData = getCleanedFormData(formData, 'SSH Key');
     expect(cleanedData).toMatchSnapshot('SSH Key auth cleanedData');
   });
 });
