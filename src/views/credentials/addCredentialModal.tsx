@@ -16,7 +16,7 @@ import {
   TextInput
 } from '@patternfly/react-core';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
-import helpers from '../../helpers';
+import { helpers } from '../../helpers';
 import { type CredentialType } from '../../types/types';
 
 interface AddCredentialModalProps {
