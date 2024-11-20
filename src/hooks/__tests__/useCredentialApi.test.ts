@@ -230,7 +230,7 @@ describe('useEditCredentialApi', () => {
 
   it('should attempt an api call to edit credentials', () => {
     const { apiCall } = hookResult;
-    const spyAxios = jest.spyOn(axios, 'put');
+    const spyAxios = jest.spyOn(axios, 'patch');
 
     apiCall({ id: 123, name: 'Lorem' }).catch(Function.prototype);
     expect(spyAxios.mock.calls).toMatchSnapshot('apiCall');
@@ -238,7 +238,7 @@ describe('useEditCredentialApi', () => {
 
   it('should handle success while attempting to edit a credential', async () => {
     const { editCredentials } = hookResult;
-    jest.spyOn(axios, 'put').mockImplementation(() => Promise.resolve({}));
+    jest.spyOn(axios, 'patch').mockImplementation(() => Promise.resolve({}));
 
     await editCredentials({ name: 'Lorem', id: '123' });
     expect(mockOnAddAlert.mock.calls).toMatchSnapshot('editCredentials, success');
@@ -246,7 +246,7 @@ describe('useEditCredentialApi', () => {
 
   it('should handle errors while attempting to edit a credential', async () => {
     const { editCredentials } = hookResult;
-    jest.spyOn(axios, 'put').mockImplementation(() => Promise.reject({ isAxiosError: true, message: 'Mock error' }));
+    jest.spyOn(axios, 'patch').mockImplementation(() => Promise.reject({ isAxiosError: true, message: 'Mock error' }));
 
     await editCredentials({ name: 'Lorem', id: '123' });
     expect(mockOnAddAlert.mock.calls).toMatchSnapshot('editCredentials, error');

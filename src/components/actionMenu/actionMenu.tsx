@@ -12,7 +12,7 @@ import { EllipsisVIcon } from '@patternfly/react-icons';
 type Action<T> = {
   label: string;
   onClick: (item: T) => void;
-  disabled?: boolean; 
+  disabled?: boolean;
   ouiaId?: string; // Optional ouiaId for E2E testing
 };
 

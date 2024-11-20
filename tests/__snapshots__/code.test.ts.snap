@@ -30,7 +30,7 @@ exports[`General code checks should only have specific console.[warn|log|info|er
   "hooks/useSourceApi.ts:191:          console.error(error);",
   "hooks/useSourceApi.ts:255:          console.error(error);",
   "hooks/useStatusApi.ts:38:        console.error(error);",
-  "views/credentials/__tests__/addCredentialModal.test.tsx:148:    console.log(props);",
+  "views/credentials/__tests__/addCredentialModal.test.tsx:152:    console.log(props);",
   "views/sources/addSourceModal.tsx:106:          console.error(err);",
   "views/sources/viewSourcesList.tsx:319:                console.error(err);",
 ]

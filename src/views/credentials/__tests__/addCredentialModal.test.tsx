@@ -106,18 +106,6 @@ describe('useCredentialForm', () => {
     expect(filteredData.name).toBe(mockValue);
   });
 
-  it('should mask sensitive fields when credential has corresponding values', () => {
-    const mockCredential = {
-      has_password: true,
-      has_ssh_key: true,
-      has_ssh_passphrase: true,
-      has_auth_token: true
-    };
-
-    const { result } = renderHook(() => useCredentialForm({ credential: mockCredential }));
-    expect(result.current.formData).toMatchSnapshot('masked sensitive fields');
-  });
-
   it('should allow editing a credential', async () => {
     const { result } = renderHook(() =>
       useCredentialForm({
@@ -215,6 +203,7 @@ describe('CredentialForm', () => {
 });
 
 describe('getCleanedFormData', () => {
+  const maskedFields = ['password', 'ssh_key', 'ssh_passphrase', 'become_password', 'auth_token'];
   it('should clean formData correctly for Token authType', () => {
     const formData = {
       name: 'Test Credential',
@@ -225,7 +214,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'Token');
+    const cleanedData = getCleanedFormData(formData, 'Token', maskedFields);
     expect(cleanedData).toMatchSnapshot('Token auth cleanedData');
   });
 
@@ -239,7 +228,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'Username and Password');
+    const cleanedData = getCleanedFormData(formData, 'Username and Password', maskedFields);
     expect(cleanedData).toMatchSnapshot('Username and Password auth cleanedData');
   });
 
@@ -253,7 +242,7 @@ describe('getCleanedFormData', () => {
       ssh_passphrase: 'test_passphrase'
     };
 
-    const cleanedData = getCleanedFormData(formData, 'SSH Key');
+    const cleanedData = getCleanedFormData(formData, 'SSH Key', maskedFields);
     expect(cleanedData).toMatchSnapshot('SSH Key auth cleanedData');
   });
 });
