@@ -65,7 +65,7 @@ const getCleanedFormData = (
   return cleanedData;
 };
 
-const deriveAuthType = (credential: Partial<CredentialType>, typeValue: string) => {
+const deriveAuthType = (credential?: Partial<CredentialType>, typeValue?: string) => {
   if (credential) {
     return helpers.getAuthType(credential);
   }
@@ -137,7 +137,6 @@ const useCredentialForm = ({
         },
         authType
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [authType, formData, credential, typeValue]
   );
 
