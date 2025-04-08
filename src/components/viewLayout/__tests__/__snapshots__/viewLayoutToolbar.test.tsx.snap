@@ -25,19 +25,19 @@ exports[`ViewToolbar should render a basic component: basic 1`] = `
       <ForwardRef
         align={
           {
-            "default": "alignRight",
+            "default": "alignEnd",
           }
         }
-        spacer={
+        gap={
           {
-            "default": "spacerNone",
-            "md": "spacerMd",
+            "default": "gapNone",
+            "md": "gapMd",
           }
         }
-        variant="icon-button-group"
+        variant="action-group-plain"
       >
         <ForwardRef
-          variant="icon-button-group"
+          variant="action-group-plain"
           visibility={
             {
               "default": "hidden",
