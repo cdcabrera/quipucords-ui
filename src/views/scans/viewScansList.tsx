@@ -26,17 +26,14 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   List,
   ListItem,
-  Modal,
-  ModalVariant,
   PageSection,
   ToolbarContent,
   ToolbarItem,
   getUniqueId
 } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ContextIcon, ContextIconVariant } from '../../components/contextIcon/contextIcon';
@@ -184,7 +181,7 @@ const ScansListView: React.FunctionComponent = () => {
   );
 
   return (
-    <PageSection variant="light">
+    <PageSection hasBodyWrapper={false}>
       {renderToolbar()}
       <Table aria-label="Example things table" variant="compact">
         <Thead>
@@ -201,12 +198,11 @@ const ScansListView: React.FunctionComponent = () => {
           isNoData={currentPageItems.length === 0}
           errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'scans' })} />}
           noDataEmptyState={
-            <EmptyState>
-              <EmptyStateHeader
-                headingLevel="h4"
-                titleText={t('view.empty-state', { context: 'scans_title' })}
-                icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-              />
+            <EmptyState
+              headingLevel="h4"
+              icon={PlusCircleIcon}
+              titleText={t('view.empty-state', { context: 'scans_title' })}
+            >
               <EmptyStateBody>{t('view.empty-state', { context: 'scans_description' })}</EmptyStateBody>
               <EmptyStateFooter>
                 <EmptyStateActions>

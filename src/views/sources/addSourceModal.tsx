@@ -15,11 +15,10 @@ import {
   FormGroup,
   HelperText,
   HelperTextItem,
-  Modal,
-  ModalVariant,
   TextArea,
   TextInput
 } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { TypeaheadCheckboxes } from '../../components/typeAheadCheckboxes/typeaheadCheckboxes';
 import { helpers } from '../../helpers';

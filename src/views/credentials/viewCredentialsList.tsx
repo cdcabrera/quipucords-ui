@@ -25,17 +25,14 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   List,
   ListItem,
-  Modal,
-  ModalVariant,
   PageSection,
   ToolbarContent,
   ToolbarItem,
   getUniqueId
 } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
@@ -238,7 +235,7 @@ const CredentialsListView: React.FunctionComponent = () => {
   );
 
   return (
-    <PageSection variant="light">
+    <PageSection hasBodyWrapper={false}>
       {renderToolbar()}
       <Table aria-label="Example things table" variant="compact">
         <Thead>
@@ -257,12 +254,11 @@ const CredentialsListView: React.FunctionComponent = () => {
           isNoData={currentPageItems.length === 0}
           errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'credentials' })} />}
           noDataEmptyState={
-            <EmptyState>
-              <EmptyStateHeader
-                headingLevel="h4"
-                titleText={t('view.empty-state', { context: 'credentials_title' })}
-                icon={<EmptyStateIcon icon={PlusCircleIcon} />}
-              />
+            <EmptyState
+              headingLevel="h4"
+              icon={PlusCircleIcon}
+              titleText={t('view.empty-state', { context: 'credentials_title' })}
+            >
               <EmptyStateBody>{t('view.empty-state', { context: 'credentials_description' })}</EmptyStateBody>
               <EmptyStateFooter>
                 <EmptyStateActions>{renderAddCredsButton()}</EmptyStateActions>
