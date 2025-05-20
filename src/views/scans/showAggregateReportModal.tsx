@@ -1,10 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  Bullseye,
   DescriptionList,
   DescriptionListTerm,
   DescriptionListDescription,
   DescriptionListGroup,
+  Flex,
+  FlexItem,
   Modal,
   ModalVariant,
   Title
@@ -59,17 +62,28 @@ const formatSortFilterReportStats = (
 ) => {
   const { results: resultStats = {}, diagnostics: diagnosticStats = {} } = report;
 
-  return [...(resultStats && Object.entries(resultStats)), ...(diagnosticStats && Object.entries(diagnosticStats))]
-    .filter(([key]) => filter.includes(key))
-    .sort(([aKey], [bKey]) => aKey.localeCompare(bKey))
-    .map(([key, value]) => {
-      const updatedValue = (
-        (key === 'system_creation_date_average' && helpers.formatDate(value as Date)) ||
-        value
-      )?.toString();
+  const formatFilterSort = (arr): [string, unknown][] =>
+    arr
+      .filter(([key]) => filter.includes(key))
+      .sort(([aKey], [bKey]) => aKey.localeCompare(bKey))
+      .map(([key, value]) => {
+        const updatedValue = (
+          (key === 'system_creation_date_average' && helpers.formatDate(value as Date)) ||
+          value
+        )?.toString();
 
-      return [key, updatedValue];
-    });
+        return [key, updatedValue];
+      });
+
+  const results = formatFilterSort([...(resultStats && Object.entries(resultStats))]);
+  const diagnostics = formatFilterSort([...(diagnosticStats && Object.entries(diagnosticStats))]);
+
+  return {
+    hasResults: results.length > 0,
+    hasDiagnostics: diagnostics.length > 0,
+    results,
+    diagnostics
+  };
 };
 
 /**
@@ -82,11 +96,18 @@ const ShowAggregateReportModal: React.FC<ShowAggregateReportModalProps> = ({
   actions
 }) => {
   const { t } = useTranslation();
-  const stats = formatSortFilterReportStats(report?.report);
+  const { hasDiagnostics, hasResults, results, diagnostics } = formatSortFilterReportStats(report?.report);
+
+  const descriptionGroup = (key, value) => (
+    <DescriptionListGroup key={key}>
+      <DescriptionListTerm>{t('modal.label', { context: key })}</DescriptionListTerm>
+      <DescriptionListDescription>{value}</DescriptionListDescription>
+    </DescriptionListGroup>
+  );
 
   return (
     <Modal
-      variant={ModalVariant.small}
+      variant={(hasResults && hasDiagnostics && ModalVariant.medium) || ModalVariant.small}
       title={t('modal.title', { context: 'scan-summary' })}
       isOpen={isOpen}
       onClose={() => onClose()}
@@ -95,16 +116,25 @@ const ShowAggregateReportModal: React.FC<ShowAggregateReportModalProps> = ({
       <Title className="pf-v5-u-mb-lg" headingLevel="h2" size="md">
         {t('modal.subtitle', { context: 'scan-id', value: report?.id })}
       </Title>
-      <DescriptionList isHorizontal isFluid isCompact>
-        {stats.map(([key, value]) => {
-          return (
-            <DescriptionListGroup key={key}>
-              <DescriptionListTerm>{t('modal.label', { context: key })}</DescriptionListTerm>
-              <DescriptionListDescription>{value}</DescriptionListDescription>
-            </DescriptionListGroup>
-          );
-        })}
-      </DescriptionList>
+      <Bullseye>
+        <Flex>
+          {!hasResults && !hasDiagnostics && t('modal.description', { context: 'scan-summary-missing' })}
+          {hasResults && (
+            <FlexItem>
+              <DescriptionList isHorizontal isFluid isCompact>
+                {results.map(([key, value]) => descriptionGroup(key, value))}
+              </DescriptionList>
+            </FlexItem>
+          )}
+          {hasDiagnostics && (
+            <FlexItem>
+              <DescriptionList isHorizontal isFluid isCompact>
+                {diagnostics.map(([key, value]) => descriptionGroup(key, value))}
+              </DescriptionList>
+            </FlexItem>
+          )}
+        </Flex>
+      </Bullseye>
     </Modal>
   );
 };

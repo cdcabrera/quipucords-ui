@@ -144,6 +144,7 @@
   "modal": {
     "title_scan-summary": "Scan summary",
     "subtitle_scan-id": "Scan ID: {{value}}",
+    "description_scan-summary-missing": "No results, or diagnostic information, available.",
     "label": "{{context}}",
     "label_ansible_hosts_all": "Ansible hosts all:",
     "label_instances_hypervisor": "Instances hypervisor:",
