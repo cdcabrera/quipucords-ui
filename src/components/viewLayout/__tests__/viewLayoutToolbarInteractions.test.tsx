@@ -47,7 +47,7 @@ describe('ViewToolbar interactions', () => {
       render(<ViewToolbar {...props} />);
     });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    await user.click(document.querySelector('button[data-ouia-component-id="help_menu_toggle"]')!);
+    await user.click(screen.getByLabelText('Help Menu Toggle'));
     await user.click(screen.getByText(/About/));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Close Dialog' }));
@@ -65,7 +65,7 @@ describe('ViewToolbar interactions', () => {
     await act(async () => {
       render(<ViewToolbar {...props} />);
     });
-    await user.click(document.querySelector('button[data-ouia-component-id="user_dropdown_button"]')!);
+    await user.click(screen.getByLabelText('User Menu Toggle'));
     await user.click(screen.getByText(/Logout/));
     expect(mockLogout).toHaveBeenCalledTimes(1);
   });

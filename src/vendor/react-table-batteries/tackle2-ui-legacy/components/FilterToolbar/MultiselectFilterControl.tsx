@@ -1,13 +1,5 @@
 import * as React from 'react';
-import { ToolbarFilter } from '@patternfly/react-core';
-import {
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-  SelectProps
-} from '@patternfly/react-core/deprecated'; // TODO upgrade to new PF5 Select stuff
-import { css } from '@patternfly/react-styles';
+import { ToolbarFilter, Menu, MenuContent, MenuItem, MenuList, MenuToggle, Checkbox } from '@patternfly/react-core';
 import { FilterControlProps } from './FilterControl';
 import { MultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 
@@ -27,11 +19,12 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   id
 }: React.PropsWithChildren<MultiselectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState('');
 
-  const getOptionKeyFromOptionValue = (optionValue: string | SelectOptionObject) =>
+  const getOptionKeyFromOptionValue = (optionValue: string) =>
     category.selectOptions.find(optionProps => optionProps.value === optionValue)?.key;
 
-  const getChipFromOptionValue = (optionValue: string | SelectOptionObject | undefined) =>
+  const getChipFromOptionValue = (optionValue: string | undefined) =>
     optionValue ? optionValue.toString() : '';
 
   const getOptionKeyFromChip = (chip: string) =>
@@ -40,7 +33,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   const getOptionValueFromOptionKey = (optionKey: string) =>
     category.selectOptions.find(optionProps => optionProps.key === optionKey)?.value;
 
-  const onFilterSelect = (value: string | SelectOptionObject) => {
+  const onFilterSelect = (value: string) => {
     const optionKey = getOptionKeyFromOptionValue(value);
     if (optionKey && filterValue?.includes(optionKey)) {
       const updatedValues = filterValue.filter((item: string) => item !== optionKey);
@@ -59,56 +52,71 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
     setFilterValue(newValue.length > 0 ? newValue : null);
   };
 
-  // Select expects "selections" to be an array of the "value" props from the relevant optionProps
-  const selections = filterValue ? filterValue.map(getOptionValueFromOptionKey) : null;
+  // Get selected options for display
+  const selectedOptions = filterValue
+    ? category.selectOptions.filter(optionProps => filterValue.includes(optionProps.key))
+    : [];
 
-  const chips = selections ? selections.map(getChipFromOptionValue) : [];
+  const chips = selectedOptions.map(option => getChipFromOptionValue(option.value));
 
-  const renderSelectOptions = (options: OptionPropsWithKey[]) =>
-    options.map(optionProps => <SelectOption {...optionProps} key={optionProps.key} />);
-
-  const onOptionsFilter: SelectProps['onFilter'] = (_event, textInput) =>
-    renderSelectOptions(
-      category.selectOptions.filter(optionProps => {
-        // Note: The in-dropdown filter can match the option's key or value. This may not be desirable?
-        if (!textInput) {
-          return false;
-        }
-        const optionValue = optionProps?.value?.toString();
-        return (
-          optionProps?.key?.toLowerCase().includes(textInput.toLowerCase()) ||
-          optionValue.toLowerCase().includes(textInput.toLowerCase())
-        );
-      })
+  // Filter options based on search
+  const filteredOptions = category.selectOptions.filter(optionProps => {
+    if (!searchValue) return true;
+    const optionValue = optionProps?.value?.toString();
+    return (
+      optionProps?.key?.toLowerCase().includes(searchValue.toLowerCase()) ||
+      optionValue.toLowerCase().includes(searchValue.toLowerCase())
     );
+  });
 
-  // TODO support i18n / custom text here?
+  const renderMenuItems = (options: OptionPropsWithKey[]) =>
+    options.map(optionProps => (
+      <MenuItem
+        key={optionProps.key}
+        itemId={optionProps.value}
+        isSelected={filterValue?.includes(optionProps.key)}
+      >
+        <Checkbox
+          id={`${id}-${category.key}-${optionProps.key}-checkbox`}
+          isChecked={filterValue?.includes(optionProps.key)}
+          onChange={() => onFilterSelect(optionProps.value)}
+          aria-label={`Select ${optionProps.value}`}
+        />
+        {optionProps.value}
+      </MenuItem>
+    ));
+
   const placeholderText = category.placeholderText || `Filter by ${category.title}...`;
 
   return (
     <ToolbarFilter
       id={`${id}-filter-control-${category.key}`}
-      chips={chips}
-      deleteChip={(_, chip) => onFilterClear(chip as string)}
+      labels={chips}
+      deleteLabel={(_, chip) => onFilterClear(chip as string)}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >
-      <Select
-        className={css(isScrollable && 'isScrollable')}
-        aria-label={category.title}
-        toggleId={`${id}-${category.key}-filter-value-select`}
-        onToggle={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-        selections={selections || []}
-        onSelect={(_, value) => onFilterSelect(value)}
-        isOpen={isFilterDropdownOpen}
-        placeholderText={placeholderText}
-        isDisabled={isDisabled || category.selectOptions.length === 0}
-        variant={SelectVariant.checkbox}
-        hasInlineFilter
-        onFilter={onOptionsFilter}
+      <Menu
+        id={`${id}-${category.key}-filter-menu`}
+        onSelect={(_, itemId) => onFilterSelect(itemId as string)}
       >
-        {renderSelectOptions(category.selectOptions)}
-      </Select>
+        <MenuToggle
+          id={`${id}-${category.key}-filter-toggle`}
+          aria-label={category.title}
+          isDisabled={isDisabled || category.selectOptions.length === 0}
+          isExpanded={isFilterDropdownOpen}
+          onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
+        >
+          {selectedOptions.length > 0
+            ? `${selectedOptions.length} selected`
+            : placeholderText}
+        </MenuToggle>
+        <MenuContent>
+          <MenuList>
+            {renderMenuItems(filteredOptions)}
+          </MenuList>
+        </MenuContent>
+      </Menu>
     </ToolbarFilter>
   );
 };

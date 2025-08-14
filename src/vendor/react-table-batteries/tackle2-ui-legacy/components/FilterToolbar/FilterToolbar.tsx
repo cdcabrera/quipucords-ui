@@ -8,9 +8,15 @@ import {
   ToolbarToggleGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { FilterControl } from './FilterControl';
+
+interface SelectOptionProps {
+  value: string;
+  label?: string;
+  isDisabled?: boolean;
+  isPlaceholder?: boolean;
+}
 
 export enum FilterType {
   select = 'select',
@@ -151,7 +157,6 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
         variant="filter-group"
         toggleIcon={<FilterIcon />}
         breakpoint="2xl"
-        spaceItems={showFiltersSideBySide ? { default: 'spaceItemsMd' } : undefined}
       >
         {!showFiltersSideBySide && (
           <ToolbarItem>

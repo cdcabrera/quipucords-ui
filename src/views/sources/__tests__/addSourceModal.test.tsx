@@ -273,8 +273,8 @@ describe('SourceForm', () => {
     const sourceTypes = ['network', 'openshift', 'rhacs', 'ansible', 'satellite', 'vcenter'];
     for (const type of sourceTypes) {
       const component = await shallowComponent(<SourceForm sourceType={type} />);
-      const portFormGroup = component.querySelector('#source-port').closest('.pf-v5-c-form__group');
-      const portHelperText = portFormGroup.querySelector('.pf-v5-c-helper-text');
+      const portFormGroup = component.querySelector('#source-port').closest('.pf-v6-c-form__group');
+      const portHelperText = portFormGroup.querySelector('.pf-v6-c-helper-text');
       expect(portHelperText).toMatchSnapshot(`form, ${type}`);
     }
   });
@@ -287,7 +287,7 @@ describe('SourceForm', () => {
       const proxyInput = component.querySelector('#proxy-url');
 
       expect(proxyInput).toBeTruthy();
-      expect(proxyInput?.getAttribute('placeholder')).toBe('Optional');
+      expect(proxyInput.getAttribute('placeholder')).toBe('Optional');
       expect(component).toMatchSnapshot(`proxy_url presence, ${type}`);
     }
   });
