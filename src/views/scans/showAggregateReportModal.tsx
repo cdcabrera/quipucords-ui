@@ -5,10 +5,9 @@ import {
   DescriptionListTerm,
   DescriptionListDescription,
   DescriptionListGroup,
-  Modal,
-  ModalVariant,
   Title
 } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { helpers } from '../../helpers';
 import { type ReportAggregateDiagnosticsType, type ReportAggregateResultsType } from '../../types/types';
 

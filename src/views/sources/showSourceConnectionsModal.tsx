@@ -5,11 +5,11 @@
  * @module connectionsModal
  */
 import React, { useCallback, useState } from 'react';
-import { Modal, ModalVariant, Button, Icon, List, ListItem } from '@patternfly/react-core';
+import { Button, Icon, List, ListItem } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { ExclamationCircleIcon, ExclamationTriangleIcon, CheckCircleIcon } from '@patternfly/react-icons';
 import { Tbody, Tr, Td, Table, ExpandableRowContent } from '@patternfly/react-table';
 import { type SourceType, type Connections } from '../../types/types';
-import './showSourceConnectionsModal.css';
 
 interface ShowConnectionsModalProps {
   isOpen: boolean;

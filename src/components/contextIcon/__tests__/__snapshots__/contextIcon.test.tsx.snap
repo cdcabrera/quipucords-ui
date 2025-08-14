@@ -24,7 +24,7 @@ exports[`ContextIcon Should render icon failed 1`] = `
 
 exports[`ContextIcon Should render icon idCard 1`] = `
 <IdCardIcon
-  color="#151515"
+  color="#6a6e73"
 />
 `;
 
