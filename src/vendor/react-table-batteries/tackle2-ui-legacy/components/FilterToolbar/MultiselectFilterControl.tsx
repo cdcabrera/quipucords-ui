@@ -88,8 +88,8 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   return (
     <ToolbarFilter
       id={`${id}-filter-control-${category.key}`}
-      chips={chips}
-      deleteChip={(_, chip) => onFilterClear(chip as string)}
+      labels={chips}
+      deleteLabel={(_, chip) => onFilterClear(chip as string)}
       categoryName={category.title}
       showToolbarItem={showToolbarItem}
     >

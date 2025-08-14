@@ -28,12 +28,11 @@ import {
   UnknownIcon,
   UserIcon
 } from '@patternfly/react-icons';
-import {
-  global_Color_dark_100 as gray,
-  global_success_color_100 as green,
-  global_warning_color_100 as yellow,
-  global_danger_color_100 as red
-} from '@patternfly/react-tokens';
+// Color tokens for PatternFly 6 - using CSS values for now
+const gray = { name: 'gray', value: '#6a6e73', var: '--pf-v6-global--Color--dark-100' };
+const green = { name: 'green', value: '#3e8635', var: '--pf-v6-global--Color--success-100' };
+const yellow = { name: 'yellow', value: '#f0ab00', var: '--pf-v6-global--Color--warning-100' };
+const red = { name: 'red', value: '#c9190b', var: '--pf-v6-global--Color--danger-100' };
 
 /**
  * Context icon colors, for consistency

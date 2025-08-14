@@ -81,11 +81,11 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
       <Toolbar id="toolbar" isFullHeight isStatic>
         <ToolbarContent>
           <ToolbarGroup
-            variant="icon-button-group"
-            align={{ default: 'alignRight' }}
-            spacer={{ default: 'spacerNone', md: 'spacerMd' }}
+            variant="action-group-plain"
+            align={{ default: 'alignEnd' }}
+            gap={{ default: 'gapNone', md: 'gapMd' }}
           >
-            <ToolbarGroup variant="icon-button-group" visibility={{ default: 'hidden', lg: 'visible' }}>
+            <ToolbarGroup variant="action-group-plain" visibility={{ default: 'hidden', lg: 'visible' }}>
               <ToolbarItem>
                 <ToggleGroup aria-label="Dark theme toggle group">
                   <ToggleGroupItem
