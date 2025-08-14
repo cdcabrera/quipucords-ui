@@ -8,7 +8,13 @@ import {
   ToolbarToggleGroup,
   ToolbarItem
 } from '@patternfly/react-core';
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+// Updated to use PatternFly 6 composable menu system
+interface SelectOptionProps {
+  value: string;
+  label?: string;
+  isDisabled?: boolean;
+  isPlaceholder?: boolean;
+}
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 import { FilterControl } from './FilterControl';
 

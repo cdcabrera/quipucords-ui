@@ -245,14 +245,14 @@ const CredentialsListView: React.FunctionComponent = () => {
   return (
     <PageSection hasBodyWrapper={false}>
       {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
+      <Table aria-label="Example things table">
         <Thead>
           <Tr isHeaderRow>
             <Th columnKey="name" />
             <Th columnKey="type" />
             <Th columnKey="auth_type" />
-            <Th columnKey="sources" />
-            <Th columnKey="updated" />
+            <Th columnKey="sources" modifier="nowrap" />
+            <Th columnKey="updated" modifier="nowrap" />
             <Th columnKey="actions" />
           </Tr>
         </Thead>
@@ -281,7 +281,7 @@ const CredentialsListView: React.FunctionComponent = () => {
                 <Td columnKey="name">{credential.name}</Td>
                 <Td columnKey="type">{getTranslatedCredentialTypeLabel(credential.cred_type)}</Td>
                 <Td columnKey="auth_type">{helpers.getAuthType(credential)}</Td>
-                <Td columnKey="sources">
+                <Td isActionCell columnKey="sources">
                   <Button
                     variant={ButtonVariant.link}
                     onClick={() => {

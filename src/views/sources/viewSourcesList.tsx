@@ -336,14 +336,14 @@ const SourcesListView: React.FunctionComponent = () => {
   return (
     <PageSection hasBodyWrapper={false}>
       {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
+      <Table aria-label="Example things table">
         <Thead>
           <Tr isHeaderRow>
             <Th columnKey="name" />
             <Th columnKey="connection" />
             <Th columnKey="type" />
-            <Th columnKey="credentials" />
-            <Th columnKey="scan" />
+            <Th columnKey="credentials" modifier="nowrap" />
+            <Th columnKey="scan" modifier="nowrap" />
             <Th columnKey="actions" />
           </Tr>
         </Thead>
@@ -370,9 +370,11 @@ const SourcesListView: React.FunctionComponent = () => {
             {currentPageItems?.map((source: SourceType, rowIndex) => (
               <Tr key={source.id} item={source} rowIndex={rowIndex}>
                 <Td columnKey="name">{source.name}</Td>
-                <Td columnKey="connection">{renderConnection(source)}</Td>
+                <Td isActionCell columnKey="connection">
+                  {renderConnection(source)}
+                </Td>
                 <Td columnKey="type">{getTranslatedSourceTypeLabel(source.source_type)}</Td>
-                <Td columnKey="credentials">
+                <Td isActionCell columnKey="credentials">
                   <Button
                     variant={ButtonVariant.link}
                     onClick={() => {

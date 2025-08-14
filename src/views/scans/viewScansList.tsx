@@ -193,12 +193,12 @@ const ScansListView: React.FunctionComponent = () => {
   return (
     <PageSection hasBodyWrapper={false}>
       {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
+      <Table aria-label="Example things table">
         <Thead>
           <Tr isHeaderRow>
             <Th columnKey="name" />
-            <Th columnKey="most_recent" />
-            <Th columnKey="sources" />
+            <Th columnKey="most_recent" modifier="nowrap" />
+            <Th columnKey="sources" modifier="nowrap" />
             <Th columnKey="actions" />
           </Tr>
         </Thead>
@@ -229,8 +229,10 @@ const ScansListView: React.FunctionComponent = () => {
             {currentPageItems?.map((scan: Scan, rowIndex) => (
               <Tr key={scan.id} item={scan} rowIndex={rowIndex}>
                 <Td columnKey="name">{scan.name}</Td>
-                <Td columnKey="most_recent">{renderConnection(scan)}</Td>
-                <Td columnKey="sources">
+                <Td isActionCell columnKey="most_recent">
+                  {renderConnection(scan)}
+                </Td>
+                <Td isActionCell columnKey="sources">
                   <Button
                     variant={ButtonVariant.link}
                     onClick={() => {
