@@ -7,6 +7,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import {
+  Avatar,
   Dropdown,
   DropdownItem,
   Icon,
@@ -20,8 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { EllipsisVIcon, MoonIcon, QuestionCircleIcon, SunIcon } from '@patternfly/react-icons';
 import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
-import '@patternfly/react-styles/css/components/Avatar/avatar.css';
-import './viewLayoutToolbar.css';
+import avatarImg from '../../images/imgAvatar.svg';
 import AboutModal from '../aboutModal/aboutModal';
 
 interface AppToolbarProps {
@@ -50,9 +50,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
     const htmlElement = document.getElementsByTagName('html')[0];
     if (htmlElement) {
       if (isDark) {
-        htmlElement.classList.add('pf-v5-theme-dark');
+        htmlElement.classList.add('pf-v6-theme-dark');
       } else {
-        htmlElement.classList.remove('pf-v5-theme-dark');
+        htmlElement.classList.remove('pf-v6-theme-dark');
       }
     }
   };
@@ -170,6 +170,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
           </ToolbarGroup>
           <ToolbarItem visibility={{ default: 'hidden', lg: 'visible' }}>
             <Dropdown
+              popperProps={{ position: 'right' }}
               onSelect={onUserDropdownSelect}
               onOpenChange={(isOpen: boolean) => setUserDropdownOpen(isOpen)}
               isOpen={userDropdownOpen}
@@ -177,15 +178,12 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                 <MenuToggle
                   aria-label="Toggle"
                   ref={toggleRef}
-                  variant="plain"
                   onClick={() => setUserDropdownOpen(prev => !prev)}
                   isExpanded={userDropdownOpen}
                   data-ouia-component-id="user_dropdown_button"
+                  icon={<Avatar size="sm" src={avatarImg} alt={`${userName} avatar`} />}
                 >
-                  <div className="quipucords-toolbar__user-dropdown">
-                    <span className="pf-v5-c-avatar" />
-                    {userName}
-                  </div>
+                  {userName}
                 </MenuToggle>
               )}
             >

@@ -17,7 +17,6 @@ import {
   MastheadContent,
   MastheadMain,
   MastheadToggle,
-  MastheadLogo,
   MastheadBrand,
   Nav,
   NavItem,
