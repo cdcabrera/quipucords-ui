@@ -80,12 +80,11 @@ const useLogoutApi = () => {
     []
   );
 
-  const callbackSuccess = useCallback(() => {
+  const callbackSuccess = useCallback((currentTheme?: string | null) => {
     // Remove auth cookie
     cookies.remove(`${process.env.REACT_APP_AUTH_COOKIE}`);
 
     // Restore theme preference after Django logout clears cookies
-    const currentTheme = localStorage.getItem('quipucords-theme');
     if (currentTheme) {
       // Restore in all storage locations
       localStorage.setItem('quipucords-theme', currentTheme);
@@ -105,6 +104,7 @@ const useLogoutApi = () => {
   const callbackError = useCallback((error: AxiosError<ApiLoginErrorType>) => Promise.reject(error), []);
 
   const logout = useCallback(async () => {
+    const currentTheme = localStorage.getItem('quipucords-theme');
     try {
       await apiCall();
     } catch (error) {
@@ -115,7 +115,7 @@ const useLogoutApi = () => {
         console.error(error);
       }
     }
-    return callbackSuccess();
+    return callbackSuccess(currentTheme);
   }, [apiCall, callbackSuccess, callbackError]);
 
   return {
