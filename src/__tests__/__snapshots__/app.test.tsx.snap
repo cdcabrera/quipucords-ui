@@ -1,13 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`App should render a basic component: basic 1`] = `
-<I18n>
-  <Login>
-    <BrowserRouter>
-      <AppLayout>
-        <AppRoutes />
-      </AppLayout>
-    </BrowserRouter>
-  </Login>
-</I18n>
+<ThemeProvider>
+  <I18n>
+    <Login>
+      <BrowserRouter>
+        <AppLayout>
+          <AppRoutes />
+        </AppLayout>
+      </BrowserRouter>
+    </Login>
+  </I18n>
+</ThemeProvider>
 `;

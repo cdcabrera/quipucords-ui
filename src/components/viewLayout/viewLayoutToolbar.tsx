@@ -21,6 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { EllipsisVIcon, MoonIcon, QuestionCircleIcon, SunIcon } from '@patternfly/react-icons';
 import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
+import { useTheme } from '../../hooks/useTheme';
 import avatarImg from '../../images/imgAvatar.svg';
 import AboutModal from '../aboutModal/aboutModal';
 
@@ -37,26 +38,14 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
   const [kebabDropdownOpen, setKebabDropdownOpen] = useState<boolean>(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(
-    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+
+  // Use the new theme hook for persistent theme management
+  const { isDarkTheme, toggleTheme } = useTheme();
 
   useEffect(() => {
     getUser().then(username => setUserName(username));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const applyTheme = isDark => {
-    const htmlElement = document.getElementsByTagName('html')[0];
-    if (htmlElement) {
-      if (isDark) {
-        htmlElement.classList.add('pf-v6-theme-dark');
-      } else {
-        htmlElement.classList.remove('pf-v6-theme-dark');
-      }
-    }
-  };
-  applyTheme(isDarkTheme);
 
   const onAbout = () => setAboutOpen(true);
 
@@ -97,8 +86,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                     }
                     isSelected={!isDarkTheme}
                     onChange={() => {
-                      setIsDarkTheme(false);
-                      applyTheme(false);
+                      if (isDarkTheme) {
+                        toggleTheme();
+                      }
                     }}
                   />
                   <ToggleGroupItem
@@ -110,8 +100,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                     }
                     isSelected={isDarkTheme}
                     onChange={() => {
-                      setIsDarkTheme(true);
-                      applyTheme(true);
+                      if (!isDarkTheme) {
+                        toggleTheme();
+                      }
                     }}
                   />
                 </ToggleGroup>

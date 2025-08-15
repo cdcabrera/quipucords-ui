@@ -10,19 +10,22 @@ import { BrowserRouter } from 'react-router-dom';
 import { I18n } from './components/i18n/i18n';
 import { Login } from './components/login/login';
 import { AppLayout } from './components/viewLayout/viewLayout';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { AppRoutes } from './routes';
 import './app.css';
 
 const App: React.FC = () => (
-  <I18n>
-    <Login>
-      <BrowserRouter>
-        <AppLayout>
-          <AppRoutes />
-        </AppLayout>
-      </BrowserRouter>
-    </Login>
-  </I18n>
+  <ThemeProvider>
+    <I18n>
+      <Login>
+        <BrowserRouter>
+          <AppLayout>
+            <AppRoutes />
+          </AppLayout>
+        </BrowserRouter>
+      </Login>
+    </I18n>
+  </ThemeProvider>
 );
 
 export { App as default, App };

@@ -61,6 +61,7 @@ exports[`ViewToolbar should render a basic component: basic 1`] = `
                     <MoonIcon />
                   </Icon>
                 }
+                isSelected={false}
                 onChange={[Function]}
               />
             </ToggleGroup>
