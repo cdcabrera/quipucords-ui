@@ -10,13 +10,13 @@ export const getStoredTheme = (): ThemeMode | null => {
     if (stored === 'light' || stored === 'dark') {
       return stored;
     }
-    
+
     // Try sessionStorage as backup
     const sessionStored = sessionStorage.getItem(THEME_STORAGE_KEY);
     if (sessionStored === 'light' || sessionStored === 'dark') {
       return sessionStored;
     }
-    
+
     // Try cookie as last resort
     const cookies = document.cookie.split(';');
     const themeCookie = cookies.find(cookie => cookie.trim().startsWith(`${THEME_COOKIE_KEY}=`));
@@ -26,7 +26,7 @@ export const getStoredTheme = (): ThemeMode | null => {
         return themeValue;
       }
     }
-    
+
     return null;
   } catch (error) {
     console.warn('Failed to read theme from storage:', error);
@@ -38,10 +38,10 @@ export const setStoredTheme = (theme: ThemeMode): void => {
   try {
     // Store in localStorage (primary)
     localStorage.setItem(THEME_STORAGE_KEY, theme);
-    
+
     // Store in sessionStorage (backup)
     sessionStorage.setItem(THEME_STORAGE_KEY, theme);
-    
+
     // Store in cookie (last resort, expires in 1 year)
     const expires = new Date();
     expires.setFullYear(expires.getFullYear() + 1);

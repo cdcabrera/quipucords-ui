@@ -81,8 +81,24 @@ const useLogoutApi = () => {
   );
 
   const callbackSuccess = useCallback(() => {
+    // Remove auth cookie
     cookies.remove(`${process.env.REACT_APP_AUTH_COOKIE}`);
-    document.location.replace('./');
+
+    // Restore theme preference after Django logout clears cookies
+    const currentTheme = localStorage.getItem('quipucords-theme');
+    if (currentTheme) {
+      // Restore in all storage locations
+      localStorage.setItem('quipucords-theme', currentTheme);
+      sessionStorage.setItem('quipucords-theme', currentTheme);
+
+      // Restore cookie with 1 year expiration
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `quipucords-theme-preference=${currentTheme}; expires=${expires.toUTCString()}; path=/`;
+    }
+
+    // Use window.location.href instead of document.location.replace for better localStorage preservation
+    window.location.href = './';
     return;
   }, []);
 
