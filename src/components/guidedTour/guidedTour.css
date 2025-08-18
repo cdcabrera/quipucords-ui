@@ -1,0 +1,62 @@
+/* Guided Tour Styles - BEM Naming Convention */
+
+/* Block: guided-tour */
+.guided-tour {
+  /* Base styles for guided tour components */
+}
+
+/* Element: guided-tour__spotlight */
+.guided-tour__spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--pf-t--global--background--color--backdrop--default);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Element: guided-tour__spotlight--border */
+.guided-tour__spotlight--border {
+  position: fixed;
+  border: 2px solid var(--pf-t--global--background--color--highlight--default);
+  border-radius: var(--pf-t--global--border--radius--small);
+  background-color: transparent;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+/* Element: guided-tour__overlay */
+.guided-tour__overlay {
+  z-index: 9999;
+  position: relative;
+}
+
+/* Element: guided-tour__popover */
+.guided-tour__popover {
+  /* Popover container - PatternFly handles most styling */
+}
+
+/* Element: guided-tour__popover--header */
+.guided-tour__popover--header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Element: guided-tour__popover--footer */
+.guided-tour__popover--footer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Element: guided-tour__popover--button */
+.guided-tour__popover--button {
+  margin-right: 0.5rem;
+}
+
+.guided-tour__popover--button:last-child {
+  margin-right: 0;
+}

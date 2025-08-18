@@ -31,6 +31,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ContextIcon, ContextIconVariant } from '../../components/contextIcon/contextIcon';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
+import { GuidedTourStep } from '../../components/guidedTour/guidedTourStep';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { API_DATA_SOURCE_TYPES, API_QUERY_TYPES, API_SOURCES_LIST_QUERY } from '../../constants/apiConstants';
@@ -244,20 +245,24 @@ const SourcesListView: React.FunctionComponent = () => {
   };
 
   const renderAddSourceButton = () => (
-    <SimpleDropdown
-      label={t('view.empty-state_label_sources')}
-      menuToggleOuiaId="add_source_button"
-      variant="primary"
-      onSelect={item => setAddSourceModal(item)}
-      dropdownItems={[
-        { item: t('dataSource.network'), ouiaId: 'network' },
-        { item: t('dataSource.openshift'), ouiaId: 'openshift' },
-        { item: t('dataSource.rhacs'), ouiaId: 'rhacs' },
-        { item: t('dataSource.satellite'), ouiaId: 'satellite' },
-        { item: t('dataSource.vcenter'), ouiaId: 'vcenter' },
-        { item: t('dataSource.ansible'), ouiaId: 'ansible' }
-      ]}
-    />
+    <GuidedTourStep stepId="add-source">
+      <div id="add-source-button">
+        <SimpleDropdown
+          label={t('view.empty-state_label_sources')}
+          menuToggleOuiaId="add_source_button"
+          variant="primary"
+          onSelect={item => setAddSourceModal(item)}
+          dropdownItems={[
+            { item: t('dataSource.network'), ouiaId: 'network' },
+            { item: t('dataSource.openshift'), ouiaId: 'openshift' },
+            { item: t('dataSource.rhacs'), ouiaId: 'rhacs' },
+            { item: t('dataSource.satellite'), ouiaId: 'satellite' },
+            { item: t('dataSource.vcenter'), ouiaId: 'vcenter' },
+            { item: t('dataSource.ansible'), ouiaId: 'ansible' }
+          ]}
+        />
+      </div>
+    </GuidedTourStep>
   );
 
   const renderToolbar = () => (
@@ -335,93 +340,101 @@ const SourcesListView: React.FunctionComponent = () => {
   };
 
   return (
-    <PageSection hasBodyWrapper={false}>
-      {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
-        <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="name" />
-            <Th columnKey="connection" />
-            <Th columnKey="type" />
-            <Th columnKey="credentials" />
-            <Th columnKey="scan" />
-            <Th columnKey="actions" />
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isError={isError}
-          isLoading={isLoading}
-          isNoData={currentPageItems.length === 0}
-          errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'sources' })} />}
-          noDataEmptyState={
-            <EmptyState
-              headingLevel="h4"
-              icon={PlusCircleIcon}
-              titleText={t('view.empty-state', { context: 'sources_title' })}
-            >
-              <EmptyStateBody>{t('view.empty-state', { context: 'sources_description' })}</EmptyStateBody>
-              <EmptyStateFooter>
-                <EmptyStateActions>{renderAddSourceButton()}</EmptyStateActions>
-              </EmptyStateFooter>
-            </EmptyState>
-          }
-          numRenderedColumns={numRenderedColumns}
-        >
-          <Tbody>
-            {currentPageItems?.map((source: SourceType, rowIndex) => (
-              <Tr key={source.id} item={source} rowIndex={rowIndex}>
-                <Td columnKey="name">{source.name}</Td>
-                <Td hasAction columnKey="connection">
-                  {renderConnection(source)}
-                </Td>
-                <Td columnKey="type">{getTranslatedSourceTypeLabel(source.source_type)}</Td>
-                <Td hasAction columnKey="credentials">
-                  <Button
-                    variant={ButtonVariant.link}
-                    size="sm"
-                    onClick={() => {
-                      setCredentialsSelected(source.credentials);
-                    }}
-                  >
-                    {source.credentials.length}
-                  </Button>
-                </Td>
-                <Td hasAction columnKey="scan">
-                  <Button
-                    isDisabled={source.connection?.status === 'pending'}
-                    variant={ButtonVariant.link}
-                    size="sm"
-                    onClick={() => onScanSource(source)}
-                    ouiaId="scan_button"
-                  >
-                    Scan
-                  </Button>
-                </Td>
-                <Td isActionCell columnKey="actions">
-                  <ActionMenu<SourceType>
-                    popperProps={{ position: 'right' }}
-                    item={source}
-                    size="sm"
-                    actions={[
-                      { label: t('table.label', { context: 'edit' }), onClick: onEditSource, ouiaId: 'edit-source' },
-                      {
-                        label: t('table.label', { context: 'delete' }),
-                        disabled: sourceHasConnection(source),
-                        onClick: setPendingDeleteSource,
-                        ouiaId: 'delete-source',
-                        ...(sourceHasConnection(source) && {
-                          tooltipProps: { content: t('table.label', { context: 'edit-disabled-source' }) }
-                        })
-                      }
-                    ]}
-                  />
-                </Td>
+    <React.Fragment>
+      <GuidedTourStep stepId="sources-overview">
+        <PageSection hasBodyWrapper={false} className="sources-view">
+          {renderToolbar()}
+          <Table aria-label="Example things table" variant="compact">
+            <Thead>
+              <Tr isHeaderRow>
+                <Th columnKey="name" />
+                <Th columnKey="connection" />
+                <Th columnKey="type" />
+                <Th columnKey="credentials" />
+                <Th columnKey="scan" />
+                <Th columnKey="actions" />
               </Tr>
-            ))}
-          </Tbody>
-        </ConditionalTableBody>
-      </Table>
-      <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+            </Thead>
+            <ConditionalTableBody
+              isError={isError}
+              isLoading={isLoading}
+              isNoData={currentPageItems.length === 0}
+              errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'sources' })} />}
+              noDataEmptyState={
+                <EmptyState
+                  headingLevel="h4"
+                  icon={PlusCircleIcon}
+                  titleText={t('view.empty-state', { context: 'sources_title' })}
+                >
+                  <EmptyStateBody>{t('view.empty-state', { context: 'sources_description' })}</EmptyStateBody>
+                  <EmptyStateFooter>
+                    <EmptyStateActions>{renderAddSourceButton()}</EmptyStateActions>
+                  </EmptyStateFooter>
+                </EmptyState>
+              }
+              numRenderedColumns={numRenderedColumns}
+            >
+              <Tbody>
+                {currentPageItems?.map((source: SourceType, rowIndex) => (
+                  <Tr key={source.id} item={source} rowIndex={rowIndex}>
+                    <Td columnKey="name">{source.name}</Td>
+                    <Td hasAction columnKey="connection">
+                      {renderConnection(source)}
+                    </Td>
+                    <Td columnKey="type">{getTranslatedSourceTypeLabel(source.source_type)}</Td>
+                    <Td hasAction columnKey="credentials">
+                      <Button
+                        variant={ButtonVariant.link}
+                        size="sm"
+                        onClick={() => {
+                          setCredentialsSelected(source.credentials);
+                        }}
+                      >
+                        {source.credentials.length}
+                      </Button>
+                    </Td>
+                    <Td hasAction columnKey="scan">
+                      <Button
+                        isDisabled={source.connection?.status === 'pending'}
+                        variant={ButtonVariant.link}
+                        size="sm"
+                        onClick={() => onScanSource(source)}
+                        ouiaId="scan_button"
+                      >
+                        Scan
+                      </Button>
+                    </Td>
+                    <Td isActionCell columnKey="actions">
+                      <ActionMenu<SourceType>
+                        popperProps={{ position: 'right' }}
+                        item={source}
+                        size="sm"
+                        actions={[
+                          {
+                            label: t('table.label', { context: 'edit' }),
+                            onClick: onEditSource,
+                            ouiaId: 'edit-source'
+                          },
+                          {
+                            label: t('table.label', { context: 'delete' }),
+                            disabled: sourceHasConnection(source),
+                            onClick: setPendingDeleteSource,
+                            ouiaId: 'delete-source',
+                            ...(sourceHasConnection(source) && {
+                              tooltipProps: { content: t('table.label', { context: 'edit-disabled-source' }) }
+                            })
+                          }
+                        ]}
+                      />
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </ConditionalTableBody>
+          </Table>
+          <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+        </PageSection>
+      </GuidedTourStep>
       <Modal
         variant={ModalVariant.small}
         title={t('view.label', { context: 'credentials' })}
@@ -555,7 +568,7 @@ const SourcesListView: React.FunctionComponent = () => {
           />
         ))}
       </AlertGroup>
-    </PageSection>
+    </React.Fragment>
   );
 };
 

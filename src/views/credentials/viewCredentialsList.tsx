@@ -30,6 +30,7 @@ import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
+import { GuidedTourStep } from '../../components/guidedTour/guidedTourStep';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { API_CREDS_LIST_QUERY, API_DATA_SOURCE_TYPES, API_QUERY_TYPES } from '../../constants/apiConstants';
@@ -243,89 +244,93 @@ const CredentialsListView: React.FunctionComponent = () => {
   );
 
   return (
-    <PageSection hasBodyWrapper={false}>
-      {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
-        <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="name" />
-            <Th columnKey="type" />
-            <Th columnKey="auth_type" />
-            <Th columnKey="sources" />
-            <Th columnKey="updated" />
-            <Th columnKey="actions" />
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isError={isError}
-          isLoading={isLoading}
-          isNoData={currentPageItems.length === 0}
-          errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'credentials' })} />}
-          noDataEmptyState={
-            <EmptyState
-              headingLevel="h4"
-              icon={PlusCircleIcon}
-              titleText={t('view.empty-state', { context: 'credentials_title' })}
-            >
-              <EmptyStateBody>{t('view.empty-state', { context: 'credentials_description' })}</EmptyStateBody>
-              <EmptyStateFooter>
-                <EmptyStateActions>{renderAddCredsButton()}</EmptyStateActions>
-              </EmptyStateFooter>
-            </EmptyState>
-          }
-          numRenderedColumns={numRenderedColumns}
-        >
-          <Tbody>
-            {currentPageItems?.map((credential: CredentialType, rowIndex) => (
-              <Tr key={credential.id} item={credential} rowIndex={rowIndex}>
-                <Td columnKey="name">{credential.name}</Td>
-                <Td columnKey="type">{getTranslatedCredentialTypeLabel(credential.cred_type)}</Td>
-                <Td columnKey="auth_type">{helpers.getAuthType(credential)}</Td>
-                <Td hasAction columnKey="sources">
-                  <Button
-                    variant={ButtonVariant.link}
-                    size="sm"
-                    onClick={() => {
-                      if (credential.sources && credential.sources.length > 0) {
-                        setSourcesSelected(credential.sources);
-                      }
-                    }}
-                    isDisabled={!credentialHasSources(credential)}
-                  >
-                    {' '}
-                    {credential.sources?.length || 0}
-                  </Button>
-                </Td>
-                <Td columnKey="updated">{helpers.getTimeDisplayHowLongAgo(credential.updated_at)}</Td>
-                <Td isActionCell columnKey="actions">
-                  <ActionMenu<CredentialType>
-                    popperProps={{ position: 'right' }}
-                    item={credential}
-                    size="sm"
-                    actions={[
-                      {
-                        label: t('table.label', { context: 'edit' }),
-                        onClick: onEditCredential,
-                        ouiaId: 'edit-credential'
-                      },
-                      {
-                        label: t('table.label', { context: 'delete' }),
-                        disabled: !!credentialHasSources(credential),
-                        onClick: setPendingDeleteCredential,
-                        ouiaId: 'delete-credential',
-                        ...(credentialHasSources(credential) && {
-                          tooltipProps: { content: t('table.label', { context: 'edit-disabled-credential' }) }
-                        })
-                      }
-                    ]}
-                  />
-                </Td>
+    <React.Fragment>
+      <GuidedTourStep stepId="credentials">
+        <PageSection hasBodyWrapper={false} className="credentials-view">
+          {renderToolbar()}
+          <Table aria-label="Example things table" variant="compact">
+            <Thead>
+              <Tr isHeaderRow>
+                <Th columnKey="name" />
+                <Th columnKey="type" />
+                <Th columnKey="auth_type" />
+                <Th columnKey="sources" />
+                <Th columnKey="updated" />
+                <Th columnKey="actions" />
               </Tr>
-            ))}
-          </Tbody>
-        </ConditionalTableBody>
-      </Table>
-      <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+            </Thead>
+            <ConditionalTableBody
+              isError={isError}
+              isLoading={isLoading}
+              isNoData={currentPageItems.length === 0}
+              errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'credentials' })} />}
+              noDataEmptyState={
+                <EmptyState
+                  headingLevel="h4"
+                  icon={PlusCircleIcon}
+                  titleText={t('view.empty-state', { context: 'credentials_title' })}
+                >
+                  <EmptyStateBody>{t('view.empty-state', { context: 'credentials_description' })}</EmptyStateBody>
+                  <EmptyStateFooter>
+                    <EmptyStateActions>{renderAddCredsButton()}</EmptyStateActions>
+                  </EmptyStateFooter>
+                </EmptyState>
+              }
+              numRenderedColumns={numRenderedColumns}
+            >
+              <Tbody>
+                {currentPageItems?.map((credential: CredentialType, rowIndex) => (
+                  <Tr key={credential.id} item={credential} rowIndex={rowIndex}>
+                    <Td columnKey="name">{credential.name}</Td>
+                    <Td columnKey="type">{getTranslatedCredentialTypeLabel(credential.cred_type)}</Td>
+                    <Td columnKey="auth_type">{helpers.getAuthType(credential)}</Td>
+                    <Td hasAction columnKey="sources">
+                      <Button
+                        variant={ButtonVariant.link}
+                        size="sm"
+                        onClick={() => {
+                          if (credential.sources && credential.sources.length > 0) {
+                            setSourcesSelected(credential.sources);
+                          }
+                        }}
+                        isDisabled={!credentialHasSources(credential)}
+                      >
+                        {' '}
+                        {credential.sources?.length || 0}
+                      </Button>
+                    </Td>
+                    <Td columnKey="updated">{helpers.getTimeDisplayHowLongAgo(credential.updated_at)}</Td>
+                    <Td isActionCell columnKey="actions">
+                      <ActionMenu<CredentialType>
+                        popperProps={{ position: 'right' }}
+                        item={credential}
+                        size="sm"
+                        actions={[
+                          {
+                            label: t('table.label', { context: 'edit' }),
+                            onClick: onEditCredential,
+                            ouiaId: 'edit-credential'
+                          },
+                          {
+                            label: t('table.label', { context: 'delete' }),
+                            disabled: !!credentialHasSources(credential),
+                            onClick: setPendingDeleteCredential,
+                            ouiaId: 'delete-credential',
+                            ...(credentialHasSources(credential) && {
+                              tooltipProps: { content: t('table.label', { context: 'edit-disabled-credential' }) }
+                            })
+                          }
+                        ]}
+                      />
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </ConditionalTableBody>
+          </Table>
+          <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+        </PageSection>
+      </GuidedTourStep>
       <Modal
         variant={ModalVariant.small}
         title={t('form-dialog.label', { context: 'sources' })}
@@ -435,7 +440,7 @@ const CredentialsListView: React.FunctionComponent = () => {
           />
         ))}
       </AlertGroup>
-    </PageSection>
+    </React.Fragment>
   );
 };
 

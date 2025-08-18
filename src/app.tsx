@@ -7,6 +7,7 @@
 import React from 'react';
 import '@patternfly/react-core/dist/styles/base.css';
 import { BrowserRouter } from 'react-router-dom';
+import { GuidedTour } from './components/guidedTour/guidedTour';
 import { I18n } from './components/i18n/i18n';
 import { Login } from './components/login/login';
 import { AppLayout } from './components/viewLayout/viewLayout';
@@ -17,9 +18,11 @@ const App: React.FC = () => (
   <I18n>
     <Login>
       <BrowserRouter>
-        <AppLayout>
-          <AppRoutes />
-        </AppLayout>
+        <GuidedTour>
+          <AppLayout>
+            <AppRoutes />
+          </AppLayout>
+        </GuidedTour>
       </BrowserRouter>
     </Login>
   </I18n>
