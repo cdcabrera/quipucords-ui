@@ -69,8 +69,8 @@ const Spotlight: React.FC<SpotlightProps> = ({ selector, resizeSelector }) => {
         left: boundingRect.left - 4,
         width: boundingRect.width + 8,
         height: boundingRect.height + 8,
-        border: '2px solid #0066cc',
-        borderRadius: '4px',
+        border: '2px solid var(--pf-t--global--background--color--highlight--default)',
+        borderRadius: 'var(--pf-t--global--border--radius--small)',
         pointerEvents: 'none',
         zIndex: 1000,
         boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
