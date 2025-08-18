@@ -2,22 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Popover, Button, ButtonVariant } from '@patternfly/react-core';
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import Spotlight from './spotlight';
-import { tourController } from './tourController';
+import { useTour } from './useTour';
 
 export const TourOverlay: React.FC = () => {
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    const unsubscribe = tourController.subscribe(() => {
-      forceUpdate({});
-    });
-    return unsubscribe;
-  }, []);
-
-  const currentStep = tourController.getCurrentStep();
-  const isActive = tourController.isActive();
-  const currentIndex = tourController.getCurrentStepIndex();
-  const totalSteps = tourController.getTotalSteps();
+  const { currentStepData: currentStep, isActive, currentStep: currentIndex, steps, next, previous, end } = useTour();
+  const totalSteps = steps.length;
 
   if (!isActive || !currentStep) {
     return null;
@@ -25,18 +14,18 @@ export const TourOverlay: React.FC = () => {
 
   const handleNext = () => {
     if (currentIndex < totalSteps - 1) {
-      tourController.next();
+      next();
     } else {
-      tourController.end();
+      end();
     }
   };
 
   const handlePrevious = () => {
-    tourController.previous();
+    previous();
   };
 
   const handleEnd = () => {
-    tourController.end();
+    end();
   };
 
   // Resolve a selector for the current step
@@ -51,7 +40,7 @@ export const TourOverlay: React.FC = () => {
   if (!targetElement) {
     console.warn(`Tour step target not found: ${currentStep.stepId}. Auto-advancing to next step.`);
     // Auto-advance to the next step that can render
-    setTimeout(() => tourController.next(), 0);
+    setTimeout(() => next(), 0);
     return null;
   }
 

@@ -26,7 +26,8 @@ import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
 import '@patternfly/react-styles/css/components/Avatar/avatar.css';
 import avatarImage from '../../images/imgAvatar.svg';
 import AboutModal from '../aboutModal/aboutModal';
-import { tourController, quipucordsTourSteps } from '../guidedTour';
+import { quipucordsTourSteps } from '../guidedTour';
+import { useTour } from '../guidedTour/useTour';
 
 interface AppToolbarProps {
   useLogout?: typeof useLogoutApi;
@@ -36,6 +37,7 @@ interface AppToolbarProps {
 const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUser = useUserApi }) => {
   const { logout: onLogout } = useLogout();
   const { getUser } = useUser();
+  const { isActive: tourActive, start } = useTour();
   const [isTourActive, setIsTourActive] = useState(false);
 
   const [userName, setUserName] = useState<string>();
@@ -53,13 +55,8 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
   }, []);
 
   useEffect(() => {
-    const unsubscribe = tourController.subscribe(() => {
-      const active = tourController.isActive();
-      console.log('Tour active state changed:', active);
-      setIsTourActive(active);
-    });
-    return unsubscribe;
-  }, []);
+    setIsTourActive(tourActive);
+  }, [tourActive]);
 
   const applyTheme = isDark => {
     const htmlElement = document.getElementsByTagName('html')[0];
@@ -153,7 +150,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   <DropdownItem
                     onClick={() => {
                       console.log('Starting tour with steps:', quipucordsTourSteps.length);
-                      tourController.start(quipucordsTourSteps);
+                      start(quipucordsTourSteps);
                     }}
                     value="tour"
                     data-ouia-component-id="start-tour"
@@ -189,7 +186,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                 )}
               >
                 <DropdownItem
-                  onClick={() => tourController.start(quipucordsTourSteps)}
+                  onClick={() => start(quipucordsTourSteps)}
                   value="tour"
                   data-ouia-component-id="start-tour-mobile"
                 >

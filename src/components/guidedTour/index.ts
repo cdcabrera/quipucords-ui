@@ -1,7 +1,7 @@
 // Core guided tour components
 export { TourStepMarker } from './tourStepMarker';
 export { TourOverlay } from './tourOverlay';
-export { tourController } from './tourController';
+export { useTour } from './useTour';
 export { default as Spotlight } from './spotlight';
 
 // Types
