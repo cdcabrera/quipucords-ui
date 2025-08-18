@@ -90,38 +90,40 @@ export const TourOverlay: React.FC = () => {
   // Regular steps as Popover
   return (
     <>
-      <Popover
-        isVisible={true}
-        shouldClose={() => false}
-        bodyContent={
-          <div>
-            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
-              {currentStep.header}
-            </div>
-            <div>{currentStep.content}</div>
-            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                Step {currentIndex + 1} of {totalSteps}
+      <div style={{ zIndex: 9999, position: 'relative' }}>
+        <Popover
+          isVisible={true}
+          shouldClose={() => false}
+          bodyContent={
+            <div>
+              <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                {currentStep.header}
               </div>
-              <div>
-                {currentIndex > 0 && (
-                  <Button variant={ButtonVariant.secondary} onClick={handlePrevious} style={{ marginRight: '0.5rem' }}>
-                    Previous
+              <div>{currentStep.content}</div>
+              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  Step {currentIndex + 1} of {totalSteps}
+                </div>
+                <div>
+                  {currentIndex > 0 && (
+                    <Button variant={ButtonVariant.secondary} onClick={handlePrevious} style={{ marginRight: '0.5rem' }}>
+                      Previous
+                    </Button>
+                  )}
+                  <Button variant={ButtonVariant.primary} onClick={handleNext} style={{ marginRight: '0.5rem' }}>
+                    {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
                   </Button>
-                )}
-                <Button variant={ButtonVariant.primary} onClick={handleNext} style={{ marginRight: '0.5rem' }}>
-                  {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
-                </Button>
-                <Button variant={ButtonVariant.secondary} onClick={handleEnd}>
-                  Skip Tour
-                </Button>
+                  <Button variant={ButtonVariant.secondary} onClick={handleEnd}>
+                    Skip Tour
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        }
-        appendTo="inline"
-        triggerRef={() => targetElement}
-      />
+          }
+          appendTo="inline"
+          triggerRef={() => targetElement}
+        />
+      </div>
       {targetElement && <Spotlight selector={currentStep.spotlightSelector || `[data-tour-id="${currentStep.stepId}"]`} />}
     </>
   );

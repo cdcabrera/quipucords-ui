@@ -72,7 +72,7 @@ const Spotlight: React.FC<SpotlightProps> = ({ selector, resizeSelector }) => {
         border: '2px solid #0066cc',
         borderRadius: '4px',
         pointerEvents: 'none',
-        zIndex: 9999,
+        zIndex: 1000,
         boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
       }}
     />
