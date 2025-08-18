@@ -1,0 +1,16 @@
+/* Guided Tour Styles */
+
+/* Spotlight overlay - matches PatternFly Modal backdrop */
+.guided-tour-spotlight-overlay {
+  background-color: var(--pf-t--global--background--color--backdrop--default);
+}
+
+/* Tour step marker styling */
+.guided-tour-step-marker {
+  /* Add any additional styling for tour step markers if needed */
+}
+
+/* Tour overlay container */
+.guided-tour-overlay-container {
+  /* Add any additional styling for tour overlay if needed */
+}

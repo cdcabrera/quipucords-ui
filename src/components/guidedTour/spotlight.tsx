@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getResizeObserver } from '@patternfly/react-core';
+import './guidedTour.css';
 
 interface SpotlightProps {
   selector: string;
@@ -61,21 +62,54 @@ const Spotlight: React.FC<SpotlightProps> = ({ selector, resizeSelector }) => {
     return null;
   }
 
+  // Create clip-path to cut out the target element area
+  const clipPath = `polygon(
+    0% 0%, 
+    0% 100%, 
+    ${boundingRect.left}px 100%, 
+    ${boundingRect.left}px ${boundingRect.top}px, 
+    ${boundingRect.left + boundingRect.width}px ${boundingRect.top}px, 
+    ${boundingRect.left + boundingRect.width}px ${boundingRect.top + boundingRect.height}px, 
+    ${boundingRect.left}px ${boundingRect.top + boundingRect.height}px, 
+    ${boundingRect.left}px 100%, 
+    100% 100%, 
+    100% 0%
+  )`;
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: boundingRect.top - 4,
-        left: boundingRect.left - 4,
-        width: boundingRect.width + 8,
-        height: boundingRect.height + 8,
-        border: '2px solid var(--pf-t--global--background--color--highlight--default)',
-        borderRadius: 'var(--pf-t--global--border--radius--small)',
-        pointerEvents: 'none',
-        zIndex: 1000,
-        boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)'
-      }}
-    />
+    <>
+      {/* Full screen overlay with clip-path hole */}
+      <div
+        className="guided-tour-spotlight-overlay"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'var(--pf-t--global--background--color--backdrop--default)',
+          pointerEvents: 'none',
+          zIndex: 1000,
+          clipPath: clipPath
+        }}
+      />
+      
+      {/* Blue border around the target element */}
+      <div
+        style={{
+          position: 'fixed',
+          top: boundingRect.top - 4,
+          left: boundingRect.left - 4,
+          width: boundingRect.width + 8,
+          height: boundingRect.height + 8,
+          border: '2px solid var(--pf-t--global--background--color--highlight--default)',
+          borderRadius: 'var(--pf-t--global--border--radius--small)',
+          backgroundColor: 'transparent',
+          pointerEvents: 'none',
+          zIndex: 1001
+        }}
+      />
+    </>
   );
 };
 
