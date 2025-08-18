@@ -39,15 +39,14 @@ export const TourOverlay: React.FC = () => {
     tourController.end();
   };
 
-  // For steps that don't have a specific target element, use a fallback
-  let targetElement: HTMLElement | null = null;
-  
-  if (currentStep.stepId === 'welcome') {
-    // Welcome step doesn't need a specific target, use body
-    targetElement = document.body;
-  } else {
-    targetElement = document.querySelector(`[data-tour-id="${currentStep.stepId}"]`) as HTMLElement;
-  }
+  // Resolve a selector for the current step
+  const targetSelector =
+    currentStep.stepId === 'welcome'
+      ? 'body'
+      : currentStep.spotlightSelector || `[data-tour-id="${currentStep.stepId}"]`;
+
+  // Find the target element via resolved selector
+  const targetElement: HTMLElement | null = document.querySelector(targetSelector) as HTMLElement;
 
   if (!targetElement) {
     console.warn(`Tour step target not found: ${currentStep.stepId}`);
@@ -83,13 +82,13 @@ export const TourOverlay: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Spotlight selector={`[data-tour-id="${currentStep.stepId}"]`} />
+      <Spotlight selector={targetSelector} resizeSelector={currentStep.spotlightResizeSelector} />
       <Popover
         isVisible={true}
         shouldClose={() => false}
         position={currentStep.position || 'bottom'}
         appendTo="inline"
-        triggerRef={() => targetElement}
+        triggerRef={() => targetElement as HTMLElement}
         bodyContent={
           <div>
             <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{currentStep.header}</div>
