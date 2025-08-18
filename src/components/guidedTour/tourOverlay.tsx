@@ -62,7 +62,7 @@ export const TourOverlay: React.FC = () => {
         isVisible={true}
         shouldClose={() => false}
         position={currentStep.position || 'bottom'}
-        appendTo={() => document.body}
+        appendTo={() => targetElement.parentElement || document.body}
         triggerRef={() => targetElement}
         bodyContent={
           <div>
