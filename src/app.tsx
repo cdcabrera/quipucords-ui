@@ -13,15 +13,18 @@ import { Login } from './components/login/login';
 import { AppLayout } from './components/viewLayout/viewLayout';
 import { AppRoutes } from './routes';
 import './app.css';
+import { TourControllerProvider } from './components/guidedTour/tourControllerProvider';
 
 const App: React.FC = () => (
   <I18n>
     <Login>
       <BrowserRouter>
-        <AppLayout>
-          <AppRoutes />
-        </AppLayout>
-        <TourOverlay />
+        <TourControllerProvider>
+          <AppLayout>
+            <AppRoutes />
+          </AppLayout>
+          <TourOverlay />
+        </TourControllerProvider>
       </BrowserRouter>
     </Login>
   </I18n>

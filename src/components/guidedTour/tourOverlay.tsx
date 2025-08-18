@@ -1,114 +1,107 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Popover, Button, ButtonVariant } from '@patternfly/react-core';
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import Spotlight from './spotlight';
-import { useTour } from './useTour';
+import { useTourControllerContext } from './tourControllerProvider';
 
 export const TourOverlay: React.FC = () => {
-  const { currentStepData: currentStep, isActive, currentStep: currentIndex, steps, next, previous, end } = useTour();
-  const totalSteps = steps.length;
+  const tourController = useTourControllerContext();
+  
+  const currentStep = tourController.getCurrentStep();
+  const isActive = tourController.isActive();
+  const currentIndex = tourController.getCurrentStepIndex();
+  const totalSteps = tourController.getTotalSteps();
+
+  const handleNext = () => {
+    if (currentIndex < totalSteps - 1) {
+      tourController.next();
+    } else {
+      tourController.end();
+    }
+  };
+
+  const handlePrevious = () => {
+    tourController.previous();
+  };
+
+  const handleEnd = () => {
+    tourController.end();
+  };
 
   if (!isActive || !currentStep) {
     return null;
   }
 
-  const handleNext = () => {
-    if (currentIndex < totalSteps - 1) {
-      next();
-    } else {
-      end();
-    }
-  };
+  // Auto-skip steps if target element is not found
+  let targetElement: HTMLElement | null = null;
+  if (currentStep.spotlightSelector) {
+    targetElement = document.querySelector(currentStep.spotlightSelector) as HTMLElement;
+  } else {
+    targetElement = document.querySelector(`[data-tour-id="${currentStep.stepId}"]`) as HTMLElement;
+  }
 
-  const handlePrevious = () => {
-    previous();
-  };
-
-  const handleEnd = () => {
-    end();
-  };
-
-  // Resolve a selector for the current step
-  const targetSelector =
-    currentStep.stepId === 'welcome'
-      ? 'body'
-      : currentStep.spotlightSelector || `[data-tour-id="${currentStep.stepId}"]`;
-
-  // Find the target element via resolved selector
-  const targetElement: HTMLElement | null = document.querySelector(targetSelector) as HTMLElement;
-
-  if (!targetElement) {
-    console.warn(`Tour step target not found: ${currentStep.stepId}. Auto-advancing to next step.`);
-    // Auto-advance to the next step that can render
-    setTimeout(() => next(), 0);
+  if (!targetElement && currentStep.stepId !== 'welcome' && currentStep.stepId !== 'completion') {
+    // Auto-advance to next step if target not found
+    setTimeout(() => tourController.next(), 0);
     return null;
   }
 
-  // Render welcome/completion steps as modals, others as popovers
+  // Welcome step as Modal
   if (currentStep.stepId === 'welcome') {
     return (
       <Modal
         isOpen={true}
-        onClose={handleEnd}
         variant={ModalVariant.small}
         title="Welcome to Quipucords"
         actions={[
           <Button key="next" variant={ButtonVariant.primary} onClick={handleNext}>
-            {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
+            Next
           </Button>,
-          <Button key="skip" variant={ButtonVariant.link} onClick={handleEnd}>
+          <Button key="skip" variant={ButtonVariant.secondary} onClick={handleEnd}>
             Skip Tour
           </Button>
         ]}
+        onClose={handleEnd}
       >
-        <div>
-          <div>{currentStep.content}</div>
-          <div style={{ marginTop: '1rem', textAlign: 'center', color: '#666' }}>
-            {currentIndex + 1} of {totalSteps}
-          </div>
-        </div>
+        <div>{currentStep.content}</div>
       </Modal>
     );
   }
+
+  // Completion step as Modal
   if (currentStep.stepId === 'completion') {
     return (
       <Modal
         isOpen={true}
-        onClose={handleEnd}
         variant={ModalVariant.small}
-        title="You're all set!"
+        title="Tour Complete!"
         actions={[
           <Button key="finish" variant={ButtonVariant.primary} onClick={handleEnd}>
             Finish
           </Button>
         ]}
+        onClose={handleEnd}
       >
-        <div>
-          <div>{currentStep.content}</div>
-          <div style={{ marginTop: '1rem', textAlign: 'center', color: '#666' }}>
-            {currentIndex + 1} of {totalSteps}
-          </div>
-        </div>
+        <div>{currentStep.content}</div>
       </Modal>
     );
   }
 
+  // Regular steps as Popover
   return (
-    <React.Fragment>
-      <Spotlight selector={targetSelector} resizeSelector={currentStep.spotlightResizeSelector} />
+    <>
       <Popover
         isVisible={true}
         shouldClose={() => false}
-        position={currentStep.position || 'bottom'}
-        appendTo="inline"
-        triggerRef={() => targetElement as HTMLElement}
         bodyContent={
           <div>
-            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>{currentStep.header}</div>
+            <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+              {currentStep.header}
+            </div>
             <div>{currentStep.content}</div>
             <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                {currentIndex + 1} of {totalSteps}
+                Step {currentIndex + 1} of {totalSteps}
               </div>
               <div>
                 {currentIndex > 0 && (
@@ -116,17 +109,20 @@ export const TourOverlay: React.FC = () => {
                     Previous
                   </Button>
                 )}
-                <Button variant={ButtonVariant.primary} onClick={handleNext}>
+                <Button variant={ButtonVariant.primary} onClick={handleNext} style={{ marginRight: '0.5rem' }}>
                   {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
                 </Button>
-                <Button variant={ButtonVariant.link} onClick={handleEnd} style={{ marginLeft: '0.5rem' }}>
+                <Button variant={ButtonVariant.secondary} onClick={handleEnd}>
                   Skip Tour
                 </Button>
               </div>
             </div>
           </div>
         }
+        appendTo="inline"
+        triggerRef={() => targetElement}
       />
-    </React.Fragment>
+      {targetElement && <Spotlight selector={currentStep.spotlightSelector || `[data-tour-id="${currentStep.stepId}"]`} />}
+    </>
   );
 };
