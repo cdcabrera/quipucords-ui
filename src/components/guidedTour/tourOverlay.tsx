@@ -38,7 +38,15 @@ export const TourOverlay: React.FC = () => {
     tourController.end();
   };
 
-  const targetElement = document.querySelector(`[data-tour-id="${currentStep.stepId}"]`) as HTMLElement;
+  // For steps that don't have a specific target element, use a fallback
+  let targetElement: HTMLElement | null = null;
+  
+  if (currentStep.stepId === 'welcome') {
+    // Welcome step doesn't need a specific target, use body
+    targetElement = document.body;
+  } else {
+    targetElement = document.querySelector(`[data-tour-id="${currentStep.stepId}"]`) as HTMLElement;
+  }
 
   if (!targetElement) {
     console.warn(`Tour step target not found: ${currentStep.stepId}`);
@@ -47,7 +55,9 @@ export const TourOverlay: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Spotlight selector={`[data-tour-id="${currentStep.stepId}"]`} />
+      {currentStep.stepId !== 'welcome' && (
+        <Spotlight selector={`[data-tour-id="${currentStep.stepId}"]`} />
+      )}
       <Popover
         isVisible={true}
         shouldClose={() => false}

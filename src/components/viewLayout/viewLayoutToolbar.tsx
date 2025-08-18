@@ -54,7 +54,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
 
   useEffect(() => {
     const unsubscribe = tourController.subscribe(() => {
-      setIsTourActive(tourController.isActive());
+      const active = tourController.isActive();
+      console.log('Tour active state changed:', active);
+      setIsTourActive(active);
     });
     return unsubscribe;
   }, []);
@@ -149,7 +151,10 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   )}
                 >
                   <DropdownItem
-                    onClick={() => tourController.start(quipucordsTourSteps)}
+                    onClick={() => {
+                      console.log('Starting tour with steps:', quipucordsTourSteps.length);
+                      tourController.start(quipucordsTourSteps);
+                    }}
                     value="tour"
                     data-ouia-component-id="start-tour"
                   >
@@ -162,13 +167,16 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
               </ToolbarItem>
               {!isTourActive && (
                 <ToolbarItem>
-                  <Button
-                    variant={ButtonVariant.secondary}
-                    onClick={() => tourController.start(quipucordsTourSteps)}
-                    data-ouia-component-id="start-tour-button"
-                  >
-                    Start Tour
-                  </Button>
+                                  <Button
+                  variant={ButtonVariant.secondary}
+                  onClick={() => {
+                    console.log('Starting tour with steps:', quipucordsTourSteps.length);
+                    tourController.start(quipucordsTourSteps);
+                  }}
+                  data-ouia-component-id="start-tour-button"
+                >
+                  Start Tour
+                </Button>
                 </ToolbarItem>
               )}
             </ToolbarGroup>
