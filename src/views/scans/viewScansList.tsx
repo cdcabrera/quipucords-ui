@@ -33,6 +33,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ContextIcon, ContextIconVariant } from '../../components/contextIcon/contextIcon';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
+import { TourStep } from '../../components/guidedTour';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { API_QUERY_TYPES, API_SCANS_LIST_QUERY } from '../../constants/apiConstants';
 import { helpers } from '../../helpers';
@@ -204,118 +205,122 @@ const ScansListView: React.FunctionComponent = () => {
   );
 
   return (
-    <PageSection hasBodyWrapper={false}>
-      {renderToolbar()}
-      <Table aria-label="Example things table" variant="compact">
-        <Thead>
-          <Tr isHeaderRow>
-            <Th columnKey="name" />
-            <Th columnKey="most_recent" />
-            <Th columnKey="sources" />
-            <Th columnKey="actions" />
-          </Tr>
-        </Thead>
-        <ConditionalTableBody
-          isError={isError}
-          isLoading={isLoading}
-          isNoData={currentPageItems.length === 0}
-          errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'scans' })} />}
-          noDataEmptyState={
-            <EmptyState
-              headingLevel="h4"
-              icon={PlusCircleIcon}
-              titleText={t('view.empty-state', { context: 'scans_title' })}
-            >
-              <EmptyStateBody>{t('view.empty-state', { context: 'scans_description' })}</EmptyStateBody>
-              <EmptyStateFooter>
-                <EmptyStateActions>
-                  <Button onClick={() => nav('/sources')} variant="primary">
-                    View Sources page
-                  </Button>
-                </EmptyStateActions>
-              </EmptyStateFooter>
-            </EmptyState>
-          }
-          numRenderedColumns={numRenderedColumns}
-        >
-          <Tbody>
-            {currentPageItems?.map((scan: Scan, rowIndex) => (
-              <Tr key={scan.id} item={scan} rowIndex={rowIndex}>
-                <Td columnKey="name">{scan.name}</Td>
-                <Td hasAction columnKey="most_recent">
-                  {renderConnection(scan)}
-                </Td>
-                <Td hasAction columnKey="sources">
-                  <Button
-                    variant={ButtonVariant.link}
-                    size="sm"
-                    onClick={() => {
-                      setScanSelectedForSources(scan);
-                    }}
-                  >
-                    {scan.sources.length}
-                  </Button>
-                </Td>
-                <Td isActionCell columnKey="actions">
-                  <Tooltip content={t('table.tooltip_action_menu')}>
-                    <ActionMenu<Scan>
-                      popperProps={{ position: 'right' }}
-                      item={scan}
-                      size="sm"
-                      actions={[
-                        {
-                          label: t('table.label', { context: 'summary' }),
-                          disabled: !helpers.canAccessMostRecentReport(scan?.most_recent),
-                          onClick: () => {
-                            if (scan?.most_recent) {
-                              getAggregateReport(scan.most_recent.report_id)
-                                .then(setAggregateReport)
-                                .catch(err => {
-                                  if (!helpers.TEST_MODE) {
-                                    console.error(err);
-                                  }
-                                });
-                            }
-                          },
-                          ouiaId: 'summary'
-                        },
-                        {
-                          label: t('table.label', { context: 'delete' }),
-                          onClick: setPendingDeleteScan,
-                          ouiaId: 'delete'
-                        },
-                        {
-                          label: t('table.label', { context: 'rescan' }),
-                          onClick: () => {
-                            runScans(scan, true).finally(() => {
-                              queryClient.invalidateQueries({
-                                queryKey: [API_SCANS_LIST_QUERY]
-                              });
-                              setScanSelected(undefined);
-                            });
-                          },
-                          ouiaId: 'rescan'
-                        },
-                        {
-                          label: t('table.label', { context: 'download' }),
-                          disabled: !helpers.canAccessMostRecentReport(scan?.most_recent),
-                          onClick: () => {
-                            if (scan?.most_recent) {
-                              downloadReport(scan.most_recent.report_id);
-                            }
-                          },
-                          ouiaId: 'download'
-                        }
-                      ]}
-                    />
-                  </Tooltip>
-                </Td>
+    <React.Fragment>
+      <TourStep stepId="scans">
+        <PageSection hasBodyWrapper={false} className="scans-view">
+          {renderToolbar()}
+          <Table aria-label="Example things table" variant="compact">
+            <Thead>
+              <Tr isHeaderRow>
+                <Th columnKey="name" />
+                <Th columnKey="most_recent" />
+                <Th columnKey="sources" />
+                <Th columnKey="actions" />
               </Tr>
-            ))}
-          </Tbody>
-        </ConditionalTableBody>
-      </Table>
-      <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+            </Thead>
+            <ConditionalTableBody
+              isError={isError}
+              isLoading={isLoading}
+              isNoData={currentPageItems.length === 0}
+              errorEmptyState={<ErrorMessage title={t('view.error_title', { context: 'scans' })} />}
+              noDataEmptyState={
+                <EmptyState
+                  headingLevel="h4"
+                  icon={PlusCircleIcon}
+                  titleText={t('view.empty-state', { context: 'scans_title' })}
+                >
+                  <EmptyStateBody>{t('view.empty-state', { context: 'scans_description' })}</EmptyStateBody>
+                  <EmptyStateFooter>
+                    <EmptyStateActions>
+                      <Button onClick={() => nav('/sources')} variant="primary">
+                        View Sources page
+                      </Button>
+                    </EmptyStateActions>
+                  </EmptyStateFooter>
+                </EmptyState>
+              }
+              numRenderedColumns={numRenderedColumns}
+            >
+              <Tbody>
+                {currentPageItems?.map((scan: Scan, rowIndex) => (
+                  <Tr key={scan.id} item={scan} rowIndex={rowIndex}>
+                    <Td columnKey="name">{scan.name}</Td>
+                    <Td hasAction columnKey="most_recent">
+                      {renderConnection(scan)}
+                    </Td>
+                    <Td hasAction columnKey="sources">
+                      <Button
+                        variant={ButtonVariant.link}
+                        size="sm"
+                        onClick={() => {
+                          setScanSelectedForSources(scan);
+                        }}
+                      >
+                        {scan.sources.length}
+                      </Button>
+                    </Td>
+                    <Td isActionCell columnKey="actions">
+                      <Tooltip content={t('table.tooltip_action_menu')}>
+                        <ActionMenu<Scan>
+                          popperProps={{ position: 'right' }}
+                          item={scan}
+                          size="sm"
+                          actions={[
+                            {
+                              label: t('table.label', { context: 'summary' }),
+                              disabled: !helpers.canAccessMostRecentReport(scan?.most_recent),
+                              onClick: () => {
+                                if (scan?.most_recent) {
+                                  getAggregateReport(scan.most_recent.report_id)
+                                    .then(setAggregateReport)
+                                    .catch(err => {
+                                      if (!helpers.TEST_MODE) {
+                                        console.error(err);
+                                      }
+                                    });
+                                }
+                              },
+                              ouiaId: 'summary'
+                            },
+                            {
+                              label: t('table.label', { context: 'delete' }),
+                              onClick: setPendingDeleteScan,
+                              ouiaId: 'delete'
+                            },
+                            {
+                              label: t('table.label', { context: 'rescan' }),
+                              onClick: () => {
+                                runScans(scan, true).finally(() => {
+                                  queryClient.invalidateQueries({
+                                    queryKey: [API_SCANS_LIST_QUERY]
+                                  });
+                                  setScanSelected(undefined);
+                                });
+                              },
+                              ouiaId: 'rescan'
+                            },
+                            {
+                              label: t('table.label', { context: 'download' }),
+                              disabled: !helpers.canAccessMostRecentReport(scan?.most_recent),
+                              onClick: () => {
+                                if (scan?.most_recent) {
+                                  downloadReport(scan.most_recent.report_id);
+                                }
+                              },
+                              ouiaId: 'download'
+                            }
+                          ]}
+                        />
+                      </Tooltip>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </ConditionalTableBody>
+          </Table>
+          <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
+        </PageSection>
+      </TourStep>
       <Modal
         variant={ModalVariant.small}
         title={t('view.label', { context: 'sources' })}
@@ -429,7 +434,7 @@ const ScansListView: React.FunctionComponent = () => {
           />
         ))}
       </AlertGroup>
-    </PageSection>
+    </React.Fragment>
   );
 };
 

@@ -8,6 +8,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Avatar,
+  Button,
+  ButtonVariant,
   Dropdown,
   DropdownItem,
   Icon,
@@ -24,6 +26,7 @@ import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
 import '@patternfly/react-styles/css/components/Avatar/avatar.css';
 import avatarImage from '../../images/imgAvatar.svg';
 import AboutModal from '../aboutModal/aboutModal';
+import { useGuidedTour } from '../guidedTour';
 
 interface AppToolbarProps {
   useLogout?: typeof useLogoutApi;
@@ -33,6 +36,7 @@ interface AppToolbarProps {
 const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUser = useUserApi }) => {
   const { logout: onLogout } = useLogout();
   const { getUser } = useUser();
+  const { onStart, tourStep } = useGuidedTour();
   const [userName, setUserName] = useState<string>();
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -88,7 +92,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
           >
             <ToolbarGroup variant="action-group-plain" visibility={{ default: 'hidden', lg: 'visible' }}>
               <ToolbarItem>
-                <ToggleGroup aria-label="Dark theme toggle group">
+                <ToggleGroup aria-label="Dark theme toggle group" id="theme-toggle">
                   <ToggleGroupItem
                     aria-label="light theme toggle"
                     icon={
@@ -136,11 +140,25 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                     </MenuToggle>
                   )}
                 >
+                  <DropdownItem onClick={onStart} value="tour" data-ouia-component-id="start-tour">
+                    Interactive Tour
+                  </DropdownItem>
                   <DropdownItem onClick={onAbout} value="about">
                     About
                   </DropdownItem>
                 </Dropdown>
               </ToolbarItem>
+              {!tourStep && (
+                <ToolbarItem>
+                  <Button
+                    variant={ButtonVariant.secondary}
+                    onClick={onStart}
+                    data-ouia-component-id="start-tour-button"
+                  >
+                    Start Tour
+                  </Button>
+                </ToolbarItem>
+              )}
             </ToolbarGroup>
             <ToolbarItem visibility={{ default: 'visible', lg: 'hidden' }}>
               <Dropdown
@@ -163,6 +181,9 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   </MenuToggle>
                 )}
               >
+                <DropdownItem onClick={onStart} value="tour" data-ouia-component-id="start-tour-mobile">
+                  Interactive Tour
+                </DropdownItem>
                 <DropdownItem value="logout" onClick={onLogout} data-ouia-component-id="logout">
                   Logout
                 </DropdownItem>
