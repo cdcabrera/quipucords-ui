@@ -31,7 +31,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ContextIcon, ContextIconVariant } from '../../components/contextIcon/contextIcon';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
-import { TourStep } from '../../components/guidedTour';
+import { TourStepMarker } from '../../components/guidedTour';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { API_DATA_SOURCE_TYPES, API_QUERY_TYPES, API_SOURCES_LIST_QUERY } from '../../constants/apiConstants';
@@ -245,7 +245,7 @@ const SourcesListView: React.FunctionComponent = () => {
   };
 
   const renderAddSourceButton = () => (
-    <TourStep stepId="add-source">
+    <TourStepMarker stepId="add-source">
       <div id="add-source-button">
         <SimpleDropdown
           label={t('view.empty-state_label_sources')}
@@ -262,7 +262,7 @@ const SourcesListView: React.FunctionComponent = () => {
           ]}
         />
       </div>
-    </TourStep>
+    </TourStepMarker>
   );
 
   const renderToolbar = () => (
@@ -341,7 +341,7 @@ const SourcesListView: React.FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <TourStep stepId="sources-overview">
+      <TourStepMarker stepId="sources-overview">
         <PageSection hasBodyWrapper={false} className="sources-view">
           {renderToolbar()}
           <Table aria-label="Example things table" variant="compact">
@@ -434,7 +434,7 @@ const SourcesListView: React.FunctionComponent = () => {
           </Table>
           <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
         </PageSection>
-      </TourStep>
+      </TourStepMarker>
       <Modal
         variant={ModalVariant.small}
         title={t('view.label', { context: 'credentials' })}

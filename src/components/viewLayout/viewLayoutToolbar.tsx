@@ -26,7 +26,7 @@ import { useLogoutApi, useUserApi } from '../../hooks/useLoginApi';
 import '@patternfly/react-styles/css/components/Avatar/avatar.css';
 import avatarImage from '../../images/imgAvatar.svg';
 import AboutModal from '../aboutModal/aboutModal';
-import { useGuidedTour } from '../guidedTour';
+import { tourController, quipucordsTourSteps } from '../guidedTour';
 
 interface AppToolbarProps {
   useLogout?: typeof useLogoutApi;
@@ -36,7 +36,8 @@ interface AppToolbarProps {
 const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUser = useUserApi }) => {
   const { logout: onLogout } = useLogout();
   const { getUser } = useUser();
-  const { onStart, tourStep } = useGuidedTour();
+  const [isTourActive, setIsTourActive] = useState(false);
+
   const [userName, setUserName] = useState<string>();
   const [helpOpen, setHelpOpen] = useState<boolean>(false);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
@@ -49,6 +50,13 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
   useEffect(() => {
     getUser().then(username => setUserName(username));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = tourController.subscribe(() => {
+      setIsTourActive(tourController.isActive());
+    });
+    return unsubscribe;
   }, []);
 
   const applyTheme = isDark => {
@@ -140,7 +148,11 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                     </MenuToggle>
                   )}
                 >
-                  <DropdownItem onClick={onStart} value="tour" data-ouia-component-id="start-tour">
+                  <DropdownItem
+                    onClick={() => tourController.start(quipucordsTourSteps)}
+                    value="tour"
+                    data-ouia-component-id="start-tour"
+                  >
                     Interactive Tour
                   </DropdownItem>
                   <DropdownItem onClick={onAbout} value="about">
@@ -148,11 +160,11 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   </DropdownItem>
                 </Dropdown>
               </ToolbarItem>
-              {!tourStep && (
+              {!isTourActive && (
                 <ToolbarItem>
                   <Button
                     variant={ButtonVariant.secondary}
-                    onClick={onStart}
+                    onClick={() => tourController.start(quipucordsTourSteps)}
                     data-ouia-component-id="start-tour-button"
                   >
                     Start Tour
@@ -181,7 +193,11 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   </MenuToggle>
                 )}
               >
-                <DropdownItem onClick={onStart} value="tour" data-ouia-component-id="start-tour-mobile">
+                <DropdownItem
+                  onClick={() => tourController.start(quipucordsTourSteps)}
+                  value="tour"
+                  data-ouia-component-id="start-tour-mobile"
+                >
                   Interactive Tour
                 </DropdownItem>
                 <DropdownItem value="logout" onClick={onLogout} data-ouia-component-id="logout">

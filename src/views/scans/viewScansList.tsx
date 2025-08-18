@@ -33,7 +33,7 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ContextIcon, ContextIconVariant } from '../../components/contextIcon/contextIcon';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
-import { TourStep } from '../../components/guidedTour';
+import { TourStepMarker } from '../../components/guidedTour';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { API_QUERY_TYPES, API_SCANS_LIST_QUERY } from '../../constants/apiConstants';
 import { helpers } from '../../helpers';
@@ -206,7 +206,7 @@ const ScansListView: React.FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <TourStep stepId="scans">
+      <TourStepMarker stepId="scans">
         <PageSection hasBodyWrapper={false} className="scans-view">
           {renderToolbar()}
           <Table aria-label="Example things table" variant="compact">
@@ -320,7 +320,7 @@ const ScansListView: React.FunctionComponent = () => {
           </Table>
           <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
         </PageSection>
-      </TourStep>
+      </TourStepMarker>
       <Modal
         variant={ModalVariant.small}
         title={t('view.label', { context: 'sources' })}

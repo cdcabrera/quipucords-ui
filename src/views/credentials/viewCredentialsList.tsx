@@ -30,7 +30,7 @@ import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import ActionMenu from '../../components/actionMenu/actionMenu';
 import { ErrorMessage } from '../../components/errorMessage/errorMessage';
-import { TourStep } from '../../components/guidedTour';
+import { TourStepMarker } from '../../components/guidedTour';
 import { RefreshTimeButton } from '../../components/refreshTimeButton/refreshTimeButton';
 import { SimpleDropdown } from '../../components/simpleDropdown/simpleDropdown';
 import { API_CREDS_LIST_QUERY, API_DATA_SOURCE_TYPES, API_QUERY_TYPES } from '../../constants/apiConstants';
@@ -245,7 +245,7 @@ const CredentialsListView: React.FunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <TourStep stepId="credentials">
+      <TourStepMarker stepId="credentials">
         <PageSection hasBodyWrapper={false} className="credentials-view">
           {renderToolbar()}
           <Table aria-label="Example things table" variant="compact">
@@ -330,7 +330,7 @@ const CredentialsListView: React.FunctionComponent = () => {
           </Table>
           <Pagination variant="bottom" widgetId="server-paginated-example-pagination" />
         </PageSection>
-      </TourStep>
+      </TourStepMarker>
       <Modal
         variant={ModalVariant.small}
         title={t('form-dialog.label', { context: 'sources' })}

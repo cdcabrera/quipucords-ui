@@ -1,7 +1,8 @@
 // Core guided tour components
-export { GuidedTourProvider, useGuidedTour } from './guidedTourContext';
+export { TourStepMarker } from './tourStepMarker';
+export { TourOverlay } from './tourOverlay';
+export { tourController } from './tourController';
 export { default as Spotlight } from './spotlight';
-export { TourStep } from './tourStep';
 
 // Types
 export type { GuidedTourStep, NotificationType, Application } from './types';
