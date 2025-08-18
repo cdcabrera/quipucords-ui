@@ -3,6 +3,7 @@ import { Popover, Button, ButtonVariant } from '@patternfly/react-core';
 import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import Spotlight from './spotlight';
 import { useTourControllerContext } from './tourControllerProvider';
+import './guidedTour.css';
 
 export const TourOverlay: React.FC = () => {
   const tourController = useTourControllerContext();
@@ -62,8 +63,9 @@ export const TourOverlay: React.FC = () => {
           </Button>
         ]}
         onClose={handleEnd}
+        className="guided-tour__modal"
       >
-        <div>{currentStep.content}</div>
+        <div className="guided-tour__modal--content">{currentStep.content}</div>
       </Modal>
     );
   }
@@ -81,8 +83,9 @@ export const TourOverlay: React.FC = () => {
           </Button>
         ]}
         onClose={handleEnd}
+        className="guided-tour__modal"
       >
-        <div>{currentStep.content}</div>
+        <div className="guided-tour__modal--content">{currentStep.content}</div>
       </Modal>
     );
   }
@@ -90,30 +93,44 @@ export const TourOverlay: React.FC = () => {
   // Regular steps as Popover
   return (
     <>
-      <div style={{ zIndex: 9999, position: 'relative' }}>
+      <div className="guided-tour__overlay">
         <Popover
           isVisible={true}
           shouldClose={() => false}
           bodyContent={
-            <div>
-              <div style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>
+            <div className="guided-tour__popover">
+              <div className="guided-tour__popover--header">
                 {currentStep.header}
               </div>
-              <div>{currentStep.content}</div>
-              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
+              <div className="guided-tour__popover--content">
+                {currentStep.content}
+              </div>
+              <div className="guided-tour__popover--footer">
+                <div className="guided-tour__popover--step-indicator">
                   Step {currentIndex + 1} of {totalSteps}
                 </div>
-                <div>
+                <div className="guided-tour__popover--actions">
                   {currentIndex > 0 && (
-                    <Button variant={ButtonVariant.secondary} onClick={handlePrevious} style={{ marginRight: '0.5rem' }}>
+                    <Button 
+                      variant={ButtonVariant.secondary} 
+                      onClick={handlePrevious} 
+                      className="guided-tour__popover--button"
+                    >
                       Previous
                     </Button>
                   )}
-                  <Button variant={ButtonVariant.primary} onClick={handleNext} style={{ marginRight: '0.5rem' }}>
+                  <Button 
+                    variant={ButtonVariant.primary} 
+                    onClick={handleNext} 
+                    className="guided-tour__popover--button"
+                  >
                     {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
                   </Button>
-                  <Button variant={ButtonVariant.secondary} onClick={handleEnd}>
+                  <Button 
+                    variant={ButtonVariant.secondary} 
+                    onClick={handleEnd}
+                    className="guided-tour__popover--button"
+                  >
                     Skip Tour
                   </Button>
                 </div>

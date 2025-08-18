@@ -1,16 +1,98 @@
-/* Guided Tour Styles */
+/* Guided Tour Styles - BEM Naming Convention */
 
-/* Spotlight overlay - matches PatternFly Modal backdrop */
-.guided-tour-spotlight-overlay {
+/* Block: guided-tour */
+.guided-tour {
+  /* Base styles for guided tour components */
+}
+
+/* Element: guided-tour__spotlight */
+.guided-tour__spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background-color: var(--pf-t--global--background--color--backdrop--default);
+  pointer-events: none;
+  z-index: 1000;
 }
 
-/* Tour step marker styling */
-.guided-tour-step-marker {
-  /* Add any additional styling for tour step markers if needed */
+/* Element: guided-tour__spotlight--overlay */
+.guided-tour__spotlight--overlay {
+  /* Additional overlay-specific styles */
 }
 
-/* Tour overlay container */
-.guided-tour-overlay-container {
-  /* Add any additional styling for tour overlay if needed */
+/* Element: guided-tour__spotlight--border */
+.guided-tour__spotlight--border {
+  position: fixed;
+  border: 2px solid var(--pf-t--global--background--color--highlight--default);
+  border-radius: var(--pf-t--global--border--radius--small);
+  background-color: transparent;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+/* Element: guided-tour__overlay */
+.guided-tour__overlay {
+  z-index: 9999;
+  position: relative;
+}
+
+/* Element: guided-tour__popover */
+.guided-tour__popover {
+  /* Base popover styles */
+}
+
+/* Element: guided-tour__popover--header */
+.guided-tour__popover--header {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Element: guided-tour__popover--content */
+.guided-tour__popover--content {
+  /* Content area styles */
+}
+
+/* Element: guided-tour__popover--footer */
+.guided-tour__popover--footer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Element: guided-tour__popover--step-indicator */
+.guided-tour__popover--step-indicator {
+  /* Step counter styles */
+}
+
+/* Element: guided-tour__popover--actions */
+.guided-tour__popover--actions {
+  /* Action buttons container */
+}
+
+/* Element: guided-tour__popover--button */
+.guided-tour__popover--button {
+  margin-right: 0.5rem;
+}
+
+/* Element: guided-tour__popover--button:last-child */
+.guided-tour__popover--button:last-child {
+  margin-right: 0;
+}
+
+/* Element: guided-tour__step-marker */
+.guided-tour__step-marker {
+  /* Tour step marker styling */
+}
+
+/* Element: guided-tour__modal */
+.guided-tour__modal {
+  /* Modal-specific styles */
+}
+
+/* Element: guided-tour__modal--content */
+.guided-tour__modal--content {
+  /* Modal content styles */
 }

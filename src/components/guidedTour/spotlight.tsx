@@ -80,33 +80,18 @@ const Spotlight: React.FC<SpotlightProps> = ({ selector, resizeSelector }) => {
     <>
       {/* Full screen overlay with clip-path hole */}
       <div
-        className="guided-tour-spotlight-overlay"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: 'var(--pf-t--global--background--color--backdrop--default)',
-          pointerEvents: 'none',
-          zIndex: 1000,
-          clipPath: clipPath
-        }}
+        className="guided-tour__spotlight guided-tour__spotlight--overlay"
+        style={{ clipPath }}
       />
       
       {/* Blue border around the target element */}
       <div
+        className="guided-tour__spotlight--border"
         style={{
-          position: 'fixed',
           top: boundingRect.top - 4,
           left: boundingRect.left - 4,
           width: boundingRect.width + 8,
-          height: boundingRect.height + 8,
-          border: '2px solid var(--pf-t--global--background--color--highlight--default)',
-          borderRadius: 'var(--pf-t--global--border--radius--small)',
-          backgroundColor: 'transparent',
-          pointerEvents: 'none',
-          zIndex: 1001
+          height: boundingRect.height + 8
         }}
       />
     </>
