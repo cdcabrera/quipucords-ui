@@ -63,6 +63,20 @@ class TourController {
     return this.state.steps.length;
   }
 
+  getStepAt(index: number): GuidedTourStep | null {
+    if (index >= 0 && index < this.state.steps.length) {
+      return this.state.steps[index];
+    }
+    return null;
+  }
+
+  goTo(index: number): void {
+    if (index >= 0 && index < this.state.steps.length) {
+      this.state.currentStep = index;
+      this.notifyListeners();
+    }
+  }
+
   subscribe(listener: () => void): () => void {
     this.listeners.add(listener);
     return () => {

@@ -49,11 +49,13 @@ export const TourOverlay: React.FC = () => {
   const targetElement: HTMLElement | null = document.querySelector(targetSelector) as HTMLElement;
 
   if (!targetElement) {
-    console.warn(`Tour step target not found: ${currentStep.stepId}`);
+    console.warn(`Tour step target not found: ${currentStep.stepId}. Auto-advancing to next step.`);
+    // Auto-advance to the next step that can render
+    setTimeout(() => tourController.next(), 0);
     return null;
   }
 
-  // Render welcome step as a modal, others as popovers
+  // Render welcome/completion steps as modals, others as popovers
   if (currentStep.stepId === 'welcome') {
     return (
       <Modal
@@ -67,6 +69,28 @@ export const TourOverlay: React.FC = () => {
           </Button>,
           <Button key="skip" variant={ButtonVariant.link} onClick={handleEnd}>
             Skip Tour
+          </Button>
+        ]}
+      >
+        <div>
+          <div>{currentStep.content}</div>
+          <div style={{ marginTop: '1rem', textAlign: 'center', color: '#666' }}>
+            {currentIndex + 1} of {totalSteps}
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+  if (currentStep.stepId === 'completion') {
+    return (
+      <Modal
+        isOpen={true}
+        onClose={handleEnd}
+        variant={ModalVariant.small}
+        title="You're all set!"
+        actions={[
+          <Button key="finish" variant={ButtonVariant.primary} onClick={handleEnd}>
+            Finish
           </Button>
         ]}
       >
