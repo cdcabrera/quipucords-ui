@@ -94,7 +94,9 @@ export const TourOverlay: React.FC = () => {
       <div className="guided-tour__overlay">
         <Popover
           isVisible={true}
-          shouldClose={() => false}
+          shouldClose={(event, hideFunction) => {
+            handleEnd();
+          }}
           bodyContent={
             <div className="guided-tour__popover">
               <div className="guided-tour__popover--header">
