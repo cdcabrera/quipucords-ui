@@ -165,20 +165,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({ useLogout = useLogoutApi, useUs
                   </DropdownItem>
                 </Dropdown>
               </ToolbarItem>
-              {!isTourActive && (
-                <ToolbarItem>
-                                  <Button
-                  variant={ButtonVariant.secondary}
-                  onClick={() => {
-                    console.log('Starting tour with steps:', quipucordsTourSteps.length);
-                    tourController.start(quipucordsTourSteps);
-                  }}
-                  data-ouia-component-id="start-tour-button"
-                >
-                  Start Tour
-                </Button>
-                </ToolbarItem>
-              )}
+              
             </ToolbarGroup>
             <ToolbarItem visibility={{ default: 'visible', lg: 'hidden' }}>
               <Dropdown
