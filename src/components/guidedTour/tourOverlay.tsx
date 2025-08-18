@@ -63,9 +63,8 @@ export const TourOverlay: React.FC = () => {
           </Button>
         ]}
         onClose={handleEnd}
-        className="guided-tour__modal"
       >
-        <div className="guided-tour__modal--content">{currentStep.content}</div>
+        <div>{currentStep.content}</div>
       </Modal>
     );
   }
@@ -83,9 +82,8 @@ export const TourOverlay: React.FC = () => {
           </Button>
         ]}
         onClose={handleEnd}
-        className="guided-tour__modal"
       >
-        <div className="guided-tour__modal--content">{currentStep.content}</div>
+        <div>{currentStep.content}</div>
       </Modal>
     );
   }
@@ -102,14 +100,14 @@ export const TourOverlay: React.FC = () => {
               <div className="guided-tour__popover--header">
                 {currentStep.header}
               </div>
-              <div className="guided-tour__popover--content">
+              <div>
                 {currentStep.content}
               </div>
               <div className="guided-tour__popover--footer">
-                <div className="guided-tour__popover--step-indicator">
+                <div>
                   Step {currentIndex + 1} of {totalSteps}
                 </div>
-                <div className="guided-tour__popover--actions">
+                <div>
                   {currentIndex > 0 && (
                     <Button 
                       variant={ButtonVariant.secondary} 

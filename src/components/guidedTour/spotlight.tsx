@@ -80,7 +80,7 @@ const Spotlight: React.FC<SpotlightProps> = ({ selector, resizeSelector }) => {
     <>
       {/* Full screen overlay with clip-path hole */}
       <div
-        className="guided-tour__spotlight guided-tour__spotlight--overlay"
+        className="guided-tour__spotlight"
         style={{ clipPath }}
       />
       
