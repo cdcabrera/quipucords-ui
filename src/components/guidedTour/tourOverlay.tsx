@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Popover, Button, ButtonVariant } from '@patternfly/react-core';
+import { Modal, ModalVariant } from '@patternfly/react-core/deprecated';
 import Spotlight from './spotlight';
 import { tourController } from './tourController';
 
@@ -53,16 +54,41 @@ export const TourOverlay: React.FC = () => {
     return null;
   }
 
+  // Render welcome step as a modal, others as popovers
+  if (currentStep.stepId === 'welcome') {
+    return (
+      <Modal
+        isOpen={true}
+        onClose={handleEnd}
+        variant={ModalVariant.small}
+        title="Welcome to Quipucords"
+        actions={[
+          <Button key="next" variant={ButtonVariant.primary} onClick={handleNext}>
+            {currentIndex === totalSteps - 1 ? 'Finish' : 'Next'}
+          </Button>,
+          <Button key="skip" variant={ButtonVariant.link} onClick={handleEnd}>
+            Skip Tour
+          </Button>
+        ]}
+      >
+        <div>
+          <div>{currentStep.content}</div>
+          <div style={{ marginTop: '1rem', textAlign: 'center', color: '#666' }}>
+            {currentIndex + 1} of {totalSteps}
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <React.Fragment>
-      {currentStep.stepId !== 'welcome' && (
-        <Spotlight selector={`[data-tour-id="${currentStep.stepId}"]`} />
-      )}
+      <Spotlight selector={`[data-tour-id="${currentStep.stepId}"]`} />
       <Popover
         isVisible={true}
         shouldClose={() => false}
         position={currentStep.position || 'bottom'}
-        appendTo={() => targetElement.parentElement || document.body}
+        appendTo="inline"
         triggerRef={() => targetElement}
         bodyContent={
           <div>
