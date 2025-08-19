@@ -172,7 +172,11 @@ const getAuthType = ({ auth_type }: Partial<CredentialType>): authType => {
  * @param fileType The type of the file to download. Defaults to 'text/plain'.
  * @returns A promise that resolves with an object containing the downloaded file's name and the original data.
  */
-const downloadData = (data: string | ArrayBuffer | ArrayBufferView | Blob, fileName: string, fileType = 'text/plain') =>
+const downloadData = (
+  data: string | ArrayBuffer | ArrayBufferView<ArrayBuffer> | Blob,
+  fileName: string,
+  fileType = 'text/plain'
+) =>
   new Promise((resolve, reject) => {
     try {
       const { document, navigator, URL } = window;
