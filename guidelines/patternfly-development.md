@@ -93,6 +93,43 @@ When encountering a PatternFly implementation challenge:
 5. **Test Built-in Props**: Many components have props for common use cases
 6. **Use Component Composition**: Combine components rather than custom styling
 
+#### Core Development Principles
+
+**1. Built-in Solutions Over Custom Code**
+- **Principle**: PatternFly components are designed to handle common use cases internally
+- **Generic Rule**: If a solution requires custom CSS or workarounds, look deeper for built-in options
+- **Benefit**: Better accessibility, consistency, and maintainability
+
+**2. Component Composition Pattern**
+- **Principle**: Combine existing PatternFly components rather than creating custom solutions
+- **Generic Rule**: Use component composition and built-in props before writing custom code
+- **Benefit**: Leverages design system consistency and reduces maintenance burden
+
+**3. Semantic Props Over Styling**
+- **Principle**: Use semantic props that provide meaning rather than just visual styling
+- **Generic Rule**: Choose props that indicate purpose (like `isActionCell`) over visual-only props
+- **Benefit**: Better accessibility and future-proof code
+
+**4. Version-Aware Implementation**
+- **Principle**: PatternFly APIs change between versions, requiring specific approaches
+- **Generic Rule**: Always verify component APIs match the project's PatternFly version
+- **Benefit**: Avoids compatibility issues and ensures proper functionality
+
+**5. Accessibility-First Approach**
+- **Principle**: PatternFly components include built-in accessibility features
+- **Generic Rule**: Use PatternFly components as designed to maintain accessibility
+- **Benefit**: Ensures applications meet accessibility standards without extra work
+
+**6. Design System Consistency**
+- **Principle**: PatternFly provides a consistent design system across all components
+- **Generic Rule**: Follow PatternFly patterns rather than creating custom implementations
+- **Benefit**: Consistent user experience and reduced design debt
+
+**7. Future-Resistant Implementation**
+- **Principle**: PatternFly components are designed to handle future updates gracefully
+- **Generic Rule**: Use official APIs and avoid custom workarounds that may break in updates
+- **Benefit**: Easier upgrades and reduced technical debt
+
 ### After Development
 1. **Validate Implementation**: Ensure code follows PatternFly best practices
 2. **Update Local Resources**: Consider updating cached resources if needed
@@ -125,7 +162,7 @@ When encountering a PatternFly implementation challenge:
 - **Resource-First**: Always check local resources before web access
 - **User Confirmation**: Request permission before downloading new resources
 - **Discovery Integration**: Incorporate local discoveries into guidance
-- **Version Awareness**: Ensure guidance matches project's PatternFly version
+- **Version Awareness**: Ensure guidance matches the project's PatternFly version
 
 ## Quick Reference
 
