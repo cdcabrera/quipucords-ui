@@ -268,7 +268,7 @@ When encountering a PatternFly implementation challenge:
 
 ### Testing Integration Patterns
 - **Component Integration Testing**: Test PatternFly component integration, not implementation
-- **Accessibility Testing**: Include axe-core or jest-axe for accessibility validation
+- **Accessibility Testing**: Use eslint-plugin-jsx-a11y for lint-time accessibility validation (preferred) or axe-core/jest-axe for runtime testing
 - **User Interaction Testing**: Test user interactions with PatternFly components
 - **Snapshot Management**: Maintain and update component snapshots regularly
 
@@ -288,7 +288,7 @@ When encountering a PatternFly implementation challenge:
 - **Rendering Patterns**: How components are rendered efficiently
 
 ### Performance Optimization Patterns
-- **Lazy Loading**: Use React.lazy for heavy PatternFly components
+- **Lazy Loading**: Use React.lazy for heavy components
 - **Memoization**: Use React.memo for frequently re-rendered components
 - **Virtualization**: Implement for large datasets in tables and lists
 - **Bundle Splitting**: Separate PatternFly components into chunks
@@ -303,6 +303,13 @@ When encountering a PatternFly implementation challenge:
 ### Keyboard Navigation
 - **Implementation**: How keyboard navigation is implemented
 - **Custom Handlers**: Project-specific keyboard handling
+
+### Accessibility Linting Strategy
+- **Primary Approach**: Use eslint-plugin-jsx-a11y for lint-time accessibility validation
+- **Configuration**: Enable recommended rules with project-specific customizations
+- **Benefits**: Catches accessibility issues during development, no runtime overhead
+- **Alternative**: Use axe-core or jest-axe for runtime accessibility testing when needed
+- **Integration**: Configure eslint-plugin-jsx-a11y in .eslintrc.js with PatternFly-specific rules
 
 ## Maintenance Guidelines
 
@@ -322,7 +329,7 @@ When encountering a PatternFly implementation challenge:
 
 ### Code Review Checklist
 - **PatternFly Compliance**: What to check in code reviews
-- **Accessibility**: Accessibility requirements for PatternFly components
+- **Accessibility**: Accessibility requirements for PatternFly components (eslint-plugin-jsx-a11y integration)
 - **Performance**: Performance considerations for PatternFly usage
 - **Import Patterns**: Verify named imports are used instead of default/wildcard imports
 - **Token Usage**: Check that semantic tokens are used for PatternFly 6 styling
