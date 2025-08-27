@@ -53,3 +53,7 @@ api-debug*
 
 # local files
 var/
+
+# agent
+.agent
+mcp-config.json

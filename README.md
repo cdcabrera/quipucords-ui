@@ -34,7 +34,7 @@ This is the base context for running a local UI against a mock API.
    ```
 1. Start developing against files in `./src`. Linting feedback will be automatically enabled through the terminal output
 
-For in-depth local run guidance review the [contribution guidelines](./CONTRIBUTING.md#local-and-stage-development)
+For in-depth local run guidance review the [contribution guidelines](./CONTRIBUTING.md#local-and-staging-development)
 
 ### Unit testing
 Run and update unit tests while developing instead of after-the-fact. In a new terminal instance
@@ -46,7 +46,13 @@ Run and update unit tests while developing instead of after-the-fact. In a new t
 2. Test files can be accessed, and edited, under `__test__` directories parallel to the files you're editing. Test failures for
    recently edited files will be available in the terminal output along with basic testing framework use directions.
 
-For in-depth testing guidance review the [contribution guidelines](./CONTRIBUTING.md#testing)
+For in-depth testing guidance review the [contribution guidelines](./CONTRIBUTING.md#unit-testing)
 
 ## Contributing
-Contributing encompasses [repository specific requirements](./CONTRIBUTING.md) and the global [contribution guidelines](https://github.com/quipucords/quipucords/blob/main/CONTRIBUTING.md).
+Contributing encompasses [repository specific requirements](./CONTRIBUTING.md),  [user and AI agent guidance](./guidelines/README.md), and the global [contribution guidelines](https://github.com/quipucords/quipucords/blob/main/CONTRIBUTING.md).
+
+### AI agent
+
+If you're using an AI assistant to help with development in this repository, please prompt it to `> review the repo guidelines` to ensure it follows the project's conventions and best practices.
+
+Guidelines for user, agent, interaction can be found in [CONTRIBUTING.md](./CONTRIBUTING.md#ai-agent).
