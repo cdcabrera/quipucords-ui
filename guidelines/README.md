@@ -27,9 +27,9 @@ TBD.
 
 TBD.
 
-#### Patternfly Development
+#### PatternFly Development
 
-TBD.
+- **[PatternFly Development Guidelines](./patternfly-development.md)** - Agent-specific guidance for PatternFly development, resource caching, and migration tools
 
 ---
 
@@ -48,7 +48,15 @@ Process guidelines in the order listed below, with specialized guidelines taking
 
 ### Available Guidelines
 
-TBD.
+#### PatternFly Development
+- **File**: `patternfly-development.md`
+- **Version**: 1.0
+- **Priority**: High
+- **Applies To**: PatternFly component development, migration planning, resource management
+- **Contexts**: Component creation, version upgrades, AI-assisted development
+- **Key Concepts**: Resource caching, migration tools, AI guidelines, local discoveries
+- **Trigger Prefixes**: "patternfly", "PF", "pf"
+- **Description**: Comprehensive reference system for PatternFly development resources, local caching strategies, and migration tools including codemods for PF4→PF5, PF5→PF6, and future PF6→PF7 upgrades.
 
 ### Core Agent Behavior Standards
 
