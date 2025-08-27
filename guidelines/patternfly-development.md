@@ -135,6 +135,21 @@ When encountering a PatternFly implementation challenge:
 - **Generic Rule**: Use official APIs and avoid custom workarounds that may break in updates
 - **Benefit**: Easier upgrades and reduced technical debt
 
+**9. PatternFly 6 Token System Compliance**
+- **Principle**: PatternFly 6 uses semantic tokens (`--pf-t-*`) instead of global variables (`--pf-v6-*`)
+- **Generic Rule**: Always use semantic tokens for styling to ensure compatibility and consistency
+- **Benefit**: Future-proof styling that works reliably across PatternFly 6 versions
+
+**10. Import Pattern Standards**
+- **Principle**: Use named imports from specific modules for better tree-shaking and clarity
+- **Generic Rule**: Prefer named imports over default or wildcard imports
+- **Benefit**: Smaller bundle sizes and clearer dependencies
+
+**11. Z-Index Management**
+- **Principle**: PatternFly manages z-index internally for overlays and components
+- **Generic Rule**: Avoid custom z-index unless necessary, and check for stacking context issues
+- **Benefit**: Consistent component layering and reduced CSS conflicts
+
 ### After Development
 1. **Validate Implementation**: Ensure code follows PatternFly best practices
 2. **Update Local Resources**: Consider updating cached resources if needed
@@ -183,10 +198,22 @@ When encountering a PatternFly implementation challenge:
 - **Custom Properties**: Project-specific CSS variables
 - **Theme Support**: Light/dark theme implementation
 
+### PatternFly 6 Token System
+- **Semantic Tokens**: Use `--pf-t-*` tokens for PatternFly 6 compatibility
+- **Global Variables**: Avoid `--pf-v6-*` variables (legacy, may not work reliably)
+- **Token Categories**: Background, text, border, spacing, and z-index tokens
+- **Migration Strategy**: Replace global variables with semantic tokens during PF6 upgrades
+
 ### Custom CSS
 - **BEM Naming**: Project's CSS naming conventions
 - **Component Overrides**: Any PatternFly component customizations
 - **Layout Customizations**: Project-specific layout patterns
+
+### Z-Index Management
+- **Component Z-Index**: PatternFly manages z-index internally for overlays (Popover, Modal, Tooltip)
+- **Custom Z-Index**: Use custom CSS classes or inline styles when needed
+- **Stacking Context**: Check for potential stacking context issues with custom z-index
+- **Utility Classes**: PatternFly does not provide z-index utility classes
 
 ## Vendor Code and Dependencies
 
@@ -239,6 +266,12 @@ When encountering a PatternFly implementation challenge:
 - **Snapshot Testing**: Approach to snapshot updates
 - **Accessibility Testing**: How accessibility is verified
 
+### Testing Integration Patterns
+- **Component Integration Testing**: Test PatternFly component integration, not implementation
+- **Accessibility Testing**: Include axe-core or jest-axe for accessibility validation
+- **User Interaction Testing**: Test user interactions with PatternFly components
+- **Snapshot Management**: Maintain and update component snapshots regularly
+
 ### Integration Testing
 - **E2E Testing**: How PatternFly components work in E2E tests
 - **OUIA IDs**: How component identification is handled
@@ -253,6 +286,12 @@ When encountering a PatternFly implementation challenge:
 ### Runtime Performance
 - **Component Optimization**: Any performance optimizations applied
 - **Rendering Patterns**: How components are rendered efficiently
+
+### Performance Optimization Patterns
+- **Lazy Loading**: Use React.lazy for heavy PatternFly components
+- **Memoization**: Use React.memo for frequently re-rendered components
+- **Virtualization**: Implement for large datasets in tables and lists
+- **Bundle Splitting**: Separate PatternFly components into chunks
 
 ## Accessibility Implementation
 
@@ -285,6 +324,9 @@ When encountering a PatternFly implementation challenge:
 - **PatternFly Compliance**: What to check in code reviews
 - **Accessibility**: Accessibility requirements for PatternFly components
 - **Performance**: Performance considerations for PatternFly usage
+- **Import Patterns**: Verify named imports are used instead of default/wildcard imports
+- **Token Usage**: Check that semantic tokens are used for PatternFly 6 styling
+- **Z-Index Management**: Ensure custom z-index doesn't conflict with PatternFly components
 
 ## Resources and References
 
