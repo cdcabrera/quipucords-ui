@@ -190,18 +190,16 @@ When encountering a PatternFly implementation challenge:
 - **Customization Level**: How much it modifies PatternFly behavior
 - **Migration Status**: Whether it needs updates
 
-### Legacy Components
-- **Component Name**: Why it exists and migration plans
+### Legacy/Deprecated Components and APIs
+- **Component/API Name**: Current legacy or deprecated usage in the codebase
+- **Legacy Reason**: Why it exists (custom implementation, old PatternFly version, etc.)
+- **Deprecation Status**: Whether it's officially deprecated and when
 - **PatternFly Compatibility**: Current version compatibility
-- **Replacement Strategy**: How to migrate to standard PatternFly
-
-### Deprecated Components and APIs
-- **Component/API Name**: Current deprecated usage in the codebase
-- **Deprecation Reason**: Why it was deprecated and when
-- **Replacement Component**: What to use instead
+- **Replacement Component**: What to use instead (if available)
 - **Migration Status**: Whether it has been updated or needs updating
 - **Breaking Changes**: Any breaking changes introduced by the replacement
 - **Migration Strategy**: Step-by-step approach to update deprecated usage
+- **Priority Level**: High/Medium/Low based on impact and usage
 
 ## Migration History
 
