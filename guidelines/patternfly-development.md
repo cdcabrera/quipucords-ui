@@ -134,6 +134,186 @@ When encountering a PatternFly implementation challenge:
 1. **Validate Implementation**: Ensure code follows PatternFly best practices
 2. **Update Local Resources**: Consider updating cached resources if needed
 3. **Document Findings**: Add new discoveries to patternfly-discoveries.md
+4. **Update Implementation Guide**: Maintain `.agent/patternfly-implementation.md` with current usage patterns
+
+#### Implementation Documentation
+
+**Purpose**: Create and maintain `.agent/patternfly-implementation.md` to document how PatternFly is specifically used within this repository.
+
+**When to Generate/Update**:
+- **Initial Setup**: When first analyzing a PatternFly project
+- **Major Changes**: After significant PatternFly-related updates
+- **Version Upgrades**: After PatternFly version migrations
+- **New Patterns**: When new usage patterns emerge
+
+**Documentation Structure**:
+
+```markdown
+# PatternFly Implementation - [Project Name]
+
+## Current PatternFly Version
+- **Core Version**: [e.g., 6.3.1]
+- **React Version**: [e.g., 6.3.1]
+- **Icons Version**: [e.g., 6.3.1]
+- **Table Version**: [e.g., 6.3.1]
+
+## Component Usage Patterns
+
+### Core Components
+- **Layout Components**: [Page, PageSection, Toolbar, etc.]
+- **Data Display**: [Table, List, Cards, etc.]
+- **Form Components**: [Button, Input, Select, etc.]
+- **Navigation**: [Nav, Masthead, Breadcrumb, etc.]
+- **Feedback**: [Alert, Modal, Toast, etc.]
+
+### Custom Components Built on PatternFly
+- **Component Name**: Brief description and PatternFly dependencies
+- **Usage Pattern**: How it's used in the codebase
+- **Customization**: Any project-specific modifications
+
+## Styling and Theming
+
+### CSS Custom Properties
+- **Design Tokens**: How PatternFly tokens are used
+- **Custom Properties**: Project-specific CSS variables
+- **Theme Support**: Light/dark theme implementation
+
+### Custom CSS
+- **BEM Naming**: Project's CSS naming conventions
+- **Component Overrides**: Any PatternFly component customizations
+- **Layout Customizations**: Project-specific layout patterns
+
+## Vendor Code and Dependencies
+
+### Third-Party Wrappers
+- **Library Name**: Purpose and PatternFly integration
+- **Customization Level**: How much it modifies PatternFly behavior
+- **Migration Status**: Whether it needs updates
+
+### Legacy Components
+- **Component Name**: Why it exists and migration plans
+- **PatternFly Compatibility**: Current version compatibility
+- **Replacement Strategy**: How to migrate to standard PatternFly
+
+### Deprecated Components and APIs
+- **Component/API Name**: Current deprecated usage in the codebase
+- **Deprecation Reason**: Why it was deprecated and when
+- **Replacement Component**: What to use instead
+- **Migration Status**: Whether it has been updated or needs updating
+- **Breaking Changes**: Any breaking changes introduced by the replacement
+- **Migration Strategy**: Step-by-step approach to update deprecated usage
+
+## Migration History
+
+### Previous Versions
+- **From Version**: [e.g., 5.3.x]
+- **To Version**: [e.g., 6.3.1]
+- **Key Changes**: Major breaking changes handled
+- **Migration Tools**: Codemods or manual changes used
+
+### Future Migration Plans
+- **Target Version**: [e.g., 7.0.0]
+- **Known Issues**: Components that will need updates
+- **Migration Strategy**: Planned approach for upgrades
+
+## Project-Specific Patterns
+
+### Common Usage Scenarios
+- **Data Tables**: How tables are implemented
+- **Form Handling**: Form validation and submission patterns
+- **Navigation**: How navigation is structured
+- **State Management**: How PatternFly components integrate with state
+
+### Custom Hooks and Utilities
+- **Hook Name**: Purpose and PatternFly dependencies
+- **Usage Pattern**: How it's used throughout the project
+- **Customization**: Project-specific modifications
+
+## Testing Patterns
+
+### Component Testing
+- **Test Framework**: How PatternFly components are tested
+- **Snapshot Testing**: Approach to snapshot updates
+- **Accessibility Testing**: How accessibility is verified
+
+### Integration Testing
+- **E2E Testing**: How PatternFly components work in E2E tests
+- **OUIA IDs**: How component identification is handled
+
+## Performance Considerations
+
+### Bundle Optimization
+- **Import Strategy**: How PatternFly components are imported
+- **Tree Shaking**: Whether unused components are eliminated
+- **Bundle Size**: Impact of PatternFly on application size
+
+### Runtime Performance
+- **Component Optimization**: Any performance optimizations applied
+- **Rendering Patterns**: How components are rendered efficiently
+
+## Accessibility Implementation
+
+### ARIA Labels and Roles
+- **Implementation Pattern**: How accessibility is handled
+- **Custom Accessibility**: Project-specific accessibility features
+- **Testing Approach**: How accessibility is verified
+
+### Keyboard Navigation
+- **Implementation**: How keyboard navigation is implemented
+- **Custom Handlers**: Project-specific keyboard handling
+
+## Maintenance Guidelines
+
+### Update Process
+- **Version Updates**: How to update PatternFly versions
+- **Breaking Changes**: How to handle breaking changes
+- **Testing Strategy**: How to verify updates work correctly
+
+### Deprecated Component Updates
+- **Identification**: How to identify deprecated components and APIs
+- **Assessment**: Evaluate impact of deprecated usage on the codebase
+- **Prioritization**: Which deprecated components to update first
+- **Migration Tools**: Available codemods or automated tools for updates
+- **Manual Updates**: How to manually update deprecated components
+- **Testing**: How to verify deprecated component updates work correctly
+- **Documentation**: How to document the migration process and lessons learned
+
+### Code Review Checklist
+- **PatternFly Compliance**: What to check in code reviews
+- **Accessibility**: Accessibility requirements for PatternFly components
+- **Performance**: Performance considerations for PatternFly usage
+
+## Resources and References
+
+### Local Resources
+- **Cached Documentation**: Links to local PatternFly resources
+- **Migration Tools**: Local copies of migration tools
+- **Custom Documentation**: Project-specific PatternFly guides
+
+### External Resources
+- **Official Documentation**: Links to relevant PatternFly docs
+- **Migration Guides**: Links to version migration guides
+- **Community Resources**: Links to helpful community resources
+```
+
+**Key Information to Capture**:
+- **Current Version**: Exact PatternFly versions in use
+- **Usage Patterns**: How components are actually used in the codebase
+- **Customizations**: Project-specific modifications and overrides
+- **Migration History**: Previous upgrades and future plans
+- **Performance Impact**: How PatternFly affects application performance
+- **Accessibility**: How accessibility is implemented with PatternFly
+- **Testing**: How PatternFly components are tested
+- **Maintenance**: Guidelines for keeping PatternFly usage current
+
+**Update Triggers**:
+- PatternFly version upgrades
+- New component implementations
+- Major refactoring efforts
+- Performance optimizations
+- Accessibility improvements
+- Deprecated component announcements
+- Breaking changes in PatternFly releases
 
 ## Resource Maintenance
 
