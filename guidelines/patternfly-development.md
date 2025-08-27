@@ -273,7 +273,7 @@ When encountering a PatternFly implementation challenge:
 - **Snapshot Management**: Maintain and update component snapshots regularly
 
 ### Integration Testing
-- **E2E Testing**: How PatternFly components work in E2E tests
+- **E2E Testing**: How custom implementations using PatternFly components work in end-to-end scenarios
 - **OUIA IDs**: How component identification is handled
 
 ## Performance Considerations
