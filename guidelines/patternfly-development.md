@@ -273,12 +273,6 @@ When encountering a PatternFly implementation challenge:
 - **Memoization**: Use of React.memo with PatternFly components
 - **Lazy Loading**: Lazy loading of heavy PatternFly components
 
-### PatternFly-Specific Performance
-- **Table Virtualization**: Implementation of virtualization for large PatternFly tables
-- **List Optimization**: Performance optimizations for PatternFly lists and data displays
-- **Form Performance**: Optimization of PatternFly form components
-- **Navigation Performance**: Performance considerations for PatternFly navigation components
-
 ## Testing Patterns
 
 ### Component Testing
