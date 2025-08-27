@@ -115,17 +115,22 @@ When encountering a PatternFly implementation challenge:
 - **Generic Rule**: Always verify component APIs match the project's PatternFly version
 - **Benefit**: Avoids compatibility issues and ensures proper functionality
 
-**5. Accessibility-First Approach**
+**5. Version-Aware Recommendations**
+- **Principle**: Always check React and PatternFly versions before making recommendations
+- **Generic Rule**: Analyze existing usage of hooks and optimization techniques before suggesting improvements
+- **Benefit**: Provides accurate, actionable guidance based on actual available features
+
+**6. Accessibility-First Approach**
 - **Principle**: PatternFly components include built-in accessibility features
 - **Generic Rule**: Use PatternFly components as designed to maintain accessibility
 - **Benefit**: Ensures applications meet accessibility standards without extra work
 
-**6. Design System Consistency**
+**7. Design System Consistency**
 - **Principle**: PatternFly provides a consistent design system across all components
 - **Generic Rule**: Follow PatternFly patterns rather than creating custom implementations
 - **Benefit**: Consistent user experience and reduced design debt
 
-**7. Future-Resistant Implementation**
+**8. Future-Resistant Implementation**
 - **Principle**: PatternFly components are designed to handle future updates gracefully
 - **Generic Rule**: Use official APIs and avoid custom workarounds that may break in updates
 - **Benefit**: Easier upgrades and reduced technical debt
