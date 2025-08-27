@@ -53,3 +53,6 @@ api-debug*
 
 # local files
 var/
+
+# agent
+.agent
