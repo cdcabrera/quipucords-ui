@@ -269,7 +269,7 @@ When encountering a PatternFly implementation challenge:
 ### Testing Integration Patterns
 - **Component Integration Testing**: Test PatternFly component integration, not implementation
 - **Accessibility Testing**: Use eslint-plugin-jsx-a11y for lint-time accessibility validation or axe-core/jest-axe for in-depth runtime testing
-- **User Interaction Testing**: Test user interactions with PatternFly components
+- **Custom Implementation Testing**: Test custom logic, state management, and business rules built on top of PatternFly components
 - **Snapshot Management**: Maintain and update component snapshots regularly
 
 ### Integration Testing
