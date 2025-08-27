@@ -333,6 +333,104 @@ When encountering a PatternFly implementation challenge:
 - **Storage Management**: Confirm before removing cached resources
 - **Bandwidth Usage**: Consider bandwidth impact when requesting updates
 
+## Resource Scanning Strategy
+
+### When to Suggest Resource Scanning
+- **User Mentions Other Projects**: When users reference other PatternFly projects or repositories
+- **Advanced Pattern Requests**: When users ask for advanced PatternFly implementation patterns
+- **Guidance Gaps**: When current guidance doesn't cover specific use cases
+- **Version-Specific Questions**: When users need insights from specific PatternFly versions
+- **Performance Optimization**: When users seek advanced performance patterns
+- **Component Integration**: When users need examples of complex component integration
+
+### How to Approach Resource Analysis
+1. **Systematic Code Review**: Follow a structured approach to analyze codebases
+2. **Pattern Identification**: Look for recurring patterns and best practices
+3. **Version-Specific Analysis**: Consider the PatternFly and React versions being used
+4. **Implementation Examples**: Extract concrete code examples and patterns
+5. **Gap Analysis**: Identify what's missing from our current guidance
+
+### What to Look For During Scanning
+
+#### **Import and Usage Patterns**
+- **Import Strategies**: How PatternFly components are imported (named, aliased, deep imports)
+- **Component Usage**: How components are actually used in real applications
+- **Hook Integration**: How React hooks are used with PatternFly components
+- **Performance Patterns**: Optimization techniques and performance considerations
+
+#### **Architecture and Composition**
+- **Custom Wrappers**: How projects create custom wrappers around PatternFly components
+- **Component Families**: How related components are organized and structured
+- **Styling Approaches**: How PatternFly styling and theming is implemented
+- **Accessibility Patterns**: How accessibility is implemented throughout the application
+
+#### **Advanced Features**
+- **Chart Integration**: How PatternFly charts and data visualization are implemented
+- **Table Patterns**: Advanced table implementations and customizations
+- **Form Handling**: Complex form patterns and validation approaches
+- **Layout Strategies**: Advanced layout and responsive design patterns
+
+### How to Document Findings
+
+#### **Create Insights Files**
+```markdown
+# [Project Name] Analysis - PatternFly Development Insights
+
+## Codebase Overview
+- Project type and domain
+- Technology stack and versions
+- PatternFly usage statistics
+
+## Key Discoveries
+- Advanced patterns found
+- Implementation examples
+- Best practices identified
+
+## Recommendations
+- How findings apply to our guidance
+- Suggested guidance updates
+- New patterns to consider
+```
+
+#### **Update Implementation Templates**
+- **Enhance Templates**: Update `.agent/patternfly-implementation.md` templates with new patterns
+- **Add Examples**: Include concrete code examples from scanned resources
+- **Document Patterns**: Add new patterns to patternfly-discoveries.md
+
+### How to Apply Learnings
+
+#### **Guidance Enhancement**
+- **Identify Gaps**: Use findings to identify gaps in current guidance
+- **Add Sections**: Create new sections for advanced patterns
+- **Update Examples**: Enhance existing examples with real-world implementations
+- **Validate Principles**: Confirm that current principles work across different project types
+
+#### **Pattern Adoption**
+- **Evaluate Relevance**: Determine which patterns are relevant to our project
+- **Adapt Patterns**: Modify patterns to fit our project's needs
+- **Test Implementation**: Verify that patterns work in our context
+- **Document Usage**: Add adopted patterns to our implementation guide
+
+### Agent Behavior Standards for Resource Scanning
+
+#### **Proactive Suggestion**
+- **Recognize Opportunities**: Identify when resource scanning could be valuable
+- **Explain Benefits**: Clearly explain what insights might be gained
+- **Request Permission**: Always ask for user permission before scanning
+- **Set Expectations**: Explain the scope and time commitment involved
+
+#### **Systematic Approach**
+- **Structured Analysis**: Follow a consistent methodology for code review
+- **Comprehensive Coverage**: Analyze imports, components, styling, and patterns
+- **Version Awareness**: Consider version-specific patterns and limitations
+- **Documentation Focus**: Focus on patterns that can be documented and reused
+
+#### **Quality Assurance**
+- **Validate Findings**: Verify that patterns are actually beneficial
+- **Context Consideration**: Consider the context and applicability of findings
+- **User Confirmation**: Confirm findings with users before implementing changes
+- **Continuous Learning**: Use findings to improve future scanning approaches
+
 ## Integration with Project Guidelines
 
 ### Relationship to Other Guidelines
