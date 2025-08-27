@@ -82,6 +82,17 @@ To reduce bandwidth usage and improve agent response times, PatternFly resources
 3. **Apply Discoveries**: Incorporate relevant findings from local discoveries
 4. **Update Discoveries**: Document new findings in patternfly-discoveries.md
 
+#### Research Process for PatternFly Solutions
+
+When encountering a PatternFly implementation challenge:
+
+1. **Check Official Documentation**: Start with [PatternFly.org](https://www.patternfly.org/)
+2. **Look for Component Examples**: Search for specific component demos
+3. **Check Migration Guides**: Review PF5 to PF6 migration documentation
+4. **Avoid Custom CSS**: If the solution requires custom CSS, look deeper
+5. **Test Built-in Props**: Many components have props for common use cases
+6. **Use Component Composition**: Combine components rather than custom styling
+
 ### After Development
 1. **Validate Implementation**: Ensure code follows PatternFly best practices
 2. **Update Local Resources**: Consider updating cached resources if needed
