@@ -17,6 +17,9 @@ This document provides agent-specific guidance for PatternFly development in the
 #### AI-Optimized Resources
 - **[PatternFly AI Coding Guidelines](https://github.com/patternfly/patternfly-ai-coding)** - AI-friendly development patterns and guidelines
 
+#### Migration Tools
+- **[PatternFly Codemods](https://github.com/patternfly/pf-codemods)** - Automated migration tools for PatternFly version upgrades (PF4→PF5, PF5→PF6, and future PF6→PF7)
+
 ## Local Resource Caching Strategy
 
 ### Purpose
@@ -40,7 +43,8 @@ To reduce bandwidth usage and improve agent response times, PatternFly resources
 ├── patternfly-ai-coding/          # AI development guidelines
 ├── patternfly-react/              # React component library
 ├── patternfly-org/                # Documentation site
-└── patternfly/                    # Core HTML/CSS implementation
+├── patternfly/                    # Core HTML/CSS implementation
+└── pf-codemods/                   # Migration tools and codemods
 ```
 
 ## Agent Usage Guidelines
@@ -48,8 +52,9 @@ To reduce bandwidth usage and improve agent response times, PatternFly resources
 ### When to Reference These Resources
 - **PatternFly Questions**: Any question containing "patternfly", "PF", or "pf"
 - **Component Development**: When creating or modifying PatternFly components
-- **Migration Planning**: When planning PatternFly version upgrades
+- **Migration Planning**: When planning PatternFly version upgrades (PF4→PF5, PF5→PF6, PF6→PF7)
 - **Best Practices**: When seeking PatternFly development guidance
+- **Automated Migration**: When using codemods for version upgrades
 
 ### Reference Priority Order
 1. **Local Cached Resources** (`.agent/_resources/*`) - If available and current
@@ -88,6 +93,7 @@ To reduce bandwidth usage and improve agent response times, PatternFly resources
 - **AI Guidelines**: Update when new AI-optimized patterns are released
 - **Component Library**: Update when new components or breaking changes are released
 - **Documentation**: Update when major documentation changes occur
+- **Codemods**: Update when new migration tools or version support is added
 - **Discoveries**: Update continuously as new findings emerge
 
 ### User Confirmation Required
@@ -117,12 +123,14 @@ To reduce bandwidth usage and improve agent response times, PatternFly resources
 - **API Reference**: Use official PatternFly.org documentation
 - **Implementation Issues**: Check local patternfly-discoveries.md
 - **Migration Planning**: Reference cached migration resources
+- **Automated Migration**: Use PatternFly codemods for version upgrades
 
 ### Resource Locations
 - **AI Guidelines**: `.agent/_resources/patternfly-ai-coding/`
 - **Local Discoveries**: `.agent/patternfly-discoveries.md`
 - **Official Docs**: https://www.patternfly.org/
 - **Component Source**: https://github.com/patternfly/patternfly-react
+- **Migration Tools**: https://github.com/patternfly/pf-codemods
 
 ---
 
