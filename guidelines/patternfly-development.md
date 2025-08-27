@@ -259,6 +259,26 @@ When encountering a PatternFly implementation challenge:
 - **Usage Pattern**: How it's used throughout the project
 - **Customization**: Project-specific modifications
 
+## Performance Considerations
+
+### Bundle Optimization
+- **Import Strategy**: How PatternFly components are imported (named vs default imports)
+- **Tree Shaking**: Whether unused PatternFly components are eliminated
+- **Bundle Size**: Impact of PatternFly on application bundle size
+- **Code Splitting**: How PatternFly components are split into chunks
+
+### Runtime Performance
+- **Component Optimization**: Any performance optimizations applied to PatternFly usage
+- **Rendering Patterns**: How PatternFly components are rendered efficiently
+- **Memoization**: Use of React.memo with PatternFly components
+- **Lazy Loading**: Lazy loading of heavy PatternFly components
+
+### PatternFly-Specific Performance
+- **Table Virtualization**: Implementation of virtualization for large PatternFly tables
+- **List Optimization**: Performance optimizations for PatternFly lists and data displays
+- **Form Performance**: Optimization of PatternFly form components
+- **Navigation Performance**: Performance considerations for PatternFly navigation components
+
 ## Testing Patterns
 
 ### Component Testing
@@ -276,22 +296,7 @@ When encountering a PatternFly implementation challenge:
 - **E2E Testing**: How custom implementations using PatternFly components work in end-to-end scenarios
 - **OUIA IDs**: How component identification is handled
 
-## Performance Considerations
 
-### Bundle Optimization
-- **Import Strategy**: How PatternFly components are imported
-- **Tree Shaking**: Whether unused components are eliminated
-- **Bundle Size**: Impact of PatternFly on application size
-
-### Runtime Performance
-- **Component Optimization**: Any performance optimizations applied
-- **Rendering Patterns**: How components are rendered efficiently
-
-### Performance Optimization Patterns
-- **Lazy Loading**: Use React.lazy for heavy components
-- **Memoization**: Use React.memo for frequently re-rendered components
-- **Virtualization**: Implement for large datasets in tables and lists
-- **Bundle Splitting**: Separate PatternFly components into chunks
 
 ## Accessibility Implementation
 
