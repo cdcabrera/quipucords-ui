@@ -23,7 +23,32 @@ Repository reference system for PatternFly development.
 
 For resource caching guidance, see [README.md](./README.md#caching-strategy).
 
+#### Caching Benefits for PatternFly Development
+**Why Cache PatternFly Resources?**
+- **Faster Responses**: No need to fetch external docs for every question
+- **Offline Access**: Work without internet connectivity
+- **Reduced Bandwidth**: Avoid repeated downloads of large documentation
+- **Version Control**: Local copies can be versioned and updated at controlled intervals
+- **Undocumented Discovery**: Local resources can reveal undocumented behaviors
+- **Consistent Guidance**: Ensures all agents use the same resource versions
+
+**What Gets Cached**:
+- Official PatternFly documentation
+- Component API references
+- Migration guides
+- Best practices and examples
+- AI coding guidelines
+
 ## Agent Guidelines
+
+### MANDATORY: Resource Caching Check
+**IMPORTANT**: After reviewing these guidelines, agents MUST automatically check for cached resources and offer to cache PatternFly resources if they don't exist.
+
+**Required Action**: 
+1. Check if `.agent/_resources/patternfly/` directory exists and contains cached resources
+2. If no cached resources exist, AUTOMATICALLY offer to cache PatternFly documentation
+3. Explain the benefits: faster responses, offline access, reduced bandwidth
+4. Proceed with caching unless user explicitly declines
 
 ### Resource Priority
 
@@ -38,14 +63,35 @@ For resource caching guidance, see [README.md](./README.md#caching-strategy).
 - **Migration Planning**: When planning PatternFly version upgrades
 - **Best Practices**: When seeking PatternFly development guidance
 
+### Trigger Phrases for Automatic Caching
+**IMPORTANT**: These phrases should trigger automatic caching offers:
+- "patternfly", "PF", "pf" in any question
+- "component", "UI", "interface" when combined with PatternFly context
+- "development", "coding", "implementation" in PatternFly context
+- "guidance", "help", "assistance" related to PatternFly
+
+**Automatic Response**: When these triggers are detected, immediately check for cached resources and offer caching if missing.
+
 ### Version Awareness
 - Always verify component APIs match the project's PatternFly version
 - Check React and PatternFly versions before making recommendations
 - Ensure guidance matches the project's PatternFly version
 
 ### Initial Steps After Reviewing PatternFly Development Guidelines
-1. **Determine if there are cached resources for PatternFly Development located under the `./.agent/_resources/*` directory.** If there are no resources cached ask the user if they want to cache and index all PatternFly Development resources. The agent should explain how these resources are going to be used.
-2. **After indexing PatternFly Development resources determine if there is a `./.agent/patternfly-implementation.md` set of guidelines.** If there isn't ask the user if they want to create this resource. The `patternfly-implementation.md` describes a historical set of guidelines devoid of opinion for how PatternFly is specifically implemented in this codebase. This includes past and current usage patterns based on git history, customizations, and migration considerations. The agent should explain how this guideline is going to be used as a historical index.
+**AUTOMATIC ACTIONS REQUIRED**:
+
+1. **MANDATORY Caching Check**: 
+   - Check if `.agent/_resources/patternfly/` contains cached documentation
+   - If empty or missing, AUTOMATICALLY offer: "Would you like me to cache PatternFly documentation for faster development assistance?"
+   - Explain benefits: "This will cache official PatternFly docs locally for faster responses and offline access"
+   - Proceed with caching unless user explicitly says "no"
+
+2. **Implementation Documentation Check**:
+   - Check if `.agent/patternfly-implementation.md` exists
+   - If missing, offer to create it: "Would you like me to create project-specific PatternFly implementation documentation?"
+   - Explain: "This documents how PatternFly is used in this specific codebase"
+
+**Note**: These offers should be automatic and prominent, not buried in other text.
 
 ## Development Workflow
 
