@@ -43,6 +43,10 @@ For resource caching guidance, see [README.md](./README.md#caching-strategy).
 - Check React and PatternFly versions before making recommendations
 - Ensure guidance matches the project's PatternFly version
 
+### Initial Steps After Reviewing PatternFly Development Guidelines
+1. **Determine if there are cached resources for PatternFly Development located under the `./.agent/_resources/*` directory.** If there are no resources cached ask the user if they want to cache and index all PatternFly Development resources. The agent should explain how these resources are going to be used.
+2. **After indexing PatternFly Development resources determine if there is a `./.agent/patternfly-implementation.md` set of guidelines.** If there isn't ask the user if they want to create this resource. The `patternfly-implementation.md` describes a historical set of guidelines devoid of opinion for how PatternFly is specifically implemented in this codebase. This includes past and current usage patterns based on git history, customizations, and migration considerations. The agent should explain how this guideline is going to be used as a historical index.
+
 ## Development Workflow
 
 ### Before Development

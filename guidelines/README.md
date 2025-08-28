@@ -8,6 +8,9 @@ This directory contains agent-specific development guidelines for consistent imp
 
 - **[PatternFly Development](./patternfly-development.md)** - PatternFly development, resource caching, and migration tools
 
+## Initial Steps
+1. **If the `./.agent/_resources` directory does not exist, ask the user if they want to create it.** The agent should explain how it's going to be used.
+
 ## Agent-Only Index
 
 ### Guidelines Processing Order
