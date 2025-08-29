@@ -7,6 +7,7 @@ This directory contains agent-specific development guidelines for consistent imp
 ## Available Guidelines
 
 - **[PatternFly Development](./patternfly-development.md)** - PatternFly development, resource caching, and migration tools
+- **[React Development](./react-development.md)** - React development, TypeScript integration, and performance optimization
 
 ## Agent-Only Index
 
@@ -27,6 +28,16 @@ This directory contains agent-specific development guidelines for consistent imp
 - **Key Concepts**: Resource caching, migration tools, AI guidelines, local discoveries
 - **Trigger Prefixes**: "patternfly", "PF", "pf"
 - **Description**: Reference system for PatternFly development resources, and migration tools.
+
+#### React Development
+- **File**: `react-development.md`
+- **Version**: 1.0
+- **Priority**: High
+- **Applies To**: React component development, TypeScript integration, performance optimization
+- **Contexts**: Component architecture, hooks usage, testing strategies, code quality
+- **Key Concepts**: TypeScript patterns, performance optimization, testing best practices, React 18/19 features
+- **Trigger Prefixes**: "react", "typescript", "ts", "hooks", "performance"
+- **Description**: Comprehensive React development guidelines with TypeScript integration and performance optimization.
 
 ### Core Agent Guidance Behavior Standards
 
@@ -68,9 +79,16 @@ Common uses for dates include:
 - Freshness and status are determined exclusively from `.agent/_resources/resource-manifest.json`. Resource directories are not used for freshness decisions.
 - All caching/refresh worklists are built from manifest entries. If a required resource isn’t in the manifest, create an entry first, then process it.
 - Provenance/traceability is recorded in the central manifest entry (e.g., `source`, `version`); do not create sidecar files.
-- Scope: resources are defined by specialized guidelines (e.g., PatternFly).
+- Scope: resources are defined by specialized guidelines (e.g., PatternFly, React).
 - Structure (example):
 `.agent/_resources/<resource>/`
+
+##### Resource Discovery and Caching
+- **MANDATORY**: Before creating any documentation, scan ALL specialized guidelines for required resources
+- **Automatic Discovery**: Each specialized guideline defines its required resources (e.g., PatternFly repos, React docs)
+- **Cross-Reference**: Ensure all resources from all guidelines are included in the manifest
+- **Comprehensive Caching**: Cache resources from ALL available guidelines, not just the current task's guideline
+- **Future-Proof**: Maintain generic guidance to allow for future guideline resources without code changes
 
 ##### Resource Manifest
 - Location: `.agent/_resources/resource-manifest.json`
@@ -88,12 +106,16 @@ Common uses for dates include:
 - **DO NOT recreate existing guidelines** - This file should only reference and index specialized guidelines, not duplicate their content
 - **DO update agent-specific references** - When new guideline markdown files are added to the `guidelines/` directory, update the "Available Guidelines" section
 - **Keep it concise** - Focus on indexing rather than comprehensive implementation details
+- **MANDATORY**: Ensure all specialized guidelines are properly indexed and cross-referenced
+- **MANDATORY**: Maintain consistency between guideline metadata and actual guideline content
 
 #### When Adding New Guidelines
-1. Add new guideline link to "Available Guidelines" section and provide a brief description focusing on what the guideline covers
-2. Add new guideline entry to "Agent-Only Index -> Available Guidelines" section and include essential metadata: File, Version, Priority, Applies To, Contexts, Key Concepts, Trigger Prefixes
-3. Update the "Agent-Only Index -> Available Guidelines" section processing order if needed.
-4. Maintain alphabetical organization within categories
+1. **Add new guideline link** to "Available Guidelines" section and provide a brief description focusing on what the guideline covers
+2. **Add new guideline entry** to "Agent-Only Index -> Available Guidelines" section and include essential metadata: File, Version, Priority, Applies To, Contexts, Key Concepts, Trigger Prefixes
+3. **Update processing order** if needed in the "Agent-Only Index -> Available Guidelines" section
+4. **Maintain alphabetical organization** within categories
+5. **MANDATORY**: Update resource manifest to include any required resources defined by the new guideline
+6. **MANDATORY**: Ensure all existing resources from other guidelines are still included in the manifest
 
 ### Final Steps
 
