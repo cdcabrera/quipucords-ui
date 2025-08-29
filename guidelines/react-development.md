@@ -1,6 +1,6 @@
 # React Development Guidelines
 
-Essential guidelines for React development in Quipucords UI, focusing on modern React patterns, performance optimization, and best practices.
+Essential guidelines for React development, focusing on modern React patterns, performance optimization, and best practices.
 
 ## Official React Resources
 
@@ -33,46 +33,52 @@ Essential guidelines for React development in Quipucords UI, focusing on modern 
    - **Purpose**: TypeScript patterns for React development
 
 ### Version Information
-- **Current React Version**: 18.3.1 (from package.json)
-- **React DOM Version**: 18.3.1
-- **TypeScript Types**: @types/react ^18.3.5, @types/react-dom ^18.3.0
-- **Latest Available**: React 19.1 (as of search results)
+**MANDATORY**: Agents must dynamically detect versions from the project's package.json:
+
+- **React Version**: Detect from `package.json` dependencies
+- **React DOM Version**: Detect from `package.json` dependencies  
+- **TypeScript Types**: Detect from `package.json` devDependencies
+- **Latest Available**: Check React.dev for current latest version
+- **Version Compatibility**: Ensure recommendations work with detected versions
 
 ## Project-Specific React Resources
 
 ### Development Dependencies
-Based on `package.json` analysis:
+**MANDATORY**: Agents must dynamically analyze the project's `package.json` to identify:
 
 #### Testing Framework
-- **Jest**: 29.7.0 - JavaScript testing framework
-- **React Testing Library**: ^16.0.1 - Component testing utilities
-- **Testing Library DOM**: ^10.4.0 - DOM testing utilities
-- **Testing Library User Event**: ^14.5.2 - User interaction simulation
-- **Jest Environment JSDOM**: 29.7.0 - Browser environment for testing
+- **Jest**: Detect version from `package.json` devDependencies
+- **React Testing Library**: Detect version from `package.json` devDependencies
+- **Testing Library DOM**: Detect version from `package.json` devDependencies
+- **Testing Library User Event**: Detect version from `package.json` devDependencies
+- **Jest Environment JSDOM**: Detect version from `package.json` devDependencies
 
 #### Linting and Code Quality
-- **ESLint**: 8.57.0 - JavaScript linting
-- **ESLint React Plugin**: ^7.35.2 - React-specific linting rules
-- **ESLint React Hooks Plugin**: ^4.6.2 - Hooks linting rules
-- **ESLint JSX A11y Plugin**: ^6.10.0 - Accessibility linting
-- **Prettier**: ^3.3.3 - Code formatting
-- **TypeScript ESLint**: 7.18.0 - TypeScript linting
+- **ESLint**: Detect version from `package.json` devDependencies
+- **ESLint React Plugin**: Detect version from `package.json` devDependencies
+- **ESLint React Hooks Plugin**: Detect version from `package.json` devDependencies
+- **ESLint JSX A11y Plugin**: Detect version from `package.json` devDependencies
+- **Prettier**: Detect version from `package.json` devDependencies
+- **TypeScript ESLint**: Detect version from `package.json` devDependencies
 
 #### Build and Development Tools
-- **Weldable**: ^3.2.0 - Webpack wrapper for development
-- **TypeScript**: TypeScript compilation and type checking
-- **React Router DOM**: 6.26.1 - Client-side routing
+- **Build Tool**: Detect from `package.json` (webpack, vite, etc.)
+- **TypeScript**: Detect version from `package.json` devDependencies
+- **Router**: Detect from `package.json` dependencies (react-router-dom, etc.)
 
 ### Available Scripts
+**MANDATORY**: Agents must dynamically discover available scripts from the project's `package.json`:
+
 ```bash
+# Common script patterns to look for:
 # Development
-npm start                    # Start development server with mock API
-npm run start:using-server   # Start with external server
-npm run start:stage          # Start with staging environment
+npm start                    # Start development server
+npm run dev                  # Development server (alternative)
+npm run serve                # Development server (alternative)
 
 # Testing
-npm test                     # Run all tests (lint, build, coverage)
-npm run test:dev             # Development testing (lint, local tests)
+npm test                     # Run all tests
+npm run test:dev             # Development testing
 npm run test:local           # Local tests with watch mode
 npm run test:integration     # Integration tests
 npm run test:lint            # Lint only
@@ -81,10 +87,37 @@ npm run test:types           # TypeScript type checking
 
 # Building
 npm run build                # Production build
-npm run build:brand          # Brand-specific build
+npm run build:dev            # Development build
+npm run build:prod           # Production build (alternative)
+
+# Linting
+npm run lint                 # Run linter
+npm run lint:fix             # Auto-fix linting issues
 ```
 
 ## Agent Guidelines
+
+### Dynamic Project Analysis
+**MANDATORY**: Before providing any recommendations, agents must analyze the project:
+
+1. **Package.json Analysis**:
+   - Detect React version from dependencies
+   - Detect React DOM version from dependencies
+   - Identify testing framework and versions
+   - Identify linting tools and versions
+   - Identify build tools and configuration
+   - Discover available npm scripts
+
+2. **Project Structure Analysis**:
+   - Identify source directory structure
+   - Detect TypeScript configuration
+   - Identify build configuration files
+   - Analyze component organization patterns
+
+3. **Version Compatibility Check**:
+   - Compare detected versions with latest available
+   - Identify potential migration opportunities
+   - Ensure recommendations work with detected versions
 
 ### Resource Priority
 1. **React.dev Documentation** - Official, up-to-date React patterns
@@ -100,10 +133,13 @@ npm run build:brand          # Brand-specific build
 - **Code Quality**: Linting rules, TypeScript patterns, formatting standards
 
 ### Version Awareness
-- **Current Project**: React 18.3.1 (stable, production-ready)
-- **Latest Available**: React 19.1 (new features, potential migration target)
-- **Migration Considerations**: Evaluate React 19 features for future adoption
-- **Backward Compatibility**: Ensure recommendations work with React 18
+**MANDATORY**: Agents must dynamically detect and analyze versions:
+
+- **Current Project**: Detect React version from `package.json` dependencies
+- **Latest Available**: Check React.dev for current latest version
+- **Migration Considerations**: Evaluate newer React features for potential adoption
+- **Backward Compatibility**: Ensure recommendations work with detected React version
+- **Version Analysis**: Compare current vs latest versions for migration opportunities
 
 ## Development Workflow
 
@@ -699,29 +735,42 @@ When creating implementation documentation, agents MUST provide:
 - **Migration**: Reference React.dev migration guides
 
 ### Testing Commands
+**MANDATORY**: Agents must discover actual available commands from package.json:
+
 ```bash
+# Common patterns to look for:
 npm test                    # Run all tests
 npm run test:dev           # Development testing
 npm run test:local         # Local tests with watch
 npm run test:lint          # Lint only
 npm run test:types         # TypeScript checking
+npm run test:coverage      # Test coverage
 ```
 
 ### Build Commands
+**MANDATORY**: Agents must discover actual available commands from package.json:
+
 ```bash
+# Common patterns to look for:
 npm start                  # Development server
+npm run dev                # Development server (alternative)
 npm run build              # Production build
-npm run build:brand        # Brand-specific build
+npm run build:dev          # Development build
+npm run build:prod         # Production build (alternative)
 ```
 
 ### Linting Commands
+**MANDATORY**: Agents must discover actual available commands from package.json:
+
 ```bash
-npm run test:lint          # Run ESLint
-npm run test:lint-fix      # Auto-fix linting issues
+# Common patterns to look for:
+npm run lint               # Run linter
+npm run lint:fix           # Auto-fix linting issues
+npm run test:lint          # Lint only (alternative)
 npm run test:types         # TypeScript type checking
 ```
 
 ## Created
 - **Date**: August 29, 2025
-- **Purpose**: Comprehensive React development guidelines for Quipucords UI
+- **Purpose**: Comprehensive React development guidelines for any React project
 - **Status**: Complete with caching strategy, implementation documentation requirements, and in-depth analysis guidelines

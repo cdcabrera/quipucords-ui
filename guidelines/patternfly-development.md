@@ -2,7 +2,7 @@
 
 ## Overview
 
-Repository reference system for PatternFly development.
+Repository reference system for PatternFly development in any React project.
 
 ## Resources
 
@@ -53,6 +53,27 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 
 ## Agent Guidelines
 
+### Dynamic Project Analysis
+**MANDATORY**: Before providing any recommendations, agents must analyze the project:
+
+1. **Package.json Analysis**:
+   - Detect PatternFly version from dependencies
+   - Detect React version from dependencies
+   - Identify PatternFly packages in use (core, react, icons, etc.)
+   - Verify version compatibility between PatternFly and React
+   - Identify any PatternFly-related build tools
+
+2. **Project Structure Analysis**:
+   - Identify PatternFly component usage patterns
+   - Detect custom PatternFly component implementations
+   - Analyze PatternFly integration patterns
+   - Identify migration opportunities
+
+3. **Version Compatibility Check**:
+   - Compare detected PatternFly version with latest available
+   - Identify potential migration opportunities
+   - Ensure recommendations work with detected versions
+
 ### Resource Priority
 
 1. **Cached Resources** - Check `.agent/_resources/` directory first
@@ -67,9 +88,13 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 - **Best Practices**: When seeking PatternFly development guidance
 
 ### Version Awareness
-- Always verify component APIs match the project's PatternFly version
-- Check React and PatternFly versions before making recommendations
-- Ensure guidance matches the project's PatternFly version
+**MANDATORY**: Agents must dynamically detect and analyze versions:
+
+- **PatternFly Version**: Detect from `package.json` dependencies
+- **React Version**: Detect from `package.json` dependencies
+- **Version Compatibility**: Ensure PatternFly and React versions are compatible
+- **API Verification**: Always verify component APIs match the detected PatternFly version
+- **Version Analysis**: Compare current vs latest versions for migration opportunities
 
 ### Initial Steps After Reviewing PatternFly Development Guidelines
 **AUTOMATIC ACTIONS REQUIRED**:
@@ -119,7 +144,7 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 ## Core Development Principles
 
 **1. Version-Aware Implementation**
-- **Rule**: Always verify component APIs match the project's PatternFly version
+- **Rule**: Always verify component APIs match the detected PatternFly version from package.json
 - **Benefit**: Avoids compatibility issues and ensures proper functionality
 
 **2. Built-in Solutions Over Custom Code**
