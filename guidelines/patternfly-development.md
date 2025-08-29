@@ -2,7 +2,7 @@
 
 ## Overview
 
-Repository reference system for PatternFly development in any React project.
+Agent-only reference system for PatternFly development in any React project.
 
 ## Resources
 

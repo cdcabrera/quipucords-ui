@@ -1,6 +1,6 @@
 # React Development Guidelines
 
-Essential guidelines for React development, focusing on modern React patterns, performance optimization, and best practices.
+Agent-only guidelines for React development, focusing on modern React patterns, performance optimization, and best practices.
 
 ## Official React Resources
 
