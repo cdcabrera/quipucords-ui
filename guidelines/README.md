@@ -126,7 +126,7 @@ These Unified Final Steps provide a single, consistent, flow for agents to set u
    - Options recognized: yes/proceed, no/stop, customize (choose resources, limit size/time, skip large repos, offline-only)
    - If no response after 15 seconds, proceed.
 
-3. Resource Caching
+2. Resource Caching
    - Cache resources under `.agent/_resources/...` when applicable.
    - After each attempt, update the manifest entry (`modified`, `lastCheckedAt`, `status`).
    - Refresh if `lastCheckedAt` > 30 days (per manifest).
