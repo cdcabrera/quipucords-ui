@@ -2,6 +2,8 @@
 
 Agent-only guidelines for React development, focusing on modern React patterns, performance optimization, and best practices.
 
+Note: This guide assumes online access.
+
 ## Official React Resources
 
 ### Primary Documentation
@@ -9,28 +11,6 @@ Agent-only guidelines for React development, focusing on modern React patterns, 
 - **[React GitHub Repository](https://github.com/facebook/react.git)** - Source code and development resources
 - **[React API Reference](https://react.dev/reference/react)** - Complete API documentation
 
-### Required Cached Resources
-**MANDATORY**: The following resources must be cached under `.agent/_resources/`:
-
-1. **React.dev Documentation** - Official React documentation and guides
-   - **Source**: https://react.dev/
-   - **Location**: `.agent/_resources/react-dev/`
-   - **Purpose**: Official React patterns, hooks, and best practices
-
-2. **React GitHub Repository** - Source code and development resources
-   - **Source**: https://github.com/facebook/react.git
-   - **Location**: `.agent/_resources/react/`
-   - **Purpose**: Advanced patterns, implementation details, and source code
-
-3. **Testing Library Documentation** - Component testing best practices
-   - **Source**: https://testing-library.com/
-   - **Location**: `.agent/_resources/testing-library/`
-   - **Purpose**: React Testing Library patterns and accessibility testing
-
-4. **TypeScript React Documentation** - TypeScript integration with React
-   - **Source**: https://www.typescriptlang.org/docs/handbook/react.html
-   - **Location**: `.agent/_resources/typescript-react/`
-   - **Purpose**: TypeScript patterns for React development
 
 ### Version Information
 **MANDATORY**: Agents must dynamically detect versions from the project's package.json:
@@ -663,11 +643,6 @@ describe('Accessibility', () => {
 ## Initial Steps After Reviewing React Development Guidelines
 **AUTOMATIC ACTIONS REQUIRED**:
 
-1. **MANDATORY Caching Check**: 
-   - Check if `.agent/_resources/react/` contains cached documentation
-   - If empty or missing, AUTOMATICALLY offer: "Would you like me to cache React documentation for faster development assistance?"
-   - Explain benefits: "This will cache official React docs locally for faster responses and offline access"
-   - Proceed with caching unless user explicitly says "no"
 
 2. **Implementation Documentation Check**:
    - Check if `.agent/react-implementation.md` exists
