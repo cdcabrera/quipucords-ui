@@ -4,6 +4,8 @@
 
 Agent-only reference system for PatternFly development in any React project.
 
+Note: This guide assumes online access.
+
 ## Resources
 
 ### Official Resources
@@ -14,42 +16,12 @@ Agent-only reference system for PatternFly development in any React project.
 - **[PatternFly AI Guidelines](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly guidelines
 - **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Migration tools
 
-### Required Cached Resources
-**MANDATORY**: The following resources must be cached under `.agent/_resources/`:
-
-1. **PatternFly Organization Documentation** - Official PatternFly documentation
-   - **Source**: https://github.com/patternfly/patternfly-org.git
-   - **Location**: `.agent/_resources/patternfly-org/`
-   - **Purpose**: Official PatternFly documentation and guides
-
-2. **PatternFly React Repository** - React component library source
-   - **Source**: https://github.com/patternfly/patternfly-react.git
-   - **Location**: `.agent/_resources/patternfly-react/`
-   - **Purpose**: React component implementation and patterns
-
-3. **PatternFly Core Repository** - Core CSS framework
-   - **Source**: https://github.com/patternfly/patternfly.git
-   - **Location**: `.agent/_resources/patternfly-core/`
-   - **Purpose**: Core CSS framework and design tokens
-
-4. **PatternFly AI Coding Guidelines** - AI-assisted development patterns
-   - **Source**: https://github.com/patternfly/patternfly-ai-coding.git
-   - **Location**: `.agent/_resources/patternfly-ai-coding/`
-   - **Purpose**: AI-specific development patterns and guidelines
-
-5. **PatternFly Codemods** - Migration and automation tools
-   - **Source**: https://github.com/patternfly/pf-codemods.git
-   - **Location**: `.agent/_resources/pf-codemods/`
-   - **Purpose**: Migration tools and automated code updates
 
 ### Project Resources
 - **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage
 - **Discoveries**: `.agent/patternfly-discoveries.md` - Developer-specific findings
 - **AI Guidelines**: `.agent/patternfly-ai-guidelines-reference.md` - AI development reference
 
-### Resource Caching
-
-For resource caching guidance and purpose, see [README.md](./README.md#caching-strategy).
 
 ## Agent Guidelines
 
@@ -76,10 +48,9 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 
 ### Resource Priority
 
-1. **Cached Resources** - Check `.agent/_resources/` directory first
+1. **Official Documentation** - For component APIs and examples
 2. **PatternFly AI Coding Guidelines** - For AI-optimized patterns
-3. **Official Documentation** - For component APIs and examples
-4. **GitHub Repositories** - For source code and implementation details
+3. **GitHub Repositories** - For source code and implementation details
 
 ### When to Use Resources
 - **PatternFly Questions**: Any question containing "patternfly", "PF", or "pf"
@@ -105,11 +76,6 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
    - Use ALL available resources to enhance analysis quality and depth
    - Cross-reference patterns between different technology guidelines
 
-2. **MANDATORY Caching Check**: 
-   - Check if `.agent/_resources/patternfly/` contains cached documentation
-   - If empty or missing, AUTOMATICALLY offer: "Would you like me to cache PatternFly documentation for faster development assistance?"
-   - Explain benefits: "This will cache official PatternFly docs locally for faster responses and offline access"
-   - Proceed with caching unless user explicitly says "no"
 
 3. **Implementation Documentation Check**:
    - Check if `.agent/patternfly-implementation.md` exists
@@ -119,7 +85,7 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 
 4. **MANDATORY Cross-Technology Analysis**:
    - After creating implementation documentation, AUTOMATICALLY provide in-depth analysis
-   - Include potential PatternFly issues and optimizations based on cached resources
+   - Include potential PatternFly issues and optimizations based on official resources
    - Reference PatternFly best practices from AI coding guidelines and codemods
    - **CRITICAL**: Integrate React development patterns, TypeScript best practices, and testing strategies
    - Identify deprecated usage, performance issues, and architectural improvements
@@ -130,10 +96,9 @@ For resource caching guidance and purpose, see [README.md](./README.md#caching-s
 ## Development Workflow
 
 ### Before Development
-1. **Check Cached Resources**: Follow the workflow in README.md
-2. **Review AI Guidelines**: Consult PatternFly AI coding guidelines
-3. **Check Discoveries**: Review local patternfly-discoveries.md
-4. **Confirm Versions**: Ensure guidance matches project's version
+1. **Review AI Guidelines**: Consult PatternFly AI coding guidelines
+2. **Check Discoveries**: Review local patternfly-discoveries.md
+3. **Confirm Versions**: Ensure guidance matches project's version
 
 ### During Development
 1. **Follow AI Guidelines**: Apply AI-optimized patterns
@@ -335,7 +300,7 @@ When creating implementation documentation, agents MUST provide:
 1. **PatternFly Best Practice Analysis**:
    - Compare current implementation against PatternFly AI coding guidelines
    - Identify deviations from recommended patterns
-   - Reference specific guidelines from cached resources
+   - Reference specific guidelines from official resources
 
 2. **React + TypeScript Integration Analysis**:
    - **CRITICAL**: Evaluate TypeScript usage in PatternFly components
@@ -373,10 +338,10 @@ When creating implementation documentation, agents MUST provide:
    - Code quality and linting compliance
 
 ### Analysis Sources
-- **PatternFly AI Coding Guidelines**: `.agent/_resources/patternfly-ai-coding/.pf-ai-documentation/`
-- **PatternFly Codemods**: `.agent/_resources/pf-codemods/`
-- **PatternFly React**: `.agent/_resources/patternfly-react/`
-- **PatternFly Core**: `.agent/_resources/patternfly-core/`
+- PatternFly AI Coding Guidelines: https://github.com/patternfly/patternfly-ai-coding
+- PatternFly Codemods: https://github.com/patternfly/pf-codemods
+- PatternFly React: https://github.com/patternfly/patternfly-react
+- PatternFly Core: https://github.com/patternfly/patternfly
 
 ## Quick Reference
 
