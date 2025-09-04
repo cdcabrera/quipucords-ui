@@ -201,27 +201,45 @@ const x = () => {};
 
 ### Pattern Implementation
 
-```markdown
-# T.B.D.
+```tsx
+/**
+ * @summary Toolbar composition pattern for status filtering.
+ * @remarks
+ * - Uses PatternFly Toolbar; prefer built-in props and composition over custom CSS.
+ * - Accessible names first to support RTL byRole queries.
+ * - JSDoc-first comments; keep inline comments to non-obvious behavior only.
+ */
+export interface StatusToolbarProps {
+  status: string;
+  onChange: (value: string) => void;
+  onClear?: () => void;
+}
 
-## Configuration
-```js
-// Purpose: What this checks
-T.B.D.
+export const StatusToolbar: React.FC<StatusToolbarProps> = ({ status, onChange, onClear }) => {
+  // Non-obvious: ensure controls have accessible names to enable byRole/byLabelText queries
+  // Implementation note: Replace the placeholder markup below with PatternFly Toolbar, ToolbarGroup, ToolbarItem, Select/Menu, and Button as needed.
+  return null;
+};
 ```
 
-## Examples
-```js
-// Valid
-const good = () => {};
+#### Configuration
+- Prefer built-in PatternFly components and tokens; avoid custom CSS.
+- Ensure controls have accessible names (aria-label, aria-labelledby, or visible text).
+- Keep imports minimal and named; mirror local import ordering patterns.
 
-// Invalid
-const bad = function() {};
+#### Examples
+```tsx
+// Valid: PatternFly components with accessible names
+// <Toolbar aria-label="Status toolbar">...</Toolbar>
+
+// Invalid: Reimplementing PF DOM without semantic roles or accessible names
+// <div className="toolbar"><div className="menu">...</div></div>
 ```
 
-## Testing
-How to test this implementation.
-```
+#### Testing
+- Use React Testing Library + user-event; prefer byRole/byLabelText queries.
+- Add jest-axe a11y test if the component introduces landmarks/ARIA regions.
+- Snapshot updates only after manual diff verification (see Agent Testing guidance).
 
 ### Workflow
 
