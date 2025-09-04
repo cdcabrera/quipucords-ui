@@ -66,6 +66,7 @@ Before advising or running tests, inspect package.json to discover available com
    - Ensure assertions reflect real UX; verify snapshots before updating
 
 ### Trigger: "Verify accessibility"
+- Note: Runtime auditing (react-axe) is optional and for development use only. See Agent PatternFly Development → Optional runtime accessibility checks for activation steps.
 1. Add an a11y test with jest-axe if the component renders complex ARIA/landmarks
 2. Validate keyboard navigation and focus order with user-event
 3. Ensure accessible names via role/label associations

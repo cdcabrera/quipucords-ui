@@ -297,6 +297,38 @@ The implementation documentation MUST include:
 - Implement keyboard shortcuts for common actions
 - Provide visible focus indicators for all interactive elements
 
+### Optional runtime accessibility checks (react-axe)
+- react-axe is optional and should be enabled in development only. By default, rely on lint-time checks (eslint-plugin-jsx-a11y) and targeted test-time checks (jest-axe).
+- If you need live a11y feedback during manual testing, you may integrate react-axe.
+
+How to research then implement react-axe:
+1. Research
+   - Verify React and ReactDOM versions in package.json
+   - Confirm you will initialize in development only (not in tests or production)
+   - Review the latest react-axe README for version compatibility and initialization API
+2. Implement (dev-only)
+   - Install: npm i -D react-axe axe-core
+   - Initialize in a dev-only entry path (e.g., src/index.tsx) using dynamic imports to avoid bundling in prod:
+     ```ts
+     if (process.env.NODE_ENV !== 'production') {
+       Promise.all([
+         import('react'),
+         import('react-dom'),
+         import('react-axe')
+       ]).then(([React, ReactDOM, axe]) => {
+         (axe as any).default(React, ReactDOM, 1000);
+       }).catch(() => {
+         // No-op: react-axe is optional; ignore if unavailable
+       });
+     }
+     ```
+   - Ensure this block does not run in Jest/jsdom tests unless explicitly desired
+3. Validate
+   - Run the app in development; confirm accessibility warnings appear in the browser console
+   - Confirm production builds have no react-axe code paths
+
+Note: For automated checks in tests, see jest-axe usage in Agent Testing and Agent React Development; runtime react-axe is optional.
+
 ## Testing Patterns
 
 ### Component Testing

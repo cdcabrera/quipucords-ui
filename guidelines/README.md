@@ -38,7 +38,7 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 
 - Testing
   - **`Test a React component`** — Behavior-first component tests
-  - **`Verify accessibility`** — jest-axe and keyboard/focus checks
+  - **`Verify accessibility`** — jest-axe and keyboard/focus checks; react-axe (optional, dev-only), see PatternFly guidance
   - **`Run integration tests`** — ./tests root execution with resilient selectors
   - **`Update snapshots`** — Verify diffs before intentional updates
   - **`Debug a failing test`** — Reproduce, inspect async flows, and stabilize tests

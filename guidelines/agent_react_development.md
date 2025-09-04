@@ -608,6 +608,9 @@ describe('Accessibility', () => {
 });
 ```
 
+#### Optional runtime accessibility checks (react-axe)
+- Runtime a11y auditing via react-axe is optional and dev-only. Prefer lint-time (eslint-plugin-jsx-a11y) and targeted test-time checks (jest-axe) by default. See Agent PatternFly Development → Optional runtime accessibility checks for activation steps.
+
 ## Performance Optimization
 
 ### Bundle Optimization
@@ -799,7 +802,7 @@ npm run test:types         # TypeScript type checking
 
 ### Trigger: "Write tests for React component"
 1. Identify critical behaviors and edge cases
-2. Create RTL tests with user-event; add jest-axe a11y test when applicable
+2. Create RTL tests with user-event; add jest-axe a11y test when applicable; runtime react-axe is optional (dev-only) — see PatternFly guidance for activation steps
 3. Verify snapshots reflect intentional UI changes before updating
 
 ### Trigger: "Plan React migration"
