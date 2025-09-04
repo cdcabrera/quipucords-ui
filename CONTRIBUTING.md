@@ -482,21 +482,45 @@ To update snapshots from the terminal run
 <details>
 <summary><h3 style="display: inline-block">Guidelines</h3></summary>
 
-If you're using an AI assistant to help with development in this repository, please prompt it to `> review the repo guidelines` first to ensure it follows the project's conventions and best practices.
-
 #### User section
 
 Current agent interaction can be triggered with the chat command
 
-- **`review the repo guidelines`** - Your agent should attempt to scan common files like `README.md` and `CONTRIBUTING.md`
+- **`review the repo guidelines`** - Your agent should attempt to scan common markdown files and the guidelines directory
+
+For detailed information on agent interaction, see [guidelines/README.md](./guidelines/README.md).
 
 ##### Customizing developer experience
 
-As developers, we often have our own flavor of working, and now that includes working with AI agents. To that point we've added agent guidance
-to allow customization through a gitignored directory `./.agent` in the root of the project. If you, as a developer, come across
-refinements that are unique to you, feel free to ask the agent to save guidance there.
+As developers, we often have our own flavor of working, and now that includes working with AI agents. To that point we've
+added agent guidance to allow customization for your work environment through a gitignored directory `./.agent` in the
+root of the project.
 
-#### AI Agent guidance
+#### Noting AI Agent contributions
 
-Located under the [guidelines directory](./guidelines) is repository specific agent workflow guidance.
+Asking the agent to review the repo and its git history should provide code-style references your agent can leverage based on this codebase's patterns. That
+helps alleviate some concerns around where your agent is generating/pulling references from, but not all.
+
+For transparency, we encourage signing commits with the tooling and model used: `Assisted by: \[tool or IDE\] (\[model\])`.
+
+> By contributing AI-assisted or AI-generated work, you accept liability for work that infringes or uses copyrighted material outside the scope of the related license.
+
+### Agent Only
+Agents: This repository contains a hierarchical guideline system. Agents should review agent-only comment blocks.
+
+<!--
+Agents must analyze these files when asked for guidance:
+
+**Guidelines review order:**
+1. **`./README.md`** - Main agent guidance and behavior standards (including agent-only comment block)
+2. **`./guidelines/README.md`** - Core agent guidance and behavior standards
+3. **`./guidelines/**/*.md`** - Specialized workflow and domain-specific instructions
+4. **`./.agent/**/*.md`** - gitignored directory and local guidelines intended for agent-specific state and new agent-generated guidance, and user workflows that enhance the core guidelines
+
+The guideline system should be processed in this order, with specialized guidelines taking precedence for their specific domains, and local guidelines overriding general guidelines when present.
+
+**Next Steps:**
+5. **Review guidance under the `./.agent/**/*.md` directory.** If the `./.agent` directory exists, the user may ask the agent about the guidance located here.
+6. **If the `./.agent` directory does not exist, ask the user if they want to create it.** The agent should explain how it's going to be used.
+-->
 </details>

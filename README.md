@@ -51,19 +51,8 @@ For in-depth testing guidance review the [contribution guidelines](./CONTRIBUTIN
 ## Contributing
 Contributing encompasses [repository specific requirements](./CONTRIBUTING.md),  [user and AI agent guidance](./guidelines/README.md), and the global [contribution guidelines](https://github.com/quipucords/quipucords/blob/main/CONTRIBUTING.md).
 
-## Agent Only
-Agents: This repository contains a hierarchical guideline system. Agents should review agent-only comment blocks.
+### AI agent
 
-<!--
-Agents must analyze these files when asked for guidance:
+If you're using an AI assistant to help with development in this repository, please prompt it to `> review the repo guidelines` to ensure it follows the project's conventions and best practices.
 
-**Guidelines review order:**
-1. **`./README.md`** - Main agent guidance and behavior standards (including agent-only comment block)
-2. **`./guidelines/README.md`** - Core agent guidance and behavior standards
-3. **`./guidelines/**/*.md`** - Specialized workflow and domain-specific instructions
-4. **`./.agent/**/*.md`** - gitignored directory, local guidelines, and cached resources intended for agent-specific state and new agent-generated guidance, and user workflows that enhance the core guidelines
-
-The guideline system should be processed in this order, with specialized guidelines taking precedence for their specific domains, and local guidelines overriding general guidelines when present.
-
-For workflow "Next Steps," use the Unified Final Steps defined in ./guidelines/README.md#final-steps.
--->
+Guidelines for user, agent, interaction can be found in [CONTRIBUTING.md](./CONTRIBUTING.md#ai-agent).
