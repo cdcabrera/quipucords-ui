@@ -501,7 +501,7 @@ root of the project.
 Asking the agent to review the repo and its git history should provide code-style references your agent can leverage based on this codebase's patterns. That
 helps alleviate some concerns around where your agent is generating/pulling references from, but not all.
 
-For transparency, we encourage signing commits with the tooling and model used: `Assisted by: \[tool or IDE\] (\[model\])`.
+For transparency, we encourage signing commits with the tooling and model used: `Assisted by: [tool or IDE] ([model])`.
 
 > By contributing AI-assisted or AI-generated work, you accept liability for work that infringes or uses copyrighted material outside the scope of the related license.
 
