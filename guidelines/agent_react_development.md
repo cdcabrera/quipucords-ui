@@ -2,8 +2,6 @@
 
 Agent-only guidelines for React development, focusing on modern React patterns, performance optimization, and best practices.
 
-Note: This guide assumes online access.
-
 ## For Agents
 
 ### Processing Priority

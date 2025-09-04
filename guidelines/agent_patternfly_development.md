@@ -4,8 +4,6 @@
 
 Agent-only reference system for PatternFly development in any React project.
 
-Note: This guide assumes online access.
-
 ## For Agents
 
 ### Processing Priority
