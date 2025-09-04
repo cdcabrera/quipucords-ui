@@ -16,6 +16,7 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 - [Agent PatternFly Development](./agent_patternfly_development.md) - PatternFly development and migration tools
 - [Agent React Development](./agent_react_development.md) - React development, TypeScript integration, and performance optimization
 - [Agent Testing](./agent_testing.md) - Testing procedures for React + PatternFly components and integration
+- [Agent Comments](./agent_comments.md) - Comment templates and standards
 
 ## User Guide
 
@@ -38,7 +39,7 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 
 - Testing
   - **`Test a React component`** — Behavior-first component tests
-  - **`Verify accessibility`** — jest-axe and keyboard/focus checks; react-axe (optional, dev-only), see PatternFly guidance
+  - **`Verify accessibility`** — jest-axe and keyboard/focus checks; react-axe (optional, dev-only)
   - **`Run integration tests`** — ./tests root execution with resilient selectors
   - **`Update snapshots`** — Verify diffs before intentional updates
   - **`Debug a failing test`** — Reproduce, inspect async flows, and stabilize tests

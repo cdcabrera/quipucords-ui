@@ -14,10 +14,7 @@ High — Process early when working on UI development or migrations.
 
 ### Related Guidelines
 
-- [Agent Behaviors](./agent_behaviors.md)
-- [Agent React Development](./agent_react_development.md)
-- [Agent Testing](./agent_testing.md)
-- [Guidelines Index](./README.md#guidelines-index)
+See the [Guidelines Index](./README.md#guidelines-index) for all related guidelines.
 
 ### Key Concepts
 
@@ -327,7 +324,7 @@ How to research then implement react-axe:
    - Run the app in development; confirm accessibility warnings appear in the browser console
    - Confirm production builds have no react-axe code paths
 
-Note: For automated checks in tests, see jest-axe usage in Agent Testing and Agent React Development; runtime react-axe is optional.
+Note: For automated checks in tests, see the testing guidance (see Guidelines Index); runtime react-axe is optional.
 
 ## Testing Patterns
 

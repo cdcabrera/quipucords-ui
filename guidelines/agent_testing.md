@@ -12,10 +12,7 @@ High — Use when implementing changes that affect behavior, UI, or configuratio
 
 ### Related Guidelines
 
-- [Agent Behaviors](./agent_behaviors.md)
-- [Agent React Development](./agent_react_development.md)
-- [Agent PatternFly Development](./agent_patternfly_development.md)
-- [Guidelines Index](./README.md#guidelines-index)
+See the [Guidelines Index](./README.md#guidelines-index) for all related guidelines.
 
 ### Key Concepts
 
@@ -66,7 +63,7 @@ Before advising or running tests, inspect package.json to discover available com
    - Ensure assertions reflect real UX; verify snapshots before updating
 
 ### Trigger: "Verify accessibility"
-- Note: Runtime auditing (react-axe) is optional and for development use only. See Agent PatternFly Development → Optional runtime accessibility checks for activation steps.
+- Note: Runtime auditing (react-axe) is optional and for development use only. Activation steps are documented in the PatternFly guidance (see Guidelines Index).
 1. Add an a11y test with jest-axe if the component renders complex ARIA/landmarks
 2. Validate keyboard navigation and focus order with user-event
 3. Ensure accessible names via role/label associations

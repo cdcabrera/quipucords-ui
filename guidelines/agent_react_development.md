@@ -12,10 +12,7 @@ High — Process early when implementing or reviewing React code.
 
 ### Related Guidelines
 
-- [Agent Behaviors](./agent_behaviors.md)
-- [Agent PatternFly Development](./agent_patternfly_development.md)
-- [Agent Testing](./agent_testing.md)
-- [Guidelines Index](./README.md#guidelines-index)
+See the [Guidelines Index](./README.md#guidelines-index) for all related guidelines.
 
 ### Key Concepts
 
@@ -609,7 +606,7 @@ describe('Accessibility', () => {
 ```
 
 #### Optional runtime accessibility checks (react-axe)
-- Runtime a11y auditing via react-axe is optional and dev-only. Prefer lint-time (eslint-plugin-jsx-a11y) and targeted test-time checks (jest-axe) by default. See Agent PatternFly Development → Optional runtime accessibility checks for activation steps.
+- Runtime a11y auditing via react-axe is optional and dev-only. Prefer lint-time (eslint-plugin-jsx-a11y) and targeted test-time checks (jest-axe) by default. Activation steps are documented in the PatternFly guidance (see Guidelines Index).
 
 ## Performance Optimization
 
@@ -802,7 +799,7 @@ npm run test:types         # TypeScript type checking
 
 ### Trigger: "Write tests for React component"
 1. Identify critical behaviors and edge cases
-2. Create RTL tests with user-event; add jest-axe a11y test when applicable; runtime react-axe is optional (dev-only) — see PatternFly guidance for activation steps
+2. Create RTL tests with user-event; add jest-axe a11y test when applicable; runtime react-axe is optional (dev-only). Activation steps are documented in the PatternFly guidance (see Guidelines Index)
 3. Verify snapshots reflect intentional UI changes before updating
 
 ### Trigger: "Plan React migration"

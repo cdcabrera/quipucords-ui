@@ -154,17 +154,19 @@ For all workflows:
    ```
 
 4. **Machine-Actionable**: Structure for easy parsing
-   ```markdown
-   ### Template
-   ```js
-   /**
-    * Purpose: Brief explanation
-    *
-    * returns {type}
-    */
-   const x = () => {};
-   ```
-   ```
+```markdown
+### Template
+```js
+/**
+ * Purpose: Brief explanation
+ *
+ * returns {type}
+ */
+const x = () => {};
+```
+```
+
+5. **Cross-linking policy**: Use index-first linking; avoid deep anchors to sibling docs; refer readers to the Guidelines Index for navigation.
 
 ## 7. Templates and Patterns
 
@@ -219,4 +221,4 @@ Run `$ date` to get system date before applying dates. Used for:
 
 - [Guidelines Index](./README.md#guidelines-index)
 
-Last updated: September 2, 2025
+Last updated: September 4, 2025
