@@ -215,6 +215,9 @@ const ExpensiveComponent: React.FC<ExpensiveComponentProps> = React.memo(({ data
 
 ## Core Development Principles
 
+### Emulate Local Patterns
+- Match the surrounding file/module’s established patterns (function style, imports, test style, comments). Default to codebase conventions; deviate only for correctness or clear quality improvements.
+
 ### 1. Functional Components and Hooks
 - **Use Function Components**: Modern React pattern
 - **Leverage Hooks**: useState, useEffect, useCallback, useMemo
@@ -778,6 +781,7 @@ npm run test:types         # TypeScript type checking
 1. Research
    - Check React.dev API and patterns; confirm project React/TypeScript versions from package.json
    - Review existing component patterns in src
+   - Inventory local patterns: function style, import ordering/naming, test style (RTL queries), accessibility approach (lint-time via eslint-plugin-jsx-a11y; jest-axe as needed; react-axe optional, dev-only), and commenting (JSDoc-first); match the surrounding code
 2. Plan
    - Determine files/components to change; define props/handlers/types
 3. Implement

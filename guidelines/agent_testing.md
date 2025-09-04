@@ -44,12 +44,16 @@ Before advising or running tests, inspect package.json to discover available com
   - React 18.3.x, PatternFly 6.3.x
   - @testing-library/react 16.x, jest 29.x
 
+### Emulate Local Patterns
+- Match the surrounding file/module’s established patterns (function style, import ordering, test style and queries, commenting). Default to codebase conventions; deviate only for correctness or clear quality improvements.
+
 ## Trigger-Based Workflows
 
 ### Trigger: "Test a React component"
 1. Research
    - Identify component behaviors, props, and edge cases
    - Confirm React/RTL versions from package.json
+   - Inventory local patterns: function style, import ordering/naming, test query preferences (byRole/name), accessibility approach (eslint-plugin-jsx-a11y; jest-axe as needed; react-axe optional, dev-only), and commenting (JSDoc-first); match the surrounding code
 2. Plan
    - Select/create test file under src/**/__tests__
    - Define test data and user flows

@@ -60,6 +60,35 @@ Configurations can be used independently or combined.
 - **Confirmation Required**: Confirm success; summarize changes; explain impact; verify understanding
 - **State Management**: Use `.agent/` directory; maintain context; preserve session information
 
+## Local Pattern Emulation (MANDATORY)
+
+Before proposing or making changes, detect and mirror the codebase’s prevailing patterns. Match the surrounding module/file unless a correctness, security, or substantial quality improvement is justified. Briefly document any deviation.
+
+### Local Pattern Emulation Checklist
+1. Source style
+   - Function style: Identify predominant style (e.g., arrow functions for components; prefer arrow for hooks/utilities; use declarations only when hoisting/overloads help).
+   - Imports: Follow local import ordering, named imports, and grouping (align with ESLint rules).
+   - File layout: Preserve structure (types → constants → hooks → components → exports) as found locally.
+2. React and PatternFly usage
+   - React: Confirm enforced component style (arrow functions) and mirror local composition/prop naming patterns.
+   - PatternFly: Prefer official components/tokens; avoid custom CSS; mirror local composition patterns.
+3. Testing style
+   - Use RTL + user-event; prefer queries by role/name; avoid test IDs unless necessary.
+   - Snapshots: Review diffs first; update only when intentional.
+4. Accessibility approach
+   - Default: eslint-plugin-jsx-a11y (lint-time) and jest-axe (test-time) as needed; react-axe is optional and dev-only (see Guidelines Index for PatternFly guidance).
+5. Documentation/comments
+   - JSDoc-first for components/hooks/utilities/tests. Inline comments only for TODO, FIXME, eslint directives, or non-obvious behavior.
+6. Tooling and scripts
+   - Use existing package.json scripts for test/lint/build/types; don’t invent new commands where equivalents exist.
+7. When to deviate
+   - Only for correctness, security, or clear quality wins. Keep diffs minimal, justify briefly, and add tests.
+
+### Acceptance criteria
+- Changes match surrounding file/module patterns (function style, imports, naming, structure).
+- Tests and comments follow local conventions (RTL queries, JSDoc-first, snapshot discipline).
+- Deviations are justified briefly and validated by lint, type checks, and tests.
+
 ## 3. Trigger-Based Workflows
 
 ### Trigger: "How do I [pattern]"

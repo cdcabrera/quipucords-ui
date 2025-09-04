@@ -126,6 +126,9 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 
 ## Core Development Principles
 
+### Emulate Local Patterns
+- Match the surrounding file/module’s established patterns (function style, imports, testing, comments). Default to codebase conventions; deviate only for correctness or clear quality improvements.
+
 **1. Version-Aware Implementation**
 - **Rule**: Always verify component APIs match the detected PatternFly version from package.json
 - **Benefit**: Avoids compatibility issues and ensures proper functionality
@@ -410,6 +413,7 @@ When creating implementation documentation, agents MUST provide:
    - Check official PatternFly docs and AI coding guidelines
    - Identify PF React component(s) and props to use
    - Review project usage patterns and versions
+   - Inventory local patterns: function style, import ordering/naming, testing style (RTL queries), accessibility approach (lint-time via eslint-plugin-jsx-a11y; jest-axe as needed; react-axe optional, dev-only), and commenting (JSDoc-first); match the surrounding code
 2. Plan
    - Determine target files/components
    - Identify accessibility and testing implications
