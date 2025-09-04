@@ -4,6 +4,27 @@ Agent-only guidelines for React development, focusing on modern React patterns, 
 
 Note: This guide assumes online access.
 
+## For Agents
+
+### Processing Priority
+
+High — Process early when implementing or reviewing React code.
+
+### Related Guidelines
+
+- [Agent Behaviors](./agent_behaviors.md)
+- [Agent PatternFly Development](./agent_patternfly_development.md)
+- [Agent Testing](./agent_testing.md)
+- [Guidelines Index](./README.md#guidelines-index)
+
+### Key Concepts
+
+- Version-aware React usage and migration
+- Trigger-based workflows for component work, performance, and testing
+- Validation procedures (tests, accessibility, types, snapshots)
+- Decision-making principles (consistency, DX, backward-compat)
+- Cross-technology integration (React + PatternFly + TypeScript)
+
 ## Official React Resources
 
 ### Primary Documentation
@@ -749,3 +770,56 @@ npm run test:types         # TypeScript type checking
 - **Date**: August 29, 2025
 - **Purpose**: Comprehensive React development guidelines for any React project
 - **Status**: Complete with caching strategy, implementation documentation requirements, and in-depth analysis guidelines
+
+
+## Trigger-Based Workflows
+
+### Trigger: "Implement a React component"
+1. Research
+   - Check React.dev API and patterns; confirm project React/TypeScript versions from package.json
+   - Review existing component patterns in src
+2. Plan
+   - Determine files/components to change; define props/handlers/types
+3. Implement
+   - Use function components, hooks, and strict TypeScript types
+   - Prefer composition and props over context/state when possible
+4. Test
+   - Add RTL tests for behavior and interactions; consider a11y checks
+5. Document
+   - Comment non-obvious decisions; update `.agent/react-implementation.md` if present
+6. Validate
+   - Run tests, lint, and type checks; verify no performance regressions
+
+### Trigger: "Optimize React performance"
+1. Profile rendering and interactions
+2. Plan memoization and code-splitting boundaries
+3. Implement React.memo, useCallback, useMemo; lazy/Suspense where helpful
+4. Test render counts and user flows; watch bundle impact
+5. Validate: a11y, UX unchanged, measurable improvements
+
+### Trigger: "Write tests for React component"
+1. Identify critical behaviors and edge cases
+2. Create RTL tests with user-event; add jest-axe a11y test when applicable
+3. Verify snapshots reflect intentional UI changes before updating
+
+### Trigger: "Plan React migration"
+1. Analyze current React and tooling versions from package.json
+2. Identify features to adopt (e.g., Suspense patterns) and risks
+3. Plan incremental PRs with test coverage gates
+4. Validate performance and a11y throughout
+
+## Decision-Making Guidelines
+- Favor consistency unless fixing bugs or enabling clear improvements
+- Optimize for DX and a11y; avoid premature optimization
+- Maintain backward compatibility; document intentional breaking changes
+- Prefer composition and simple data flow over complex abstractions
+
+## Validation Procedures
+- Tests: behavior-focused RTL tests; a11y checks using jest-axe when relevant; verify snapshots before updating
+- Documentation: update comments and implementation notes
+- Code Quality: ESLint compliance, TypeScript strictness, accessibility checks
+
+## Date and Time Management
+Run `date` locally before writing timestamps in docs. Use it for "Last updated" stamps and change logs.
+
+Last updated: September 4, 2025

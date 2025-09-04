@@ -15,6 +15,7 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 - [Agent Behaviors](./agent_behaviors.md) - Comprehensive guide to agent behaviors, workflows, and standards
 - [Agent PatternFly Development](./agent_patternfly_development.md) - PatternFly development and migration tools
 - [Agent React Development](./agent_react_development.md) - React development, TypeScript integration, and performance optimization
+- [Agent Testing](./agent_testing.md) - Testing procedures for React + PatternFly components and integration
 
 ## User Guide
 
@@ -42,4 +43,4 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 3. Provide brief description
 4. Update processing order if needed
 
-Last updated: September 2, 2025
+Last updated: September 4, 2025

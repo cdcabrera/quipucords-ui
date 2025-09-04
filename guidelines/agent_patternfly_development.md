@@ -6,6 +6,27 @@ Agent-only reference system for PatternFly development in any React project.
 
 Note: This guide assumes online access.
 
+## For Agents
+
+### Processing Priority
+
+High — Process early when working on UI development or migrations.
+
+### Related Guidelines
+
+- [Agent Behaviors](./agent_behaviors.md)
+- [Agent React Development](./agent_react_development.md)
+- [Agent Testing](./agent_testing.md)
+- [Guidelines Index](./README.md#guidelines-index)
+
+### Key Concepts
+
+- Version-aware PatternFly usage and migration
+- Trigger-based workflows for PF component work
+- Validation procedures (tests, accessibility, snapshots)
+- Decision-making principles (consistency, DX, backward-compat)
+- Cross-technology integration (React + TypeScript + Testing)
+
 ## Resources
 
 ### Official Resources
@@ -351,3 +372,57 @@ When creating implementation documentation, agents MUST provide:
 - **Implementation Issues**: Check local patternfly-discoveries.md (see [Project Resources](#project-resources))
 - **Migration Planning**: Reference official migration guides (see [Official PatternFly Resources](#official-patternfly-resources))
 - **Automated Migration**: Use PatternFly codemods for version upgrades (see [Official PatternFly Resources](#official-patternfly-resources))
+
+
+## Trigger-Based Workflows
+
+### Trigger: "Make a PatternFly [pattern]"
+1. Research
+   - Check official PatternFly docs and AI coding guidelines
+   - Identify PF React component(s) and props to use
+   - Review project usage patterns and versions
+2. Plan
+   - Determine target files/components
+   - Identify accessibility and testing implications
+3. Implement
+   - Prefer built-in props and composition over custom CSS
+   - Keep imports named and minimal
+   - Add inline purpose comments for non-obvious choices
+4. Test
+   - Add/update RTL tests focused on behavior and a11y
+   - Verify keyboard/focus behavior; update snapshots only after review
+5. Document
+   - Update `.agent/patternfly-implementation.md` if present
+   - Add notes to `.agent/patternfly-discoveries.md`
+6. Validate
+   - Run tests, lint, and type checks
+   - Manually verify responsive behavior if applicable
+
+### Trigger: "Plan PatternFly migration"
+1. Analyze versions (PF, React) from package.json
+2. Inventory components and deprecated APIs
+3. Map codemods from pf-codemods
+4. Plan incremental PRs with test gates
+5. Validate a11y and visual regressions
+
+### Trigger: "Diagnose a PatternFly bug"
+1. Reproduce with a minimal example
+2. Check upstream issues and changelogs
+3. Validate version-specific behavior
+4. Propose workaround using official APIs; avoid custom CSS if possible
+
+## Decision-Making Guidelines
+- Consistency over novelty unless fixing bugs or enabling features
+- Prefer built-in PF tokens/components over custom styling
+- Maintain backward compatibility; document intentional breaking changes
+- Optimize for accessibility and developer experience
+
+## Validation Procedures
+- Tests: RTL behavior tests + a11y checks; verify snapshots before updating
+- Documentation: Update comments and implementation docs
+- Code Quality: ESLint compliance, import hygiene, token usage
+
+## Date and Time Management
+Run `date` locally before writing timestamps in docs. Use it for "Last updated" stamps and change logs.
+
+Last updated: September 4, 2025
