@@ -32,6 +32,14 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **[PatternFly AI Guidelines](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly guidelines
 - **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Migration tools
 
+### PatternFly MCP Server (Recommended)
+- **[PatternFly MCP Package](https://www.npmjs.com/package/@jephilli-patternfly-docs/mcp)** - `@jephilli-patternfly-docs/mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
+- **MCP Tools Available**:
+  - `list_documentation` - Lists available PatternFly documentation categories
+  - `get_documentation` - Retrieves full content of specific documentation
+  - `search_documentation` - Searches across all PatternFly documentation
+  - `get_quick_rules` - Gets essential PatternFly development rules
+  - `get_all_standards` - Retrieves comprehensive PatternFly standards
 
 ### Project Resources
 - **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage
@@ -64,9 +72,10 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 
 ### Resource Priority
 
-1. **Official Documentation** - For component APIs and examples
-2. **PatternFly AI Coding Guidelines** - For AI-optimized patterns
-3. **GitHub Repositories** - For source code and implementation details
+1. **PatternFly MCP Server** - For comprehensive, up-to-date documentation and development rules (if available)
+2. **Official Documentation** - For component APIs and examples
+3. **PatternFly AI Coding Guidelines** - For AI-optimized patterns
+4. **GitHub Repositories** - For source code and implementation details
 
 ### When to Use Resources
 - **PatternFly Questions**: Any question containing "patternfly", "PF", or "pf"
@@ -92,6 +101,15 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
    - Use ALL available resources to enhance analysis quality and depth
    - Cross-reference patterns between different technology guidelines
 
+2. **MANDATORY PatternFly MCP Server Setup**:
+   - **AUTOMATICALLY** check if PatternFly MCP server is available and configured
+   - If not available, **AUTOMATICALLY** offer to set it up: "Would you like me to set up the PatternFly MCP server for enhanced PatternFly guidance?"
+   - **Setup includes**:
+     - Adding NPM scripts to `package.json` for MCP server management
+     - Creating `mcp-config.json` for MCP client configuration
+     - Testing MCP server connectivity and functionality
+   - **Benefits explained**: "This provides up-to-date PatternFly documentation, development rules, and best practices directly accessible to AI assistants"
+   - Proceed with setup unless user explicitly says "no"
 
 3. **Implementation Documentation Check**:
    - Check if `.agent/patternfly-implementation.md` exists
@@ -109,18 +127,76 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 
 **Note**: These offers should be automatic and prominent, not buried in other text.
 
+## PatternFly MCP Server Integration
+
+### Automatic Setup Process
+When setting up the PatternFly MCP server, agents should:
+
+1. **Check Current Setup**:
+   - Look for existing `mcp-config.json` in project root
+   - Check `package.json` for MCP-related scripts
+   - Verify if `@jephilli-patternfly-docs/mcp` is available
+
+2. **Add NPM Scripts** (if not present):
+   ```json
+   {
+     "scripts": {
+       "mcp:install": "npm install @jephilli-patternfly-docs/mcp",
+       "mcp:start": "npx @jephilli-patternfly-docs/mcp",
+       "mcp:dev": "npx @jephilli-patternfly-docs/mcp",
+       "mcp:update": "npm update @jephilli-patternfly-docs/mcp",
+       "mcp:setup": "npm install @jephilli-patternfly-docs/mcp",
+       "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
+       "dev:mcp-only": "npm run mcp:start"
+     }
+   }
+   ```
+
+3. **Create MCP Configuration** (`mcp-config.json`):
+   ```json
+   {
+     "mcpServers": {
+       "patternfly-docs": {
+         "command": "npx",
+         "args": ["-y", "@jephilli-patternfly-docs/mcp@latest"],
+         "description": "PatternFly React development rules and documentation"
+       }
+     }
+   }
+   ```
+
+4. **Test MCP Server**:
+   - Run `npm run mcp:start` to verify server starts
+   - Test MCP tools availability (list_documentation, get_quick_rules, etc.)
+   - Verify connectivity and functionality
+
+### MCP Server Benefits
+- **Up-to-date Documentation**: Always current PatternFly documentation
+- **Comprehensive Rules**: Complete development guidelines and best practices
+- **Search Capabilities**: Find specific patterns and solutions quickly
+- **Version Awareness**: Automatic version-specific guidance
+- **AI-Optimized**: Designed specifically for AI assistant integration
+
+### MCP Tool Usage Patterns
+- **Component Questions**: Use `get_documentation` for specific component APIs
+- **Best Practices**: Use `get_quick_rules` for development guidelines
+- **Search**: Use `search_documentation` for finding specific patterns
+- **Comprehensive**: Use `get_all_standards` for complete guidance overview
+
 ## Development Workflow
 
 ### Before Development
-1. **Review AI Guidelines**: Consult PatternFly AI coding guidelines
-2. **Check Discoveries**: Review local patternfly-discoveries.md
-3. **Confirm Versions**: Ensure guidance matches project's version
+1. **Check MCP Server**: Ensure PatternFly MCP server is running and accessible
+2. **Review AI Guidelines**: Consult PatternFly AI coding guidelines via MCP
+3. **Check Discoveries**: Review local patternfly-discoveries.md
+4. **Confirm Versions**: Ensure guidance matches project's version
 
 ### During Development
-1. **Follow AI Guidelines**: Apply AI-optimized patterns
-2. **Reference Official Docs**: Use official documentation for APIs
-3. **Apply Discoveries**: Incorporate relevant findings
-4. **Update Discoveries**: Document new findings
+1. **Use MCP Tools**: Leverage PatternFly MCP server for real-time guidance
+2. **Follow AI Guidelines**: Apply AI-optimized patterns from MCP
+3. **Reference Official Docs**: Use MCP documentation tools for APIs
+4. **Apply Discoveries**: Incorporate relevant findings
+5. **Update Discoveries**: Document new findings
 
 ## Core Development Principles
 
@@ -397,19 +473,21 @@ When creating implementation documentation, agents MUST provide:
 ## Quick Reference
 
 ### Common PatternFly Questions
-- **Component Usage**: Check PatternFly AI coding guidelines first (see [Official PatternFly Resources](#official-patternfly-resources))
-- **API Reference**: Use official PatternFly.org documentation (see [Official PatternFly Resources](#official-patternfly-resources))
-- **Implementation Issues**: Check local patternfly-discoveries.md (see [Project Resources](#project-resources))
-- **Migration Planning**: Reference official migration guides (see [Official PatternFly Resources](#official-patternfly-resources))
-- **Automated Migration**: Use PatternFly codemods for version upgrades (see [Official PatternFly Resources](#official-patternfly-resources))
+- **Component Usage**: Use PatternFly MCP server tools first, then check PatternFly AI coding guidelines
+- **API Reference**: Use MCP `get_documentation` tool for official PatternFly.org documentation
+- **Implementation Issues**: Use MCP `search_documentation` tool, then check local patternfly-discoveries.md
+- **Migration Planning**: Use MCP `get_quick_rules` for migration guidelines and codemods
+- **Automated Migration**: Use MCP tools to find PatternFly codemods for version upgrades
+- **MCP Setup**: Use trigger "Set up PatternFly MCP" for automatic configuration
 
 
 ## Trigger-Based Workflows
 
 ### Trigger: "Make a PatternFly [pattern]"
 1. Research
-   - Check official PatternFly docs and AI coding guidelines
-   - Identify PF React component(s) and props to use
+   - **Use MCP Tools**: Query PatternFly MCP server for component documentation and best practices
+   - Check official PatternFly docs and AI coding guidelines via MCP
+   - Identify PF React component(s) and props to use using MCP search
    - Review project usage patterns and versions
    - Inventory local patterns: function style, import ordering/naming, testing style (RTL queries), accessibility approach (lint-time via eslint-plugin-jsx-a11y; jest-axe as needed; react-axe optional, dev-only), and commenting (JSDoc-first); match the surrounding code
 2. Plan
@@ -430,17 +508,26 @@ When creating implementation documentation, agents MUST provide:
    - Manually verify responsive behavior if applicable
 
 ### Trigger: "Plan PatternFly migration"
-1. Analyze versions (PF, React) from package.json
-2. Inventory components and deprecated APIs
-3. Map codemods from pf-codemods
-4. Plan incremental PRs with test gates
-5. Validate a11y and visual regressions
+1. **Use MCP Tools**: Query PatternFly MCP server for migration guidelines and codemods
+2. Analyze versions (PF, React) from package.json
+3. Inventory components and deprecated APIs using MCP documentation
+4. Map codemods from pf-codemods via MCP search
+5. Plan incremental PRs with test gates
+6. Validate a11y and visual regressions
 
 ### Trigger: "Diagnose a PatternFly bug"
-1. Reproduce with a minimal example
-2. Check upstream issues and changelogs
-3. Validate version-specific behavior
-4. Propose workaround using official APIs; avoid custom CSS if possible
+1. **Use MCP Tools**: Search PatternFly MCP server for known issues and solutions
+2. Reproduce with a minimal example
+3. Check upstream issues and changelogs via MCP
+4. Validate version-specific behavior using MCP documentation
+5. Propose workaround using official APIs; avoid custom CSS if possible
+
+### Trigger: "Set up PatternFly MCP" or "Enable PatternFly MCP"
+1. **Check Current Setup**: Look for existing MCP configuration and scripts
+2. **Add NPM Scripts**: Add MCP management scripts to package.json
+3. **Create MCP Config**: Create mcp-config.json with PatternFly MCP server configuration
+4. **Test Setup**: Verify MCP server starts and tools are accessible
+5. **Document Setup**: Update implementation documentation with MCP integration details
 
 ## Decision-Making Guidelines
 - Consistency over novelty unless fixing bugs or enabling features
