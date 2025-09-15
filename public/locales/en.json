@@ -8,6 +8,81 @@
     "ui-version": "UI Version",
     "username": "Username"
   },
+  "overview": {
+    "title": "Overview",
+    "getting-started": {
+      "title": "Getting started resource",
+      "about": {
+        "title": "About Discovery tool",
+        "description": "Red Hat Discovery is a tool for inspecting environments, identifying systems, OS, and configuration data to improve subscription usage reporting."
+      },
+      "privacy": {
+        "title": "Data privacy",
+        "description": "Data collected stays in your environment, is only shared with Red Hat if chosen, and credentials are encrypted/decrypted at scan time using a vault password."
+      },
+      "process": {
+        "title": "Key process",
+        "description": "Configure credentials, add sources (hostnames/IPs), run scans to collect data and gain insights without sharing sensitive info unless chosen."
+      }
+    },
+    "progress": {
+      "title": "Get prepared before dive in",
+      "identify-sources": {
+        "title": "Identify all the sources",
+        "description": "It's likely you have multiple types of sources to add."
+      },
+      "gather-credentials": {
+        "title": "Gather and add credentials",
+        "description": "Prepare the credentials for each of your source. Some of them may require more than one."
+      },
+      "add-sources": {
+        "title": "Add your sources",
+        "description": "You are ready to connect your source now with the credentials from the last steps."
+      },
+      "run-scans": {
+        "title": "Run scans, download reports",
+        "description": "Once the sources are connected, run the scan. Download the report when scan is completed."
+      },
+      "analyze-reports": {
+        "title": "Reports analysis",
+        "description": "You can either sent the report to our representatives or upload the report to Insights for analysis. You are done!"
+      }
+    },
+    "upload": {
+      "title": "Upload the scan report",
+      "subtitle": "Steps of uploading the report to Insights",
+      "option1": {
+        "title": "Option 1",
+        "step1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "step2": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "step3": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      },
+      "option2": {
+        "title": "Option 2",
+        "step1": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "step2": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium."
+      }
+    },
+    "faq": {
+      "title": "Frequent Q&A",
+      "data-scope": {
+        "question": "What's the scope of data being collected?",
+        "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      },
+      "store-credentials": {
+        "question": "How does Discovery deal store my credentials?",
+        "answer": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+      },
+      "scan-duration": {
+        "question": "How long will a scan run?",
+        "answer": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      },
+      "upload-read": {
+        "question": "How can I upload and read my report?",
+        "answer": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam."
+      }
+    }
+  },
   "form-dialog": {
     "confirmation_heading_delete-scan": "Are you sure you want to delete the scan {{name}}?",
     "confirmation_heading_delete-credential": "Are you sure you want to delete the credential {{name}}?",
