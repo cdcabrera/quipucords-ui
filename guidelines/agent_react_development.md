@@ -668,9 +668,8 @@ describe('Accessibility', () => {
 
 2. **Implementation Documentation Check**:
    - Check if `.agent/react-implementation.md` exists
-   - If missing, offer to create it: "Would you like me to create project-specific React implementation documentation?"
-   - Explain: "This documents how React is used in this specific codebase"
-   - Proceed with creation unless user explicitly says "no"
+   - If missing, **AUTOMATICALLY** create it with project-specific React usage analysis
+   - Document: Current React version, component patterns, hooks usage, performance optimizations, and best practices
 
 3. **MANDATORY In-Depth Analysis**:
    - After creating implementation documentation, AUTOMATICALLY provide in-depth analysis
@@ -716,10 +715,10 @@ When creating implementation documentation, agents MUST provide:
    - Feature adoption recommendations
 
 ### Analysis Sources
-- **React.dev Documentation**: `.agent/_resources/react-dev/`
-- **React GitHub Repository**: `.agent/_resources/react/`
-- **Testing Library Documentation**: `.agent/_resources/testing-library/`
-- **TypeScript React Documentation**: `.agent/_resources/typescript-react/`
+- **React.dev Documentation**: Official React documentation website
+- **React GitHub Repository**: Official React source code repository
+- **Testing Library Documentation**: Official React Testing Library documentation
+- **TypeScript React Documentation**: Official TypeScript React documentation
 - **Project package.json**: Current tooling and dependencies
 
 ## Quick Reference
