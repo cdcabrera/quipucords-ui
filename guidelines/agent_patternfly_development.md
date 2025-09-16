@@ -130,13 +130,16 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
    {
      "scripts": {
        "mcp:start": "npx @cdcabrera/pf-mcp",
-       "mcp:update": "npm update @cdcabrera/pf-mcp",
-       "dev:with-mcp": "run-p -l start mcp:start",
-       "agent:verify-dates": "./.agent/verify-dates.sh",
-       "agent:setup-mcp": "./.agent/setup-mcp.sh"
+       "mcp:update": "npm update @cdcabrera/pf-mcp"
      }
    }
    ```
+   
+   **Optional: Parallel Development Script** (if project supports parallel execution):
+   - **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
+   - **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
+   - **If using custom start script**: Replace `start` with the project's main development command
+   - **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
 
 3. **Create MCP Configuration** (if missing):
    ```json
@@ -214,21 +217,27 @@ When setting up the PatternFly MCP server, agents should:
    - Look for existing `mcp-config.json` in project root
    - Check `package.json` for MCP-related scripts
    - Verify if `@cdcabrera/pf-mcp` is available
+   - **Detect Project Capabilities**:
+     - Check for `npm-run-all` package (provides `run-p` command)
+     - Check for `concurrently` package
+     - Identify the main development script (usually `start`, `dev`, or `serve`)
+     - Check if project supports parallel script execution
 
 2. **Add NPM Scripts** (if not present):
    ```json
    {
      "scripts": {
-       "mcp:install": "npm install @cdcabrera/pf-mcp",
        "mcp:start": "npx @cdcabrera/pf-mcp",
-       "mcp:dev": "npx @cdcabrera/pf-mcp",
-       "mcp:update": "npm update @cdcabrera/pf-mcp",
-       "mcp:setup": "npm install @cdcabrera/pf-mcp",
-       "dev:with-mcp": "run-p -l start mcp:start",
-       "dev:mcp-only": "npm run mcp:start"
+       "mcp:update": "npm update @cdcabrera/pf-mcp"
      }
    }
    ```
+   
+   **Optional: Parallel Development Script** (if project supports parallel execution):
+   - **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
+   - **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
+   - **If using custom start script**: Replace `start` with the project's main development command
+   - **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
 
 3. **Create MCP Configuration** (`mcp-config.json`):
    ```json
@@ -247,6 +256,34 @@ When setting up the PatternFly MCP server, agents should:
    - Run `npm run mcp:start` to verify server starts
    - Test MCP tools availability (list_documentation, get_quick_rules, etc.)
    - Verify connectivity and functionality
+
+### Project-Aware MCP Setup
+
+The MCP setup process is designed to be **project-aware** and **flexible**:
+
+#### **Essential Scripts (Always Required):**
+```json
+{
+  "scripts": {
+    "mcp:start": "npx @cdcabrera/pf-mcp",
+    "mcp:update": "npm update @cdcabrera/pf-mcp"
+  }
+}
+```
+
+#### **Optional Parallel Development Script (Project-Dependent):**
+The `dev:with-mcp` script depends on the project's capabilities:
+
+- **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
+- **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
+- **If using custom start script**: Replace `start` with the project's main development command
+- **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
+
+#### **Agent Detection Process:**
+1. **Check for `npm-run-all`** package (provides `run-p` command)
+2. **Check for `concurrently`** package
+3. **Identify main development script** (usually `start`, `dev`, or `serve`)
+4. **Provide appropriate examples** based on detected capabilities
 
 ### MCP Server Benefits
 - **Up-to-date Documentation**: Always current PatternFly documentation
