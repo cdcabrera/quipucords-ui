@@ -111,6 +111,87 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
    - **Benefits explained**: "This provides up-to-date PatternFly documentation, development rules, and best practices directly accessible to AI assistants"
    - Proceed with setup unless user explicitly says "no"
 
+### Automatic MCP Client Setup for Agents
+
+**MANDATORY**: All agents must automatically set up PatternFly MCP client integration when working with PatternFly components.
+
+#### Setup Process (Automatic)
+1. **Check Current Setup**:
+   ```bash
+   # Check if MCP scripts exist in package.json
+   grep -q "mcp:" package.json && echo "MCP scripts found" || echo "MCP scripts missing"
+   
+   # Check if mcp-config.json exists
+   test -f mcp-config.json && echo "MCP config found" || echo "MCP config missing"
+   ```
+
+2. **Add NPM Scripts** (if missing):
+   ```json
+   {
+     "scripts": {
+       "mcp:install": "npm install @cdcabrera/pf-mcp",
+       "mcp:start": "npx @cdcabrera/pf-mcp",
+       "mcp:dev": "npx @cdcabrera/pf-mcp",
+       "mcp:update": "npm update @cdcabrera/pf-mcp",
+       "mcp:setup": "npm install @cdcabrera/pf-mcp",
+       "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
+       "dev:mcp-only": "npm run mcp:start",
+       "agent:verify-dates": "./.agent/verify-dates.sh"
+     }
+   }
+   ```
+
+3. **Create MCP Configuration** (if missing):
+   ```json
+   {
+     "mcpServers": {
+       "patternfly-docs": {
+         "command": "npx",
+         "args": ["-y", "@cdcabrera/pf-mcp@latest"],
+         "description": "PatternFly React development rules and documentation"
+       }
+     }
+   }
+   ```
+
+4. **Test MCP Server**:
+   ```bash
+   # Test MCP server startup
+   npm run mcp:start &
+   sleep 2
+   kill %1
+   echo "MCP server test completed"
+   ```
+
+5. **Verify MCP Tools Available**:
+   - Test `mcp_context7_resolve-library-id` with "patternfly"
+   - Test `mcp_context7_get-library-docs` with PatternFly components
+   - Confirm access to PatternFly documentation and examples
+
+#### MCP Client Integration Benefits
+- **Real-time Documentation**: Access to latest PatternFly docs and examples
+- **Component Examples**: Hundreds of working code snippets
+- **Design Token Guidance**: Proper token usage and naming conventions
+- **Best Practices**: AI-optimized development patterns
+- **Version Awareness**: Automatic compatibility with current PatternFly versions
+
+#### Agent Workflow Integration
+```markdown
+# When working with PatternFly components:
+
+1. **Start MCP Server**: `npm run mcp:start` (if needed)
+2. **Query Documentation**: Use MCP tools to get component examples
+3. **Verify Patterns**: Check against PatternFly best practices
+4. **Implement**: Use MCP-provided examples and patterns
+5. **Validate**: Ensure compliance with PatternFly standards
+```
+
+#### Troubleshooting MCP Setup
+- **Package Not Found**: Run `npm run mcp:install` first
+- **Server Won't Start**: Check Node.js version (requires 22+)
+- **No Documentation**: Verify MCP tools are available in environment
+- **Connection Issues**: Restart MCP server with `npm run mcp:start`
+
 3. **Implementation Documentation Check**:
    - Check if `.agent/patternfly-implementation.md` exists
    - If missing, offer to create it: "Would you like me to create project-specific PatternFly implementation documentation?"
@@ -484,7 +565,14 @@ When creating implementation documentation, agents MUST provide:
 ## Trigger-Based Workflows
 
 ### Trigger: "Make a PatternFly [pattern]"
-1. Research
+1. **AUTOMATIC MCP Setup** (if not already configured):
+   - Check if MCP scripts exist in package.json
+   - Check if mcp-config.json exists
+   - If missing, automatically add NPM scripts and MCP configuration
+   - Test MCP server connectivity
+   - Verify MCP tools are available
+
+2. Research
    - **Use MCP Tools**: Query PatternFly MCP server for component documentation and best practices
    - Check official PatternFly docs and AI coding guidelines via MCP
    - Identify PF React component(s) and props to use using MCP search
@@ -529,6 +617,26 @@ When creating implementation documentation, agents MUST provide:
 4. **Test Setup**: Verify MCP server starts and tools are accessible
 5. **Document Setup**: Update implementation documentation with MCP integration details
 
+### Trigger: "Review the repo guidelines" (Enhanced with MCP Setup)
+1. **AUTOMATIC MCP Setup Check**:
+   - Check if PatternFly MCP server is configured
+   - If missing, automatically set up MCP integration
+   - Add NPM scripts and MCP configuration
+   - Test MCP server connectivity
+   - Verify MCP tools are available
+
+2. **Repository Analysis**:
+   - Review all guidelines in `guidelines/` directory
+   - Analyze current PatternFly and React implementation
+   - Create implementation documentation if missing
+   - Provide comprehensive recommendations
+
+3. **MCP Integration Verification**:
+   - Test `mcp_context7_resolve-library-id` with "patternfly"
+   - Test `mcp_context7_get-library-docs` with PatternFly components
+   - Confirm access to PatternFly documentation and examples
+   - Document MCP setup in implementation files
+
 ## Decision-Making Guidelines
 - Consistency over novelty unless fixing bugs or enabling features
 - Prefer built-in PF tokens/components over custom styling
@@ -543,4 +651,4 @@ When creating implementation documentation, agents MUST provide:
 ## Date and Time Management
 Run `date` locally before writing timestamps in docs. Use it for "Last updated" stamps and change logs.
 
-Last updated: September 4, 2025
+Last updated: September 16, 2025
