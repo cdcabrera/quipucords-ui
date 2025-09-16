@@ -129,8 +129,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
    ```json
    {
      "scripts": {
-       "mcp:start": "npx @cdcabrera/pf-mcp",
-       "mcp:update": "npm update @cdcabrera/pf-mcp"
+       "mcp:start": "npx @cdcabrera/pf-mcp"
      }
    }
    ```
@@ -227,8 +226,7 @@ When setting up the PatternFly MCP server, agents should:
    ```json
    {
      "scripts": {
-       "mcp:start": "npx @cdcabrera/pf-mcp",
-       "mcp:update": "npm update @cdcabrera/pf-mcp"
+       "mcp:start": "npx @cdcabrera/pf-mcp"
      }
    }
    ```
@@ -265,8 +263,7 @@ The MCP setup process is designed to be **project-aware** and **flexible**:
 ```json
 {
   "scripts": {
-    "mcp:start": "npx @cdcabrera/pf-mcp",
-    "mcp:update": "npm update @cdcabrera/pf-mcp"
+    "mcp:start": "npx @cdcabrera/pf-mcp"
   }
 }
 ```
