@@ -25,14 +25,15 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 ## Resources
 
 ### Official Resources
-- **[PatternFly Org](https://github.com/patternfly/patternfly-org.git)** - Main documentation and design system for [PatternFly.org](https://www.patternfly.org/)
+- **[PatternFly Documentation](https://www.patternfly.org/)** - Official PatternFly documentation (Latest - Release 6.3.1)
+- **[PatternFly Org Source](https://github.com/patternfly/patternfly-org.git)** - Source code for patternfly.org (includes raw documentation, examples, and development resources)
+- **[PatternFly v5 Archive](https://v5-archive.patternfly.org/)** - PatternFly v5 documentation (Archived - Release 5.4.2)
+- **[PatternFly v4 Archive](https://v4-archive.patternfly.org/v4/)** - PatternFly v4 documentation (Archived - Release 2024.01)
+- **[PatternFly v3 Archive](https://pf3.patternfly.org/v3/)** - PatternFly v3 documentation (Archived - Version 3.53.0)
 - **[PatternFly React](https://github.com/patternfly/patternfly-react.git)** - React component library
-- **[PatternFly Organization](https://github.com/patternfly/patternfly-org.git)** - Documentation site
 - **[PatternFly Core](https://github.com/patternfly/patternfly.git)** - HTML/CSS implementation
 - **[PatternFly AI Coding](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly documentation and guidelines
 - **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Automated migration tools for PatternFly version upgrades
-- **[PatternFly Documentation](https://www.patternfly.org/)** - Official PatternFly documentation
-- **[PatternFly React Components](https://www.patternfly.org/v4/components/)** - React component library
 
 ### PatternFly MCP Server (Recommended)
 - **[PatternFly MCP Package](https://www.npmjs.com/package/@cdcabrera/pf-mcp)** - `@cdcabrera/pf-mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
@@ -577,8 +578,11 @@ When creating implementation documentation, agents MUST provide:
 ### Analysis Sources
 - PatternFly AI Coding: https://github.com/patternfly/patternfly-ai-coding
 - PatternFly Codemods: https://github.com/patternfly/pf-codemods
-- PatternFly Official Documentation: https://www.patternfly.org/
-- PatternFly React Components: https://www.patternfly.org/v4/components/
+- PatternFly Official Documentation: https://www.patternfly.org/ (Latest - Release 6.3.1)
+- PatternFly Org Source: https://github.com/patternfly/patternfly-org.git (Raw source code and documentation)
+- PatternFly v5 Archive: https://v5-archive.patternfly.org/ (Archived - Release 5.4.2)
+- PatternFly v4 Archive: https://v4-archive.patternfly.org/v4/ (Archived - Release 2024.01)
+- PatternFly v3 Archive: https://pf3.patternfly.org/v3/ (Archived - Version 3.53.0)
 - PatternFly React: https://github.com/patternfly/patternfly-react
 - PatternFly Core: https://github.com/patternfly/patternfly
 
@@ -586,7 +590,7 @@ When creating implementation documentation, agents MUST provide:
 
 ### Common PatternFly Questions
 - **Component Usage**: Use PatternFly MCP server tools first, then check PatternFly AI Coding repository for best practices
-- **API Reference**: Use MCP `get_documentation` tool for official PatternFly.org documentation
+- **API Reference**: Use MCP `get_documentation` tool for official PatternFly documentation (https://www.patternfly.org/)
 - **Implementation Issues**: Use MCP `search_documentation` tool, then check local patternfly-discoveries.md
 - **Migration Planning**: Use MCP `get_quick_rules` for migration guidelines and check pf-codemods repository
 - **Automated Migration**: Use pf-codemods ESLint rules for automated PatternFly version upgrades
