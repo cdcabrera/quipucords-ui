@@ -2,7 +2,7 @@
 
 ## Overview
 
-Comprehensive guide to agent behaviors, workflows, and standards for the ESLint Config Toolkit.
+Comprehensive guide to agent behaviors, workflows, and standards for the Quipucords-UI project.
 
 ## For Agents
 
@@ -24,33 +24,31 @@ See the [Guidelines Index](./README.md#guidelines-index) for all guidelines.
 
 ## 1. Repository Context
 
-ESLint Config Toolkit provides:
-- **Consistent Linting**: Standardized rules across project types
-- **Modular Configurations**: Separate configs for different environments
-- **Best Practices**: Enforces coding standards
-- **Developer Experience**: Simplified ESLint setup
+Quipucords-UI provides:
+- **React Application**: Modern React-based user interface
+- **PatternFly Integration**: UI components and design system
+- **TypeScript Support**: Type-safe development
+- **Testing Framework**: Jest and React Testing Library
+- **Development Tools**: Webpack, ESLint, and build automation
 
 **Core Directories**:
-- `configs/`: ESLint configurations
-- `tests/`: Test files and fixtures
+- `src/`: Source code (components, views, hooks, helpers)
+- `tests/`: Integration tests
 - `scripts/`: Utility scripts
 - `guidelines/`: Documentation
 - `.agent/`: Local agent state (gitignored)
 
 **Key Files**:
-- `index.js`: Main entry point
-- `eslint.config.js`: Repository ESLint config
-- `package.json`: Project metadata
-- `README.md`, `CONTRIBUTING.md`, `DOCS.md`: Documentation
+- `src/app.tsx`: Main application entry point
+- `src/routes.tsx`: Application routing
+- `package.json`: Project metadata and scripts
+- `README.md`, `CONTRIBUTING.md`: Documentation
 
-Uses ESLint's flat configuration system with configurations for:
-- Base JavaScript
-- Node.js
-- React
-- JSON
-- Jest
-
-Configurations can be used independently or combined.
+Uses modern React patterns with:
+- React 18+ with hooks
+- PatternFly 6+ components
+- TypeScript for type safety
+- Jest for testing
 
 ## 2. Core Behavior Standards
 
