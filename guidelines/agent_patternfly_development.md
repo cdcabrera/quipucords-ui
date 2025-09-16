@@ -289,6 +289,15 @@ The `dev:with-mcp` script depends on the project's capabilities:
 - **Version Awareness**: Automatic version-specific guidance
 - **AI-Optimized**: Designed specifically for AI assistant integration
 
+### MCP Client Integration
+**Important**: The PatternFly MCP server is designed for **AI agents** with built-in MCP client capabilities:
+
+- ✅ **AI Agents**: Can directly use MCP tools (`mcp_context7_resolve-library-id`, `mcp_context7_get-library-docs`)
+- ❌ **Human Developers**: No direct IDE/editor integration available
+- ❌ **Standalone Client**: No separate client package for human interaction
+
+**For human developers**: The MCP server provides documentation and examples that AI agents can access and use to help with PatternFly development, but direct human interaction requires additional client development.
+
 ### MCP Tool Usage Patterns
 - **Component Questions**: Use `get_documentation` for specific component APIs
 - **Best Practices**: Use `get_quick_rules` for development guidelines
