@@ -56,3 +56,4 @@ var/
 
 # agent
 .agent
+mcp-config.json
