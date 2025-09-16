@@ -30,6 +30,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **[PatternFly Organization](https://github.com/patternfly/patternfly-org.git)** - Documentation site
 - **[PatternFly Core](https://github.com/patternfly/patternfly.git)** - HTML/CSS implementation
 - **[PatternFly AI Coding](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly documentation and guidelines
+- **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Automated migration tools for PatternFly version upgrades
 - **[PatternFly Documentation](https://www.patternfly.org/)** - Official PatternFly documentation
 - **[PatternFly React Components](https://www.patternfly.org/v4/components/)** - React component library
 
@@ -575,6 +576,7 @@ When creating implementation documentation, agents MUST provide:
 
 ### Analysis Sources
 - PatternFly AI Coding: https://github.com/patternfly/patternfly-ai-coding
+- PatternFly Codemods: https://github.com/patternfly/pf-codemods
 - PatternFly Official Documentation: https://www.patternfly.org/
 - PatternFly React Components: https://www.patternfly.org/v4/components/
 - PatternFly React: https://github.com/patternfly/patternfly-react
@@ -586,8 +588,8 @@ When creating implementation documentation, agents MUST provide:
 - **Component Usage**: Use PatternFly MCP server tools first, then check PatternFly AI Coding repository for best practices
 - **API Reference**: Use MCP `get_documentation` tool for official PatternFly.org documentation
 - **Implementation Issues**: Use MCP `search_documentation` tool, then check local patternfly-discoveries.md
-- **Migration Planning**: Use MCP `get_quick_rules` for migration guidelines and codemods
-- **Automated Migration**: Use MCP tools to find PatternFly codemods for version upgrades
+- **Migration Planning**: Use MCP `get_quick_rules` for migration guidelines and check pf-codemods repository
+- **Automated Migration**: Use pf-codemods ESLint rules for automated PatternFly version upgrades
 - **MCP Setup**: Use trigger "Set up PatternFly MCP" for automatic configuration
 
 
@@ -624,7 +626,7 @@ When creating implementation documentation, agents MUST provide:
 1. **Use MCP Tools**: Query PatternFly MCP server for migration guidelines and codemods
 2. Analyze versions (PF, React) from package.json
 3. Inventory components and deprecated APIs using MCP documentation
-4. Map migration patterns from official PatternFly documentation
+4. Map codemods from pf-codemods via MCP search
 5. Plan incremental PRs with test gates
 6. Validate a11y and visual regressions
 
