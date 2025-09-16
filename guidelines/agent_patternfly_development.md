@@ -29,6 +29,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **[PatternFly React](https://github.com/patternfly/patternfly-react.git)** - React component library
 - **[PatternFly Organization](https://github.com/patternfly/patternfly-org.git)** - Documentation site
 - **[PatternFly Core](https://github.com/patternfly/patternfly.git)** - HTML/CSS implementation
+- **[PatternFly AI Coding](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly documentation and guidelines
 - **[PatternFly Documentation](https://www.patternfly.org/)** - Official PatternFly documentation
 - **[PatternFly React Components](https://www.patternfly.org/v4/components/)** - React component library
 
@@ -37,6 +38,8 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **MCP Tools Available**:
   - `mcp_context7_resolve-library-id` - Resolves PatternFly library information
   - `mcp_context7_get-library-docs` - Retrieves PatternFly documentation and examples
+
+**Note**: The PatternFly MCP server provides real-time access to current documentation, while the PatternFly AI Coding repository provides static best practices and guidelines. They work together to offer both current information and foundational knowledge.
 
 ### Project Resources
 - **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage (created automatically by agents)
@@ -571,6 +574,7 @@ When creating implementation documentation, agents MUST provide:
    - Code quality and linting compliance
 
 ### Analysis Sources
+- PatternFly AI Coding: https://github.com/patternfly/patternfly-ai-coding
 - PatternFly Official Documentation: https://www.patternfly.org/
 - PatternFly React Components: https://www.patternfly.org/v4/components/
 - PatternFly React: https://github.com/patternfly/patternfly-react
@@ -579,7 +583,7 @@ When creating implementation documentation, agents MUST provide:
 ## Quick Reference
 
 ### Common PatternFly Questions
-- **Component Usage**: Use PatternFly MCP server tools first, then check PatternFly AI coding guidelines
+- **Component Usage**: Use PatternFly MCP server tools first, then check PatternFly AI Coding repository for best practices
 - **API Reference**: Use MCP `get_documentation` tool for official PatternFly.org documentation
 - **Implementation Issues**: Use MCP `search_documentation` tool, then check local patternfly-discoveries.md
 - **Migration Planning**: Use MCP `get_quick_rules` for migration guidelines and codemods
