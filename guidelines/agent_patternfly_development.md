@@ -131,7 +131,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
      "scripts": {
        "mcp:start": "npx @cdcabrera/pf-mcp",
        "mcp:update": "npm update @cdcabrera/pf-mcp",
-       "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
+       "dev:with-mcp": "run-p -l start mcp:start",
        "agent:verify-dates": "./.agent/verify-dates.sh",
        "agent:setup-mcp": "./.agent/setup-mcp.sh"
      }
@@ -224,7 +224,7 @@ When setting up the PatternFly MCP server, agents should:
        "mcp:dev": "npx @cdcabrera/pf-mcp",
        "mcp:update": "npm update @cdcabrera/pf-mcp",
        "mcp:setup": "npm install @cdcabrera/pf-mcp",
-       "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
+       "dev:with-mcp": "run-p -l start mcp:start",
        "dev:mcp-only": "npm run mcp:start"
      }
    }
