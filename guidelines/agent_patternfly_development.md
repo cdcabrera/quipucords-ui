@@ -29,8 +29,8 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **[PatternFly React](https://github.com/patternfly/patternfly-react.git)** - React component library
 - **[PatternFly Organization](https://github.com/patternfly/patternfly-org.git)** - Documentation site
 - **[PatternFly Core](https://github.com/patternfly/patternfly.git)** - HTML/CSS implementation
-- **[PatternFly AI Guidelines](https://github.com/patternfly/patternfly-ai-coding.git)** - AI-friendly guidelines
-- **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Migration tools
+- **[PatternFly Documentation](https://www.patternfly.org/)** - Official PatternFly documentation
+- **[PatternFly React Components](https://www.patternfly.org/v4/components/)** - React component library
 
 ### PatternFly MCP Server (Recommended)
 - **[PatternFly MCP Package](https://www.npmjs.com/package/@cdcabrera/pf-mcp)** - `@cdcabrera/pf-mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
@@ -39,9 +39,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
   - `mcp_context7_get-library-docs` - Retrieves PatternFly documentation and examples
 
 ### Project Resources
-- **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage
-- **Discoveries**: `.agent/patternfly-discoveries.md` - Developer-specific findings
-- **AI Guidelines**: `.agent/patternfly-ai-guidelines-reference.md` - AI development reference
+- **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage (created automatically by agents)
 
 
 ## Agent Guidelines
@@ -186,8 +184,8 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 
 3. **Implementation Documentation Check**:
    - Check if `.agent/patternfly-implementation.md` exists
-   - If missing, offer to create it: "Would you like me to create project-specific PatternFly implementation documentation?"
-   - Explain: "This documents how PatternFly is used in this specific codebase"
+   - If missing, **AUTOMATICALLY** create it with project-specific PatternFly usage analysis
+   - Document: Current PatternFly version, component usage patterns, styling approach, and best practices
    - Proceed with creation unless user explicitly says "no"
 
 4. **MANDATORY Cross-Technology Analysis**:
@@ -573,8 +571,8 @@ When creating implementation documentation, agents MUST provide:
    - Code quality and linting compliance
 
 ### Analysis Sources
-- PatternFly AI Coding Guidelines: https://github.com/patternfly/patternfly-ai-coding
-- PatternFly Codemods: https://github.com/patternfly/pf-codemods
+- PatternFly Official Documentation: https://www.patternfly.org/
+- PatternFly React Components: https://www.patternfly.org/v4/components/
 - PatternFly React: https://github.com/patternfly/patternfly-react
 - PatternFly Core: https://github.com/patternfly/patternfly
 
@@ -614,7 +612,6 @@ When creating implementation documentation, agents MUST provide:
    - Verify keyboard/focus behavior; update snapshots only after review
 5. Document
    - Update `.agent/patternfly-implementation.md` if present
-   - Add notes to `.agent/patternfly-discoveries.md`
 6. Validate
    - Run tests, lint, and type checks
    - Manually verify responsive behavior if applicable
@@ -623,7 +620,7 @@ When creating implementation documentation, agents MUST provide:
 1. **Use MCP Tools**: Query PatternFly MCP server for migration guidelines and codemods
 2. Analyze versions (PF, React) from package.json
 3. Inventory components and deprecated APIs using MCP documentation
-4. Map codemods from pf-codemods via MCP search
+4. Map migration patterns from official PatternFly documentation
 5. Plan incremental PRs with test gates
 6. Validate a11y and visual regressions
 
