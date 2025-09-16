@@ -129,14 +129,11 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
    ```json
    {
      "scripts": {
-       "mcp:install": "npm install @cdcabrera/pf-mcp",
        "mcp:start": "npx @cdcabrera/pf-mcp",
-       "mcp:dev": "npx @cdcabrera/pf-mcp",
        "mcp:update": "npm update @cdcabrera/pf-mcp",
-       "mcp:setup": "npm install @cdcabrera/pf-mcp",
        "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
-       "dev:mcp-only": "npm run mcp:start",
-       "agent:verify-dates": "./.agent/verify-dates.sh"
+       "agent:verify-dates": "./.agent/verify-dates.sh",
+       "agent:setup-mcp": "./.agent/setup-mcp.sh"
      }
    }
    ```
@@ -187,7 +184,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 ```
 
 #### Troubleshooting MCP Setup
-- **Package Not Found**: Run `npm run mcp:install` first
+- **Package Not Found**: Run `npx @cdcabrera/pf-mcp` directly to install and start
 - **Server Won't Start**: Check Node.js version (requires 22+)
 - **No Documentation**: Verify MCP tools are available in environment
 - **Connection Issues**: Restart MCP server with `npm run mcp:start`
