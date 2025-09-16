@@ -33,7 +33,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - **[PatternFly Codemods](https://github.com/patternfly/pf-codemods.git)** - Migration tools
 
 ### PatternFly MCP Server (Recommended)
-- **[PatternFly MCP Package](https://www.npmjs.com/package/@jephilli-patternfly-docs/mcp)** - `@jephilli-patternfly-docs/mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
+- **[PatternFly MCP Package](https://www.npmjs.com/package/@cdcabrera/pf-mcp)** - `@cdcabrera/pf-mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
 - **MCP Tools Available**:
   - `list_documentation` - Lists available PatternFly documentation categories
   - `get_documentation` - Retrieves full content of specific documentation
@@ -135,17 +135,17 @@ When setting up the PatternFly MCP server, agents should:
 1. **Check Current Setup**:
    - Look for existing `mcp-config.json` in project root
    - Check `package.json` for MCP-related scripts
-   - Verify if `@jephilli-patternfly-docs/mcp` is available
+   - Verify if `@cdcabrera/pf-mcp` is available
 
 2. **Add NPM Scripts** (if not present):
    ```json
    {
      "scripts": {
-       "mcp:install": "npm install @jephilli-patternfly-docs/mcp",
-       "mcp:start": "npx @jephilli-patternfly-docs/mcp",
-       "mcp:dev": "npx @jephilli-patternfly-docs/mcp",
-       "mcp:update": "npm update @jephilli-patternfly-docs/mcp",
-       "mcp:setup": "npm install @jephilli-patternfly-docs/mcp",
+       "mcp:install": "npm install @cdcabrera/pf-mcp",
+       "mcp:start": "npx @cdcabrera/pf-mcp",
+       "mcp:dev": "npx @cdcabrera/pf-mcp",
+       "mcp:update": "npm update @cdcabrera/pf-mcp",
+       "mcp:setup": "npm install @cdcabrera/pf-mcp",
        "dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\"",
        "dev:mcp-only": "npm run mcp:start"
      }
@@ -158,7 +158,7 @@ When setting up the PatternFly MCP server, agents should:
      "mcpServers": {
        "patternfly-docs": {
          "command": "npx",
-         "args": ["-y", "@jephilli-patternfly-docs/mcp@latest"],
+         "args": ["-y", "@cdcabrera/pf-mcp@latest"],
          "description": "PatternFly React development rules and documentation"
        }
      }
