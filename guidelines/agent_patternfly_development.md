@@ -35,11 +35,8 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 ### PatternFly MCP Server (Recommended)
 - **[PatternFly MCP Package](https://www.npmjs.com/package/@cdcabrera/pf-mcp)** - `@cdcabrera/pf-mcp` - Centralized PatternFly documentation and development rules via Model Context Protocol
 - **MCP Tools Available**:
-  - `list_documentation` - Lists available PatternFly documentation categories
-  - `get_documentation` - Retrieves full content of specific documentation
-  - `search_documentation` - Searches across all PatternFly documentation
-  - `get_quick_rules` - Gets essential PatternFly development rules
-  - `get_all_standards` - Retrieves comprehensive PatternFly standards
+  - `mcp_context7_resolve-library-id` - Resolves PatternFly library information
+  - `mcp_context7_get-library-docs` - Retrieves PatternFly documentation and examples
 
 ### Project Resources
 - **Implementation Guide**: `.agent/patternfly-implementation.md` - Project-specific usage
@@ -104,11 +101,7 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 2. **MANDATORY PatternFly MCP Server Setup**:
    - **AUTOMATICALLY** check if PatternFly MCP server is available and configured
    - If not available, **AUTOMATICALLY** offer to set it up: "Would you like me to set up the PatternFly MCP server for enhanced PatternFly guidance?"
-   - **Setup includes**:
-     - Adding NPM scripts to `package.json` for MCP server management
-     - Creating `mcp-config.json` for MCP client configuration
-     - Testing MCP server connectivity and functionality
-   - **Benefits explained**: "This provides up-to-date PatternFly documentation, development rules, and best practices directly accessible to AI assistants"
+   - **AUTOMATICALLY** set up MCP client integration if requested (see MCP Setup section below)
    - Proceed with setup unless user explicitly says "no"
 
 ### Automatic MCP Client Setup for Agents
@@ -209,78 +202,8 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 
 ## PatternFly MCP Server Integration
 
-### Automatic Setup Process
-When setting up the PatternFly MCP server, agents should:
-
-1. **Check Current Setup**:
-   - Look for existing `mcp-config.json` in project root
-   - Check `package.json` for MCP-related scripts
-   - Verify if `@cdcabrera/pf-mcp` is available
-   - **Detect Project Capabilities**:
-     - Check for `npm-run-all` package (provides `run-p` command)
-     - Check for `concurrently` package
-     - Identify the main development script (usually `start`, `dev`, or `serve`)
-     - Check if project supports parallel script execution
-
-2. **Add NPM Scripts** (if not present):
-   ```json
-   {
-     "scripts": {
-       "mcp:start": "npx @cdcabrera/pf-mcp"
-     }
-   }
-   ```
-   
-   **Optional: Parallel Development Script** (if project supports parallel execution):
-   - **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
-   - **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
-   - **If using custom start script**: Replace `start` with the project's main development command
-   - **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
-
-3. **Create MCP Configuration** (`mcp-config.json`):
-   ```json
-   {
-     "mcpServers": {
-       "patternfly-docs": {
-         "command": "npx",
-         "args": ["-y", "@cdcabrera/pf-mcp@latest"],
-         "description": "PatternFly React development rules and documentation"
-       }
-     }
-   }
-   ```
-
-4. **Test MCP Server**:
-   - Run `npm run mcp:start` to verify server starts
-   - Test MCP tools availability (list_documentation, get_quick_rules, etc.)
-   - Verify connectivity and functionality
-
-### Project-Aware MCP Setup
-
-The MCP setup process is designed to be **project-aware** and **flexible**:
-
-#### **Essential Scripts (Always Required):**
-```json
-{
-  "scripts": {
-    "mcp:start": "npx @cdcabrera/pf-mcp"
-  }
-}
-```
-
-#### **Optional Parallel Development Script (Project-Dependent):**
-The `dev:with-mcp` script depends on the project's capabilities:
-
-- **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
-- **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
-- **If using custom start script**: Replace `start` with the project's main development command
-- **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
-
-#### **Agent Detection Process:**
-1. **Check for `npm-run-all`** package (provides `run-p` command)
-2. **Check for `concurrently`** package
-3. **Identify main development script** (usually `start`, `dev`, or `serve`)
-4. **Provide appropriate examples** based on detected capabilities
+### Overview
+The PatternFly MCP server provides AI agents with real-time access to PatternFly documentation, examples, and best practices. This section covers setup, usage, and integration patterns.
 
 ### MCP Server Benefits
 - **Up-to-date Documentation**: Always current PatternFly documentation
@@ -298,10 +221,74 @@ The `dev:with-mcp` script depends on the project's capabilities:
 
 **For human developers**: The MCP server provides documentation and examples that AI agents can access and use to help with PatternFly development, but direct human interaction requires additional client development.
 
+### Automatic Setup Process (MANDATORY)
+When setting up the PatternFly MCP server, agents must follow this **project-aware** process:
+
+1. **Check Current Setup**:
+   - Look for existing `mcp-config.json` in project root
+   - Check `package.json` for MCP-related scripts
+   - Verify if `@cdcabrera/pf-mcp` is available
+   - **Detect Project Capabilities**:
+     - Check for `npm-run-all` package (provides `run-p` command)
+     - Check for `concurrently` package
+     - Identify the main development script (usually `start`, `dev`, or `serve`)
+     - Check if project supports parallel script execution
+
+2. **Add Essential NPM Scripts** (if missing):
+   ```json
+   {
+     "scripts": {
+       "mcp:start": "npx @cdcabrera/pf-mcp"
+     }
+   }
+   ```
+
+3. **Add Optional Parallel Development Script** (if project supports it):
+   - **If using `npm-run-all`**: `"dev:with-mcp": "run-p -l start mcp:start"`
+   - **If using `concurrently`**: `"dev:with-mcp": "concurrently \"npm start\" \"npm run mcp:start\""`
+   - **If using custom start script**: Replace `start` with the project's main development command
+   - **If no parallel execution available**: Recommend installing `npm-run-all` or `concurrently`
+
+4. **Create MCP Configuration** (if missing):
+   ```json
+   {
+     "mcpServers": {
+       "patternfly-docs": {
+         "command": "npx",
+         "args": ["-y", "@cdcabrera/pf-mcp@latest"],
+         "description": "PatternFly React development rules and documentation"
+       }
+     }
+   }
+   ```
+
+5. **Test MCP Server**:
+   - Run `npm run mcp:start` to verify server starts
+   - Test MCP tools availability (`mcp_context7_resolve-library-id`, `mcp_context7_get-library-docs`)
+   - Verify connectivity and functionality
+
 ### MCP Tool Usage Patterns
-- **Component Questions**: Use `get_documentation` for specific component APIs
-- **Best Practices**: Use `get_quick_rules` for development guidelines
-- **Search**: Use `search_documentation` for finding specific patterns
+- **Component Questions**: Use `mcp_context7_get-library-docs` for specific component APIs
+- **Library Resolution**: Use `mcp_context7_resolve-library-id` for PatternFly library information
+- **Best Practices**: Access PatternFly development guidelines and examples
+- **Search**: Find specific patterns and solutions quickly
+
+### Agent Workflow Integration
+```markdown
+# When working with PatternFly components:
+
+1. **Start MCP Server**: `npm run mcp:start` (if needed)
+2. **Query Documentation**: Use MCP tools to get component examples
+3. **Verify Patterns**: Check against PatternFly best practices
+4. **Implement**: Use MCP-provided examples and patterns
+5. **Validate**: Ensure compliance with PatternFly standards
+```
+
+### Troubleshooting MCP Setup
+- **Package Not Found**: Run `npx @cdcabrera/pf-mcp` directly to install and start
+- **Server Won't Start**: Check Node.js version (requires 22+)
+- **No Documentation**: Verify MCP tools are available in environment
+- **Connection Issues**: Restart MCP server with `npm run mcp:start`
 - **Comprehensive**: Use `get_all_standards` for complete guidance overview
 
 ## Development Workflow
@@ -606,11 +593,8 @@ When creating implementation documentation, agents MUST provide:
 
 ### Trigger: "Make a PatternFly [pattern]"
 1. **AUTOMATIC MCP Setup** (if not already configured):
-   - Check if MCP scripts exist in package.json
-   - Check if mcp-config.json exists
-   - If missing, automatically add NPM scripts and MCP configuration
-   - Test MCP server connectivity
-   - Verify MCP tools are available
+   - Follow the MCP Setup Process in the PatternFly MCP Server Integration section
+   - Verify MCP tools are available and working
 
 2. Research
    - **Use MCP Tools**: Query PatternFly MCP server for component documentation and best practices
@@ -651,11 +635,9 @@ When creating implementation documentation, agents MUST provide:
 5. Propose workaround using official APIs; avoid custom CSS if possible
 
 ### Trigger: "Set up PatternFly MCP" or "Enable PatternFly MCP"
-1. **Check Current Setup**: Look for existing MCP configuration and scripts
-2. **Add NPM Scripts**: Add MCP management scripts to package.json
-3. **Create MCP Config**: Create mcp-config.json with PatternFly MCP server configuration
-4. **Test Setup**: Verify MCP server starts and tools are accessible
-5. **Document Setup**: Update implementation documentation with MCP integration details
+1. **Follow MCP Setup Process**: Use the Automatic Setup Process in the PatternFly MCP Server Integration section
+2. **Test Setup**: Verify MCP server starts and tools are accessible
+3. **Document Setup**: Update implementation documentation with MCP integration details
 
 ### Trigger: "Review the repo guidelines" (Enhanced with MCP Setup)
 1. **AUTOMATIC MCP Setup Check**:
