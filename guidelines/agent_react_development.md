@@ -665,17 +665,12 @@ describe('Accessibility', () => {
 ## Initial Steps After Reviewing React Development Guidelines
 **AUTOMATIC ACTIONS REQUIRED**:
 
-1. **Discovery via MCP**:
-   - Use MCP filesystem to read `package.json` and `.eslintrc.js` to confirm React/PatternFly versions and lint rules
-   - Use MCP shell to validate environment: `npm run test:types` and `npm run test:lint`
-   - See [Agent MCP Setup](./agent_mcp_setup.md)
-
-2. **Implementation Documentation Check**:
+1. **MANDATORY Implementation Documentation Check**:
    - Check if `.agent/react-implementation.md` exists
-   - If missing, AUTOMATICALLY create it using the template in [Agent Local Scaffolding](./agent_local_scaffolding.md) and fill in project-specific analysis
+   - If missing, **AUTOMATICALLY** create it with project-specific React usage analysis
    - Document: Current React version, component patterns, hooks usage, performance optimizations, and best practices
 
-3. **MANDATORY In-Depth Analysis**:
+2. **MANDATORY In-Depth Analysis**:
    - After creating implementation documentation, AUTOMATICALLY provide in-depth analysis
    - Include potential React issues and optimizations based on cached resources
    - Reference React best practices from official documentation

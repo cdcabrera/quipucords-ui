@@ -4,11 +4,6 @@
 
 Agent-only reference system for PatternFly development in any React project.
 
-## Prerequisites
-
-- Configure MCP per [Agent MCP Setup](./agent_mcp_setup.md) (filesystem, shell, git, openapi)
-- Ensure Agent Boot Checklist items are complete (see [Guidelines README](./README.md))
-
 ## For Agents
 
 ### Processing Priority

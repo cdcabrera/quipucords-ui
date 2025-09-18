@@ -1,4 +1,3 @@
-
 # Agent Guidelines
 
 ## Overview
@@ -18,7 +17,6 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 - [Agent React Development](./agent_react_development.md) - React development, TypeScript integration, and performance optimization
 - [Agent Testing](./agent_testing.md) - Testing procedures for React + PatternFly components and integration
 - [Agent Comments](./agent_comments.md) - Comment templates and standards
-- [Agent MCP Setup](./agent_mcp_setup.md) - Mandatory MCP configuration, example mcp-config.json, validation
 - [Agent Local Scaffolding](./agent_local_scaffolding.md) - .agent templates and bootstrap guidance
 
 ## User Guide
@@ -51,16 +49,6 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 
 1. **Guidelines Directory** (all files in the `guidelines/` directory)
 2. **Local Guidelines** (`.agent/` directory)
-
-## MCP Setup (Mandatory for Agents)
-Agents must configure MCP locally before starting work. See [Agent MCP Setup](./agent_mcp_setup.md) for server recommendations, example `mcp-config.json`, validation, and security notes.
-
-## Agent Boot Checklist (MANDATORY)
-- [ ] MCP configured and reachable (filesystem, shell, git, openapi)
-- [ ] `.agent/react-implementation.md` exists and is current
-- [ ] `.agent/patternfly-implementation.md` exists and is current (if PF work)
-- [ ] Review package.json scripts/versions via MCP
-- [ ] Review `.eslintrc.js` rules via MCP
 
 ## Maintaining This Directory
 

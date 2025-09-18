@@ -139,8 +139,4 @@ const Toolbar = () => null;
 - See the [Guidelines Index](./README.md#guidelines-index) for related guidelines
 - ESLint config for jsdoc and comment-length rules is defined in .eslintrc.js
 
-## PR Transparency (MCP)
-- Include a short note in PR descriptions when MCP-assisted: `Assisted by: [tool or IDE] ([model]); MCP servers: [filesystem, shell, git, openapi, http]`
-- If MCP access was limited or deviated (e.g., additional shell commands), note the rationale briefly.
-
 Last updated: September 17, 2025
