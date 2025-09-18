@@ -17,7 +17,6 @@ Agent-specific development guidelines for the Quipucords-UI project, optimized f
 - [Agent React Development](./agent_react_development.md) - React development, TypeScript integration, and performance optimization
 - [Agent Testing](./agent_testing.md) - Testing procedures for React + PatternFly components and integration
 - [Agent Comments](./agent_comments.md) - Comment templates and standards
-- [Agent Local Scaffolding](./agent_local_scaffolding.md) - .agent templates and bootstrap guidance
 
 ## User Guide
 
