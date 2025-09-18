@@ -521,5 +521,6 @@ The guideline system should be processed in this order, with specialized guideli
 **Next Steps:**
 5. **Review guidance under the `./.agent/**/*.md` directory.** If the `./.agent` directory exists, the user may ask the agent about the guidance located here.
 6. **If the `./.agent` directory does not exist, ask the user if they want to create it.** The agent should explain how it's going to be used.
+7. **Agents must configure MCP locally before contributing.** See [guidelines/agent_mcp_setup.md](./guidelines/agent_mcp_setup.md).
 -->
 </details>

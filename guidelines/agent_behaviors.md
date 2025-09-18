@@ -267,3 +267,19 @@ Run `$ date` to get system date before applying dates. Used for:
 - [Guidelines Index](./README.md#guidelines-index)
 
 Last updated: September 4, 2025
+
+
+## Start-of-session Boot Checklist (MANDATORY)
+- [ ] MCP configured and reachable (filesystem, shell, git, openapi). See guidelines/agent_mcp_setup.md
+- [ ] `.agent/react-implementation.md` present and current; `.agent/patternfly-implementation.md` when PF work is involved. See guidelines/agent_local_scaffolding.md
+- [ ] package.json scripts/versions reviewed (via MCP filesystem)
+- [ ] `.eslintrc.js` rules reviewed (via MCP filesystem)
+
+## MCP Usage Policy
+- Prefer MCP servers for repository IO and shell execution.
+  - filesystem: read-only file access for discovery
+  - shell: allowlisted commands only — npm, git, node, jest, tsc, eslint
+  - git: history/blame/diff to mirror local patterns
+  - openapi: load Quipucords spec to ground API-related UI logic
+- Document tool/model and MCP servers used in PRs for transparency: “Assisted by: [tool] ([model]); MCP servers: [list]”.
+- Perform dynamic discovery via MCP before planning or implementing changes.

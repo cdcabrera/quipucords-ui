@@ -30,8 +30,11 @@ See the [Guidelines Index](./README.md#guidelines-index) for all related guideli
 - Lint Gate: ESLint (TS, TSX, JSON)
 
 ## Dynamic Project Analysis (MANDATORY)
-Before advising or running tests, inspect package.json to discover available commands and versions.
+Perform this via MCP (filesystem + shell). Before advising or running tests, inspect package.json to discover available commands and versions; validate environment with allowlisted shell commands.
 
+- Quick MCP examples:
+  - filesystem.read: `package.json` and `.eslintrc.js`
+  - shell.run: `npm run test:types` and `npm run test:lint`
 - Scripts:
   - test: runs test:ci-lint, test:ci-build, test:ci-coverage
   - test:dev: lint + local watch tests
